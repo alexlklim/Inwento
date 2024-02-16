@@ -24,7 +24,6 @@ public class Branch extends BaseEntity {
     private String branch;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "company_id")
     private Company company;
 

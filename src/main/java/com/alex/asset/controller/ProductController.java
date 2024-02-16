@@ -34,7 +34,7 @@ public class ProductController {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(
             @PathVariable("id") Long id, @RequestBody ProductDto dto, Authentication authentication) {
         return new ResponseEntity<>(HttpStatus.OK);

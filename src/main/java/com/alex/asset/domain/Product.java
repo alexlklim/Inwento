@@ -1,8 +1,5 @@
 package com.alex.asset.domain;
 
-import com.alex.asset.domain.enums.AssetStatus;
-import com.alex.asset.domain.enums.KST;
-import com.alex.asset.domain.enums.Unit;
 import com.alex.asset.domain.fields.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -38,11 +35,11 @@ public class Product extends BaseEntity {
 
 
     @Enumerated(EnumType.STRING)
-    Unit unit;
+    UnitEnum unitEnum;
     @Enumerated(EnumType.STRING)
-    KST kst;
+    KSTEnum kstEnum;
     @Enumerated(EnumType.STRING)
-    AssetStatus assetStatus;
+    AssetStatusEnum assetStatusEnum;
 
     @ManyToOne
     @JsonIgnore

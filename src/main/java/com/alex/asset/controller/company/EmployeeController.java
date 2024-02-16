@@ -1,8 +1,6 @@
 package com.alex.asset.controller.company;
 
-import com.alex.asset.dto.CompanyDto;
 import com.alex.asset.dto.EmployeeDto;
-import com.alex.asset.dto.FieldsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +23,14 @@ public class EmployeeController {
     }
 
     @GetMapping("/{secret}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<HttpStatus> assEmpToCompanyBySecretCode(
             @PathVariable("secret") String secret, Authentication authentication) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{uuid}}")
-    public ResponseEntity<?> getFields(
-            @PathVariable("uuid") UUID secret, Authentication authentication) {
+    public ResponseEntity<HttpStatus> deleteEmpFromActiveEmp(
+            @PathVariable("uuid") UUID id, Authentication authentication) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

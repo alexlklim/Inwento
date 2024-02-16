@@ -1,4 +1,4 @@
-package com.alex.asset.repo.product;
+package com.alex.asset.repo.product.type;
 
 import com.alex.asset.domain.Company;
 import com.alex.asset.domain.fields.Type;

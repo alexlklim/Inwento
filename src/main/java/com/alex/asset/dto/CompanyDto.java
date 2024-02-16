@@ -17,15 +17,11 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CompanyDto {
     String company, info;
-
     String country,city, address;
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     UUID secretCode;
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Integer productCounter;
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Long ownerId;
+    UUID ownerUUID;
 }

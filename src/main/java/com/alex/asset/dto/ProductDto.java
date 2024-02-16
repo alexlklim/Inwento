@@ -1,5 +1,6 @@
 package com.alex.asset.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -20,22 +21,20 @@ public class ProductDto {
     Long id;
     String title, description;
     Double price;
-
     String inventoryNumber, code;
 
-    UUID liable, createdBy;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    String createdBy;
+
+    UUID liable;
     String receiver;
-
-
     String unit, kst, assetStatus;
-
     String typeName, subtypeName, producerName, supplierName, branchName, mpkName;
-
     String document;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date documentDate, warrantyPeriod, inspectionDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Date lastInventoryDate;
-    // location
     Double locLongitude, locLatitude;
 }

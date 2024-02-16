@@ -1,9 +1,8 @@
 package com.alex.asset.domain;
 
-import com.alex.asset.domain.enums.AssetStatus;
-import com.alex.asset.domain.enums.KST;
-import com.alex.asset.domain.enums.Unit;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.alex.asset.domain.fields.constants.AssetStatus;
+import com.alex.asset.domain.fields.constants.KST;
+import com.alex.asset.domain.fields.constants.Unit;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,56 +29,26 @@ public class Company extends BaseEntity{
     UUID ownerId;
 
 
-    @ElementCollection
-    Set<UUID> employees = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "company_asset_status",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "asset_status_id"))
+    private List<AssetStatus> assetStatusEnums;
 
+    @ManyToMany
+    @JoinTable(
+            name = "company_kst",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "kst_id"))
+    private List<KST> ksts;
 
-
-
-    @ElementCollection(targetClass = KST.class)
-    @CollectionTable(name = "company_kst", joinColumns = @JoinColumn(name = "company_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "ksts")
-    Set<KST> ksts = new HashSet<>();
-
-    @ElementCollection(targetClass = AssetStatus.class)
-    @CollectionTable(name = "company_asset_status", joinColumns = @JoinColumn(name = "company_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "statuses")
-    Set<AssetStatus> statuses = new HashSet<>();
-
-    @ElementCollection(targetClass = Unit.class)
-    @CollectionTable(name = "company_unit", joinColumns = @JoinColumn(name = "company_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "units")
-    Set<Unit> units = new HashSet<>();
-
-
-
-    public void addEmployee(UUID uuid) {
-        employees.add(uuid);
-    }
-
-    public void removeEmployee(UUID uuid) {
-        employees.remove(uuid);
-    }
-
-
-
-    public void deleteStatus(AssetStatus status) {
-        statuses.remove(status);
-    }
-
-    public void deleteUnit(Unit unit) {
-        units.remove(unit);
-    }
-
-    public void deleteKst(KST kst) {
-        ksts.remove(kst);
-    }
-
-
-
+    @ManyToMany
+    @JoinTable(
+            name = "company_unit",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "unit_id"))
+    private List<Unit> units;
 
 
 }

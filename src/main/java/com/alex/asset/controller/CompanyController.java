@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
@@ -15,32 +17,21 @@ import org.springframework.web.bind.annotation.*;
 public class CompanyController {
 
 
-    @GetMapping("/info")
+
+    @GetMapping
     public ResponseEntity<CompanyDto> info(Authentication authentication) {
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> add(
             @RequestBody CompanyDto dto, Authentication authentication) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-
-    @GetMapping("/fields")
-    public ResponseEntity<FieldsDto> getFields(Authentication authentication) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
-    }
-
-    @PostMapping("/secret")
-    public ResponseEntity<?> changeSecret(
-            @RequestBody String oldSecret, Authentication authentication) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    @DeleteMapping("/company/{secret}")
-    public ResponseEntity<?> delete(
-            @PathVariable("secret") String secret, Authentication authentication) {
+    @PutMapping
+    public ResponseEntity<?> update(
+            @RequestBody CompanyDto dto, Authentication authentication) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
