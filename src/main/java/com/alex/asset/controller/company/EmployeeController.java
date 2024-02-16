@@ -28,7 +28,7 @@ public class EmployeeController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{uuid}}")
+    @DeleteMapping("/{uuid}")
     public ResponseEntity<HttpStatus> deleteEmpFromActiveEmp(
             @PathVariable("uuid") UUID id, Authentication authentication) {
         return new ResponseEntity<>(null, HttpStatus.OK);

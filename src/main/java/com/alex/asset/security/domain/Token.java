@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -23,7 +24,7 @@ public class Token {
     public Long id;
 
     @Column(unique = true)
-    public String token; //UUID
+    public UUID token; //UUID
 
 
     public LocalDateTime created;

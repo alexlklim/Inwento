@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 import java.util.*;
 
 @Getter @AllArgsConstructor @NoArgsConstructor
-@Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity @Table(name = "companies")
 public class Company extends BaseEntity{

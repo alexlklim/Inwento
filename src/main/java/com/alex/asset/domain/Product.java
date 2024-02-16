@@ -1,6 +1,9 @@
 package com.alex.asset.domain;
 
 import com.alex.asset.domain.fields.*;
+import com.alex.asset.domain.fields.constants.AssetStatus;
+import com.alex.asset.domain.fields.constants.KST;
+import com.alex.asset.domain.fields.constants.Unit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +15,6 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "companies",
@@ -33,38 +35,36 @@ public class Product extends BaseEntity {
     UUID liable;
     String receiver;
 
+    @ManyToOne @JoinColumn(name = "asset_status_id")
+    AssetStatus assetStatusEnum;
 
-    @Enumerated(EnumType.STRING)
-    UnitEnum unitEnum;
-    @Enumerated(EnumType.STRING)
-    KSTEnum kstEnum;
-    @Enumerated(EnumType.STRING)
-    AssetStatusEnum assetStatusEnum;
+    @ManyToOne @JoinColumn(name = "kst_id")
+    KST kstEnum;
+
+    @ManyToOne @JoinColumn(name = "unit_id")
+    Unit unitEnum;
+
+
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "type_id")
     Type type;
 
-    @ManyToOne
-    @JoinColumn(name = "subtype_id")
+    @ManyToOne @JoinColumn(name = "subtype_id")
     Subtype subtype;
 
 
-    @ManyToOne
-    @JoinColumn(name = "producer_id")
+    @ManyToOne @JoinColumn(name = "producer_id")
     Producer producer;
 
-    @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @ManyToOne @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
+    @ManyToOne @JoinColumn(name = "branch_id")
     Branch branch;
 
-    @ManyToOne
-    @JoinColumn(name = "mpk_id")
+    @ManyToOne @JoinColumn(name = "mpk_id")
     MPK mpk;
 
 
@@ -85,7 +85,7 @@ public class Product extends BaseEntity {
     // location
     Double longitude, latitude;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "company_id")
     Company company;
 
 
