@@ -1,6 +1,6 @@
-package com.alex.asset.security.repo;
+package com.alex.asset.a_security.repo;
 
-import com.alex.asset.security.domain.User;
+import com.alex.asset.a_security.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

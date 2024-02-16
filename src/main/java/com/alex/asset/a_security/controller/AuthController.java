@@ -1,4 +1,4 @@
-package com.alex.asset.security.controller;
+package com.alex.asset.a_security.controller;
 
 
 import lombok.RequiredArgsConstructor;

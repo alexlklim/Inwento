@@ -1,8 +1,8 @@
-package com.alex.asset.security.mappers;
+package com.alex.asset.a_security.mappers;
 
 
-import com.alex.asset.security.domain.User;
-import com.alex.asset.security.dto.UserDto;
+import com.alex.asset.a_security.domain.User;
+import com.alex.asset.a_security.dto.UserDto;
 
 public class UserMapper {
 

@@ -1,4 +1,4 @@
-package com.alex.asset.security.domain;
+package com.alex.asset.a_security.domain;
 
 
 import jakarta.persistence.*;
@@ -7,7 +7,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Data

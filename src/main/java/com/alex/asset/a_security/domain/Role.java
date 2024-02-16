@@ -1,4 +1,4 @@
-package com.alex.asset.security.domain;
+package com.alex.asset.a_security.domain;
 
 import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

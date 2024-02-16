@@ -1,6 +1,6 @@
-package com.alex.asset.security.jwt;
+package com.alex.asset.a_security.jwt;
 
-import com.alex.asset.security.domain.User;
+import com.alex.asset.a_security.domain.User;
 import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

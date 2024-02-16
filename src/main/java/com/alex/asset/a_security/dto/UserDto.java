@@ -1,4 +1,4 @@
-package com.alex.asset.security.dto;
+package com.alex.asset.a_security.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
