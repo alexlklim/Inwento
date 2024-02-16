@@ -1,0 +1,17 @@
+use asset_track;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS token;
+DROP TABLE IF EXISTS asset_statuses;
+DROP TABLE IF EXISTS ksts;
+DROP TABLE IF EXISTS units;
+DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS company_asset_status;
+DROP TABLE IF EXISTS company_kst;
+DROP TABLE IF EXISTS company_unit;
+DROP TABLE IF EXISTS branches;
+DROP TABLE IF EXISTS mpks;
+DROP TABLE IF EXISTS producers;
+DROP TABLE IF EXISTS suppliers;
+DROP TABLE IF EXISTS types;
+DROP TABLE IF EXISTS subtypes;
+DROP TABLE IF EXISTS products;

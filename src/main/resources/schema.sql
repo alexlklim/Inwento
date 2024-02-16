@@ -1,4 +1,5 @@
 
+
 CREATE TABLE IF NOT EXISTS users (
     id BINARY(16) NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     firstname VARCHAR(255),
@@ -28,25 +29,22 @@ ALTER TABLE users CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- for AssetStatus, KST, Units
 CREATE TABLE IF NOT EXISTS asset_statuses (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    active BOOLEAN, created DATETIME, updated DATETIME,
-    asset_status VARCHAR(255));
+    asset_status VARCHAR(255) UNIQUE);
 
 CREATE TABLE IF NOT EXISTS ksts (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    active BOOLEAN, created DATETIME, updated DATETIME,
-    kst VARCHAR(255));
+    kst VARCHAR(255)UNIQUE );
 
 CREATE TABLE IF NOT EXISTS units (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    active BOOLEAN, created DATETIME, updated DATETIME,
-    unit VARCHAR(255));
+    unit VARCHAR(255) UNIQUE);
 
 CREATE TABLE IF NOT EXISTS companies (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     active BOOLEAN, created DATETIME, updated DATETIME,
     company VARCHAR(255), info TEXT,
     country VARCHAR(255), city VARCHAR(255), address TEXT,
-    secret_code BINARY(16),
+    secret_code BINARY(16) UNIQUE,
     product_counter INT,
     owner_id BINARY(16)
 );
