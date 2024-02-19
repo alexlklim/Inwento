@@ -14,13 +14,12 @@ CREATE TABLE IF NOT EXISTS users (
     roles ENUM('ADMIN', 'CLIENT', 'EMP')
 );
 
-select * from users;
 
 CREATE TABLE IF NOT EXISTS token (
     id BINARY(16) NOT NULL PRIMARY KEY DEFAULT (UUID_TO_BIN(UUID())),
     created DATETIME,
     expired DATETIME,
-    user_id BINARY(16),
+    user_id BINARY(16) ,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

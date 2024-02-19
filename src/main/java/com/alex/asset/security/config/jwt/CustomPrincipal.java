@@ -25,8 +25,4 @@ public class CustomPrincipal implements Principal {
         this.comapnyUUID = user.getCompanyUUID();
         this.roles = Collections.singletonList(user.getRoles().name()); // Assuming roles is an Enum
     }
-
-
-
-
 }

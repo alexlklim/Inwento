@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "supplier")
+@Table(name = "suppliers")
 public class Supplier  extends BaseEntity {
 
 

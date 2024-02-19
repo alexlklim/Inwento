@@ -22,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "product",
+@Table(name = "products",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"code", "inventory_number"})})
 public class Product {
     @Id

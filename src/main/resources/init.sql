@@ -105,8 +105,6 @@ SET @type4 = (SELECT id FROM types WHERE type = 'Electronics');
 SET @type5 = (SELECT id FROM types WHERE type = 'Furniture');
 
 
-select * from types;
-select * from subtypes;
 
 INSERT IGNORE INTO subtypes (active, subtype, company_id, type_id)
 VALUES
@@ -145,15 +143,22 @@ INSERT IGNORE INTO products (active, created, updated,title, description, price,
                              document, document_date, warranty_period, inspection_date, last_inventory_date, longitude, latitude,company_id)
 VALUES
     (true, NOW(), NOW(), 'Lenove Ideapad Gaming', 'It is a very good laptop',4000.00,'INV123456', '12345678',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 16, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 1, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Samsung Galaxy', 'It is a very good phone',2000.00,'INV123455', '12345638',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 16, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 1, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'ThinkPad', 'It is a very good laptop with sensor screen',5000.00,'INV123355', '12145638',  @user_id, @user_id, 'Łukasz Boryś',
-     1, 2, 4, 1, 16, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 1, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Biurko', 'It is a very good biurko',5000.00,'INV145456', '12346578',  @user_id, @user_id, 'Gabriella Walczyna',
-     1, 2, 4, 1, 28, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Hammer Cobnstruction', 'It is a very good phone with IP69',1500.00,'INV133456', '12445678',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 16, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Tablica do pisania', 'It is a very good tabliza do pisania',5000.00,'INV123456', '12345678',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 28, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id);
+     1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id);
 
+select * from users;
+
+
+
+
+INSERT INTO token (created, expired, user_id)
+VALUES ( NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY ), @user_id);

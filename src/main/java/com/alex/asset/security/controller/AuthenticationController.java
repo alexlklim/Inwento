@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final String TAG = "AUTHENTICATION_CONTROLLER";
+    private final String TAG = "AUTHENTICATION_CONTROLLER - ";
 
 
     private final UserService userService;
@@ -61,11 +62,9 @@ public class AuthenticationController {
 
 
     @PostMapping("/pw/change")
-    public ResponseEntity<AuthDto> changePassword(@RequestBody PasswordDto request, Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication;
+    public ResponseEntity<AuthDto> changePassword(@RequestBody PasswordDto request) {
+        CustomPrincipal principal = (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boolean result = userService.changePassword(request, principal);
-
-
         if (!result) {
             log.error(TAG + "Change password action for user {} failed", principal.getEmail());
             return new ResponseEntity<>(HttpStatus.CONFLICT);

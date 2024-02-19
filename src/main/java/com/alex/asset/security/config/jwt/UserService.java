@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,7 +35,7 @@ public class UserService {
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .roles(Role.CLIENT)
-                    .isEnabled(false)
+                    .isEnabled(true)
                     .build();
             userRepo.save(user);
             log.info("User with email {} was successfully created", request.getEmail());
@@ -60,15 +61,12 @@ public class UserService {
     }
 
 
-    public boolean changePassword(String email, String password) {
+    public void changePasswordForgot(String email, String password) {
         log.info("Change password for user: {}", email);
         User user = userRepo.findByEmail(email).orElse(null);
-        assert user != null;
         user.setPassword(passwordEncoder.encode(password));
         repository.save(user);
         emailService.passwordWasChanged(user.getEmail());
-
-        return true;
     }
 
 
@@ -81,4 +79,8 @@ public class UserService {
     public User getByEmail(String email) {
         return userRepo.findByEmail(email).orElse(null);
     }
+
+    public User getById(UUID userId) {
+        return userRepo.findById(userId).orElse(null);
+        }
 }

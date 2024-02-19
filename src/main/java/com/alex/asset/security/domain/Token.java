@@ -10,8 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder(toBuilder = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -30,8 +30,9 @@ public class Token {
   public LocalDateTime expired;
 
 
-  @OneToOne
-  @PrimaryKeyJoinColumn
+  @OneToOne(fetch = FetchType.EAGER)
   public User user;
+
+
 
 }

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "branches ")
+@Table(name = "branches")
 public class Branch extends BaseEntity {
 
     private String branch;

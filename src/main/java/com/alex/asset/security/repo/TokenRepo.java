@@ -9,9 +9,9 @@ import java.util.UUID;
 
 public interface TokenRepo extends JpaRepository<Token, UUID> {
 
-  Optional<Token> findByIdAndUser(UUID token, User user);
+  Optional<Token> findByIdAndUserId(UUID token, UUID userId);
 
-  void deleteAllByUser(User user);
+  void deleteAllByUserId(UUID userId);
 
 
 

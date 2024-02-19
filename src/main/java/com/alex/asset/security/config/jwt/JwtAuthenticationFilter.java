@@ -43,7 +43,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         String jwt, userEmail;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.error(ErrorMessage.AUTHENTICATION_HEADER_IS_INCORRECT);
             filterChain.doFilter(request, response);
             return;
         }
@@ -62,9 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
-                    log.error(ErrorMessage.USER_NOT_ENABLE);
                 }
-                log.error(ErrorMessage.INVALID_TOKEN);
             }
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
                  SignatureException | IllegalArgumentException e) {

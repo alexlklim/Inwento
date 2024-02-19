@@ -54,7 +54,8 @@ public class AuthenticationService {
         log.info("Get authentication dto for user with email: {}", user.getEmail());
         CustomPrincipal principal = new CustomPrincipal(user);
         String accessToken = jwtService.generateToken(principal);
-        Token refreshToken = tokenService.createToken(user);
+        Token refreshToken = tokenService.createRefreshToken(user);
+
         AuthDto authDto = new AuthDto();
         authDto.setUserUUID(principal.getUserUUID());
         authDto.setExpiresAt(tokenService.getTokenById(refreshToken.getId()).getExpired());
@@ -67,8 +68,10 @@ public class AuthenticationService {
     public AuthDto refreshToken(TokenDto request) {
         log.info("Refresh access and refresh tokens for user: {}", request.getEmail());
         User user = userService.getByEmail(request.getEmail());
+
         // check if token belong to this user and not expired
         boolean result =  tokenService.checkIfTokenValid(request.getRefreshToken(), user);
+        System.out.printf("Token valid: " + result);
         if (!result) return null;
 
         // if token valid -> delete old tokens
@@ -86,7 +89,7 @@ public class AuthenticationService {
 
         if (user == null) return false;
         tokenService.deleteTokenByUser(user);
-        emailService.forgotPassword(tokenService.createToken(user).getId().toString());
+        emailService.forgotPassword(tokenService.createRefreshToken(user).getId().toString());
         return true;
     }
 
@@ -94,9 +97,9 @@ public class AuthenticationService {
         log.info("Recovery password for user with token: {}", token);
         Token tokenFromDB = tokenService.getTokenById(UUID.fromString(token));
         if (tokenFromDB == null) return false;
-        User user = tokenFromDB.getUser();
+        User user = userService.getById(tokenFromDB.getUser().getId());
         tokenService.deleteTokenByUser(user);
-        userService.changePassword(user.getEmail(), password);
+        userService.changePasswordForgot(user.getEmail(), password);
         return true;
     }
 }
