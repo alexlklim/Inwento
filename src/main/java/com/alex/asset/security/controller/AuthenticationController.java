@@ -49,6 +49,8 @@ public class AuthenticationController {
         return new ResponseEntity<>(authDto, HttpStatus.OK);
     }
 
+
+
     @PostMapping("/refresh")
     public ResponseEntity<AuthDto> refreshToken(@RequestBody TokenDto request) {
         AuthDto authDto = authenticationService.refreshToken(request);
@@ -89,4 +91,11 @@ public class AuthenticationController {
     }
 
 
+
+
+    @GetMapping("/me")
+    public ResponseEntity<CustomPrincipal> info(Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        return new ResponseEntity<>(principal, HttpStatus.OK);
+    }
 }

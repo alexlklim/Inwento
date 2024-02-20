@@ -5,38 +5,48 @@ import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Setter
 @Getter @AllArgsConstructor @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity @Table(name = "companies")
+@Entity @Table(name = "companies",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"company", "secret_code"})})
 public class Company {
 
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     UUID id;
 
     boolean active;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "company_kst",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "kst_id"))
+    private List<KST> ksts;
+
+
     @JsonIgnore
     @CreatedDate
     @Column(name = "created")
-    Date created;
+    LocalDateTime created;
 
     @JsonIgnore
     @LastModifiedDate
     @Column(name = "updated")
-    Date updated;
+    LocalDateTime updated;
 
     String company, info;
     String country,city, address;
@@ -57,14 +67,9 @@ public class Company {
             name = "company_asset_status",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "asset_status_id"))
-    private List<AssetStatus> assetStatusEnums;
+    private List<AssetStatus> assetStatus;
 
-    @ManyToMany
-    @JoinTable(
-            name = "company_kst",
-            joinColumns = @JoinColumn(name = "company_id"),
-            inverseJoinColumns = @JoinColumn(name = "kst_id"))
-    private List<KST> ksts;
+
 
     @ManyToMany
     @JoinTable(

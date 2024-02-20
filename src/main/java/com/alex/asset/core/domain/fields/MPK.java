@@ -1,12 +1,7 @@
 package com.alex.asset.core.domain.fields;
 
 import com.alex.asset.core.domain.Company;
-import com.alex.asset.utils.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,10 +10,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
+
 @NoArgsConstructor
 @Table(name = "mpks")
-public class MPK extends BaseEntity {
+public class MPK {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    boolean active;
 
 
     private String mpk;
@@ -26,4 +25,10 @@ public class MPK extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    public MPK(String mpk, Company company) {
+        this.active = true;
+        this.mpk = mpk;
+        this.company = company;
+    }
 }

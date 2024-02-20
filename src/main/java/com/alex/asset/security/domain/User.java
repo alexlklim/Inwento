@@ -33,6 +33,9 @@ public class User implements UserDetails {
     @Column(name = "company_id")
     UUID companyUUID;
 
+    @Column(name = "company_name")
+    String companyName;
+
     @Column(unique = true)
     String email;
     String password;

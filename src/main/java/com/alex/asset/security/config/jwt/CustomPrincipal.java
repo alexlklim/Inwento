@@ -16,7 +16,7 @@ public class CustomPrincipal implements Principal {
     private UUID comapnyUUID;
     @Override
     public String getName() {
-        return null;
+        return email;
     }
 
     public CustomPrincipal(User user) {

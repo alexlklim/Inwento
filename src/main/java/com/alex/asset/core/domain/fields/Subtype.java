@@ -1,12 +1,7 @@
 package com.alex.asset.core.domain.fields;
 
-import com.alex.asset.utils.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,10 +9,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "subtypes")
-public class Subtype  extends BaseEntity {
+public class Subtype {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    boolean active;
+
     private String subtype;
 
     @ManyToOne
@@ -25,4 +25,9 @@ public class Subtype  extends BaseEntity {
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private Type type;
 
+    public Subtype(String subtype, Type type) {
+        this.active = true;
+        this.subtype = subtype;
+        this.type = type;
+    }
 }

@@ -1,6 +1,9 @@
 package com.alex.asset.core.controller.company;
 
 import com.alex.asset.core.dto.FieldsDto;
+import com.alex.asset.core.service.impl.CompanyService;
+import com.alex.asset.core.service.impl.FieldService;
+import com.alex.asset.security.config.jwt.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,26 +15,42 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/company/fields")
+@RequestMapping("/api/core/company/fields")
 public class FieldsController {
+
+    private final CompanyService companyService;
+
+    private final FieldService fieldService;
 
     @GetMapping
     public ResponseEntity<FieldsDto> getAllFields(Authentication authentication) {
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        if (principal.getComapnyUUID() == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(companyService.getAllFields(principal.getComapnyUUID()), HttpStatus.OK);
     }
 
     @PostMapping("/asset-status")
-    public ResponseEntity<HttpStatus> updateAssetStatuses(List<String> list){
+    public ResponseEntity<HttpStatus> updateAssetStatuses(@RequestBody List<String> list, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.updateAssetStatuses(list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/kst")
-    public ResponseEntity<HttpStatus> updateKST(List<String> list){
+    public ResponseEntity<HttpStatus> updateKst(@RequestBody List<String> list, Authentication authentication){
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.updateKst(list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/units")
-    public ResponseEntity<HttpStatus> updateUnits(List<String> list){
+    public ResponseEntity<HttpStatus> updateUnits(@RequestBody List<String> list, Authentication authentication){
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.updateUnits(list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -43,24 +62,36 @@ public class FieldsController {
     @PostMapping("/branch")
     public ResponseEntity<HttpStatus> addBranches(
             @RequestBody List<String> list, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.addBranches (list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/mpk")
     public ResponseEntity<HttpStatus> addMPKs(
             @RequestBody List<String> list, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.addMPKs(list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/producer")
     public ResponseEntity<HttpStatus> addProducers(
             @RequestBody List<String> list, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.addProducers(list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/supplier")
     public ResponseEntity<HttpStatus> addSuppliers(
             @RequestBody List<String> list, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.addSuppliers(list, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

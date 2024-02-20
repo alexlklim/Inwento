@@ -5,13 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Getter
+@Setter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     UUID uuid;
@@ -22,9 +26,9 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String companyName;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Long companyId;
+    UUID companyId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    boolean isEnabled;
+    boolean enabled;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY) @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDateTime createdAt, updatedAt;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

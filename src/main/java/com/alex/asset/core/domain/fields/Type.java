@@ -1,7 +1,6 @@
 package com.alex.asset.core.domain.fields;
 
 import com.alex.asset.core.domain.Company;
-import com.alex.asset.utils.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 @Getter
 @Setter
@@ -18,7 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "types")
-public class Type extends BaseEntity {
+public class Type {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    boolean active;
+
 
     private String type;
 
@@ -31,8 +35,9 @@ public class Type extends BaseEntity {
     private Company company;
 
 
-    public Type(String type) {
-        super(true);
+    public Type(String type, Company company) {
+        this.active = true;
         this.type = type;
+        this.company = company;
     }
 }

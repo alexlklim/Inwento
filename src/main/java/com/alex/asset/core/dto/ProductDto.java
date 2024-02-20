@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -32,9 +33,9 @@ public class ProductDto {
     String typeName, subtypeName, producerName, supplierName, branchName, mpkName;
     String document;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    Date documentDate, warrantyPeriod, inspectionDate;
+    LocalDateTime documentDate, warrantyPeriod, inspectionDate;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Date lastInventoryDate;
+    LocalDateTime lastInventoryDate;
     Double locLongitude, locLatitude;
 }

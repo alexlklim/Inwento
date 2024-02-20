@@ -6,7 +6,6 @@ import com.alex.asset.security.repo.TokenRepo;
 import com.alex.asset.utils.DateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,7 @@ public class TokenService {
 
     public void deleteTokenByUser(User user) {
         log.info("Delete refresh token for user with email: {}", user.getEmail());
-        tokenRepo.deleteAllByUserId(user.getId());
+        tokenRepo.deleteAllByUser(user);
     }
 
     public Token getTokenById(UUID uuid){
@@ -31,7 +30,7 @@ public class TokenService {
 
     public Token createRefreshToken(User user){
         log.info("Create refresh token for user with email: {}", user.getEmail());
-        tokenRepo.deleteAllByUserId(user.getId());
+        tokenRepo.deleteAllByUser(user);
         Token token = new Token();
         token.setUser(user);
         token.setCreated(DateService.getDateNow());

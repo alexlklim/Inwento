@@ -10,7 +10,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "products",
@@ -32,10 +35,10 @@ public class Product {
     boolean active;
 
     @JsonIgnore @CreatedDate @Column(name = "created")
-    Date created;
+    LocalDateTime created;
 
     @JsonIgnore @LastModifiedDate @Column(name = "updated")
-    Date updated;
+    LocalDateTime updated;
 
     String title, description;
     Double price;
@@ -87,16 +90,16 @@ public class Product {
     String document;
 
     @Column(name = "document_date")
-    Date documentDate;
+    LocalDateTime documentDate;
 
     @Column(name = "warranty_period")
-    Date warrantyPeriod;
+    LocalDateTime warrantyPeriod;
 
     @Column(name = "inspection_date")
-    Date inspectionDate;
+    LocalDateTime inspectionDate;
 
-    @Column(name = "last_inventory")
-    Date lastInventoryDate;
+    @Column(name = "last_inventory_date")
+    LocalDateTime lastInventoryDate;
 
     // location
     Double longitude, latitude;

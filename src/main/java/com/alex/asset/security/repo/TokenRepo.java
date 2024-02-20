@@ -11,7 +11,8 @@ public interface TokenRepo extends JpaRepository<Token, UUID> {
 
   Optional<Token> findByIdAndUserId(UUID token, UUID userId);
 
-  void deleteAllByUserId(UUID userId);
+
+  void deleteAllByUser(User user);
 
 
 

@@ -13,11 +13,11 @@ public class DateService {
     }
 
     public static LocalDateTime addOneDayToDate(LocalDateTime dateTime) {
-        return dateTime.plusDays(1);
+        return dateTime.plusDays(5);
     }
 
     public static Date addFiveMinutesToDate(LocalDateTime dateTime) {
-        return convertToDate(dateTime.plusMinutes(5));
+        return convertToDate(dateTime.plusDays(5));
     }
 
 

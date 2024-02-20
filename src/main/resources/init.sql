@@ -21,21 +21,21 @@ VALUES('GRUNTY'),
 
 -- create default user with ROLE_ADMIN
 INSERT IGNORE INTO users (firstname, lastname, email, password, is_enabled, created, updated, roles)
-SELECT 'Alex', 'Klim', 'alex@google.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2',
+SELECT 'Alex', 'Klim', 'alex@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2',
        true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ADMIN'
-    WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'alex@google.com');
+    WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'alex@gmail.com');
 
 -- Insert a company into the companies table
 INSERT IGNORE INTO companies (active, created, updated, company, info, country, city, address,
                               secret_code, product_counter, owner_id)
 VALUES (true, NOW(), NOW(), 'Cyfore Sieci Multimedialne', 'Some information about the company',
         'Poland', 'Stalowa Wola', 'Kwiatkowskiego 1', UNHEX(REPLACE('e00b7c0e9a9044cf8db1f2cd9c80f3eb', '-', '')), 0,
-        (SELECT HEX(id) FROM users WHERE email = 'alex@google.com') );
+        (SELECT HEX(id) FROM users WHERE email = 'alex@gmail.com') );
 
 
 
 SET @company_name = 'Cyfore Sieci Multimedialne';
-SET @user_email = 'alex@google.com';
+SET @user_email = 'alex@gmail.com';
 SET @user_id = (SELECT id FROM users WHERE email = @user_email);
 SET @company_id = (SELECT id FROM companies WHERE company = @company_name);
 
@@ -155,7 +155,7 @@ VALUES
     (true, NOW(), NOW(), 'Tablica do pisania', 'It is a very good tabliza do pisania',5000.00,'INV123456', '12345678',  @user_id, @user_id, 'Tetiana Klimenko',
      1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id);
 
-select * from users;
+
 
 
 
