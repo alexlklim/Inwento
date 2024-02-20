@@ -2,8 +2,8 @@ package com.alex.asset.core.controller.company;
 
 import com.alex.asset.core.dto.FieldsDto;
 import com.alex.asset.core.dto.SimpleDto;
-import com.alex.asset.core.service.impl.CompanyService;
-import com.alex.asset.core.service.impl.FieldService;
+import com.alex.asset.core.service.CompanyService;
+import com.alex.asset.core.service.FieldService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

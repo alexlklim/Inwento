@@ -12,8 +12,10 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     Optional<Product> findByCode(String code);
     Optional<Product> findByInventoryNumber(String inventoryNumber);
 
-    List<Product> findByCompany(Company company);
+    List<Product> findByActiveTrueAndCompany(Company company);
     List<Product> findByLiable(UUID liable);
+
+    Optional<Product> findByActiveTrueAndIdAndCompany(Long id, Company company);
 
 
 }

@@ -4,6 +4,7 @@ import com.alex.asset.core.domain.fields.*;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -35,7 +37,6 @@ public class Product {
 
     @JsonIgnore @CreatedDate @Column(name = "created")
     LocalDateTime created;
-
     @JsonIgnore @LastModifiedDate @Column(name = "updated")
     LocalDateTime updated;
 
@@ -82,6 +83,7 @@ public class Product {
     @ManyToOne @JoinColumn(name = "branch_id")
     Branch branch;
 
+
     @ManyToOne @JoinColumn(name = "mpk_id")
     MPK mpk;
 
@@ -89,20 +91,21 @@ public class Product {
     String document;
 
     @Column(name = "document_date")
-    LocalDateTime documentDate;
+    LocalDate documentDate;
 
     @Column(name = "warranty_period")
-    LocalDateTime warrantyPeriod;
+    LocalDate warrantyPeriod;
 
     @Column(name = "inspection_date")
-    LocalDateTime inspectionDate;
+    LocalDate inspectionDate;
 
     @Column(name = "last_inventory_date")
-    LocalDateTime lastInventoryDate;
+    LocalDate lastInventoryDate;
 
     // location
     Double longitude, latitude;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "company_id")
     Company company;
 

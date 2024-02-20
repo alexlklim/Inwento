@@ -1,5 +1,6 @@
 package com.alex.asset.core.domain.fields;
 
+import com.alex.asset.core.domain.Company;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,10 +21,15 @@ public class Subtype {
 
     private String subtype;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private Type type;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     public Subtype(String subtype, Type type) {
         this.active = true;

@@ -1,4 +1,4 @@
-package com.alex.asset.core.service.impl;
+package com.alex.asset.core.service;
 
 
 import com.alex.asset.core.domain.Company;
@@ -36,5 +36,16 @@ public class TypeService {
         return typesMap;
 
 
+    }
+
+
+
+
+    public Type getType(String name, Company company){
+        return typeRepo.findByTypeAndCompany(name, company).orElse(null);
+    }
+
+    public Subtype getSubtype(String subtype, Type type, Company company){
+        return subtypeRepo.findBySubtypeAndTypeAndCompany(subtype, type, company).orElse(null);
     }
 }

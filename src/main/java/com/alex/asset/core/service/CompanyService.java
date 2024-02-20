@@ -1,4 +1,4 @@
-package com.alex.asset.core.service.impl;
+package com.alex.asset.core.service;
 
 
 import com.alex.asset.core.domain.Company;
@@ -7,7 +7,6 @@ import com.alex.asset.core.dto.EmployeeDto;
 import com.alex.asset.core.dto.FieldsDto;
 import com.alex.asset.core.mappers.CompanyMapper;
 import com.alex.asset.core.repo.CompanyRepo;
-import com.alex.asset.core.service.ConverterService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.security.config.jwt.UserService;
 import com.alex.asset.security.domain.User;

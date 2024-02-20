@@ -1,6 +1,7 @@
 package com.alex.asset.core.domain.fields;
 
 import com.alex.asset.core.domain.Company;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,9 @@ public class Producer {
     boolean active;
 
     private String producer;
-    @ManyToOne
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 

@@ -1,7 +1,7 @@
 package com.alex.asset.core.controller;
 
 import com.alex.asset.core.dto.CompanyDto;
-import com.alex.asset.core.service.impl.CompanyService;
+import com.alex.asset.core.service.CompanyService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

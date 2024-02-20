@@ -196,8 +196,10 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (asset_status_id) REFERENCES asset_statuses(id),
     FOREIGN KEY (kst_id) REFERENCES ksts(id),
     FOREIGN KEY (unit_id) REFERENCES units(id),
+
     FOREIGN KEY (type_id) REFERENCES types(id),
     FOREIGN KEY (subtype_id) REFERENCES subtypes(id),
+
     FOREIGN KEY (producer_id) REFERENCES producers(id),
     FOREIGN KEY (supplier_id) REFERENCES suppliers(id),
     FOREIGN KEY (branch_id) REFERENCES branches(id),

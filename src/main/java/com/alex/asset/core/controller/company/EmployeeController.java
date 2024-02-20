@@ -1,7 +1,7 @@
 package com.alex.asset.core.controller.company;
 
 import com.alex.asset.core.dto.EmployeeDto;
-import com.alex.asset.core.service.impl.CompanyService;
+import com.alex.asset.core.service.CompanyService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.security.config.jwt.UserService;
 import com.alex.asset.security.domain.dto.UserDtoShort;

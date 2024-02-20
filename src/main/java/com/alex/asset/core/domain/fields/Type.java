@@ -1,6 +1,7 @@
 package com.alex.asset.core.domain.fields;
 
 import com.alex.asset.core.domain.Company;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,9 @@ public class Type {
     @OneToMany(mappedBy = "type")
     private List<Subtype> subtypes = new ArrayList<>();
 
-    @ManyToOne
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 
