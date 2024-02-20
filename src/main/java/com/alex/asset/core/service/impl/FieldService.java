@@ -9,6 +9,7 @@ import com.alex.asset.core.domain.fields.Supplier;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
+import com.alex.asset.core.dto.SimpleDto;
 import com.alex.asset.core.repo.CompanyRepo;
 import com.alex.asset.core.repo.product.BranchRepo;
 import com.alex.asset.core.repo.product.MpkRepo;
@@ -236,4 +237,81 @@ public class FieldService {
     }
 
 
+    public boolean deleteBranch(SimpleDto dto, UUID comapnyUUID) {
+        log.info("Try to delete branch: {} for company {}", dto.getName(), comapnyUUID);
+        Company company = companyRepo.findById(comapnyUUID).orElse(null);
+        if (company == null) {
+            log.error("Company with id: {} not found", comapnyUUID);
+            return false;
+        }
+        Optional<Branch> optional = branchRepo.findByBranchAndCompany(dto.getName(), company);
+        if (optional.isPresent()){
+
+            Branch branch = optional.get();
+            branch.setActive(false);
+            log.info("Delete branch: {} for company {}", dto.getName(), company.getCompany());
+            branchRepo.save(branch);
+            return true;
+        }
+        log.info("Branch: {} not found", dto.getName());
+        return false;
+    }
+
+    public boolean deleteSupplier(SimpleDto dto, UUID comapnyUUID) {
+        log.info("Try to delete supplier: {} for company {}", dto.getName(), comapnyUUID);
+        Company company = companyRepo.findById(comapnyUUID).orElse(null);
+        if (company == null) {
+            log.error("Company with id: {} not found", comapnyUUID);
+            return false;
+        }
+        Optional<Supplier> optional = supplierRepo.findBySupplierAndCompany(dto.getName(), company);
+        if (optional.isPresent()){
+            Supplier entity = optional.get();
+            entity.setActive(false);
+            log.info("Delete supplier: {} for company {}", dto.getName(), company.getCompany());
+            supplierRepo.save(entity);
+            return true;
+        }
+        log.info("Supplier: {} not found", dto.getName());
+        return false;
+    }
+
+
+    public boolean deleteProducer(SimpleDto dto, UUID comapnyUUID) {
+        log.info("Try to delete producer: {} for company {}", dto.getName(), comapnyUUID);
+        Company company = companyRepo.findById(comapnyUUID).orElse(null);
+        if (company == null) {
+            log.error("Company with id: {} not found", comapnyUUID);
+            return false;
+        }
+        Optional<Producer> optional = producerRepo.findByProducerAndCompany(dto.getName(), company);
+        if (optional.isPresent()){
+            Producer entity = optional.get();
+            entity.setActive(false);
+            log.info("Delete producer: {} for company {}", dto.getName(), company.getCompany());
+            producerRepo.save(entity);
+            return true;
+        }
+        log.info("Producer: {} not found", dto.getName());
+        return false;
+    }
+
+    public boolean deleteMPK(SimpleDto dto, UUID comapnyUUID) {
+        log.info("Try to delete MPK: {} for company {}", dto.getName(), comapnyUUID);
+        Company company = companyRepo.findById(comapnyUUID).orElse(null);
+        if (company == null) {
+            log.error("Company with id: {} not found", comapnyUUID);
+            return false;
+        }
+        Optional<MPK> optional = mpkRepo.findByMpkAndCompany(dto.getName(), company);
+        if (optional.isPresent()){
+            MPK entity = optional.get();
+            entity.setActive(false);
+            log.info("Delete MPK: {} for company {}", dto.getName(), company.getCompany());
+            mpkRepo.save(entity);
+            return true;
+        }
+        log.info("MPK: {} not found", dto.getName());
+        return false;
+    }
 }

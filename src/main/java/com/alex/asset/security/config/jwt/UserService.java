@@ -15,7 +15,6 @@ import com.alex.asset.utils.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +37,9 @@ public class UserService {
 
     public boolean register(RegisterDto request) {
         log.info("Try to register user with email: {}", request.getEmail());
+        if (userRepo.existsByEmail(request.getEmail())){
+            return false;
+        }
         try {
             User user = User.builder()
                     .firstname(request.getFirstName())

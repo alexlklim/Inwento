@@ -1,6 +1,7 @@
 package com.alex.asset.core.controller.company;
 
 import com.alex.asset.core.dto.FieldsDto;
+import com.alex.asset.core.dto.SimpleDto;
 import com.alex.asset.core.service.impl.CompanyService;
 import com.alex.asset.core.service.impl.FieldService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
@@ -100,26 +101,38 @@ public class FieldsController {
 
 
 
-    @DeleteMapping("/branch/{name}")
+    @DeleteMapping("/branch")
     public ResponseEntity<HttpStatus> deleteBranch(
-            @PathVariable("name") String title, Authentication authentication) {
+            @RequestBody SimpleDto dto, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.deleteBranch(dto, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/mpk/{name}")
+    @DeleteMapping("/mpk")
     public ResponseEntity<HttpStatus> deleteMPK(
-            @PathVariable("name") String title, Authentication authentication) {
+            @RequestBody SimpleDto dto, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.deleteMPK(dto, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/producer/{name}")
+    @DeleteMapping("/producer")
     public ResponseEntity<HttpStatus> deleteProducer(
-            @PathVariable("name") String title, Authentication authentication) {
+            @RequestBody SimpleDto dto, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.deleteProducer(dto, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @DeleteMapping("/supplier/{name}")
+    @DeleteMapping("/supplier")
     public ResponseEntity<HttpStatus> deleteSupplier(
-            @PathVariable("name") String title, Authentication authentication) {
+            @RequestBody SimpleDto dto, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        boolean result = fieldService.deleteSupplier(dto, principal.getComapnyUUID());
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
