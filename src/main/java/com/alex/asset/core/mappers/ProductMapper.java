@@ -2,11 +2,6 @@ package com.alex.asset.core.mappers;
 
 import com.alex.asset.core.domain.Product;
 import com.alex.asset.core.dto.ProductDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class ProductMapper {
 
