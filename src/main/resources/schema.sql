@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS products (
     active BOOLEAN, created DATETIME, updated DATETIME,
     title VARCHAR(255), description TEXT,
     price DOUBLE,
-    inventory_number VARCHAR(255) UNIQUE , code VARCHAR(255) UNIQUE ,
+    inventory_number VARCHAR(255) , code VARCHAR(255) ,
     created_by BINARY(16), liable BINARY(16), receiver VARCHAR(255),
     asset_status_id BIGINT, kst_id BIGINT, unit_id BIGINT,
     type_id BIGINT, subtype_id BIGINT,

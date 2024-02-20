@@ -49,6 +49,13 @@ public class ProductService {
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
         if (company == null) return false;
+
+        if (productRepo.existsByInventoryNumberAndCompany(dto.getInventoryNumber(), company) ||
+        productRepo.existsByCodeAndCompany(dto.getCode(), company)){
+            log.error("Inventory number or code aren't unique");
+            return false;
+        }
+
         productRepo.save(productCreating(dto, company, principal.getUserUUID()));
 
         log.info("Product {} was added", dto.getTitle());
