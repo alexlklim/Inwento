@@ -22,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/core/company/emp")
 public class EmployeeController {
+    private final String TAG = "EMPLOYEE_CONTROLLER - ";
 
     private final UserService userService;
     private final CompanyService companyService;

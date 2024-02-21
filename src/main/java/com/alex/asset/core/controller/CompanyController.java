@@ -26,6 +26,7 @@ public class CompanyController {
     @GetMapping
     public ResponseEntity<CompanyDto> info(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.info(TAG + "try to get info about company {}", principal.getComapnyUUID());
         if (principal.getComapnyUUID() == null){
             log.error(TAG + "User: {} doesn't belong to any company", principal.getUserUUID());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -43,6 +44,7 @@ public class CompanyController {
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody CompanyDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.info(TAG + "try to create company {} by {}", dto.getCompany(), principal.getEmail());
         if (principal.getComapnyUUID() != null) {
             log.warn("User: {} already belong to company: {}", principal.getEmail(), principal.getComapnyUUID());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -58,6 +60,7 @@ public class CompanyController {
     public ResponseEntity<HttpStatus> update(
             @RequestBody CompanyDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.info(TAG + "try to update company {} by {}", dto.getCompany(), principal.getEmail());
         if (principal.getComapnyUUID() == null) {
             log.warn("User: {} doesnt belong to any company", principal.getEmail());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -76,6 +79,8 @@ public class CompanyController {
     @DeleteMapping
     public ResponseEntity<HttpStatus> makeInactive(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.info(TAG + "try to make inactive company {} by {}", principal.getComapnyUUID(), principal.getEmail());
+
         if (principal.getComapnyUUID() == null) {
             log.warn("User: {} doesnt belong to any company", principal.getEmail());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

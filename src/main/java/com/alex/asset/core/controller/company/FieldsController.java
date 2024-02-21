@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/core/company/fields")
 public class FieldsController {
+    private final String TAG = "FIELDS_CONTROLLER - ";
 
     private final CompanyService companyService;
 

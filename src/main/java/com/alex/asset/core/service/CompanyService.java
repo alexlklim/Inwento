@@ -23,6 +23,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
+    private final String TAG = "COMPANY_CONTROLLER - ";
 
     private final CompanyRepo companyRepo;
     private final UserService userService;
@@ -31,7 +32,7 @@ public class CompanyService {
 
 
     public CompanyDto getInfo(CustomPrincipal principal) {
-        log.info("Get information about company: {}  from user: {}", principal.getComapnyUUID(), principal.getEmail());
+        log.info(TAG + "Get information about company: {}  from user: {}", principal.getComapnyUUID(), principal.getEmail());
         Optional<Company> optionalCompany = companyRepo.findById(principal.getComapnyUUID());
         if (optionalCompany.isEmpty()) return null;
         Company company = optionalCompany.get();
@@ -44,7 +45,7 @@ public class CompanyService {
 
 
     public CompanyDto add(CompanyDto dto, CustomPrincipal principal) {
-        log.info("Creating company {} for client: {}", dto.getCompany(), principal.getEmail());
+        log.info(TAG + "Creating company {} for client: {}", dto.getCompany(), principal.getEmail());
         Company company = CompanyMapper.toEntity(dto);
         company.setOwnerId(principal.getUserUUID());
         Company companyFromDB = companyRepo.save(company);
@@ -53,10 +54,11 @@ public class CompanyService {
     }
 
     public CompanyDto update(CompanyDto dto, CustomPrincipal principal) {
+        log.info(TAG + "Updating company {} for client: {}", dto.getCompany(), principal.getEmail());
         User user = userService.getById(principal.getUserUUID());
         Optional<Company> optionalCompany = companyRepo.findByOwnerId(user.getId());
         if (optionalCompany.isEmpty()) {
-            log.error("User {} isn't the owner of any company", user.getEmail());
+            log.error(TAG + "User {} isn't the owner of any company", user.getEmail());
             return null;
         }
         Company updatedCompany = CompanyMapper.updateCompany(optionalCompany.get(), dto);
@@ -65,10 +67,11 @@ public class CompanyService {
     }
 
     public boolean makeInactive(CustomPrincipal principal) {
+        log.warn(TAG + "make inactive company {}", principal.getComapnyUUID());
         User user = userService.getById(principal.getUserUUID());
         Optional<Company> optionalCompany = companyRepo.findByOwnerId(user.getId());
         if (optionalCompany.isEmpty()) {
-            log.error("User {} isn't the owner of any company", user.getEmail());
+            log.error(TAG + "User {} isn't the owner of any company", user.getEmail());
             return false;
         }
         Company inactiveCompany = optionalCompany.get();
@@ -79,23 +82,31 @@ public class CompanyService {
 
 
     public void addUserToEmployee(EmployeeDto dto, CustomPrincipal principal) {
+        log.info(TAG + "add user {} to employee of company {}", dto.getEmail(), principal.getComapnyUUID());
         User user = userService.getById(dto.getId());
         // if user from dto not found return null
-        if (user == null) return;
+        if (user == null) {
+            log.error(TAG + "User is null");
+            return;
+        }
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
-        if (company == null) return;
+        if (company == null){
+            log.error(TAG + "Company is null");
+            return;
+        }
         // if user is active. email from user == email from dto, and user not belong to any company -> add user to emp
         if (user.isEnabled() && dto.getEmail().equals(user.getEmail()) && user.getCompanyUUID() == null) {
             user.setCompanyName(company.getCompany());
             user.setCompanyUUID(company.getId());
             userService.save(user);
-            log.info("User {} was added to company {} like employee", user.getEmail(), company.getCompany());
+            log.info(TAG + "User {} was added to company {} like employee", user.getEmail(), company.getCompany());
         }
     }
 
 
     public FieldsDto getAllFields(UUID companyUUID) {
+        log.info(TAG + "get all fields for company {}", companyUUID);
         Company company = companyRepo.findById(companyUUID).orElse(null);
         if (company == null) return null;
         return new FieldsDto().toBuilder()
@@ -113,6 +124,7 @@ public class CompanyService {
 
 
     private List<String> getListOfEmployee(UUID companyId) {
+        log.info(TAG + "get list of employee for company {}", companyUUID);
         List<String> employeeNames = new LinkedList<>();
         for (User user : userService.getByCompanyId(companyId)) {
             employeeNames.add(user.getFirstname() + " " + user.getLastname());

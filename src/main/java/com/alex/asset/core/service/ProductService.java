@@ -24,6 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final String TAG = "PRODUCT_CONTROLLER - ";
+
     private final ProductRepo productRepo;
     private final CompanyRepo companyRepo;
     private final  FieldService fieldService;
@@ -31,26 +33,31 @@ public class ProductService {
 
 
     public List<ProductDto> getAll(UUID comapnyUUID) {
+        log.info(TAG + "Try to get all Product and return ProductDto");
         Company company = companyRepo.findById(comapnyUUID).orElse(null);
         // if company doesn't exist return null
-        if (company == null) return null;
+        if (company == null) {
+            log.error(TAG + "Company is null");
+            return null;
+        }
         List<Product> products = productRepo.findByActiveTrueAndCompany(company);
         List<ProductDto> productDtos = new ArrayList<>();
 
         for (Product product: products){
             productDtos.add(ProductMapper.toDto(product));
-            log.info(product.toString());
         }
         return productDtos;
     }
 
 
     public Long add(CustomPrincipal principal) {
-        log.info("Create an empty new product for company {} by {}", principal.getComapnyUUID(), principal.getEmail());
+        log.info(TAG + "Create an empty new product for company {} by {}", principal.getComapnyUUID(), principal.getEmail());
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
-        if (company == null) return null;
-
+        if (company == null) {
+            log.error(TAG + "Company is null");
+            return null;
+        }
         Product product = new Product();
         product.setActive(true);
         product.setCreatedBy(principal.getUserUUID());
@@ -58,24 +65,33 @@ public class ProductService {
 
 
         Product productFromDB = productRepo.save(product);
-        log.info("Product with id {} was added", productFromDB.getId());
+        log.info(TAG + "Product with id {} was added", productFromDB.getId());
         return productFromDB.getId();
     }
     public ProductDto getProductById(Long id, CustomPrincipal principal) {
         log.info("Try to get  product with id: {}", id);
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
-        if (company == null) return null;
+        if (company == null) {
+            log.error(TAG + "Company is null");
+            return null;
+        }
         Product product = productRepo.findByActiveTrueAndIdAndCompany(id, company).orElse(null);
-        if (product == null) return null;
+        if (product == null) {
+                log.error(TAG + "Product is null with id: {}", id);
+            return null;
+        }
         return ProductMapper.toDto(product);
     }
 
     public boolean update(Long id, ProductDto dto, CustomPrincipal principal) {
-        log.info("Try to add update product {} to company {} by {}", dto.getTitle(), principal.getComapnyUUID(), principal.getEmail());
+        log.info(TAG + "Try to add update product {} to company {} by {}", dto.getTitle(), principal.getComapnyUUID(), principal.getEmail());
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
-        if (company == null) return false;
+        if (company == null) {
+
+            return false;
+        }
 
         Product productFromDb = productRepo.findByActiveTrueAndIdAndCompanyAndBarCode(id, company, dto.getBarCode()).orElse(null);
         if (productFromDb == null) return false;
@@ -93,7 +109,7 @@ public class ProductService {
 
 
     public boolean delete(Long id, CustomPrincipal principal) {
-        log.info("Try to delete product with id: {}",  id);
+        log.info(TAG + "Try to delete product with id: {}",  id);
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         if (company == null) return false;
         if (!productRepo.existsById(id)) return false;
@@ -104,6 +120,7 @@ public class ProductService {
     }
 
     private Product productCreating(ProductDto dto, Company company, UUID userUUID){
+        log.info(TAG + "Product creating process");
         Product product = ProductMapper.toEntity(dto);
         product.setCreatedBy(userUUID);
         product.setAssetStatus(fieldService.getAssetStatus(dto.getAssetStatus()));
