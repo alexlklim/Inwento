@@ -3,6 +3,8 @@ spring:
     url: jdbc:mysql://localhost:3306/asset_track
     username: root
     password: 1Qazimodo237!
+  jpa:
+    open-in-view: false
 
   sql:
     init:
