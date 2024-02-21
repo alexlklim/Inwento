@@ -1,6 +1,7 @@
 package com.alex.asset.core.controller;
 
 
+import com.alex.asset.core.domain.Product;
 import com.alex.asset.core.dto.ProductDto;
 import com.alex.asset.core.service.ProductService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
@@ -29,12 +30,11 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> add(
-            @RequestBody ProductDto dto, Authentication authentication) {
+    public ResponseEntity<Long> add(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        boolean result = productService.add(dto, principal);
-        if (!result)return new ResponseEntity<>(HttpStatus.CONFLICT);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Long id = productService.add(principal);
+        if (id == null)return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
 

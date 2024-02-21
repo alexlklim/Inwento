@@ -15,7 +15,6 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FieldsDto {
-    int productCounter;
     List<String> employees;
     List<String> units;
     List<String> ksts;

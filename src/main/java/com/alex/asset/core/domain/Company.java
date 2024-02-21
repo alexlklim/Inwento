@@ -55,9 +55,6 @@ public class Company {
     @Column(name = "secret_code")
     UUID secretCode;
 
-    @Column(name = "product_counter")
-    Integer productCounter;
-
     @Column(name = "owner_id")
     UUID ownerId;
 

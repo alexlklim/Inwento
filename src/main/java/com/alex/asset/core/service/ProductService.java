@@ -44,24 +44,41 @@ public class ProductService {
     }
 
 
-    public boolean add(ProductDto dto, CustomPrincipal principal) {
-        log.info("Try to add new product {} to company {} by {}", dto.getTitle(), principal.getComapnyUUID(), principal.getEmail());
+//    public boolean add(ProductDto dto, CustomPrincipal principal) {
+//        log.info("Try to add new product {} to company {} by {}", dto.getTitle(), principal.getComapnyUUID(), principal.getEmail());
+//        Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
+//        // if company doesn't exist return null
+//        if (company == null) return false;
+//
+//        if (productRepo.existsByInventoryNumberAndCompany(dto.getInventoryNumber(), company) ||
+//        productRepo.existsByCodeAndCompany(dto.getCode(), company)){
+//            log.error("Inventory number or code aren't unique");
+//            return false;
+//        }
+//
+//        productRepo.save(productCreating(dto, company, principal.getUserUUID()));
+//
+//        log.info("Product {} was added", dto.getTitle());
+//        return true;
+//    }
+
+
+    public Long add(CustomPrincipal principal) {
+        log.info("Create an empty new product for company {} by {}", principal.getComapnyUUID(), principal.getEmail());
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
-        if (company == null) return false;
+        if (company == null) return null;
 
-        if (productRepo.existsByInventoryNumberAndCompany(dto.getInventoryNumber(), company) ||
-        productRepo.existsByCodeAndCompany(dto.getCode(), company)){
-            log.error("Inventory number or code aren't unique");
-            return false;
-        }
+        Product product = new Product();
+        product.setActive(true);
+        product.setCreatedBy(principal.getUserUUID());
+        product.setCompany(company);
 
-        productRepo.save(productCreating(dto, company, principal.getUserUUID()));
 
-        log.info("Product {} was added", dto.getTitle());
-        return true;
+        Product productFromDB = productRepo.save(product);
+        log.info("Product with id {} was added", productFromDB.getId());
+        return productFromDB.getId();
     }
-
     public ProductDto getProductById(Long id, CustomPrincipal principal) {
         log.info("Try to get  product with id: {}", id);
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
@@ -79,6 +96,11 @@ public class ProductService {
         if (company == null) return false;
         Product productFromDb = productRepo.findByActiveTrueAndIdAndCompany(id, company).orElse(null);
         if (productFromDb == null) return false;
+        if (productRepo.existsByInventoryNumberAndCompany(dto.getInventoryNumber(), company) ||
+                productRepo.existsByCodeAndCompany(dto.getCode(), company)){
+            log.error("Inventory number or code aren't unique");
+            return false;
+        }
         Product product = productCreating(dto, company, principal.getUserUUID());
         product.setId(id);
         product.setCreated(productFromDb.getCreated());

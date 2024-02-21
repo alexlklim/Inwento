@@ -26,8 +26,7 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "products",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"code", "inventory_number"})})
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +34,19 @@ public class Product {
 
     boolean active;
 
-    @JsonIgnore @CreatedDate @Column(name = "created")
+    @CreatedDate @Column(name = "created")
     LocalDateTime created;
-    @JsonIgnore @LastModifiedDate @Column(name = "updated")
+    @LastModifiedDate @Column(name = "updated")
     LocalDateTime updated;
 
     String title, description;
     Double price;
 
     // qr, rfid, ean etc
-    @Column(name = "inventory_number")
+    @Column(name = "bar_code")
     String inventoryNumber;
+
+    @Column(name = "rfid_code")
     String code;
 
 

@@ -15,7 +15,6 @@ public class CompanyMapper {
         company.setCountry(dto.getCountry());
         company.setCity(dto.getCity());
         company.setAddress(dto.getAddress());
-        company.setProductCounter(1);
         company.setSecretCode(UUID.randomUUID());
         return company;
     }
@@ -28,7 +27,6 @@ public class CompanyMapper {
         dto.setCountry(entity.getCountry());
         dto.setCity(entity.getCity());
         dto.setAddress(entity.getAddress());
-        dto.setProductCounter(entity.getProductCounter());
         return dto;
     }
 

@@ -21,21 +21,21 @@ VALUES('GRUNTY'),
 
 -- create default user with ROLE_ADMIN
 INSERT IGNORE INTO users (firstname, lastname, email, password, is_enabled, created, updated, roles)
-SELECT 'Alex', 'Klim', 'alex@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2',
+SELECT 'Admin', 'Admin', 'admin@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2',
        true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'ADMIN'
-    WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'alex@gmail.com');
+    WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'admin@gmail.com');
 
 -- Insert a company into the companies table
 INSERT IGNORE INTO companies (active, created, updated, company, info, country, city, address,
-                              secret_code, product_counter, owner_id)
+                              secret_code, owner_id)
 VALUES (true, NOW(), NOW(), 'Cyfore Sieci Multimedialne', 'Some information about the company',
-        'Poland', 'Stalowa Wola', 'Kwiatkowskiego 1', UNHEX(REPLACE('e00b7c0e9a9044cf8db1f2cd9c80f3eb', '-', '')), 0,
-        (SELECT HEX(id) FROM users WHERE email = 'alex@gmail.com') );
+        'Poland', 'Stalowa Wola', 'Kwiatkowskiego 1', UNHEX(REPLACE('e00b7c0e9a9044cf8db1f2cd9c80f3eb', '-', '')),
+        (SELECT HEX(id) FROM users WHERE email = 'admin@gmail.com') );
 
 
 
 SET @company_name = 'Cyfore Sieci Multimedialne';
-SET @user_email = 'alex@gmail.com';
+SET @user_email = 'admin@gmail.com';
 SET @user_id = (SELECT id FROM users WHERE email = @user_email);
 SET @company_id = (SELECT id FROM companies WHERE company = @company_name);
 
@@ -138,7 +138,7 @@ VALUES
     (true, 'Shelving units', @company_id, @type5);
 
 
-INSERT IGNORE INTO products (active, created, updated,title, description, price,inventory_number, code,created_by, liable, receiver,
+INSERT IGNORE INTO products (active, created, updated,title, description, price, bar_code, rfid_code,created_by, liable, receiver,
                              asset_status_id, kst_id, unit_id, type_id, subtype_id,producer_id, supplier_id, branch_id, mpk_id,
                              document, document_date, warranty_period, inspection_date, last_inventory_date, longitude, latitude,company_id)
 VALUES

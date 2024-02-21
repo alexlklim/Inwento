@@ -108,7 +108,6 @@ public class CompanyService {
                 .suppliers(fieldService.getSupplierNames(company))
                 .producers(fieldService.getProducerNames(company))
                 .mpks(fieldService.getMPKNames(company))
-                .productCounter(company.getProductCounter())
                 .build();
     }
 

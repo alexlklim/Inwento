@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS companies (
     company VARCHAR(255) UNIQUE, info TEXT,
     country VARCHAR(255), city VARCHAR(255), address TEXT,
     secret_code BINARY(16) UNIQUE,
-    product_counter INT,
     owner_id BINARY(16)
 );
 
@@ -183,7 +182,7 @@ CREATE TABLE IF NOT EXISTS products (
     active BOOLEAN, created DATETIME, updated DATETIME,
     title VARCHAR(255), description TEXT,
     price DOUBLE,
-    inventory_number VARCHAR(255) , code VARCHAR(255) ,
+    bar_code VARCHAR(255) , rfid_code VARCHAR(255) ,
     created_by BINARY(16), liable BINARY(16), receiver VARCHAR(255),
     asset_status_id BIGINT, kst_id BIGINT, unit_id BIGINT,
     type_id BIGINT, subtype_id BIGINT,
@@ -206,11 +205,6 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (mpk_id) REFERENCES mpks(id),
     FOREIGN KEY (company_id) REFERENCES companies(id),
 
-    CONSTRAINT unique_per_inventory_number UNIQUE (company_id, inventory_number),
-    CONSTRAINT unique_per_code UNIQUE (company_id, code)
+    CONSTRAINT unique_per_inventory_number UNIQUE (company_id, bar_code),
+    CONSTRAINT unique_per_code UNIQUE (company_id, rfid_code)
 );
-
-
-
-
-select * from users;
