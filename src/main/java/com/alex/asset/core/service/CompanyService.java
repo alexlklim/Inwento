@@ -124,7 +124,7 @@ public class CompanyService {
 
 
     private List<String> getListOfEmployee(UUID companyId) {
-        log.info(TAG + "get list of employee for company {}", companyUUID);
+        log.info(TAG + "get list of employee for company {}", companyId);
         List<String> employeeNames = new LinkedList<>();
         for (User user : userService.getByCompanyId(companyId)) {
             employeeNames.add(user.getFirstname() + " " + user.getLastname());
