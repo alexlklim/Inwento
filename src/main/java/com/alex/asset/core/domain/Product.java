@@ -44,10 +44,10 @@ public class Product {
 
     // qr, rfid, ean etc
     @Column(name = "bar_code")
-    String inventoryNumber;
+    String barCode;
 
     @Column(name = "rfid_code")
-    String code;
+    String rfidCode;
 
 
     @Column(name = "created_by")

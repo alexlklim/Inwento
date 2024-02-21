@@ -11,10 +11,12 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     List<Product> findByActiveTrueAndCompany(Company company);
 
-    boolean existsByInventoryNumberAndCompany(String inventoryNumber, Company company);
-    boolean existsByCodeAndCompany(String code, Company company);
+    boolean existsByBarCodeAndCompany(String barCode, Company company);
+    boolean existsByRfidCodeAndCompany(String rfidCode, Company company);
 
     Optional<Product> findByActiveTrueAndIdAndCompany(Long id, Company company);
+
+    Optional<Product> findByActiveTrueAndIdAndCompanyAndBarCode(Long id, Company company, String barCode);
 
 
 }

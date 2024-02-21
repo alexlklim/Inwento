@@ -21,7 +21,7 @@ public class ProductDto {
     Long id;
     String title, description;
     Double price;
-    String inventoryNumber, code;
+    String barCode, rfidCode;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = "yyyy-MM-dd")

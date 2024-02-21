@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/company/type")
+@RequestMapping("/api/core/company/type")
 public class TypeController {
 
 

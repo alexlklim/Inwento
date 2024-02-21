@@ -39,28 +39,10 @@ public class ProductService {
 
         for (Product product: products){
             productDtos.add(ProductMapper.toDto(product));
+            log.info(product.toString());
         }
         return productDtos;
     }
-
-
-//    public boolean add(ProductDto dto, CustomPrincipal principal) {
-//        log.info("Try to add new product {} to company {} by {}", dto.getTitle(), principal.getComapnyUUID(), principal.getEmail());
-//        Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
-//        // if company doesn't exist return null
-//        if (company == null) return false;
-//
-//        if (productRepo.existsByInventoryNumberAndCompany(dto.getInventoryNumber(), company) ||
-//        productRepo.existsByCodeAndCompany(dto.getCode(), company)){
-//            log.error("Inventory number or code aren't unique");
-//            return false;
-//        }
-//
-//        productRepo.save(productCreating(dto, company, principal.getUserUUID()));
-//
-//        log.info("Product {} was added", dto.getTitle());
-//        return true;
-//    }
 
 
     public Long add(CustomPrincipal principal) {
@@ -94,13 +76,9 @@ public class ProductService {
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         // if company doesn't exist return null
         if (company == null) return false;
-        Product productFromDb = productRepo.findByActiveTrueAndIdAndCompany(id, company).orElse(null);
+
+        Product productFromDb = productRepo.findByActiveTrueAndIdAndCompanyAndBarCode(id, company, dto.getBarCode()).orElse(null);
         if (productFromDb == null) return false;
-        if (productRepo.existsByInventoryNumberAndCompany(dto.getInventoryNumber(), company) ||
-                productRepo.existsByCodeAndCompany(dto.getCode(), company)){
-            log.error("Inventory number or code aren't unique");
-            return false;
-        }
         Product product = productCreating(dto, company, principal.getUserUUID());
         product.setId(id);
         product.setCreated(productFromDb.getCreated());
@@ -108,6 +86,7 @@ public class ProductService {
         product.setCreatedBy(productFromDb.getCreatedBy());
         product.setLastInventoryDate(productFromDb.getLastInventoryDate());
         product.setCompany(productFromDb.getCompany());
+        product.setLastInventoryDate(productFromDb.getLastInventoryDate());
         productRepo.save(product);
         return true;
     }
