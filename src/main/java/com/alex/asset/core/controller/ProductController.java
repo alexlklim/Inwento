@@ -64,6 +64,16 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    public ResponseEntity<?> makeInactive(
+            @PathVariable("id") Long id, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.info(TAG + "delete product with id: {} for company {}", id, principal.getComapnyUUID());
+        boolean result = productService.makeInactive(id, principal);
+        if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/del/{id}")
     public ResponseEntity<?> delete(
             @PathVariable("id") Long id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();

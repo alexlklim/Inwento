@@ -59,7 +59,7 @@ public class ProductService {
             return null;
         }
         Product product = new Product();
-        product.setActive(true);
+        product.setActive(false);
         product.setCreatedBy(principal.getUserUUID());
         product.setCompany(company);
 
@@ -97,6 +97,7 @@ public class ProductService {
         if (productFromDb == null) return false;
         Product product = productCreating(dto, company, principal.getUserUUID());
         product.setId(id);
+        product.setActive(true);
         product.setCreated(productFromDb.getCreated());
         product.setUpdated(product.getUpdated());
         product.setCreatedBy(productFromDb.getCreatedBy());
@@ -108,8 +109,8 @@ public class ProductService {
     }
 
 
-    public boolean delete(Long id, CustomPrincipal principal) {
-        log.info(TAG + "Try to delete product with id: {}",  id);
+    public boolean makeInactive(Long id, CustomPrincipal principal) {
+        log.info(TAG + "Try to make inactive product with id: {}",  id);
         Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
         if (company == null) return false;
         if (!productRepo.existsById(id)) return false;
@@ -141,5 +142,18 @@ public class ProductService {
         product.setCompany(company);
         return product;
     }
+
+
+    public boolean delete(Long id, CustomPrincipal principal) {
+        log.info(TAG + "Try to delete product with id: {}",  id);
+        Company company = companyRepo.findById(principal.getComapnyUUID()).orElse(null);
+        if (company == null) return false;
+        if (!productRepo.existsById(id)) return false;
+        Product product = productRepo.findByActiveFalseAndIdAndCompany(id, company).orElse(null);
+        if (product == null) return false;
+        productRepo.delete(product);
+        return true;
+    }
+
 
 }

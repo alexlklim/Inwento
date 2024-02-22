@@ -19,4 +19,5 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     Optional<Product> findByActiveTrueAndIdAndCompanyAndBarCode(Long id, Company company, String barCode);
 
 
+    Optional<Product> findByActiveFalseAndIdAndCompany(Long id, Company company);
 }
