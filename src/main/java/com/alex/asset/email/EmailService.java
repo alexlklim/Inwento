@@ -10,8 +10,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -24,8 +26,9 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromMail;
 
-    @Value("${spring.mail.username}")
-    private String ps;
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
 
     public void accountWasCreated(User user) {
@@ -66,7 +69,6 @@ public class EmailService {
         simpleMailMessage.setSubject(mailStructure.getSubject());
         simpleMailMessage.setText(mailStructure.getMessage());
         mailSender.send(simpleMailMessage);
-
 
     }
 }
