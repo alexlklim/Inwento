@@ -6,16 +6,14 @@ import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class ConverterService {
-    private static final String TAG = "PRODUCT_CONTROLLER - ";
+    private static final String TAG = "CONVERTER_SERVICE - ";
 
 
 

@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final String TAG = "PRODUCT_CONTROLLER - ";
+    private final String TAG = "PRODUCT_SERVICE - ";
 
     private final ProductRepo productRepo;
     private final CompanyRepo companyRepo;

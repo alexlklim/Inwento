@@ -35,7 +35,7 @@ import java.util.UUID;
 @Transactional
 @RequiredArgsConstructor
 public class FieldService {
-    private final String TAG = "FIELD_CONTROLLER - ";
+    private final String TAG = "FIELD_SERVICE - ";
 
     private final BranchRepo branchRepo;
     private final SupplierRepo supplierRepo;

@@ -30,12 +30,6 @@ public class Company {
     boolean active;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "company_kst",
-            joinColumns = @JoinColumn(name = "company_id"),
-            inverseJoinColumns = @JoinColumn(name = "kst_id"))
-    private List<KST> ksts;
 
 
     @JsonIgnore
@@ -75,5 +69,10 @@ public class Company {
             inverseJoinColumns = @JoinColumn(name = "unit_id"))
     private List<Unit> units;
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "company_kst",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "kst_id"))
+    private List<KST> ksts;
 }

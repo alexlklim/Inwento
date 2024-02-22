@@ -15,6 +15,10 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class TypeService {
+
+    private final String TAG = "TYPE_SERVICE - ";
+
+
     private final TypeRepo typeRepo;
     private final SubtypeRepo subtypeRepo;
 
