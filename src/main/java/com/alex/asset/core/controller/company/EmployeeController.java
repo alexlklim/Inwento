@@ -31,8 +31,12 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAllEmployee(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.warn(TAG + "Try to get all employee");
         // if company id is not available return 404
-        if (principal.getComapnyUUID() == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (principal.getComapnyUUID() == null) {
+            log.warn(TAG + "User: {} doesnt belong to any company", principal.getEmail());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         List<EmployeeDto> list = userService.getEmployeeList(principal.getComapnyUUID());
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -42,9 +46,14 @@ public class EmployeeController {
     public ResponseEntity<?> getEmployeeById(
             @PathVariable("id") String id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.warn(TAG + "Try to get employee by id");
         // if company id is not available return NOT_FOUND
-        if (principal.getComapnyUUID() == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (principal.getComapnyUUID() == null) {
+            log.warn(TAG + "User: {} doesnt belong to any company", principal.getEmail());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         if (principal.getUserUUID().equals(UUID.fromString(id))) {
+            log.warn(TAG + "Current user: {} is the the employee", principal.getEmail());
             return new ResponseEntity<>(userService.getEmployeeMe(principal), HttpStatus.OK);
         }
         UserDtoShort userDto = userService.getEmployeeById(UUID.fromString(id), principal);
@@ -56,8 +65,12 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<?> addUserToEmployee(@RequestBody EmployeeDto dto, Authentication authentication){
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.warn(TAG + "Add user to employee by {} ", principal.getEmail());
         // if client doesn't have any company return 404
-        if (principal.getComapnyUUID() == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (principal.getComapnyUUID() == null) {
+            log.warn(TAG + "User: {} doesnt belong to any company", principal.getEmail());
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         companyService.addUserToEmployee(dto, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -68,16 +81,17 @@ public class EmployeeController {
     public ResponseEntity<HttpStatus> deleteEmpFromActiveEmp(
             @PathVariable("uuid") String id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        log.warn(TAG + "Try to delete user from active employee");
         if (principal.getUserUUID().equals(UUID.fromString(id))) {
-            log.error("User {} is owner of company {}", id, principal.getComapnyUUID());
+            log.error(TAG + "User {} is owner of company {}", id, principal.getComapnyUUID());
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
         boolean result = userService.deleteEmpFromActiveEmp(UUID.fromString(id), principal);
         if (!result){
-            log.error("Employee wasn't deleted from active employee");
+            log.error(TAG + "Employee wasn't deleted from active employee");
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
-        log.info("User {} was deleted from active employee of company: {}", id, principal.getComapnyUUID());
+        log.info(TAG + "User {} was deleted from active employee of company: {}", id, principal.getComapnyUUID());
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

@@ -14,9 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @RequiredArgsConstructor
 @EnableMethodSecurity
 public class EmailService {
-
-
-
     public void accountWasCreated(User user){
         log.info("account was created for user: {}", user.getEmail());
     }
@@ -24,7 +21,6 @@ public class EmailService {
     public void forgotPassword(String token){
         log.info("Someone try to get access to your account: " + token);
     }
-
 
     public void passwordWasChanged(String email) {
         log.info("Password was changed for user: " + email);
