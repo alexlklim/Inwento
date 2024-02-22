@@ -11,8 +11,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     List<Product> findByActiveTrueAndCompany(Company company);
 
-    boolean existsByBarCodeAndCompany(String barCode, Company company);
-    boolean existsByRfidCodeAndCompany(String rfidCode, Company company);
 
     Optional<Product> findByActiveTrueAndIdAndCompany(Long id, Company company);
 
