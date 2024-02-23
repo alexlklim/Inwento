@@ -13,13 +13,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.UUID;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UserService userService;
+    private final UserAuthService userAuthService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
@@ -28,12 +29,11 @@ public class AuthenticationService {
 
     public AuthDto authenticate(LoginDto request) {
         log.info("Try to authenticate user with email: {}", request.getEmail());
-        if (!userService.existsByEmail(request.getEmail())) {
+        if (!userAuthService.existsByEmail(request.getEmail())) {
             log.error("User with username {} doesnt exists", request.getEmail());
             return null;
         }
-        User user = userService.getByEmail(request.getEmail());
-        if (user == null) return null;
+        User user = userAuthService.getByEmail(request.getEmail());
         if (!user.isEnabled()) {
             log.error("User with username {} doesnt enabled", request.getEmail());
             return null;
@@ -57,21 +57,23 @@ public class AuthenticationService {
         Token refreshToken = tokenService.createRefreshToken(user);
 
         AuthDto authDto = new AuthDto();
-        authDto.setUserUUID(principal.getUserUUID());
+        authDto.setName(user.getFirstname() + " " + user.getLastname());
+
         authDto.setExpiresAt(tokenService.getTokenById(refreshToken.getId()).getExpired());
         authDto.setAccessToken(accessToken);
-        authDto.setRefreshToken(refreshToken.getId());
-        authDto.setRole(principal.getRoles());
+        authDto.setRefreshToken(refreshToken.getToken());
+        authDto.setRole(Collections.singletonList(user.getRoles().name()));
         return authDto;
     }
 
     public AuthDto refreshToken(TokenDto request) {
         log.info("Refresh access and refresh tokens for user: {}", request.getEmail());
-        User user = userService.getByEmail(request.getEmail());
+        User user = userAuthService.getByEmail(request.getEmail());
+
+        if (user == null) return null;
 
         // check if token belong to this user and not expired
         boolean result =  tokenService.checkIfTokenValid(request.getRefreshToken(), user);
-        System.out.printf("Token valid: " + result);
         if (!result) return null;
 
         // if token valid -> delete old tokens
@@ -85,9 +87,11 @@ public class AuthenticationService {
         // create new refresh token for this user
         // sent link to restore password with this token
         // return default message
-        User user = userService.getByEmail(email);
-
+        User user = userAuthService.getByEmail(email);
         if (user == null) return false;
+
+
+
         tokenService.deleteTokenByUser(user);
         emailService.forgotPassword(tokenService.createRefreshToken(user).getId().toString(), user.getEmail());
         return true;
@@ -95,11 +99,11 @@ public class AuthenticationService {
 
     public boolean recoveryPassword(String token, String password) {
         log.info("Recovery password for user with token: {}", token);
-        Token tokenFromDB = tokenService.getTokenById(UUID.fromString(token));
+        Token tokenFromDB = tokenService.getTokenByToken(UUID.fromString(token));
         if (tokenFromDB == null) return false;
-        User user = userService.getById(tokenFromDB.getUser().getId());
+        User user = userAuthService.getById(tokenFromDB.getUser().getId());
         tokenService.deleteTokenByUser(user);
-        userService.changePasswordForgot(user.getEmail(), password);
+        userAuthService.changePasswordForgot(user.getEmail(), password);
         return true;
     }
 }

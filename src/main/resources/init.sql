@@ -30,9 +30,7 @@ INSERT IGNORE INTO companies (active, created, updated, company, info, country, 
                               secret_code, owner_id)
 VALUES (true, NOW(), NOW(), 'Cyfore Sieci Multimedialne', 'Some information about the company',
         'Poland', 'Stalowa Wola', 'Kwiatkowskiego 1', UNHEX(REPLACE('e00b7c0e9a9044cf8db1f2cd9c80f3eb', '-', '')),
-        (SELECT HEX(id) FROM users WHERE email = 'admin@gmail.com') );
-
-
+        (SELECT id FROM users WHERE email = 'admin@gmail.com') );
 
 SET @company_name = 'Cyfore Sieci Multimedialne';
 SET @user_email = 'admin@gmail.com';
@@ -41,7 +39,7 @@ SET @company_id = (SELECT id FROM companies WHERE company = @company_name);
 
 
 UPDATE users
-SET company_name = @company_name, company_id = @company_id
+SET company_id = @company_id
 WHERE email = @user_email;
 
 
@@ -138,7 +136,7 @@ VALUES
     (true, 'Shelving units', @company_id, @type5);
 
 
-INSERT IGNORE INTO products (active, created, updated,title, description, price, bar_code, rfid_code,created_by, liable, receiver,
+INSERT IGNORE INTO products (active, created, updated,title, description, price, bar_code, rfid_code,created_by_id, liable_id, receiver,
                              asset_status_id, kst_id, unit_id, type_id, subtype_id,producer_id, supplier_id, branch_id, mpk_id,
                              document, document_date, warranty_period, inspection_date, last_inventory_date, longitude, latitude,company_id)
 VALUES

@@ -26,16 +26,8 @@ public class CompanyController {
     @GetMapping
     public ResponseEntity<CompanyDto> info(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "try to get info about company {}", principal.getComapnyUUID());
-        if (principal.getComapnyUUID() == null){
-            log.error(TAG + "User: {} doesn't belong to any company", principal.getUserUUID());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        log.info(TAG + "try to get info about company {}", principal.getCompanyId());
         CompanyDto dto = companyService.getInfo(principal);
-        if (dto == null) {
-            log.error(TAG + "Get info for company: {} failed", principal.getComapnyUUID());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -44,9 +36,9 @@ public class CompanyController {
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody CompanyDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "try to create company {} by {}", dto.getCompany(), principal.getEmail());
-        if (principal.getComapnyUUID() != null) {
-            log.warn("User: {} already belong to company: {}", principal.getEmail(), principal.getComapnyUUID());
+        log.info(TAG + "try to create company {} by {}", dto.getCompany(), principal.getName());
+        if (principal.getCompanyId() != null) {
+            log.warn("User: {} already belong to company: {}", principal.getName(), principal.getCompanyId());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         CompanyDto companyDto = companyService.add(dto, principal);
@@ -60,17 +52,14 @@ public class CompanyController {
     public ResponseEntity<HttpStatus> update(
             @RequestBody CompanyDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "try to update company {} by {}", dto.getCompany(), principal.getEmail());
-        if (principal.getComapnyUUID() == null) {
-            log.warn("User: {} doesnt belong to any company", principal.getEmail());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        log.info(TAG + "try to update company {} by {}", dto.getCompany(), principal.getName());
+
         CompanyDto companyDto = companyService.update(dto, principal);
         if (companyDto == null) {
-            log.warn(TAG + "User: {} isn't owner of any company:", principal.getEmail());
+            log.warn(TAG + "User: {} isn't owner of any company:", principal.getName());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        log.error(TAG + "Company: '{}' was updated by its owner {}", companyDto.getCompany(), principal.getEmail());
+        log.error(TAG + "Company: '{}' was updated by its owner {}", companyDto.getCompany(), principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -79,17 +68,13 @@ public class CompanyController {
     @DeleteMapping
     public ResponseEntity<HttpStatus> makeInactive(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "try to make inactive company {} by {}", principal.getComapnyUUID(), principal.getEmail());
+        log.info(TAG + "try to make inactive company {} by {}", principal.getCompanyId(), principal.getName());
 
-        if (principal.getComapnyUUID() == null) {
-            log.warn("User: {} doesnt belong to any company", principal.getEmail());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         if (!companyService.makeInactive(principal)) {
-            log.warn(TAG + "User: {} isn't owner of any company:", principal.getEmail());
+            log.warn(TAG + "User: {} isn't owner of any company:", principal.getName());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        log.error(TAG + "Company {} was inactive with owner {}", principal.getComapnyUUID(), principal.getEmail());
+        log.error(TAG + "Company {} was inactive with owner {}", principal.getCompanyId(), principal.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

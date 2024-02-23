@@ -5,6 +5,7 @@ import com.alex.asset.core.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
@@ -14,8 +15,16 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     Optional<Product> findByActiveTrueAndIdAndCompany(Long id, Company company);
 
-    Optional<Product> findByActiveTrueAndIdAndCompanyAndBarCode(Long id, Company company, String barCode);
 
 
     Optional<Product> findByActiveFalseAndIdAndCompany(Long id, Company company);
+
+
+    boolean existsByBarCodeOrRfidCode(String barCode, String rfidCode);
+
+
+
+    List<Product> findByTitleContainingIgnoreCase(String title);
+
+    Optional<Product> findByIdAndCompany(Long id, Company company);
 }

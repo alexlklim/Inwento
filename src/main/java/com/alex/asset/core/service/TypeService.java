@@ -25,7 +25,7 @@ public class TypeService {
     private final CompanyRepo companyRepo;
 
 
-    public Map<String, List<String>> getTypesMap(UUID companyId){
+    public Map<String, List<String>> getTypesMap(Long companyId){
         Map<String, List<String>> typesMap = new HashMap<>();
         Company company = companyRepo.findById(companyId).orElse(null);
         List<Type> types = typeRepo.findByActiveTrueAndCompany(company);

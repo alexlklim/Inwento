@@ -26,6 +26,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UserAuthService userAuthService;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -52,12 +53,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(jwt, userDetails)) {
-                    User user = userService.getByEmail(userEmail);
+                    User user = userAuthService.getByEmail(userEmail);
                     if (user.isEnabled()){
                         CustomPrincipal principal = new CustomPrincipal(user);
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 principal, null,
-                                principal.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                                Stream.of(user.getRoles().name())
+                                        .map(SimpleGrantedAuthority::new)
+                                        .collect(Collectors.toList()));
                         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }

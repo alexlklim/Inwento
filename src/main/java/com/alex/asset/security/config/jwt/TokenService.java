@@ -24,8 +24,8 @@ public class TokenService {
         tokenRepo.deleteAllByUser(user);
     }
 
-    public Token getTokenById(UUID uuid){
-        return tokenRepo.findById(uuid).orElse(null);
+    public Token getTokenById(Long tokenID){
+        return tokenRepo.findById(tokenID).orElse(null);
     }
 
     public Token createRefreshToken(User user){
@@ -33,23 +33,26 @@ public class TokenService {
         tokenRepo.deleteAllByUser(user);
         Token token = new Token();
         token.setUser(user);
+        token.setToken(UUID.randomUUID());
         token.setCreated(DateService.getDateNow());
         token.setExpired(DateService.addOneDayToDate(DateService.getDateNow()));
         return tokenRepo.save(token);
     }
 
 
-    public boolean checkIfTokenValid(UUID id, User user) {
+    public boolean checkIfTokenValid(UUID refreshToken, User user) {
         log.info("Check if token belong to user: {} and not expired", user.getEmail());
-        Optional<Token> optionalToken = tokenRepo.findByIdAndUserId(id, user.getId());
+        Optional<Token> optionalToken = tokenRepo.findByUserAndToken(user, refreshToken);
 
-        LocalDateTime currentTime = LocalDateTime.now();
         if (optionalToken.isEmpty()) return false;
 
-        log.warn(currentTime +" : " + optionalToken.get().getExpired());
+        // check if token expired
         Token token = optionalToken.get();
-        return token.getExpired() != null && token.getExpired().isBefore(currentTime);
+        return token.getExpired() != null && token.getExpired().isBefore(LocalDateTime.now());
     }
 
 
+    public Token getTokenByToken(UUID refreshToken) {
+        return tokenRepo.findByToken(refreshToken);
+    }
 }

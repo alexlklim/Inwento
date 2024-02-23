@@ -1,5 +1,6 @@
 package com.alex.asset.security.domain;
 
+import com.alex.asset.core.domain.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,16 +26,11 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     String firstname, lastname;
 
-    @Column(name = "company_id")
-    UUID companyUUID;
-
-    @Column(name = "company_name")
-    String companyName;
 
     @Column(unique = true)
     String email;
@@ -43,12 +39,14 @@ public class User implements UserDetails {
 
     @Column(name = "is_enabled")
     boolean isEnabled;
-
     @CreatedDate
     private LocalDateTime created;
-
     @LastModifiedDate
     private LocalDateTime updated;
+
+
+    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "company_id")
+    private Company company;
 
     @Enumerated(EnumType.STRING)
     private Role roles;

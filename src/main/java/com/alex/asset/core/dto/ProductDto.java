@@ -33,9 +33,9 @@ public class ProductDto {
 
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    UUID createdBy;
+    String createdByName;
 
-    UUID liableUUID;
+    String liableName;
     String receiver;
     String unit, kst, assetStatus;
     String typeName, subtypeName, producerName, supplierName, branchName, mpkName;

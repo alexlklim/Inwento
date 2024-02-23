@@ -23,7 +23,7 @@ public class ProductMapper {
         product.setBarCode(dto.getBarCode());
         product.setRfidCode(dto.getRfidCode());
 
-        product.setLiable(dto.getLiableUUID());
+//        product.setLiable(dto.getLiableUUID());
         product.setReceiver(dto.getReceiver());
 
 
@@ -52,8 +52,8 @@ public class ProductMapper {
         dto.setCreated(entity.getCreated().toLocalDate());
         dto.setUpdated(entity.getUpdated().toLocalDate());
 
-        dto.setCreatedBy(entity.getCreatedBy());
-        dto.setLiableUUID(entity.getLiable());
+        dto.setCreatedByName(entity.getCreatedBy().getFirstname());
+        dto.setLiableName(entity.getLiable().getFirstname());
         dto.setReceiver(entity.getReceiver());
 
         setField(entity.getUnit(), dto::setUnit, Unit::getUnit);

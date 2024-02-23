@@ -2,6 +2,8 @@ package com.alex.asset.core.controller;
 
 
 import com.alex.asset.core.dto.ProductDto;
+import com.alex.asset.core.dto.ShortProduct;
+import com.alex.asset.core.dto.Dto;
 import com.alex.asset.core.service.ProductService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -24,20 +26,20 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAll(Authentication authentication) {
+    public ResponseEntity<List<ProductDto>> getAllByCompany(Authentication authentication) {
+        log.info(TAG + "get all products for company");
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "get all products for company {}", principal.getComapnyUUID());
-        List<ProductDto> products = productService.getAll(principal.getComapnyUUID());
+        List<ProductDto> products = productService.getAllByCompany(principal.getCompanyId());
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Long> add(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "add empty product for company {}", principal.getComapnyUUID());
-        Long id = productService.add(principal);
-        if (id == null)return new ResponseEntity<>(HttpStatus.CONFLICT);
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        log.info(TAG + "add empty product {}", principal);
+        return new ResponseEntity<>(
+                productService.addEmptyForCompany(principal.getCompanyId(), principal.getUserId()),
+                HttpStatus.OK);
     }
 
 
@@ -46,8 +48,8 @@ public class ProductController {
     public ResponseEntity<ProductDto> getById(
             @PathVariable("id") Long id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "get productby id {} for company {}", id, principal.getComapnyUUID());
-        ProductDto dto = productService.getProductById(id, principal);
+
+        ProductDto dto = productService.getProductByCompanyAndId(principal.getCompanyId(), id);
         if (dto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -56,7 +58,6 @@ public class ProductController {
     public ResponseEntity<?> update(
             @PathVariable("id") Long id, @RequestBody ProductDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "update product with id: {} for company {}", id, principal.getComapnyUUID());
 
         boolean result = productService.update(id, dto, principal);
         if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -67,7 +68,6 @@ public class ProductController {
     public ResponseEntity<?> makeInactive(
             @PathVariable("id") Long id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "delete product with id: {} for company {}", id, principal.getComapnyUUID());
         boolean result = productService.makeInactive(id, principal);
         if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -77,7 +77,6 @@ public class ProductController {
     public ResponseEntity<?> delete(
             @PathVariable("id") Long id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "delete product with id: {} for company {}", id, principal.getComapnyUUID());
         boolean result = productService.delete(id, principal);
         if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -85,5 +84,13 @@ public class ProductController {
 
 
 
+
+    @GetMapping("/filter/title")
+    public ResponseEntity<List<ShortProduct>> getProductsByTitle(
+            @RequestBody Dto dto, Authentication authentication){
+        System.out.println(authentication);
+
+        return new ResponseEntity<>(productService.getProductsByTitle(dto.getName()), HttpStatus.OK);
+    }
 
 }

@@ -9,7 +9,7 @@ import com.alex.asset.core.domain.fields.Supplier;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
-import com.alex.asset.core.dto.SimpleDto;
+import com.alex.asset.core.dto.Dto;
 import com.alex.asset.core.repo.CompanyRepo;
 import com.alex.asset.core.repo.product.BranchRepo;
 import com.alex.asset.core.repo.product.MpkRepo;
@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Slf4j
@@ -104,11 +103,11 @@ public class FieldService {
 
 
     @Modifying
-    public boolean updateKst(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to update kst: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
+    public boolean updateKst(List<String> list, Long companyID) {
+        log.info(TAG + "Try to update kst: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
         if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
+            log.error(TAG + "Company with id: {} not found", companyID);
             return false;
         }
         List<KST> ksts = company.getKsts();
@@ -118,26 +117,19 @@ public class FieldService {
     }
 
 
-    public boolean updateAssetStatuses(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to update asset status: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean updateAssetStatuses(List<String> list, Long companyID) {
+        log.info(TAG + "Try to update asset status: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
         List<AssetStatus> assetStatus = company.getAssetStatus();
         assetStatus.removeIf(status -> !list.contains(status.getAssetStatus()));
         companyRepo.save(company);
         return true;
     }
 
-    public boolean updateUnits(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to update units: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean updateUnits(List<String> list, Long companyID) {
+        log.info(TAG + "Try to update units: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
+
         List<Unit> units = company.getUnits();
         units.removeIf(unit -> !list.contains(unit.getUnit()));
         companyRepo.save(company);
@@ -147,22 +139,16 @@ public class FieldService {
 
 
 
-    public boolean addBranches(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to add Branches: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean addBranches(List<String> list, Long companyID) {
+        log.info(TAG + "Try to add Branches: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
         for (String name: list){
             Optional<Branch> optional =  branchRepo.findByBranchAndCompany(name, company);
             if (optional.isEmpty()){
-                log.info(TAG + "Adding mpk {} to company {}", name, company.getCompany());
                 Branch entity = new Branch(name, company);
                 branchRepo.save(entity);
             } else {
                 if (!optional.get().isActive()){
-                    log.info(TAG + "Make active branch {} for company {}", name, company.getCompany());
                     Branch entity = optional.get();
                     entity.setActive(true);
                     branchRepo.save(entity);
@@ -172,17 +158,12 @@ public class FieldService {
         return  true;
     }
 
-    public boolean addMPKs(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to add MPKS: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean addMPKs(List<String> list, Long companyID) {
+        log.info(TAG + "Try to add MPKS: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
         for (String name: list){
             Optional<MPK> optionalMPK =  mpkRepo.findByMpkAndCompany(name, company);
             if (optionalMPK.isEmpty()){
-                log.info(TAG + "Adding mpk {} to company {}", name, company.getCompany());
                 MPK mpk = new MPK(name, company);
                 mpkRepo.save(mpk);
             } else {
@@ -198,13 +179,9 @@ public class FieldService {
 
 
 
-    public boolean addSuppliers(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to add Suppliers: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean addSuppliers(List<String> list, Long companyID) {
+        log.info(TAG + "Try to add Suppliers: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
         for (String name: list){
             Optional<Supplier> optional =  supplierRepo.findBySupplierAndCompany(name, company);
             if (optional.isEmpty()){
@@ -223,13 +200,9 @@ public class FieldService {
         return  true;
     }
 
-    public boolean addProducers(List<String> list, UUID comapnyUUID) {
-        log.info(TAG + "Try to add Producers: {} for company {}", list, comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean addProducers(List<String> list, Long companyID) {
+        log.info(TAG + "Try to add Producers: {} for company {}", list, companyID);
+        Company company = companyRepo.getCompany(companyID);
         for (String name: list){
             Optional<Producer> optional =  producerRepo.findByProducerAndCompany(name, company);
             if (optional.isEmpty()){
@@ -249,19 +222,15 @@ public class FieldService {
     }
 
 
-    public boolean deleteBranch(SimpleDto dto, UUID comapnyUUID) {
-        log.info(TAG + "Try to delete branch: {} for company {}", dto.getName(), comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean deleteBranch(Dto dto, Long companyID) {
+        log.info(TAG + "Try to delete branch: {} for company {}", dto.getName(), companyID);
+        Company company = companyRepo.getCompany(companyID);
+
         Optional<Branch> optional = branchRepo.findByBranchAndCompany(dto.getName(), company);
         if (optional.isPresent()){
 
             Branch branch = optional.get();
             branch.setActive(false);
-            log.info(TAG + "Delete branch: {} for company {}", dto.getName(), company.getCompany());
             branchRepo.save(branch);
             return true;
         }
@@ -269,13 +238,9 @@ public class FieldService {
         return false;
     }
 
-    public boolean deleteSupplier(SimpleDto dto, UUID comapnyUUID) {
-        log.info(TAG + "Try to delete supplier: {} for company {}", dto.getName(), comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean deleteSupplier(Dto dto, Long companyID) {
+        log.info(TAG + "Try to delete supplier: {} for company {}", dto.getName(), companyID);
+        Company company = companyRepo.getCompany(companyID);
         Optional<Supplier> optional = supplierRepo.findBySupplierAndCompany(dto.getName(), company);
         if (optional.isPresent()){
             Supplier entity = optional.get();
@@ -289,13 +254,9 @@ public class FieldService {
     }
 
 
-    public boolean deleteProducer(SimpleDto dto, UUID comapnyUUID) {
-        log.info(TAG + "Try to delete producer: {} for company {}", dto.getName(), comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean deleteProducer(Dto dto, Long companyID) {
+        log.info(TAG + "Try to delete producer: {} for company {}", dto.getName(), companyID);
+        Company company = companyRepo.getCompany(companyID);
         Optional<Producer> optional = producerRepo.findByProducerAndCompany(dto.getName(), company);
         if (optional.isPresent()){
             Producer entity = optional.get();
@@ -308,13 +269,10 @@ public class FieldService {
         return false;
     }
 
-    public boolean deleteMPK(SimpleDto dto, UUID comapnyUUID) {
-        log.info(TAG + "Try to delete MPK: {} for company {}", dto.getName(), comapnyUUID);
-        Company company = companyRepo.findById(comapnyUUID).orElse(null);
-        if (company == null) {
-            log.error(TAG + "Company with id: {} not found", comapnyUUID);
-            return false;
-        }
+    public boolean deleteMPK(Dto dto, Long companyID) {
+        log.info(TAG + "Try to delete MPK: {} for company {}", dto.getName(), companyID);
+        Company company = companyRepo.getCompany(companyID);
+
         Optional<MPK> optional = mpkRepo.findByMpkAndCompany(dto.getName(), company);
         if (optional.isPresent()){
             MPK entity = optional.get();

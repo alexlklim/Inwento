@@ -6,17 +6,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class EmployeeDto {
-    UUID id;
+    Long id;
     String email;
     String name;
 
-    public EmployeeDto(UUID id ,String email, String name) {
+    public EmployeeDto(Long id , String email, String name) {
         this.id = id;
         this.email = email;
         this.name = name;

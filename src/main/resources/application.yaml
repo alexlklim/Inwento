@@ -20,9 +20,10 @@ spring:
     password: ubum fcfe xntw xcxq
     properties:
       mail:
-        smpt:
+        smtp:
           auth: true
-          starttls: true
+          starttls:
+            enable: true
 
 server:
   port: 9091

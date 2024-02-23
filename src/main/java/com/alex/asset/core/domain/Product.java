@@ -4,6 +4,7 @@ import com.alex.asset.core.domain.fields.*;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
+import com.alex.asset.security.domain.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -50,9 +51,13 @@ public class Product {
     String rfidCode;
 
 
-    @Column(name = "created_by")
-    UUID createdBy;
-    UUID liable;
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    User createdBy;
+
+    @ManyToOne @JoinColumn(name = "liable_id")
+    User liable;
+
     String receiver;
 
     @ManyToOne @JoinColumn(name = "asset_status_id")

@@ -18,7 +18,7 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    UUID uuid;
+    Long id;
     String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
@@ -26,7 +26,7 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String companyName;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    UUID companyId;
+    Long companyId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     boolean enabled;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY) @JsonFormat(pattern = "yyyy-MM-dd")

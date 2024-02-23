@@ -2,8 +2,10 @@ package com.alex.asset.email;
 
 
 import com.alex.asset.security.domain.User;
+import com.alex.asset.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,6 +28,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromMail;
 
+    @Autowired
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -37,7 +40,8 @@ public class EmailService {
         mail.setEmail(user.getEmail());
         mail.setSubject("Asset Track Pro");
         mail.setMessage("For " + user.getFirstname() + " " + user.getLastname() +
-                " account was created. Please login using this link  \n https://asset.track.pro/login");
+                " account was created in Inventory System. Please login using this link  \n" +
+                Utils.ENDPOINT_LOGIN);
         sendMail(mail);
 
     }
@@ -48,7 +52,8 @@ public class EmailService {
         MailStructure mail = new MailStructure();
         mail.setEmail(email);
         mail.setSubject("Asset Track Pro");
-        mail.setMessage("Link to restore password  https://asset.track.pro/auth/password/" + token);
+        mail.setMessage("Link to restore password  \n" +
+                Utils.ENDPOINT_RECOVERY + token);
         sendMail(mail);
     }
 

@@ -2,7 +2,7 @@ package com.alex.asset.security.controller;
 
 import com.alex.asset.security.config.jwt.AuthenticationService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
-import com.alex.asset.security.config.jwt.UserService;
+import com.alex.asset.security.config.jwt.UserAuthService;
 import com.alex.asset.security.domain.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +22,15 @@ public class AuthenticationController {
     private final String TAG = "AUTHENTICATION_CONTROLLER - ";
 
 
-    private final UserService userService;
+
+
+    private final UserAuthService userAuthService;
     private final AuthenticationService authenticationService;
 
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody RegisterDto request) {
-        boolean registerResult = userService.register(request);
+        boolean registerResult = userAuthService.register(request);
         if (!registerResult) {
             log.error(TAG + "Registration for user {} failed", request.getEmail());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -66,13 +68,15 @@ public class AuthenticationController {
     @PostMapping("/pw/change")
     public ResponseEntity<AuthDto> changePassword(@RequestBody PasswordDto request) {
         CustomPrincipal principal = (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean result = userService.changePassword(request, principal);
+        boolean result = userAuthService.changePassword(request, principal);
         if (!result) {
-            log.error(TAG + "Change password action for user {} failed", principal.getEmail());
+            log.error(TAG + "Change password action for user {} failed", principal.getName());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    // request which send email with the link with token to recovery password
     @PostMapping("/pw/forgot")
     public ResponseEntity<String> forgotPassword(String email) {
         // send link to restore account to email
@@ -81,6 +85,10 @@ public class AuthenticationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    // request to change password
+    // after user click link, front needs to open form to recovery password, get token from link
+    // ask user to write new password and sent token and new password to server
     @PostMapping("/pw/recovery/{token}")
     public ResponseEntity<?> recoveryPassword(
             @PathVariable("token") String token,
@@ -95,7 +103,12 @@ public class AuthenticationController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomPrincipal> info(Authentication authentication) {
+        System.out.println(authentication);
+
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+
+        System.out.println(authentication.getAuthorities());
+        System.out.println(principal);
         return new ResponseEntity<>(principal, HttpStatus.OK);
     }
 }

@@ -36,7 +36,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req
                                 .requestMatchers(Utils.PUBLIC_ROUTES).permitAll()
-                                .requestMatchers("/api/core/company").hasAuthority("CLIENT")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

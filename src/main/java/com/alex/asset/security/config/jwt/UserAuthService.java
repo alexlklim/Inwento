@@ -1,16 +1,11 @@
 package com.alex.asset.security.config.jwt;
 
-import com.alex.asset.core.domain.Company;
-import com.alex.asset.core.dto.EmployeeDto;
 import com.alex.asset.email.EmailService;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.dto.PasswordDto;
 import com.alex.asset.security.domain.dto.RegisterDto;
-import com.alex.asset.security.domain.dto.UserDto;
-import com.alex.asset.security.domain.dto.UserDtoShort;
-import com.alex.asset.security.mapper.UserMapper;
-import com.alex.asset.security.repo.UserRepository;
+import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +14,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserService {
+public class UserAuthService {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository repository;
-    private final UserRepository userRepo;
+    private final UserRepo userRepo;
     private final EmailService emailService;
 
 
@@ -63,12 +53,12 @@ public class UserService {
 
 
     public boolean changePassword(PasswordDto dto, CustomPrincipal principal) {
-        log.info("Try to change password for user with email: {}", principal.getEmail());
-        User user = userRepo.findByEmail(principal.getEmail()).orElse(null);
+        log.info("Try to change password for user with email: {}", principal.getName());
+        User user = userRepo.findByEmail(principal.getName()).orElse(null);
         assert user != null;
         if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) return false;
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-        repository.save(user);
+        userRepo.save(user);
         return true;
     }
 
@@ -78,7 +68,7 @@ public class UserService {
         User user = userRepo.findByEmail(email).orElse(null);
         if (user == null) return;
         user.setPassword(passwordEncoder.encode(password));
-        repository.save(user);
+        userRepo.save(user);
         emailService.passwordWasChanged(user.getEmail());
     }
 
@@ -86,68 +76,17 @@ public class UserService {
 
 
     public boolean existsByEmail(String email){
-        return repository.existsByEmail(email);
+        return userRepo.existsByEmail(email);
     }
 
     public User getByEmail(String email) {
         return userRepo.findByEmail(email).orElse(null);
     }
 
-    public User getById(UUID userId) {
+    public User getById(Long userId) {
         return userRepo.findById(userId).orElse(null);
         }
 
-    public List<User> getByCompanyId(UUID id) {
-        return userRepo.findByCompanyUUID(id);
-    }
 
-    public void updateInfoAboutCompany(Company company, CustomPrincipal principal) {
-        log.info("Information about company for user: {} was updated", principal.getEmail());
-        User user = getById(principal.getUserUUID());
-        user.setCompanyUUID(company.getId());
-        user.setCompanyName(company.getCompany());
-        userRepo.save(user);
-    }
 
-    public List<EmployeeDto> getEmployeeList(UUID comapnyUUID) {
-        List<EmployeeDto> list = new ArrayList<>();
-        for (User user: getByCompanyId(comapnyUUID)){
-            if (user.isEnabled()){
-                String name = user.getFirstname() + " " + user.getLastname();
-                list.add(new EmployeeDto(user.getId(), user.getEmail(), name));
-            }
-        }
-        return list;
-
-    }
-
-    public UserDtoShort getEmployeeById(UUID id, CustomPrincipal principal) {
-        User user = userRepo.findById(id).orElse(null);
-        if (user == null) return null;
-        if (!user.getCompanyUUID().equals(principal.getComapnyUUID())) return null;
-        return UserMapper.toShortDto(user);
-    }
-
-    public UserDto getEmployeeMe(CustomPrincipal principal) {
-        User user = userRepo.findById(principal.getUserUUID()).orElse(null);
-        if (user == null) return null;
-        return UserMapper.toDto(user);
-    }
-
-    public void save(User user) {
-        userRepo.save(user);
-    }
-
-    @Transactional
-    public boolean deleteEmpFromActiveEmp(UUID id, CustomPrincipal principal) {
-        User user = userRepo.findById(id).orElse(null);
-        if (user == null) return false;
-        if (principal.getComapnyUUID().equals(user.getCompanyUUID())){
-            user.setCompanyName(null);
-            user.setCompanyUUID(null);
-            userRepo.save(user);
-            return true;
-        }
-        return false;
-    }
 }

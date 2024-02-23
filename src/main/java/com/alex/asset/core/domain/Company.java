@@ -3,6 +3,7 @@ package com.alex.asset.core.domain;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
+import com.alex.asset.security.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,8 +25,8 @@ import java.util.UUID;
 public class Company {
 
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    UUID id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     boolean active;
 
@@ -49,8 +50,9 @@ public class Company {
     @Column(name = "secret_code")
     UUID secretCode;
 
-    @Column(name = "owner_id")
-    UUID ownerId;
+    @OneToOne
+    @PrimaryKeyJoinColumn(name = "owner_id")
+    User owner;
 
 
     @ManyToMany

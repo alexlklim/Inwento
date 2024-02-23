@@ -20,8 +20,10 @@ import java.util.UUID;
 @Table(name = "token")
 public class Token {
 
-  @Id @GeneratedValue(strategy = GenerationType.AUTO)
-  public UUID id;
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  public Long id;
+
+  public UUID token;
 
   @CreatedDate
   public LocalDateTime created;

@@ -33,11 +33,9 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, CustomPrincipal principal) {
-        extraClaims.put("userUUID", principal.getUserUUID());
-        extraClaims.put("email", principal.getEmail());
-        extraClaims.put("roles", principal.getRoles());
-        extraClaims.put("companyUUID", principal.getComapnyUUID());
-        return buildToken(extraClaims, principal.getEmail());
+        extraClaims.put("userUUID", principal.getUserId());
+        extraClaims.put("email", principal.getName());
+        return buildToken(extraClaims, principal.getName());
     }
 
 
@@ -72,7 +70,4 @@ public class JwtService {
     }
 
 
-//    private Key getSignInKey() {
-//        return Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//    }
 }

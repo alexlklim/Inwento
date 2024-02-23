@@ -24,9 +24,6 @@ public class CompanyDto {
     UUID secretCode;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Integer productCounter;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String owner;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
