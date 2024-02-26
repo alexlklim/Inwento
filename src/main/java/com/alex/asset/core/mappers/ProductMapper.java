@@ -9,10 +9,15 @@ import com.alex.asset.core.domain.fields.constants.Unit;
 import com.alex.asset.core.dto.ProductDto;
 import com.alex.asset.core.service.FieldService;
 import com.alex.asset.core.service.TypeService;
+import com.alex.asset.security.domain.User;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.naming.Name;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -26,7 +31,7 @@ public class ProductMapper {
 
 
     public Product toEntity(Company company, Product product, ProductDto dto) {
-//        product.setActive(true);
+        product.setActive(true);
         product.setTitle(dto.getTitle());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
@@ -83,9 +88,18 @@ public class ProductMapper {
         dto.setCreated(entity.getCreated().toLocalDate());
         dto.setUpdated(entity.getUpdated().toLocalDate());
 
-        dto.setCreatedByName(entity.getCreatedBy().getFirstname());
-//        dto.setLiableName(entity.getLiable().getFirstname());
+        Fio createdBy = new Fio();
+        setField(entity.getCreatedBy(), createdBy::setName, User::getFirstname);
+        setField(entity.getCreatedBy(), createdBy::setSurname, User::getLastname);
+        dto.setCreatedByName(createdBy.getName() + " " + createdBy.getSurname());
+
         dto.setReceiver(entity.getReceiver());
+
+
+        Fio nameLiable = new Fio();
+        setField(entity.getLiable(), nameLiable::setName, User::getFirstname);
+        setField(entity.getLiable(), nameLiable::setSurname, User::getLastname);
+        dto.setLiableName(nameLiable.getName() + " " + nameLiable.getSurname());
 
         setField(entity.getUnit(), dto::setUnit, Unit::getUnit);
         setField(entity.getAssetStatus(), dto::setAssetStatus, AssetStatus::getAssetStatus);
@@ -111,10 +125,22 @@ public class ProductMapper {
         return dto;
     }
 
+    @NoArgsConstructor
+    @Data
+    private static class Fio{
+        String name;
+        String surname;
+    }
+
 
 
 
     private <T, R> void setField(T object, Consumer<R> setter, Function<T, R> getter) {
         Optional.ofNullable(object).map(getter).ifPresent(setter);
     }
+
+
+
+
+
 }

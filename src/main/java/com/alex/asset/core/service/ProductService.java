@@ -78,7 +78,7 @@ public class ProductService {
         }
 
         Product product = productMapper.toEntity(company, productFromDb, dto);
-        product.setActive(true);
+        product.setActive(true);;
 
         productRepo.save(product);
         return true;

@@ -15,9 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Create companies table with foreign key reference to users table
 CREATE TABLE IF NOT EXISTS companies (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    active BOOLEAN,
-    created DATETIME,
-    updated DATETIME,
+    active BOOLEAN, created DATETIME, updated DATETIME,
     company VARCHAR(255) UNIQUE,
     info TEXT,
     country VARCHAR(255),
