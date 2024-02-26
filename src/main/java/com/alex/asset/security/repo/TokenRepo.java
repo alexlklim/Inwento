@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public interface TokenRepo extends JpaRepository<Token, Long> {
 
-  Optional<Token> findByIdAndUser(Long token, User user);
 
 
   void deleteAllByUser(User user);

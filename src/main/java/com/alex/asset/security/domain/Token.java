@@ -32,7 +32,7 @@ public class Token {
   public LocalDateTime expired;
 
 
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(fetch = FetchType.EAGER) @JoinColumn(name = "user_id")
   public User user;
 
 

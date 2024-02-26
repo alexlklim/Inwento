@@ -159,6 +159,6 @@ VALUES
 
 
 
-
-INSERT INTO token (created, expired, user_id)
-VALUES ( NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY ), @user_id);
+#
+# INSERT INTO token (created, expired, user_id)
+# VALUES ( NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY ), @user_id);

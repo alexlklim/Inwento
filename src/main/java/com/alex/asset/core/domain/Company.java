@@ -76,5 +76,5 @@ public class Company {
             name = "company_kst",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "kst_id"))
-    private List<KST> ksts;
+    private List<KST> ksts;  
 }

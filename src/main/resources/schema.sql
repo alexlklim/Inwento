@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
     is_enabled BOOLEAN  NOT NULL,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL,
-    roles ENUM('ADMIN', 'CLIENT', 'EMP') NOT NULL
+    roles ENUM('ADMIN', 'CLIENT', 'EMP') NOT NULL,
+    company_id BIGINT
 );
 
 -- Create companies table with foreign key reference to users table
@@ -26,8 +27,11 @@ CREATE TABLE IF NOT EXISTS companies (
     FOREIGN KEY (owner_id) REFERENCES users(id)
 );
 
-CALL AddCompanyColumn();
 
+ALTER TABLE users DROP FOREIGN KEY fk_company_id;
+
+ALTER TABLE users
+    ADD CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES companies(id);
 
 
 
@@ -223,6 +227,3 @@ CREATE TABLE IF NOT EXISTS products (
     CONSTRAINT unique_per_inventory_number UNIQUE (company_id, bar_code),
     CONSTRAINT unique_per_code UNIQUE (company_id, rfid_code)
 );
-
-
-select * from users;

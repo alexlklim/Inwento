@@ -3,7 +3,6 @@ package com.alex.asset.security.mapper;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.dto.UserDto;
 import com.alex.asset.security.domain.dto.UserDtoShort;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.BeanUtils;
 
 import java.util.List;
@@ -33,10 +32,6 @@ public class UserMapper {
     }
 
 
-    public static User toEntity(UserDto dto){
 
-
-        return null;
-    }
 }
 
