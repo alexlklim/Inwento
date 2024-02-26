@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<HttpStatus> update(
             @PathVariable("id") Long id, @RequestBody ProductDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
 
@@ -69,7 +69,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> makeInactive(
+    public ResponseEntity<HttpStatus> makeInactive(
             @PathVariable("id") Long productId, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         boolean result = productService.makeProductInvisibleByIdForCompany(principal.getCompanyId(), productId);
@@ -78,7 +78,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/del/{id}")
-    public ResponseEntity<?> delete(
+    public ResponseEntity<HttpStatus> delete(
             @PathVariable("id") Long productId, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         boolean result = productService.deleteProductByIdForCompany(principal.getCompanyId(), productId);

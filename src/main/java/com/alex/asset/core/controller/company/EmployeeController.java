@@ -39,7 +39,7 @@ public class EmployeeController {
 
     @Secured({"ROLE_CLIENT", "ROLE_ADMIN"})
     @GetMapping("/{id}")
-    public ResponseEntity<?> getEmployeeById(
+    public ResponseEntity<UserDtoShort> getEmployeeById(
             @PathVariable("id") String id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.warn(TAG + "Try to get employee by id");
@@ -53,7 +53,7 @@ public class EmployeeController {
 
     @Secured("ROLE_CLIENT")
     @PostMapping
-    public ResponseEntity<?> addUserToEmployee(@RequestBody EmployeeDto dto, Authentication authentication){
+    public ResponseEntity<HttpStatus> addUserToEmployee(@RequestBody EmployeeDto dto, Authentication authentication){
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.warn(TAG + "Add user to employee by {} ", principal.getName());
 
