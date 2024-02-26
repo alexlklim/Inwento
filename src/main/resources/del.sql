@@ -18,8 +18,7 @@ DROP TABLE IF EXISTS units;
 
 DROP TABLE IF EXISTS branches;
 DROP TABLE IF EXISTS mpks;
-DROP TABLE IF EXISTS producers;
-DROP TABLE IF EXISTS suppliers;
+
 
 
 -- Drop tables

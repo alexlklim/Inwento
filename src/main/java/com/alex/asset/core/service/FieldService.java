@@ -4,8 +4,6 @@ package com.alex.asset.core.service;
 import com.alex.asset.core.domain.Company;
 import com.alex.asset.core.domain.fields.Branch;
 import com.alex.asset.core.domain.fields.MPK;
-import com.alex.asset.core.domain.fields.Producer;
-import com.alex.asset.core.domain.fields.Supplier;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
@@ -13,8 +11,6 @@ import com.alex.asset.core.dto.Dto;
 import com.alex.asset.core.repo.CompanyRepo;
 import com.alex.asset.core.repo.product.BranchRepo;
 import com.alex.asset.core.repo.product.MpkRepo;
-import com.alex.asset.core.repo.product.ProducerRepo;
-import com.alex.asset.core.repo.product.SupplierRepo;
 import com.alex.asset.core.repo.product.constatns.AssetStatusRepo;
 import com.alex.asset.core.repo.product.constatns.KstRepo;
 import com.alex.asset.core.repo.product.constatns.UnitRepo;
@@ -37,8 +33,7 @@ public class FieldService {
     private final String TAG = "FIELD_SERVICE - ";
 
     private final BranchRepo branchRepo;
-    private final SupplierRepo supplierRepo;
-    private final ProducerRepo producerRepo;
+
     private final MpkRepo mpkRepo;
     private final CompanyRepo companyRepo;
 
@@ -57,23 +52,9 @@ public class FieldService {
         return list;
     }
 
-    public List<String> getSupplierNames(Company company) {
-        log.info(TAG + "get suppliers name for company {}", company.getCompany());
-        List<String> list = new ArrayList<>();
-        for (Supplier supplier : getSuppliers(company)) {
-            list.add(supplier.getSupplier());
-        }
-        return list;
-    }
 
-    public List<String> getProducerNames(Company company) {
-        log.info(TAG + "get producers name for company {}", company.getCompany());
-        List<String> list = new ArrayList<>();
-        for (Producer producer : getProducers(company)) {
-            list.add(producer.getProducer());
-        }
-        return list;
-    }
+
+
     public List<String> getMPKNames(Company company) {
         log.info(TAG + "get MPKs name for company {}", company.getCompany());
         List<String> list = new ArrayList<>();
@@ -87,13 +68,7 @@ public class FieldService {
         return branchRepo.findByActiveTrueAndCompany(company);
     }
 
-    private List<Supplier> getSuppliers(Company company) {
-        return supplierRepo.findByActiveTrueAndCompany(company);
-    }
 
-    private List<Producer> getProducers(Company company) {
-        return producerRepo.findByActiveTrueAndCompany(company);
-    }
 
     private List<MPK> getMPKs(Company company) {
         return mpkRepo.findByActiveTrueAndCompany(company);
@@ -179,47 +154,8 @@ public class FieldService {
 
 
 
-    public boolean addSuppliers(List<String> list, Long companyID) {
-        log.info(TAG + "Try to add Suppliers: {} for company {}", list, companyID);
-        Company company = companyRepo.getCompany(companyID);
-        for (String name: list){
-            Optional<Supplier> optional =  supplierRepo.findBySupplierAndCompany(name, company);
-            if (optional.isEmpty()){
-                log.info(TAG + "Adding suppliers {} to company {}", name, company.getCompany());
-                Supplier entity = new Supplier(name, company);
-                supplierRepo.save(entity);
-            } else {
-                if (!optional.get().isActive()){
-                    log.info(TAG + "Make active supplier {} for company {}", name, company.getCompany());
-                    Supplier entity = optional.get();
-                    entity.setActive(true);
-                    supplierRepo.save(entity);
-                }
-            }
-        }
-        return  true;
-    }
 
-    public boolean addProducers(List<String> list, Long companyID) {
-        log.info(TAG + "Try to add Producers: {} for company {}", list, companyID);
-        Company company = companyRepo.getCompany(companyID);
-        for (String name: list){
-            Optional<Producer> optional =  producerRepo.findByProducerAndCompany(name, company);
-            if (optional.isEmpty()){
-                log.info(TAG + "Adding producer {} to company {}", name, company.getCompany());
-                Producer entity = new Producer(name, company);
-                producerRepo.save(entity);
-            } else {
-                if (!optional.get().isActive()){
-                    log.info(TAG + "Make active producer {} for company {}", name, company.getCompany());
-                    Producer entity = optional.get();
-                    entity.setActive(true);
-                    producerRepo.save(entity);
-                }
-            }
-        }
-        return  true;
-    }
+
 
 
     public boolean deleteBranch(Dto dto, Long companyID) {
@@ -238,36 +174,9 @@ public class FieldService {
         return false;
     }
 
-    public boolean deleteSupplier(Dto dto, Long companyID) {
-        log.info(TAG + "Try to delete supplier: {} for company {}", dto.getName(), companyID);
-        Company company = companyRepo.getCompany(companyID);
-        Optional<Supplier> optional = supplierRepo.findBySupplierAndCompany(dto.getName(), company);
-        if (optional.isPresent()){
-            Supplier entity = optional.get();
-            entity.setActive(false);
-            log.info(TAG + "Delete supplier: {} for company {}", dto.getName(), company.getCompany());
-            supplierRepo.save(entity);
-            return true;
-        }
-        log.info(TAG + "Supplier: {} not found", dto.getName());
-        return false;
-    }
 
 
-    public boolean deleteProducer(Dto dto, Long companyID) {
-        log.info(TAG + "Try to delete producer: {} for company {}", dto.getName(), companyID);
-        Company company = companyRepo.getCompany(companyID);
-        Optional<Producer> optional = producerRepo.findByProducerAndCompany(dto.getName(), company);
-        if (optional.isPresent()){
-            Producer entity = optional.get();
-            entity.setActive(false);
-            log.info(TAG + "Delete producer: {} for company {}", dto.getName(), company.getCompany());
-            producerRepo.save(entity);
-            return true;
-        }
-        log.info(TAG + "Producer: {} not found", dto.getName());
-        return false;
-    }
+
 
     public boolean deleteMPK(Dto dto, Long companyID) {
         log.info(TAG + "Try to delete MPK: {} for company {}", dto.getName(), companyID);
@@ -303,13 +212,6 @@ public class FieldService {
         return branchRepo.findByBranchAndCompany(name, company).orElse(null);
     }
 
-    public Producer getProducer(String name, Company company){
-        return producerRepo.findByProducerAndCompany(name, company).orElse(null);
-    }
-
-    public Supplier getSupplier(String name, Company company){
-        return supplierRepo.findBySupplierAndCompany(name, company).orElse(null);
-    }
 
     public MPK getMPK(String name, Company company){
         return mpkRepo.findByMpkAndCompany(name, company).orElse(null);

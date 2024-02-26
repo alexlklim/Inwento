@@ -7,6 +7,7 @@ public class Utils {
             "/api/auth/register",
             "/api/auth/refresh",
             "/api/auth/pw/forgot",
+            "/api/core/get",
             "/api/auth/pw/recovery/**"
     };
 

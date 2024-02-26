@@ -86,25 +86,6 @@ public class FieldsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/producer")
-    public ResponseEntity<HttpStatus> addProducers(
-            @RequestBody List<String> list, Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Try to add Producers");
-        boolean result = fieldService.addProducers(list, principal.getCompanyId());
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/supplier")
-    public ResponseEntity<HttpStatus> addSuppliers(
-            @RequestBody List<String> list, Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Try to add suppliers");
-        boolean result = fieldService.addSuppliers(list, principal.getCompanyId());
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 
 
@@ -131,24 +112,5 @@ public class FieldsController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/producer")
-    public ResponseEntity<HttpStatus> deleteProducer(
-            @RequestBody Dto dto, Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Try to delete producer");
-        boolean result = fieldService.deleteProducer(dto, principal.getCompanyId());
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    @DeleteMapping("/supplier")
-    public ResponseEntity<HttpStatus> deleteSupplier(
-            @RequestBody Dto dto, Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Try to delete supplier");
-        boolean result = fieldService.deleteSupplier(dto, principal.getCompanyId());
-        if (!result) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 }

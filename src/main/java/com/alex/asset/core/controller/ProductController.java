@@ -40,7 +40,7 @@ public class ProductController {
         log.info(TAG + "add empty product {}", principal);
 
         LongDto dto = new LongDto();
-        dto.setName(productService.addEmptyProductForCompany(principal.getCompanyId(), principal.getUserId()));
+        dto.setId(productService.addEmptyProductForCompany(principal.getCompanyId(), principal.getUserId()));
         return new ResponseEntity<>(
                 dto,
                 HttpStatus.OK);
@@ -92,7 +92,9 @@ public class ProductController {
     @GetMapping("/filter/title")
     public ResponseEntity<List<ShortProduct>> getProductsByTitle(
             @RequestBody Dto dto, Authentication authentication){
+        log.info(TAG + " ");
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+
         return new ResponseEntity<>(
                 productService.getProductsByTitleForCompany(principal.getCompanyId(), dto.getName()),
                 HttpStatus.OK);

@@ -80,11 +80,9 @@ public class Product {
     Subtype subtype;
 
 
-    @ManyToOne @JoinColumn(name = "producer_id")
-    Producer producer;
 
-    @ManyToOne @JoinColumn(name = "supplier_id")
-    Supplier supplier;
+    String producer;
+    String supplier;
 
     @ManyToOne @JoinColumn(name = "branch_id")
     Branch branch;

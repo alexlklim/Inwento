@@ -72,21 +72,6 @@ VALUES
     (true, 'MPK4', @company_id),
     (true, 'MPK5', @company_id);
 
-INSERT IGNORE INTO producers (active, producer, company_id)
-VALUES
-    (true, 'Apple Inc.', @company_id),
-    (true, 'Procter & Gamble', @company_id),
-    (true, 'Samsung Electronics Co., Ltd.', @company_id),
-    (true, 'Coca-Cola Company', @company_id),
-    (true, 'Tesla, Inc.', @company_id);
-
-INSERT IGNORE INTO suppliers (active, supplier, company_id)
-VALUES
-    (true, 'Intel Corporation', @company_id),
-    (true, 'Oracle Corporation', @company_id),
-    (true, 'Amazon.com, Inc.', @company_id),
-    (true, 'McKesson Corporation', @company_id),
-    (true, 'Walmart Inc.', @company_id);
 
 
 INSERT IGNORE INTO types (active, type, company_id)
@@ -139,26 +124,21 @@ VALUES
 
 
 INSERT IGNORE INTO products (active, created, updated,title, description, price, bar_code, rfid_code,created_by_id, liable_id, receiver,
-                             asset_status_id, kst_id, unit_id, type_id, subtype_id,producer_id, supplier_id, branch_id, mpk_id,
+                             asset_status_id, kst_id, unit_id, type_id, subtype_id,producer, supplier, branch_id, mpk_id,
                              document, document_date, warranty_period, inspection_date, last_inventory_date, longitude, latitude,company_id)
 VALUES
     (true, NOW(), NOW(), 'Lenove Ideapad Gaming', 'It is a very good laptop',4000.00,'INV123456', '12345678',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 1, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 1, 'producer1', 'supplier1', 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Samsung Galaxy', 'It is a very good phone',2000.00,'INV123455', '12345638',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 1, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 1, 'producer1', 'supplier1', 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'ThinkPad', 'It is a very good laptop with sensor screen',5000.00,'INV123355', '12145638',  @user_id, @user_id, 'Łukasz Boryś',
-     1, 2, 4, 1, 1, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 1, 'producer1', 'supplier1', 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Biurko', 'It is a very good biurko',5000.00,'INV145456', '12346578',  @user_id, @user_id, 'Gabriella Walczyna',
-     1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 4, 'producer1', 'supplier1', 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Hammer Cobnstruction', 'It is a very good phone with IP69',1500.00,'INV133456', '12445678',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
+     1, 2, 4, 1, 4, 'producer1', 'supplier1', 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id),
     (true, NOW(), NOW(), 'Tablica do pisania', 'It is a very good tabliza do pisania',5000.00,'INV123456', '12345678',  @user_id, @user_id, 'Tetiana Klimenko',
-     1, 2, 4, 1, 4, 1, 1, 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id);
+     1, 2, 4, 1, 4, 'producer1', 'supplier1', 1, 1,'Sample document content...', '2024-02-19', '2025-02-19', '2024-03-19', '2023-12-31',  40.7128, -74.0060,@company_id);
 
 
 
-
-
-#
-# INSERT INTO token (created, expired, user_id)
-# VALUES ( NOW(), DATE_ADD(NOW(), INTERVAL 1 DAY ), @user_id);

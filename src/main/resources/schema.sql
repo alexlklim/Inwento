@@ -28,11 +28,11 @@ CREATE TABLE IF NOT EXISTS companies (
 );
 
 
-ALTER TABLE users DROP FOREIGN KEY fk_company_id;
-
-ALTER TABLE users
-    ADD CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES companies(id);
-
+# ALTER TABLE users DROP FOREIGN KEY fk_company_id;
+#
+# ALTER TABLE users
+#     ADD CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES companies(id);
+#
 
 
 
@@ -150,24 +150,6 @@ CREATE TABLE IF NOT EXISTS mpks (
     CONSTRAINT unique_per_company UNIQUE (company_id, mpk)
 );
 
-CREATE TABLE IF NOT EXISTS producers (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    active BOOLEAN,
-    producer VARCHAR(255),
-    company_id BIGINT NOT NULL,
-    FOREIGN KEY (company_id) REFERENCES companies(id),
-    CONSTRAINT unique_per_company UNIQUE (company_id, producer)
-);
-
-CREATE TABLE IF NOT EXISTS suppliers (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    active BOOLEAN,
-    supplier VARCHAR(255),
-    company_id BIGINT NOT NULL,
-    FOREIGN KEY (company_id) REFERENCES companies(id),
-    CONSTRAINT unique_per_company UNIQUE (company_id, supplier)
-);
-
 
 -- for types and subtypes
 CREATE TABLE IF NOT EXISTS types (
@@ -202,7 +184,9 @@ CREATE TABLE IF NOT EXISTS products (
     receiver VARCHAR(255),
     asset_status_id BIGINT, kst_id BIGINT, unit_id BIGINT,
     type_id BIGINT, subtype_id BIGINT,
-    producer_id BIGINT, supplier_id BIGINT, branch_id BIGINT, mpk_id BIGINT,
+    producer VARCHAR(255), supplier VARCHAR(255),
+
+    branch_id BIGINT, mpk_id BIGINT,
     document TEXT,
     document_date DATE, warranty_period DATE, inspection_date DATE, last_inventory_date DATE,
     longitude DOUBLE, latitude DOUBLE,
@@ -218,8 +202,6 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (type_id) REFERENCES types(id),
     FOREIGN KEY (subtype_id) REFERENCES subtypes(id),
 
-    FOREIGN KEY (producer_id) REFERENCES producers(id),
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id),
     FOREIGN KEY (branch_id) REFERENCES branches(id),
     FOREIGN KEY (mpk_id) REFERENCES mpks(id),
     FOREIGN KEY (company_id) REFERENCES companies(id),

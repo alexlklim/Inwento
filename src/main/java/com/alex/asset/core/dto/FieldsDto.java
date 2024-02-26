@@ -23,8 +23,6 @@ public class FieldsDto {
     Map<String, List<String>> types;
 
     List<String> branches;
-    List<String> suppliers;
-    List<String> producers;
     List<String> mpks;
 
 }

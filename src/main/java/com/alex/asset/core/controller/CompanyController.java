@@ -65,18 +65,6 @@ public class CompanyController {
     }
 
 
-    @DeleteMapping
-    public ResponseEntity<HttpStatus> makeInactive(Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "try to make inactive company {} by {}", principal.getCompanyId(), principal.getName());
-
-        if (!companyService.makeInactive(principal)) {
-            log.warn(TAG + "User: {} isn't owner of any company:", principal.getName());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        log.error(TAG + "Company {} was inactive with owner {}", principal.getCompanyId(), principal.getName());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 
 }

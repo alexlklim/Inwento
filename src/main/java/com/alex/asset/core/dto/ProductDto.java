@@ -38,7 +38,7 @@ public class ProductDto {
     String liableName;
     String receiver;
     String unit, kst, assetStatus;
-    String typeName, subtypeName, producerName, supplierName, branchName, mpkName;
+    String typeName, subtypeName, producer, supplier, branchName, mpkName;
     String document;
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate documentDate, warrantyPeriod, inspectionDate;

@@ -54,8 +54,9 @@ public class ProductMapper {
         product.setUnit(fieldService.getUnit(dto.getUnit()));
         product.setKst(fieldService.getKST(dto.getKst()));
 
-        product.setProducer(fieldService.getProducer(dto.getProducerName(), company));
-        product.setSupplier(fieldService.getSupplier(dto.getSupplierName(), company));
+
+        product.setProducer(dto.getProducer());
+        product.setSupplier(dto.getSupplier());
         product.setBranch(fieldService.getBranch(dto.getBranchName(), company));
         product.setMpk(fieldService.getMPK(dto.getMpkName(), company));
 
@@ -88,6 +89,9 @@ public class ProductMapper {
         dto.setCreated(entity.getCreated().toLocalDate());
         dto.setUpdated(entity.getUpdated().toLocalDate());
 
+        dto.setProducer(entity.getProducer());
+        dto.setSupplier(entity.getSupplier());
+
         Fio createdBy = new Fio();
         setField(entity.getCreatedBy(), createdBy::setName, User::getFirstname);
         setField(entity.getCreatedBy(), createdBy::setSurname, User::getLastname);
@@ -107,10 +111,8 @@ public class ProductMapper {
 
         setField(entity.getType(), dto::setTypeName, Type::getType);
         setField(entity.getSubtype(), dto::setSubtypeName, Subtype::getSubtype);
-
         setField(entity.getBranch(), dto::setBranchName, Branch::getBranch);
-        setField(entity.getProducer(), dto::setProducerName, Producer::getProducer);
-        setField(entity.getSupplier(), dto::setSupplierName, Supplier::getSupplier);
+
         setField(entity.getMpk(), dto::setMpkName, MPK::getMpk);
 
 

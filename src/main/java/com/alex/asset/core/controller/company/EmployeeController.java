@@ -63,9 +63,9 @@ public class EmployeeController {
 
 
     @Secured({"ROLE_CLIENT", "ROLE_ADMIN"})
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteEmpFromActiveEmp(
-            @PathVariable("uuid") String id, Authentication authentication) {
+            @PathVariable("id") String id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.warn(TAG + "Try to delete user from active employee");
 

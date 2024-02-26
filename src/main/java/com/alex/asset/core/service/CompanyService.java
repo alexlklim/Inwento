@@ -109,8 +109,6 @@ public class CompanyService {
                 .ksts(ConverterService.convertKSTToString(company.getKsts()))
                 .types(typeService.getTypesMap(company.getId()))
                 .branches(fieldService.getBranchNames(company))
-                .suppliers(fieldService.getSupplierNames(company))
-                .producers(fieldService.getProducerNames(company))
                 .mpks(fieldService.getMPKNames(company))
                 .build();
     }
