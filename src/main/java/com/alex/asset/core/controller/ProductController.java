@@ -1,6 +1,7 @@
 package com.alex.asset.core.controller;
 
 
+import com.alex.asset.core.dto.LongDto;
 import com.alex.asset.core.dto.ProductDto;
 import com.alex.asset.core.dto.ShortProduct;
 import com.alex.asset.core.dto.Dto;
@@ -34,11 +35,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> add(Authentication authentication) {
+    public ResponseEntity<LongDto> add(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "add empty product {}", principal);
+
+        LongDto dto = new LongDto();
+        dto.setName(productService.addEmptyProductForCompany(principal.getCompanyId(), principal.getUserId()));
         return new ResponseEntity<>(
-                productService.addEmptyProductForCompany(principal.getCompanyId(), principal.getUserId()),
+                dto,
                 HttpStatus.OK);
     }
 
