@@ -22,26 +22,27 @@ public class CompanyController {
     private final CompanyService companyService;
 
 
-
     @GetMapping
-    public ResponseEntity<CompanyDto> info(Authentication authentication) {
+    public ResponseEntity<CompanyDto> getInfoAboutCompany(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "try to get info about company {}", principal.getCompanyId());
-        CompanyDto dto = companyService.getInfo(principal);
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        System.out.println(principal);
+        return new ResponseEntity<>(
+                companyService.getInfoAboutCompany(principal.getCompanyId(), principal.getUserId()),
+                HttpStatus.OK);
     }
 
 
     @Secured({"ROLE_CLIENT", "ROLE_ADMIN"})
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody CompanyDto dto, Authentication authentication) {
+    public ResponseEntity<HttpStatus> createNewCompany(@RequestBody CompanyDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "try to create company {} by {}", dto.getCompany(), principal.getName());
         if (principal.getCompanyId() != null) {
             log.warn("User: {} already belong to company: {}", principal.getName(), principal.getCompanyId());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        CompanyDto companyDto = companyService.add(dto, principal);
+        CompanyDto companyDto = companyService.addCompanyForUser(principal.getUserId(), dto);
         log.error(TAG + "Company {} was added", companyDto.getCompany());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -64,7 +65,6 @@ public class CompanyController {
     }
 
 
-    @Secured({"ROLE_CLIENT"})
     @DeleteMapping
     public ResponseEntity<HttpStatus> makeInactive(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();

@@ -50,8 +50,8 @@ public class Company {
     @Column(name = "secret_code")
     UUID secretCode;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "owner_id")
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     User owner;
 
 

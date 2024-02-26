@@ -29,7 +29,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> getAllByCompany(Authentication authentication) {
         log.info(TAG + "get all products for company");
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        List<ProductDto> products = productService.getAllByCompany(principal.getCompanyId());
+        List<ProductDto> products = productService.getAllProductsForCompany(principal.getCompanyId());
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -38,7 +38,7 @@ public class ProductController {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "add empty product {}", principal);
         return new ResponseEntity<>(
-                productService.addEmptyForCompany(principal.getCompanyId(), principal.getUserId()),
+                productService.addEmptyProductForCompany(principal.getCompanyId(), principal.getUserId()),
                 HttpStatus.OK);
     }
 
@@ -49,7 +49,7 @@ public class ProductController {
             @PathVariable("id") Long id, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
 
-        ProductDto dto = productService.getProductByCompanyAndId(principal.getCompanyId(), id);
+        ProductDto dto = productService.getProductByIdForCompany(principal.getCompanyId(), id);
         if (dto == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -59,25 +59,25 @@ public class ProductController {
             @PathVariable("id") Long id, @RequestBody ProductDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
 
-        boolean result = productService.update(id, dto, principal);
-        if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        boolean result = productService.updateProductByIdForCompany(principal.getCompanyId(), id, dto);
+        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> makeInactive(
-            @PathVariable("id") Long id, Authentication authentication) {
+            @PathVariable("id") Long productId, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        boolean result = productService.makeInactive(id, principal);
+        boolean result = productService.makeProductInvisibleByIdForCompany(principal.getCompanyId(), productId);
         if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/del/{id}")
     public ResponseEntity<?> delete(
-            @PathVariable("id") Long id, Authentication authentication) {
+            @PathVariable("id") Long productId, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        boolean result = productService.delete(id, principal);
+        boolean result = productService.deleteProductByIdForCompany(principal.getCompanyId(), productId);
         if (!result)return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -88,9 +88,10 @@ public class ProductController {
     @GetMapping("/filter/title")
     public ResponseEntity<List<ShortProduct>> getProductsByTitle(
             @RequestBody Dto dto, Authentication authentication){
-        System.out.println(authentication);
-
-        return new ResponseEntity<>(productService.getProductsByTitle(dto.getName()), HttpStatus.OK);
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+        return new ResponseEntity<>(
+                productService.getProductsByTitleForCompany(principal.getCompanyId(), dto.getName()),
+                HttpStatus.OK);
     }
 
 }

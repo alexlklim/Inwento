@@ -32,22 +32,23 @@ public class CompanyService {
     private final CompanyRepo companyRepo;
 
 
-    public CompanyDto getInfo(CustomPrincipal principal) {
-        log.info(TAG + "Get information about company from user: {}", principal);
-        Optional<Company> optionalCompany = companyRepo.findById(principal.getCompanyId());
-        if (optionalCompany.isEmpty()) return null;
-        Company company = optionalCompany.get();
+
+    @Transactional
+    public CompanyDto getInfoAboutCompany(Long companyId, Long userId) {
+        log.info(TAG + "Get information about company from user");
+        Company company = companyRepo.getCompany(companyId);
         CompanyDto dto = CompanyMapper.toDto(company);
-        User user = userRepo.getUser(principal.getName());
+        User user = company.getOwner();
         dto.setOwner(user.getFirstname() + " " + user.getLastname());
-        dto.setEmployees(getListOfEmployee(company.getId()));
+        dto.setEmployees(getListOfEmployeeForCompany(company));
         dto.setSecretCode(company.getSecretCode());
         return dto;
     }
 
+    @Transactional
     public CompanyDto update(CompanyDto dto, CustomPrincipal principal) {
         log.info(TAG + "Updating company {} for client: {}", dto.getCompany(), principal.getName());
-        User user = userRepo.getUser(principal.getName());
+        User user = userRepo.getUser(principal.getUserId());
 
         Optional<Company> optionalCompany = companyRepo.findByOwner(user);
         if (optionalCompany.isEmpty()) {
@@ -61,19 +62,19 @@ public class CompanyService {
 
 
 
-    public CompanyDto add(CompanyDto dto, CustomPrincipal principal) {
-        log.info(TAG + "Creating company {} for client: {}", dto.getCompany(), principal.getName());
-        Company company = CompanyMapper.toEntity(dto);
 
-        User user = userRepo.getUser(principal.getName());
+    @Transactional
+    public CompanyDto addCompanyForUser(Long userId, CompanyDto dto) {
+        Company company = CompanyMapper.toEntity(dto);
+        User user = userRepo.getUser(userId);
         company.setOwner(user);
         company.setActive(true);
         Company companyFromDB = companyRepo.save(company);
-
         user.setCompany(companyFromDB);
         userRepo.save(user);
         return CompanyMapper.toDto(companyFromDB);
     }
+
 
 
     public boolean makeInactive(CustomPrincipal principal) {
@@ -87,7 +88,7 @@ public class CompanyService {
 
 
     public void addUserToEmployee(EmployeeDto dto, CustomPrincipal principal) {
-        User user = userRepo.getUser(principal.getName());
+        User user = userRepo.getUser(principal.getUserId());
         Company company = companyRepo.getCompany(principal.getCompanyId());
         if (user.isEnabled() && dto.getEmail().equals(user.getEmail()) && user.getCompany() == null) {
             user.setCompany(company);
@@ -102,7 +103,7 @@ public class CompanyService {
         Company company = companyRepo.getCompany(principal.getCompanyId());
         if (company == null) return null;
         return new FieldsDto().toBuilder()
-                .employees(getListOfEmployee(company.getId()))
+                .employees(getListOfEmployeeForCompany(company))
                 .units(ConverterService.convertUnitsToString(company.getUnits()))
                 .assetStatuses(ConverterService.convertAssetStatusesToString(company.getAssetStatus()))
                 .ksts(ConverterService.convertKSTToString(company.getKsts()))
@@ -115,10 +116,10 @@ public class CompanyService {
     }
 
 
-    private List<String> getListOfEmployee(Long companyId) {
-        log.info(TAG + "get list of employee for company {}", companyId);
+    private List<String> getListOfEmployeeForCompany(Company company) {
+        log.info(TAG + "get list of employee for company");
         List<String> employeeNames = new LinkedList<>();
-        for (User user : userRepo.findByCompany(companyRepo.getCompany(companyId))) {
+        for (User user : userRepo.findByCompany(company)) {
             employeeNames.add(user.getFirstname() + " " + user.getLastname());
         }
         return employeeNames;

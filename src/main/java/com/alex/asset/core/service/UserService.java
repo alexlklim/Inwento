@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public UserDto getEmployeeMe(CustomPrincipal principal) {
-        User user = userRepo.getUser(principal.getName());
+        User user = userRepo.getUser(principal.getUserId());
         if (user == null) return null;
         return UserMapper.toDto(user);
     }
@@ -55,7 +55,7 @@ public class UserService {
 
     @Transactional
     public boolean deleteEmpFromActiveEmp(Long id, CustomPrincipal principal) {
-        User user = userRepo.getUser(principal.getName());
+        User user = userRepo.getUser(principal.getUserId());
         if (principal.getCompanyId().equals(user.getCompany().getId())){
             user.setCompany(null);
             userRepo.save(user);

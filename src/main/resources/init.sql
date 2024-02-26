@@ -43,6 +43,8 @@ SET company_id = @company_id
 WHERE email = @user_email;
 
 
+
+
 -- add units, ksts and asset statuses to company
 INSERT IGNORE INTO company_asset_status (company_id, asset_status_id)
 SELECT @company_id, id FROM asset_statuses;

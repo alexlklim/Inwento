@@ -24,6 +24,10 @@ public class CustomPrincipal implements Principal {
     public CustomPrincipal(User user) {
         this.userId = user.getId();
         this.name = user.getEmail();
-        this.companyId = user.getCompany().getId();
+        if (user.getCompany() != null) {
+            this.companyId = user.getCompany().getId();
+        } else {
+            this.companyId = null;
+        }
     }
 }

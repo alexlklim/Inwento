@@ -28,134 +28,94 @@ public class ProductService {
 
     private final String TAG = "PRODUCT_SERVICE - ";
 
+    private final ProductMapper productMapper;
     private final ProductRepo productRepo;
     private final CompanyRepo companyRepo;
     private final UserRepo userRepo;
-    private final FieldService fieldService;
-    private final TypeService typeService;
 
 
-    public List<ProductDto> getAllByCompany(Long companyID) {
+
+    @Transactional
+    public List<ProductDto> getAllProductsForCompany(Long companyID) {
         log.info(TAG + "Try to get all Product and return ProductDto");
         List<ProductDto> productDTOs = new ArrayList<>();
         for (Product product : productRepo.findByActiveTrueAndCompany(companyRepo.getCompany(companyID))) {
-            productDTOs.add(ProductMapper.toDto(product));
+            productDTOs.add(productMapper.toDto(product));
         }
         return productDTOs;
     }
 
 
-    public Long addEmptyForCompany(Long companyId, Long userId) {
+    public Long addEmptyProductForCompany(Long companyId, Long userId) {
         log.info(TAG + "Create an empty new product for company");
-        Company company = companyRepo.getCompany(companyId);
         Product product = new Product();
         product.setActive(false);
         product.setCreatedBy(userRepo.getUser(userId));
-        product.setCompany(company);
+        product.setCompany(companyRepo.getCompany(companyId));
         Product productFromDB = productRepo.save(product);
         return productFromDB.getId();
     }
 
-    public ProductDto getProductByCompanyAndId(Long companyId, Long id) {
+    public ProductDto getProductByIdForCompany(Long companyId, Long id) {
         log.info("Try to get  product with id: {}", id);
-        Company company = companyRepo.getCompany(companyId);
-        Product product = productRepo.findByActiveTrueAndIdAndCompany(id, company).orElse(null);
+        Product product = productRepo
+                .findByActiveTrueAndIdAndCompany(
+                        id, companyRepo.getCompany(companyId)).orElse(null);
         if (product == null) {
             log.error(TAG + "Product is null with id: {}", id);
             return null;
         }
-        return ProductMapper.toDto(product);
+        return productMapper.toDto(product);
     }
 
-    public boolean updateProductForCompanyById(
-            ,
-            Long id, ProductDto dto, CustomPrincipal principal) {
+    public boolean updateProductByIdForCompany(Long companyId, Long productId, ProductDto dto){
         log.info(TAG + "Try to update product");
-        Company company = companyRepo.getCompany(principal.getCompanyId());
-
-        Product productFromDb = productRepo.findByIdAndCompany(id, company).orElse(null);
+        Company company = companyRepo.getCompany(companyId);
+        Product productFromDb = productRepo.findByCompanyAndId(company, productId).orElse(null);
         if (productFromDb == null) {
             log.info(TAG + "Product is null");
             return false;
         }
 
-        Product product = productCreating(dto, company,userRepo.getUser(principal.getName()));
-        product.setId(id);
+        Product product = productMapper.toEntity(company, productFromDb, dto);
         product.setActive(true);
-        product.setCreated(productFromDb.getCreated());
-        product.setUpdated(product.getUpdated());
-        product.setCreatedBy(productFromDb.getCreatedBy());
-        product.setLastInventoryDate(productFromDb.getLastInventoryDate());
-        product.setCompany(productFromDb.getCompany());
-        product.setLastInventoryDate(productFromDb.getLastInventoryDate());
-
 
         productRepo.save(product);
         return true;
     }
 
 
-    public boolean makeInactive(Long id, CustomPrincipal principal) {
-        log.info(TAG + "Try to make inactive product with id: {}", id);
-        Company company = companyRepo.getCompany(principal.getCompanyId());
-        if (company == null) return false;
-        if (!productRepo.existsById(id)) return false;
-        Product product = productRepo.findByActiveTrueAndIdAndCompany(id, company).orElse(null);
+
+    public boolean makeProductInvisibleByIdForCompany(Long companyId, Long productId) {
+        log.info(TAG + "Try to make inactive product with id: {}", productId);
+        if (!productRepo.existsById(productId)) return false;
+        Product product = productRepo
+                .findByCompanyAndIdAndActiveTrue(
+                        companyRepo.getCompany(companyId), productId).orElse(null);
         if (product == null) return false;
         product.setActive(false);
         return true;
     }
 
-    private Product productCreating(ProductDto dto, Company company, User user) {
-        log.info(TAG + "Product creating process");
-        Product product = ProductMapper.toEntity(dto);
-        product.setCreatedBy(user);
-        product.setAssetStatus(fieldService.getAssetStatus(dto.getAssetStatus()));
-        product.setUnit(fieldService.getUnit(dto.getUnit()));
-        product.setKst(fieldService.getKST(dto.getKst()));
 
-        product.setProducer(fieldService.getProducer(dto.getProducerName(), company));
-        product.setSupplier(fieldService.getSupplier(dto.getSupplierName(), company));
-        product.setBranch(fieldService.getBranch(dto.getBranchName(), company));
-        product.setMpk(fieldService.getMPK(dto.getMpkName(), company));
-
-        product.setType(typeService.getType(dto.getTypeName(), company));
-        product.setSubtype(typeService.getSubtype(
-                dto.getSubtypeName(),
-                typeService.getType(dto.getTypeName(), company),
-                company
-        ));
-        product.setCompany(company);
-        return product;
-    }
-
-
-    public boolean delete(Long id, CustomPrincipal principal) {
-        log.info(TAG + "Try to delete product with id: {}", id);
-        Company company = companyRepo.getCompany(principal.getCompanyId());
-        if (company == null) return false;
-        if (!productRepo.existsById(id)) return false;
-        Product product = productRepo.findByActiveFalseAndIdAndCompany(id, company).orElse(null);
+    public boolean deleteProductByIdForCompany(Long companyId, Long productId) {
+        Product product = productRepo
+                .findByCompanyAndIdAndActiveFalse(
+                        companyRepo.getCompany(companyId), productId).orElse(null);
         if (product == null) return false;
         productRepo.delete(product);
         return true;
     }
 
 
-    public List<ShortProduct> getProductsByTitle(String title) {
-        List<Product> products = productRepo.findByTitleContainingIgnoreCase(title);
+    public List<ShortProduct> getProductsByTitleForCompany(Long companyId, String title) {
+        List<Product> products = productRepo
+                .findByCompanyAndTitleContainingIgnoreCase(companyRepo.getCompany(companyId), title);
         List<ShortProduct> shortProducts = new ArrayList<>();
 
         for (Product product : products) {
-            System.out.println(product.getBarCode() + " " + product.getTitle());
-            ;
-
             shortProducts.add(new ShortProduct(product.getBarCode(), product.getTitle()));
-            System.out.println(product.getBarCode() + " " + product.getTitle());
-            ;
         }
-
-
         return shortProducts;
     }
 
