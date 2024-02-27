@@ -1,6 +1,5 @@
 package com.alex.asset.core.controller.company;
 
-import com.alex.asset.core.dto.FieldsDto;
 import com.alex.asset.core.dto.Dto;
 import com.alex.asset.core.service.CompanyService;
 import com.alex.asset.core.service.FieldService;

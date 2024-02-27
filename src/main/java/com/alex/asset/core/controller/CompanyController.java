@@ -1,56 +1,64 @@
 package com.alex.asset.core.controller;
 
 import com.alex.asset.core.dto.CompanyDto;
+import com.alex.asset.core.dto.Dto;
 import com.alex.asset.core.service.CompanyService;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
+import com.alex.asset.security.domain.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
-@RestController
-@CrossOrigin
-@RequiredArgsConstructor
-@RequestMapping("/api/core/company")
+import java.util.List;
+
+@Slf4j @RestController @CrossOrigin
+@RequiredArgsConstructor @RequestMapping("/api/core/company")
 public class CompanyController {
     private final String TAG = "COMPANY_CONTROLLER - ";
-
     private final CompanyService companyService;
 
-
     @GetMapping
-    public ResponseEntity<CompanyDto> getInfoAboutCompany(Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        System.out.println(principal);
-        return new ResponseEntity<>(
-                companyService.getInfoAboutCompany(principal.getCompanyId(), principal.getUserId()),
-                HttpStatus.OK);
+    public ResponseEntity<CompanyDto> getInfoAboutCompany() {
+        return new ResponseEntity<>(companyService.getInfoAboutCompany(), HttpStatus.OK);
     }
 
+    @PutMapping  @Secured("ROLE_ADMIN")
+    public ResponseEntity<CompanyDto> updateCompany(@RequestBody CompanyDto dto) {
+        log.info(TAG + "try to update company ");
+        return new ResponseEntity<>(companyService.updateCompany(dto), HttpStatus.OK);
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getInfoAboutEmployee(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(companyService.getInfoAboutEmpById(id), HttpStatus.OK);
+    }
 
+    @GetMapping("/emp")  @Secured("ROLE_ADMIN")
+    public ResponseEntity<List<UserDto>> getAllEmployee() {
+        return new ResponseEntity<>(companyService.getAllEmployee(), HttpStatus.OK);
+    }
 
-    @Secured({"ROLE_CLIENT", "ROLE_ADMIN"})
-    @PutMapping
-    public ResponseEntity<HttpStatus> update(
-            @RequestBody CompanyDto dto, Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "try to update company {} by {}", dto.getCompany(), principal.getName());
-
-        CompanyDto companyDto = companyService.update(dto, principal);
-        if (companyDto == null) {
-            log.warn(TAG + "User: {} isn't owner of any company:", principal.getName());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        log.error(TAG + "Company: '{}' was updated by its owner {}", companyDto.getCompany(), principal.getName());
+    @PutMapping("/emp")  @Secured("ROLE_ADMIN")
+    public ResponseEntity<HttpStatus> makeUserActive(@RequestBody Dto dto) {
+        log.info(TAG + "Try to make user inactive ");
+        companyService.makeUserActive(dto.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/emp")  @Secured("ROLE_ADMIN")
+    public ResponseEntity<HttpStatus> makeUserInactive(@RequestBody Dto dto) {
+        log.info(TAG + "Try to make user inactive ");
+        companyService.makeUserInactive(dto.getName());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-
+    @DeleteMapping("/emp/del") @Secured("ROLE_ADMIN")
+    public ResponseEntity<HttpStatus> deleteUser(@RequestBody Dto dto) {
+        log.info(TAG + "Try to delete user");
+        companyService.deleteUser(dto.getName());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

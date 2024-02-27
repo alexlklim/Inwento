@@ -46,7 +46,7 @@ public class ProductDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate lastInventoryDate;
-    Double locLongitude, locLatitude;
+    Double longitude, latitude;
 
 }
 

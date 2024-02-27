@@ -1,0 +1,29 @@
+package com.alex.asset.core.mappers;
+
+import com.alex.asset.security.domain.User;
+import com.alex.asset.security.domain.dto.UserDto;
+
+import java.util.List;
+
+public class UserMapper {
+
+
+//    public User toEntity(UserDto dto) {
+//
+//
+//    }
+
+    public static UserDto toDTO(User user) {
+        UserDto dto = new UserDto();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstname());
+        dto.setLastActivity(user.getLastActivity());
+        dto.setActive(user.isActive());
+        dto.setLastActivity(user.getLastActivity());
+        dto.setCreatedAt(user.getCreated());
+        dto.setUpdatedAt(user.getUpdated());
+        dto.setRole(List.of(user.getRoles().name()));
+        return dto;
+    }
+}
