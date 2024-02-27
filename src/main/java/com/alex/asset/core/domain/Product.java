@@ -109,9 +109,7 @@ public class Product {
     // location
     Double longitude, latitude;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "company_id")
-    Company company;
+
 
 
 }
