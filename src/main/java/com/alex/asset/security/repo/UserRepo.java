@@ -4,6 +4,7 @@ import com.alex.asset.security.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,15 +23,16 @@ public interface UserRepo extends JpaRepository<User, Long> {
   List<User> getActiveUsers();
 
   @Modifying
-  @Query("UPDATE User u SET u.isActive = false WHERE u = ?1")
-  void makeUserInactive(User user);
+  @Query("UPDATE User u SET u.isActive = ?1 WHERE u.id = ?2")
+  void updateVisibility(boolean bool, Long id);
 
-  @Modifying
-  @Query("UPDATE User u SET u.isActive = true WHERE u = ?1")
-  void makeUserActive(User user);
 
   boolean existsByEmail(String email);
 
 
   Optional<User> getUserByEmail(String username);
+
+  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM User u WHERE :role IN (u.roles) AND u.id = :id")
+  boolean checkIfRole(@Param("role") String role, @Param("id") Long id);
+
 }

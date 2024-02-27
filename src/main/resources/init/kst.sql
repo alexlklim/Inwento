@@ -1,4 +1,4 @@
-INSERT INTO ksts (is_active, num, kst) VALUES
+INSERT IGNORE INTO ksts (is_active, num, kst) VALUES
 (true, '0', 'GRUNTY'),
 (true, '01', 'UŻYTKI ROLNE'),
 (true, '010', 'Grunty orne'),

@@ -10,14 +10,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CompanyRepo extends JpaRepository<Company, Long> {
-    Optional<Company> findBySecretCode(UUID secretCode);
+
 
     @Query("SELECT c FROM Company c WHERE c.id = ?1")
     Company getCompany(Long id);
 
-    Optional<Company> findByIdAndActiveTrueAndOwner(Long id, User user);
 
-    Optional<Company> findByOwner(User user);
-
-    Optional<Company> findByIdAndOwner(Long companyId, User user);
 }

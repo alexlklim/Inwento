@@ -7,7 +7,7 @@ import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
 import com.alex.asset.core.dto.ProductDto;
-import com.alex.asset.core.service.FieldService;
+import com.alex.asset.core.service.ConfigureService;
 import com.alex.asset.core.service.TypeService;
 import com.alex.asset.security.domain.User;
 import lombok.Data;
@@ -15,9 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.naming.Name;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -27,7 +25,7 @@ import java.util.function.Function;
 @Service
 public class ProductMapper {
     private final TypeService typeService;
-    private final FieldService fieldService;
+    private final ConfigureService fieldService;
 
 
     public Product toEntity(Company company, Product product, ProductDto dto) {
@@ -47,25 +45,25 @@ public class ProductMapper {
         product.setWarrantyPeriod(dto.getWarrantyPeriod());
         product.setInspectionDate(dto.getInspectionDate());
         product.setLastInventoryDate(dto.getLastInventoryDate());
-
-        product.setLongitude(dto.getLocLongitude());
-        product.setLatitude(dto.getLocLatitude());
-        product.setAssetStatus(fieldService.getAssetStatus(dto.getAssetStatus()));
-        product.setUnit(fieldService.getUnit(dto.getUnit()));
-        product.setKst(fieldService.getKST(dto.getKst()));
-
-
-        product.setProducer(dto.getProducer());
-        product.setSupplier(dto.getSupplier());
-        product.setBranch(fieldService.getBranch(dto.getBranchName(), company));
-        product.setMpk(fieldService.getMPK(dto.getMpkName(), company));
-
-        product.setType(typeService.getType(dto.getTypeName(), company));
-        product.setSubtype(typeService.getSubtype(
-                dto.getSubtypeName(),
-                typeService.getType(dto.getTypeName(), company),
-                company
-        ));
+//
+//        product.setLongitude(dto.getLocLongitude());
+//        product.setLatitude(dto.getLocLatitude());
+//        product.setAssetStatus(fieldService.getAssetStatus(dto.getAssetStatus()));
+//        product.setUnit(fieldService.getUnit(dto.getUnit()));
+//        product.setKst(fieldService.getKST(dto.getKst()));
+//
+//
+//        product.setProducer(dto.getProducer());
+//        product.setSupplier(dto.getSupplier());
+//        product.setBranch(fieldService.getBranch(dto.getBranchName(), company));
+//        product.setMpk(fieldService.getMPK(dto.getMpkName(), company));
+//
+//        product.setType(typeService.getType(dto.getTypeName(), company));
+//        product.setSubtype(typeService.getSubtype(
+//                dto.getSubtypeName(),
+//                typeService.getType(dto.getTypeName(), company),
+//                company
+//        ));
 
         return product;
 
@@ -86,34 +84,34 @@ public class ProductMapper {
         dto.setBarCode(entity.getBarCode());
         dto.setRfidCode(entity.getRfidCode());
 
-        dto.setCreated(entity.getCreated().toLocalDate());
-        dto.setUpdated(entity.getUpdated().toLocalDate());
+        dto.setCreated(entity.getCreated());
+        dto.setUpdated(entity.getUpdated());
 
         dto.setProducer(entity.getProducer());
         dto.setSupplier(entity.getSupplier());
 
-        Fio createdBy = new Fio();
-        setField(entity.getCreatedBy(), createdBy::setName, User::getFirstname);
-        setField(entity.getCreatedBy(), createdBy::setSurname, User::getLastname);
-        dto.setCreatedByName(createdBy.getName() + " " + createdBy.getSurname());
+//        Fio createdBy = new Fio();
+//        setField(entity.getCreatedBy(), createdBy::setName, User::getFirstname);
+//        setField(entity.getCreatedBy(), createdBy::setSurname, User::getLastname);
+//        dto.setCreatedByName(createdBy.getName() + " " + createdBy.getSurname());
+//
+//        dto.setReceiver(entity.getReceiver());
+//
+//
+//        Fio nameLiable = new Fio();
+//        setField(entity.getLiable(), nameLiable::setName, User::getFirstname);
+//        setField(entity.getLiable(), nameLiable::setSurname, User::getLastname);
+//        dto.setLiableName(nameLiable.getName() + " " + nameLiable.getSurname());
 
-        dto.setReceiver(entity.getReceiver());
-
-
-        Fio nameLiable = new Fio();
-        setField(entity.getLiable(), nameLiable::setName, User::getFirstname);
-        setField(entity.getLiable(), nameLiable::setSurname, User::getLastname);
-        dto.setLiableName(nameLiable.getName() + " " + nameLiable.getSurname());
-
-        setField(entity.getUnit(), dto::setUnit, Unit::getUnit);
-        setField(entity.getAssetStatus(), dto::setAssetStatus, AssetStatus::getAssetStatus);
-        setField(entity.getKst(), dto::setKst, KST::getKst);
-
-        setField(entity.getType(), dto::setTypeName, Type::getType);
-        setField(entity.getSubtype(), dto::setSubtypeName, Subtype::getSubtype);
-        setField(entity.getBranch(), dto::setBranchName, Branch::getBranch);
-
-        setField(entity.getMpk(), dto::setMpkName, MPK::getMpk);
+//        setField(entity.getUnit(), dto::setUnit, Unit::getUnit);
+//        setField(entity.getAssetStatus(), dto::setAssetStatus, AssetStatus::getAssetStatus);
+//        setField(entity.getKst(), dto::setKst, KST::getKst);
+//
+//        setField(entity.getType(), dto::setTypeName, Type::getType);
+//        setField(entity.getSubtype(), dto::setSubtypeName, Subtype::getSubtype);
+//        setField(entity.getBranch(), dto::setBranchName, Branch::getBranch);
+//
+//        setField(entity.getMpk(), dto::setMpkName, MPK::getMpk);
 
 
 
@@ -122,17 +120,11 @@ public class ProductMapper {
         dto.setWarrantyPeriod(entity.getWarrantyPeriod());
         dto.setInspectionDate(entity.getInspectionDate());
         dto.setLastInventoryDate(entity.getLastInventoryDate());
-        dto.setLocLongitude(entity.getLongitude());
-        dto.setLocLatitude(entity.getLatitude());
+//        dto.setLocLongitude(entity.getLongitude());
+//        dto.setLocLatitude(entity.getLatitude());
         return dto;
     }
 
-    @NoArgsConstructor
-    @Data
-    private static class Fio{
-        String name;
-        String surname;
-    }
 
 
 

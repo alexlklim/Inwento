@@ -1,4 +1,4 @@
-package com.alex.asset.core.repo.product.constatns;
+package com.alex.asset.core.repo.product;
 
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import org.springframework.data.jpa.repository.JpaRepository;

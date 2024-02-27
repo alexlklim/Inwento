@@ -10,9 +10,9 @@ import com.alex.asset.core.dto.simple.ActiveDto;
 import com.alex.asset.core.dto.simple.DtoName;
 import com.alex.asset.core.repo.product.BranchRepo;
 import com.alex.asset.core.repo.product.MpkRepo;
-import com.alex.asset.core.repo.product.constatns.AssetStatusRepo;
-import com.alex.asset.core.repo.product.constatns.KstRepo;
-import com.alex.asset.core.repo.product.constatns.UnitRepo;
+import com.alex.asset.core.repo.product.AssetStatusRepo;
+import com.alex.asset.core.repo.product.KstRepo;
+import com.alex.asset.core.repo.product.UnitRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FieldService {
+public class ConfigureService {
     private final String TAG = "FIELD_SERVICE - ";
 
     private final BranchRepo branchRepo;

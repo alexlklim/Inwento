@@ -12,7 +12,7 @@ spring:
       continue-on-error: false
       schema-locations:
         - classpath:schema.sql
-        - classpath:init.
+        - classpath:init/init.sql
         - classpath:init/kst.sql
         - classpath:init/products.sql
   mail:

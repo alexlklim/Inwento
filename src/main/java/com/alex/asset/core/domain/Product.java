@@ -44,9 +44,10 @@ public class Product {
     @Column(name = "rfid_code")
     String rfidCode;
 
-    @ManyToOne @JoinColumn(name = "created_by_id")
+
+    @ManyToOne @JoinColumn(name = "created_by_id") @JsonIgnore
     User createdBy;
-    @ManyToOne @JoinColumn(name = "liable_id")
+    @ManyToOne @JoinColumn(name = "liable_id") @JsonBackReference
     User liable;
     String receiver;
 
@@ -71,9 +72,9 @@ public class Product {
 
     @Column(name = "is_scrapping")
     boolean isScrapping;
-    @Column(name = "iscrapping_date")
+    @Column(name = "scrapping_date")
     LocalDate scrappingDate;
-    @Column(name = "is_scrapping_reason")
+    @Column(name = "scrapping_reason")
     String scrappingReason;
 
     String document;

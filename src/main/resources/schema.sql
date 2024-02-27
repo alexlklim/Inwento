@@ -112,3 +112,4 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (subtype_id) REFERENCES subtypes(id),
     FOREIGN KEY (branch_id) REFERENCES branches(id),
     FOREIGN KEY (mpk_id) REFERENCES mpks(id));
+

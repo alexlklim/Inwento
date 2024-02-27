@@ -13,7 +13,7 @@ public class UserMapper {
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstname());
-        dto.setLastActivity(user.getLastActivity());
+        dto.setLastName(user.getLastname());
         dto.setActive(user.isActive());
         dto.setLastActivity(user.getLastActivity());
         dto.setCreatedAt(user.getCreated());
