@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
@@ -31,5 +32,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
   boolean existsByEmail(String email);
 
 
-
+  Optional<User> getUserByEmail(String username);
 }

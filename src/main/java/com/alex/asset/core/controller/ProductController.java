@@ -1,10 +1,9 @@
 package com.alex.asset.core.controller;
 
 
-import com.alex.asset.core.dto.LongDto;
+import com.alex.asset.core.dto.simple.DtoLong;
 import com.alex.asset.core.dto.ProductDto;
-import com.alex.asset.core.dto.ShortProduct;
-import com.alex.asset.core.dto.Dto;
+import com.alex.asset.core.dto.simple.DtoName;
 import com.alex.asset.core.service.ProductService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +34,11 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<LongDto> add(Authentication authentication) {
+    public ResponseEntity<DtoLong> add(Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "add empty product {}", principal);
 
-        LongDto dto = new LongDto();
+        DtoLong dto = new DtoLong();
         dto.setId(productService.addEmptyProductForCompany(principal.getCompanyId(), principal.getUserId()));
         return new ResponseEntity<>(
                 dto,
@@ -91,7 +90,7 @@ public class ProductController {
 
     @GetMapping("/filter/title")
     public ResponseEntity<List<ShortProduct>> getProductsByTitle(
-            @RequestBody Dto dto, Authentication authentication){
+            @RequestBody DtoName dto, Authentication authentication){
         log.info(TAG + " ");
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
 

@@ -69,6 +69,13 @@ public class Product {
 
     String producer, supplier;
 
+    @Column(name = "is_scrapping")
+    boolean isScrapping;
+    @Column(name = "iscrapping_date")
+    LocalDate scrappingDate;
+    @Column(name = "is_scrapping_reason")
+    String scrappingReason;
+
     String document;
     @Column(name = "document_date")
     LocalDate documentDate;

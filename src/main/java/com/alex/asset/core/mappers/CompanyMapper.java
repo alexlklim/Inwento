@@ -8,16 +8,6 @@ import java.util.List;
 
 public class CompanyMapper {
 
-    public static Company toEntity(CompanyDto dto){
-        Company company = new Company();
-        company.setCompany(dto.getCompany());
-        company.setInfo(dto.getInfo());
-        company.setCountry(dto.getCountry());
-        company.setCity(dto.getCity());
-        company.setAddress(dto.getAddress());
-        return company;
-    }
-
     public static CompanyDto toDto(Company entity, List<UserDto> employeeDTOs){
         CompanyDto dto = new CompanyDto();
         dto.setCompany(entity.getCompany());

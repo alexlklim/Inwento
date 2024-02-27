@@ -1,7 +1,7 @@
 package com.alex.asset.core.controller;
 
 import com.alex.asset.core.dto.CompanyDto;
-import com.alex.asset.core.dto.Dto;
+import com.alex.asset.core.dto.simple.DtoName;
 import com.alex.asset.core.service.CompanyService;
 import com.alex.asset.security.domain.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -41,21 +41,21 @@ public class CompanyController {
     }
 
     @PutMapping("/emp")  @Secured("ROLE_ADMIN")
-    public ResponseEntity<HttpStatus> makeUserActive(@RequestBody Dto dto) {
+    public ResponseEntity<HttpStatus> makeUserActive(@RequestBody DtoName dto) {
         log.info(TAG + "Try to make user inactive ");
         companyService.makeUserActive(dto.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/emp")  @Secured("ROLE_ADMIN")
-    public ResponseEntity<HttpStatus> makeUserInactive(@RequestBody Dto dto) {
+    public ResponseEntity<HttpStatus> makeUserInactive(@RequestBody DtoName dto) {
         log.info(TAG + "Try to make user inactive ");
         companyService.makeUserInactive(dto.getName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/emp/del") @Secured("ROLE_ADMIN")
-    public ResponseEntity<HttpStatus> deleteUser(@RequestBody Dto dto) {
+    public ResponseEntity<HttpStatus> deleteUser(@RequestBody DtoName dto) {
         log.info(TAG + "Try to delete user");
         companyService.deleteUser(dto.getName());
         return new ResponseEntity<>(HttpStatus.OK);

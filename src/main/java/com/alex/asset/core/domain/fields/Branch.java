@@ -2,6 +2,7 @@ package com.alex.asset.core.domain.fields;
 
 import com.alex.asset.core.domain.Company;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,8 +22,12 @@ public class Branch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active") @JsonIgnore
     boolean isActive;
-
     String branch;
+
+    public Branch(String branch) {
+        this.isActive = true;
+        this.branch = branch;
+    }
 }

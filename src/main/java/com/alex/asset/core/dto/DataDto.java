@@ -1,6 +1,10 @@
 package com.alex.asset.core.dto;
 
 
+import com.alex.asset.core.domain.fields.Branch;
+import com.alex.asset.core.domain.fields.MPK;
+import com.alex.asset.core.domain.fields.constants.AssetStatus;
+import com.alex.asset.core.domain.fields.constants.Unit;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -14,16 +18,39 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DataDto {
-    List<Map<Integer, String>> employees;
-    List<Map<Integer, String>> units;
-    List<Map<Integer, String>> ksts;
-    List<Map<Integer, String>> assetStatuses;
+    List<Employee> employees;
 
-    Map<String, List<String>> types;
+    List<Type> types;
 
-    List<Map<Integer, String>> branches;
-    List<Map<Integer, String>> suppliers;
-    List<Map<Integer, String>> producers;
-    List<Map<Integer, String>> mpks;
+    List<Unit> units;
+    List<AssetStatus> assetStatuses;
+    List<Branch> branches;
+    List<MPK> MPKs;
 
+
+
+    @Data
+    public static class Employee {
+        private Long id;
+        private String email;
+        private String firstName;
+        private String lastName;
+    }
+
+
+    @AllArgsConstructor
+    @Data
+    public static class Type {
+        private Long id;
+        private String type;
+        private List<Subtype> subtypes;
+
+    }
+
+    @AllArgsConstructor
+    @Data
+    public static class Subtype {
+        private Long id;
+        private String subtype;
+    }
 }

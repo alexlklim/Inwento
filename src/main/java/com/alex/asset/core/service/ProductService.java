@@ -4,12 +4,9 @@ package com.alex.asset.core.service;
 import com.alex.asset.core.domain.Company;
 import com.alex.asset.core.domain.Product;
 import com.alex.asset.core.dto.ProductDto;
-import com.alex.asset.core.dto.ShortProduct;
 import com.alex.asset.core.mappers.ProductMapper;
 import com.alex.asset.core.repo.CompanyRepo;
 import com.alex.asset.core.repo.ProductRepo;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
-import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +48,6 @@ public class ProductService {
         Product product = new Product();
         product.setActive(false);
         product.setCreatedBy(userRepo.getUser(userId));
-        product.setCompany(companyRepo.getCompany(companyId));
         Product productFromDB = productRepo.save(product);
         return productFromDB.getId();
     }

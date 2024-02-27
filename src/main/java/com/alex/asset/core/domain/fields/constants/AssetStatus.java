@@ -1,6 +1,7 @@
 package com.alex.asset.core.domain.fields.constants;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +19,7 @@ public class AssetStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active") @JsonIgnore
     boolean isActive;
 
     @Column(name = "asset_status")

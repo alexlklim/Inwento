@@ -18,12 +18,10 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CompanyDto {
     String company, info;
+
     String country,city, address;
 
-
-    String ownerFirstName;
-    String ownerLastName;
-    String ownerEmail;
+    String ownerFirstName, ownerLastName, ownerEmail;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     List<UserDto> employees;
