@@ -1,21 +1,24 @@
 package com.alex.asset.core.domain.fields.constants;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "units")
-public class Unit{
+public class Unit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    private String unit;
+    @Column(name = "is_active")
+    boolean isActive;
+
+    @Column(name = "unit")
+    String unit;
 }

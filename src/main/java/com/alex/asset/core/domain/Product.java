@@ -19,21 +19,16 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 
-@Data
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "products")
+@Entity @Table(name = "products")
 public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    boolean active;
+    @Column(name = "is_active")
+    boolean isActive;
 
     @CreatedDate @Column(name = "created")
     LocalDateTime created;
@@ -43,63 +38,42 @@ public class Product {
     String title, description;
     Double price;
 
-    // qr, rfid, ean etc
     @Column(name = "bar_code")
     String barCode;
 
     @Column(name = "rfid_code")
     String rfidCode;
 
-
-    @ManyToOne
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne @JoinColumn(name = "created_by_id")
     User createdBy;
-
     @ManyToOne @JoinColumn(name = "liable_id")
     User liable;
-
     String receiver;
-
-    @ManyToOne @JoinColumn(name = "asset_status_id")
-    AssetStatus assetStatus;
 
     @ManyToOne @JoinColumn(name = "kst_id")
     KST kst;
-
+    @ManyToOne @JoinColumn(name = "asset_status_id")
+    AssetStatus assetStatus;
     @ManyToOne @JoinColumn(name = "unit_id")
     Unit unit;
 
-
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "type_id")
-    Type type;
-
-    @ManyToOne @JoinColumn(name = "subtype_id")
-    Subtype subtype;
-
-
-
-    String producer;
-    String supplier;
-
     @ManyToOne @JoinColumn(name = "branch_id")
     Branch branch;
-
-
     @ManyToOne @JoinColumn(name = "mpk_id")
     MPK mpk;
 
+    @ManyToOne @JsonIgnore @JoinColumn(name = "type_id")
+    Type type;
+    @ManyToOne @JoinColumn(name = "subtype_id")
+    Subtype subtype;
+
+    String producer, supplier;
 
     String document;
-
     @Column(name = "document_date")
     LocalDate documentDate;
-
     @Column(name = "warranty_period")
     LocalDate warrantyPeriod;
-
     @Column(name = "inspection_date")
     LocalDate inspectionDate;
 
@@ -108,8 +82,4 @@ public class Product {
 
     // location
     Double longitude, latitude;
-
-
-
-
 }

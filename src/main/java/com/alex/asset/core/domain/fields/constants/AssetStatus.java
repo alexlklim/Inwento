@@ -2,16 +2,15 @@ package com.alex.asset.core.domain.fields.constants;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "asset_statuses")
 public class AssetStatus {
 
@@ -19,6 +18,9 @@ public class AssetStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(name = "is_active")
+    boolean isActive;
+
     @Column(name = "asset_status")
-    private String assetStatus;
+    String assetStatus;
 }
