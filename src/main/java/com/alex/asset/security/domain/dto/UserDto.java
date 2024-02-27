@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -20,17 +18,16 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
     String email;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    String password;
-    String firstname, lastname;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    String companyName;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Long companyId;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    boolean enabled;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY) @JsonFormat(pattern = "yyyy-MM-dd")
+
+    String firstName, lastName;
+
+    boolean isActive;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    LocalDateTime lastActivity;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDateTime createdAt, updatedAt;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+
     List<String> role = new ArrayList<>();
 }

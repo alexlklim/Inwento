@@ -57,7 +57,8 @@ public class AuthenticationService {
         Token refreshToken = tokenService.createRefreshToken(user);
 
         AuthDto authDto = new AuthDto();
-        authDto.setName(user.getFirstname() + " " + user.getLastname());
+        authDto.setFirstName(user.getFirstname());
+        authDto.setLastName(user.getLastname());
 
         authDto.setExpiresAt(tokenService.getTokenById(refreshToken.getId()).getExpired());
         authDto.setAccessToken(accessToken);
@@ -83,17 +84,13 @@ public class AuthenticationService {
 
     public boolean forgotPasswordAction(String email) {
         log.info("Forgot password action: {}", email);
-        // delete token for this user
-        // create new refresh token for this user
-        // sent link to restore password with this token
-        // return default message
+
         User user = userAuthService.getByEmail(email);
         if (user == null) return false;
 
-
-
         tokenService.deleteTokenByUser(user);
-        emailService.forgotPassword(tokenService.createRefreshToken(user).getId().toString(), user.getEmail());
+        emailService.forgotPassword(
+                tokenService.createRefreshToken(user).getId().toString(), user.getEmail());
         return true;
     }
 

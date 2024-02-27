@@ -11,11 +11,10 @@ spring:
       mode: always
       continue-on-error: false
       schema-locations:
-        - classpath:del.sql
         - classpath:schema.sql
         - classpath:init.
-        - classpath:kst.sql
-        - classpath:products.sql
+        - classpath:init/kst.sql
+        - classpath:init/products.sql
   mail:
     host: smtp.gmail.com
     port: 587

@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final String TAG = "AUTHENTICATION_CONTROLLER - ";
 
-
-
-
     private final UserAuthService userAuthService;
     private final AuthenticationService authenticationService;
 
@@ -103,12 +100,7 @@ public class AuthenticationController {
 
     @GetMapping("/me")
     public ResponseEntity<CustomPrincipal> info(Authentication authentication) {
-        System.out.println(authentication);
-
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-
-        System.out.println(authentication.getAuthorities());
-        System.out.println(principal);
         return new ResponseEntity<>(principal, HttpStatus.OK);
     }
 }

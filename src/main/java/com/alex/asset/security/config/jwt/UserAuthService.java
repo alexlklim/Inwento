@@ -6,7 +6,6 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.dto.PasswordDto;
 import com.alex.asset.security.domain.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -36,15 +35,14 @@ public class UserAuthService {
                     .lastname(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .roles(Role.CLIENT)
-                    .isEnabled(true)
+                    .roles(Role.EMP)
+                    .isActive(true)
                     .build();
             userRepo.save(user);
             log.info("User with email {} was successfully created", request.getEmail());
             emailService.accountWasCreated(user);
             return true;
         } catch (DataIntegrityViolationException e) {
-            log.error(ErrorStatus.USER_ALREADY_EXISTS.name());
             log.error("User with email {} is already exists in DB", request.getEmail());
             return false;
         }
@@ -54,7 +52,7 @@ public class UserAuthService {
 
     public boolean changePassword(PasswordDto dto, CustomPrincipal principal) {
         log.info("Try to change password for user with email: {}", principal.getName());
-        User user = userRepo.findByEmail(principal.getName()).orElse(null);
+        User user = userRepo.getUserByEmail(principal.getName()).orElse(null);
         assert user != null;
         if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())) return false;
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
@@ -65,7 +63,7 @@ public class UserAuthService {
 
     public void changePasswordForgot(String email, String password) {
         log.info("Change password for user: {}", email);
-        User user = userRepo.findByEmail(email).orElse(null);
+        User user = userRepo.getUserByEmail(email).orElse(null);
         if (user == null) return;
         user.setPassword(passwordEncoder.encode(password));
         userRepo.save(user);
@@ -80,7 +78,7 @@ public class UserAuthService {
     }
 
     public User getByEmail(String email) {
-        return userRepo.findByEmail(email).orElse(null);
+        return userRepo.getUserByEmail(email).orElse(null);
     }
 
     public User getById(Long userId) {

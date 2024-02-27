@@ -1,7 +1,6 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.ErrorMessage;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -69,12 +68,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
                  SignatureException | IllegalArgumentException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            log.error(ErrorMessage.SOMETHING_WRONG);
             return;
         } catch (AuthenticationException e) {
             if (e instanceof NonceExpiredException) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                log.error(ErrorMessage.SOMETHING_WRONG);
                 return;
             }
         }

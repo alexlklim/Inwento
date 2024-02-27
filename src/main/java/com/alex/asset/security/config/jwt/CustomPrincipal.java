@@ -6,16 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data @Getter @Setter @Builder(toBuilder = true) @NoArgsConstructor @AllArgsConstructor
 public class CustomPrincipal implements Principal {
-    private String name;
+    private String name; // email
     private Long userId;
-    private Long companyId;
     @Override
     public String getName() {
         return name;
@@ -24,10 +20,6 @@ public class CustomPrincipal implements Principal {
     public CustomPrincipal(User user) {
         this.userId = user.getId();
         this.name = user.getEmail();
-        if (user.getCompany() != null) {
-            this.companyId = user.getCompany().getId();
-        } else {
-            this.companyId = null;
-        }
+
     }
 }

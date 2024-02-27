@@ -29,6 +29,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(name = "is_active")
+    boolean isActive;
+
     String firstname, lastname;
 
 
@@ -36,17 +39,15 @@ public class User implements UserDetails {
     String email;
     String password;
 
+    @Column(name = "last_activity")
+    LocalDateTime lastActivity;
 
-    @Column(name = "is_enabled")
-    boolean isEnabled;
+
     @CreatedDate
-    private LocalDateTime created;
+    LocalDateTime created;
     @LastModifiedDate
-    private LocalDateTime updated;
+    LocalDateTime updated;
 
-
-    @ManyToOne(fetch = FetchType.EAGER) @JoinColumn(name = "company_id")
-    private Company company;
 
     @Enumerated(EnumType.STRING)
     private Role roles;
@@ -83,6 +84,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return isActive;
     }
 }

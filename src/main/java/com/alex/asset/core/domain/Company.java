@@ -20,15 +20,13 @@ import java.util.UUID;
 @Getter @AllArgsConstructor @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity @Table(name = "companies",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"company", "secret_code"})})
+@Entity @Table(name = "company",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"company"})})
 public class Company {
 
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    boolean active;
 
 
 

@@ -4,7 +4,6 @@ import com.alex.asset.core.dto.EmployeeDto;
 import com.alex.asset.core.service.CompanyService;
 import com.alex.asset.core.service.UserService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
-import com.alex.asset.security.domain.dto.UserDtoShort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController

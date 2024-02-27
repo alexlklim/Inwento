@@ -6,7 +6,6 @@ import com.alex.asset.core.repo.CompanyRepo;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.dto.UserDto;
-import com.alex.asset.security.domain.dto.UserDtoShort;
 import com.alex.asset.security.mapper.UserMapper;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
