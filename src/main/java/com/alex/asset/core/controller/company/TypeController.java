@@ -18,8 +18,9 @@ public class TypeController {
 
 
     @PostMapping
-    public ResponseEntity<HttpStatus> addTypes(
-            @RequestBody List<String> list, Authentication authentication) {
+    public ResponseEntity<HttpStatus> addTypes(@RequestBody List<String> list) {
+
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

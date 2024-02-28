@@ -1,7 +1,6 @@
 package com.alex.asset.core.repo.product;
 
 import com.alex.asset.core.domain.fields.MPK;
-import com.alex.asset.core.domain.fields.Subtype;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

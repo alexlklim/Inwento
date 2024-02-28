@@ -1,7 +1,6 @@
 package com.alex.asset.core.service;
 
 
-import com.alex.asset.core.domain.fields.Branch;
 import com.alex.asset.core.domain.fields.Subtype;
 import com.alex.asset.core.domain.fields.Type;
 import com.alex.asset.core.dto.DataDto;
