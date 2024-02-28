@@ -1,6 +1,9 @@
 package com.alex.asset.core.domain;
 
-import com.alex.asset.core.domain.fields.*;
+import com.alex.asset.core.domain.fields.Branch;
+import com.alex.asset.core.domain.fields.MPK;
+import com.alex.asset.core.domain.fields.Subtype;
+import com.alex.asset.core.domain.fields.Type;
 import com.alex.asset.core.domain.fields.constants.AssetStatus;
 import com.alex.asset.core.domain.fields.constants.KST;
 import com.alex.asset.core.domain.fields.constants.Unit;
@@ -16,7 +19,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 @Data @Getter @Setter @AllArgsConstructor @NoArgsConstructor
@@ -87,7 +89,5 @@ public class Product {
 
     @Column(name = "last_inventory_date")
     LocalDate lastInventoryDate;
-
-    // location
     Double longitude, latitude;
 }

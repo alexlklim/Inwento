@@ -11,8 +11,10 @@ import java.util.Optional;
 public interface KstRepo extends JpaRepository<KST, Long> {
 
 
-    Optional<KST> findByKst(String kst);
-
     @Query("SELECT k FROM KST k WHERE k.num LIKE :prefix%")
     List<KST> findByNum(@Param("prefix") String prefix);
+
+
+    @Query("SELECT k FROM KST k WHERE k.id = ?1")
+    KST get(Long id);
 }

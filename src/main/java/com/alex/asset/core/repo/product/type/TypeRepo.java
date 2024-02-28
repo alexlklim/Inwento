@@ -13,11 +13,9 @@ import java.util.Optional;
 @Repository
 public interface TypeRepo extends JpaRepository<Type, Long> {
 
-
-
-
     @Query("SELECT t FROM Type t WHERE t.isActive = true")
     List<Type> getActive();
 
-
+    @Query("SELECT t FROM Type t WHERE t.id = ?1")
+    Type get(Long id);
 }

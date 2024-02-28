@@ -19,4 +19,8 @@ public interface UnitRepo extends JpaRepository<Unit, Long> {
     @Modifying
     @Query("UPDATE Unit u SET u.isActive = ?1 WHERE u.id = ?2")
     void update(boolean bool, Long id);
+
+
+    @Query("SELECT u FROM Unit u WHERE u.id = ?1")
+    Unit get(Long id);
 }

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface AssetStatusRepo extends JpaRepository<AssetStatus, Long> {
 
-    Optional<AssetStatus> findByAssetStatus(String assetStatus);
 
     @Query("SELECT a FROM AssetStatus a WHERE a.isActive = true")
     List<AssetStatus> getActive();
@@ -20,5 +19,7 @@ public interface AssetStatusRepo extends JpaRepository<AssetStatus, Long> {
     @Query("UPDATE AssetStatus a SET a.isActive = ?1 WHERE a.id = ?2")
     void update(boolean bool, Long id);
 
+    @Query("SELECT a FROM AssetStatus a WHERE a.id = ?1")
+    AssetStatus get(Long id);
 
 }

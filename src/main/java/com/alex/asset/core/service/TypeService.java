@@ -1,6 +1,7 @@
 package com.alex.asset.core.service;
 
 
+import com.alex.asset.core.domain.fields.Branch;
 import com.alex.asset.core.domain.fields.Subtype;
 import com.alex.asset.core.domain.fields.Type;
 import com.alex.asset.core.dto.DataDto;
@@ -21,6 +22,15 @@ public class TypeService {
 
     private final TypeRepo typeRepo;
     private final SubtypeRepo subtypeRepo;
+
+    public Type getTypeById(Long id){
+        return typeRepo.get(id);
+    }
+
+    public Subtype getSubtypeById(Long id){
+        return subtypeRepo.get(id);
+    }
+
 
     public List<DataDto.Type> getTypes(){
         return convertTypesToDTOs(typeRepo.getActive());

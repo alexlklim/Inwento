@@ -30,6 +30,7 @@ public class DataDto {
 
 
     @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Employee {
         private Long id;
         private String email;

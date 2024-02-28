@@ -18,4 +18,8 @@ public interface MpkRepo extends JpaRepository<MPK, Long> {
     @Modifying
     @Query("UPDATE MPK m SET m.isActive = ?1 WHERE m.id = ?2")
     void update(boolean bool, Long id);
+
+    @Query("SELECT m FROM MPK m WHERE m.id = ?1")
+    MPK get(Long id);
+
 }

@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS types (
 CREATE TABLE IF NOT EXISTS subtypes (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     is_active BOOLEAN  NOT NULL,
-    subtype VARCHAR(255),
+    subtype VARCHAR(255) UNIQUE NOT NULL,
     type_id BIGINT,
     FOREIGN KEY (type_id) REFERENCES types(id)
 );

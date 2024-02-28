@@ -18,4 +18,8 @@ public interface BranchRepo extends JpaRepository<Branch, Long> {
     @Modifying
     @Query("UPDATE Branch b SET b.isActive = ?1 WHERE b.id = ?2")
     void update(boolean bool, Long id);
+
+
+    @Query("SELECT b FROM Branch b WHERE b.id = ?1")
+    Branch get(Long id);
 }

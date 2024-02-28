@@ -32,7 +32,6 @@ public class ConfigureService {
     private final MpkRepo mpkRepo;
     private final AssetStatusRepo assetStatusRepo;
     private final UnitRepo unitRepo;
-
     private final KstRepo kstRepo;
 
 
@@ -96,6 +95,31 @@ public class ConfigureService {
         log.info(TAG + "Delete MPK {}", id);
         mpkRepo.deleteById(id);
     }
+
+
+
+    public AssetStatus getAssetStatusById(Long id){
+        return assetStatusRepo.get(id);
+    }
+
+    public Unit getUnitById(Long id){
+        return unitRepo.get(id);
+    }
+
+    public KST getKSTById(Long id){
+        return kstRepo.get(id);
+    }
+
+    public MPK getMPKById(Long id){
+        return mpkRepo.get(id);
+    }
+
+
+    public Branch getBranchById(Long id){
+        return branchRepo.get(id);
+    }
+
+
 
 
 }
