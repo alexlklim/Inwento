@@ -1,9 +1,9 @@
 package com.alex.asset.core.controller.company;
 
+import com.alex.asset.core.service.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,33 +13,32 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/type")
+@RequestMapping("/api/core/company")
 public class TypeController {
 
+    private final TypeService typeService;
 
-    @PostMapping
+    @PostMapping("/type")
     public ResponseEntity<HttpStatus> addTypes(@RequestBody List<String> list) {
+        typeService.addTypes(list);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+//    @DeleteMapping("/type/{id}}")
+//    public ResponseEntity<HttpStatus> deleteType(@PathVariable("id") Long id) {
+//        boolean result = typeService.deleteType(id);
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 
+    @PostMapping("/{id}/subtype")
+    public ResponseEntity<HttpStatus> addSubtypes(@PathVariable("id") Long id, @RequestBody List<String> list) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{type}")
-    public ResponseEntity<HttpStatus> deleteType(
-            @PathVariable("type") String type, Authentication authentication) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-    @PostMapping("/subtype")
-    public ResponseEntity<HttpStatus> addSubtypes(
-            @RequestBody List<String> list, Authentication authentication) {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/subtype/{subtype}")
-    public ResponseEntity<HttpStatus> deleteSubtype(
-            @PathVariable("subtype") String type, Authentication authentication) {
+    @DeleteMapping("/subtype/{id}")
+    public ResponseEntity<HttpStatus> deleteSubtype(@PathVariable("id") Long id) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -76,12 +76,7 @@ public class ConfigureController {
         configureService.updateBranch(dto);
         return new ResponseEntity<>( HttpStatus.OK);
     }
-    @DeleteMapping("/branch/{id}")
-    public ResponseEntity<HttpStatus> deleteBranch(@PathVariable("id") Long id) {
-        log.info(TAG + "Try to delete branch {}", id);
-        configureService.deleteBranch(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 
 
     @GetMapping("/mpk")
@@ -101,10 +96,5 @@ public class ConfigureController {
         configureService.updateMPK(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @DeleteMapping("/mpk/{id}")
-    public ResponseEntity<HttpStatus> deleteMPK(@PathVariable("id") Long id) {
-        log.info(TAG + "Try to delete MPK {}", id);
-        configureService.deleteMPK(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 }

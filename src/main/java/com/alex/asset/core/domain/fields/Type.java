@@ -34,4 +34,10 @@ public class Type {
     @OneToMany(mappedBy = "type")
     private List<Subtype> subtypes = new ArrayList<>();
 
+
+    public Type(String type) {
+        this.isActive = true;
+        this.type = type;
+        this.subtypes = new ArrayList<>();
+    }
 }
