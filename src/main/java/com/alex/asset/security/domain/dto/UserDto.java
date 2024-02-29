@@ -19,7 +19,7 @@ public class UserDto {
     Long id;
     String email;
 
-    String firstName, lastName;
+    String firstName, lastName, phone;
 
     boolean isActive;
 

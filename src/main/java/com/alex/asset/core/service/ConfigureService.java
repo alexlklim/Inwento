@@ -77,10 +77,6 @@ public class ConfigureService {
         log.info(TAG + "Update branch {}", dto.getId());
         branchRepo.update(dto.isActive(), dto.getId());
     }
-    public void deleteBranch(Long id) {
-        log.info(TAG + "Delete branch {}", id);
-        branchRepo.deleteById(id);
-    }
 
 
     public MPK addMPK(DtoName dto) {
@@ -91,11 +87,6 @@ public class ConfigureService {
         log.info(TAG + "Update MPK {}", dto.getId());
         mpkRepo.update(dto.isActive(), dto.getId());
     }
-    public void deleteMPK(Long id) {
-        log.info(TAG + "Delete MPK {}", id);
-        mpkRepo.deleteById(id);
-    }
-
 
 
     public AssetStatus getAssetStatusById(Long id){

@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Column(name = "is_active")
     boolean isActive;
 
-    String firstname, lastname;
+    String firstname, lastname, phone;
 
 
     @Column(unique = true)

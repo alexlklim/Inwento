@@ -3,9 +3,11 @@ package com.alex.asset.security.config.jwt;
 import com.alex.asset.email.EmailService;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
+import com.alex.asset.security.domain.UserMapper;
 import com.alex.asset.security.domain.dto.PasswordDto;
 import com.alex.asset.security.domain.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
+import com.alex.asset.utils.DateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,26 +28,13 @@ public class UserAuthService {
 
     public boolean register(RegisterDto request) {
         log.info("Try to register user with email: {}", request.getEmail());
-        if (userRepo.existsByEmail(request.getEmail())){
-            return false;
-        }
-        try {
-            User user = User.builder()
-                    .firstname(request.getFirstName())
-                    .lastname(request.getLastName())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .roles(Role.EMP)
-                    .isActive(true)
-                    .build();
-            userRepo.save(user);
-            log.info("User with email {} was successfully created", request.getEmail());
-            emailService.accountWasCreated(user);
-            return true;
-        } catch (DataIntegrityViolationException e) {
-            log.error("User with email {} is already exists in DB", request.getEmail());
-            return false;
-        }
+        if (userRepo.existsByEmail(request.getEmail())) return false;
+
+        User user = UserMapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepo.save(user);
+        log.info("User with email {} was successfully created", request.getEmail());
+        return true;
     }
 
 

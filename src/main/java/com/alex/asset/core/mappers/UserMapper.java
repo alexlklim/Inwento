@@ -14,6 +14,7 @@ public class UserMapper {
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstname());
         dto.setLastName(user.getLastname());
+        dto.setPhone(user.getPhone());
         dto.setActive(user.isActive());
         dto.setLastActivity(user.getLastActivity());
         dto.setCreatedAt(user.getCreated());

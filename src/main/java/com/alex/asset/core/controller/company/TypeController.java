@@ -24,13 +24,6 @@ public class TypeController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-//    @DeleteMapping("/type/{id}}")
-//    public ResponseEntity<HttpStatus> deleteType(@PathVariable("id") Long id) {
-//        boolean result = typeService.deleteType(id);
-//
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
 
     @PostMapping("/{id}/subtype")
     public ResponseEntity<HttpStatus> addSubtypes(@PathVariable("id") Long id, @RequestBody List<String> list) {

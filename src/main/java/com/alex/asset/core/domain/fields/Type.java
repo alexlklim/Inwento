@@ -1,8 +1,5 @@
 package com.alex.asset.core.domain.fields;
 
-import com.alex.asset.core.domain.Company;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
