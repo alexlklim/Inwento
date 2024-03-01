@@ -48,6 +48,7 @@ public class AppConfig implements WebMvcConfigurer {
         return config.getAuthenticationManager();
     }
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final String TAG = "JWT AUTHENTICATION FILTER - ";
 
     private final JwtService jwtService;
     private final UserAuthService userAuthService;

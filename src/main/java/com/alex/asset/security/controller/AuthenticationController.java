@@ -48,6 +48,11 @@ public class AuthenticationController {
         return new ResponseEntity<>(authDto, HttpStatus.OK);
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<AuthDto> logout(Authentication authentication) {
+        authenticationService.logout((CustomPrincipal) authentication.getPrincipal());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
     @PostMapping("/refresh")
