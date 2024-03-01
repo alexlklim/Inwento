@@ -22,7 +22,6 @@ public interface TypeRepo extends JpaRepository<Type, Long> {
     void updateVisibility(boolean bool, Long id);
 
 
-
-
     boolean existsByType(String type);
+//    boolean existsById(Long id);
 }

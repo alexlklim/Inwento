@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.stereotype.Service;
+
 
 @Slf4j
 @Service
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity
 public class EmailService {
 
 
@@ -35,7 +32,7 @@ public class EmailService {
 
 
     public void accountWasCreated(User user) {
-        log.info("account was created for user: {}", user.getEmail());
+        log.info("Send email about creating account to user with email: {}", user.getEmail());
         MailStructure mail = new MailStructure();
         mail.setEmail(user.getEmail());
         mail.setSubject("Asset Track Pro");
@@ -47,7 +44,7 @@ public class EmailService {
     }
 
     public void forgotPassword(String token, String email) {
-        log.info("Someone try to get access to your account: " + token);
+        log.info("Send email forgot password to user with email: {}", email);
 
         MailStructure mail = new MailStructure();
         mail.setEmail(email);
@@ -58,7 +55,7 @@ public class EmailService {
     }
 
     public void passwordWasChanged(String email) {
-        log.info("Password was changed for user: " + email);
+        log.info("Send email what password was changed to user with email: {}", email);
         MailStructure mail = new MailStructure();
         mail.setEmail(email);
         mail.setSubject("Asset Track Pro");

@@ -83,7 +83,9 @@ public class AuthenticationController {
     public ResponseEntity<String> forgotPassword(String email) {
         // send link to restore account to email
         boolean result = authenticationService.forgotPasswordAction(email);
-        if (result) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        if (result) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -92,15 +94,13 @@ public class AuthenticationController {
     // after user click link, front needs to open form to recovery password, get token from link
     // ask user to write new password and sent token and new password to server
     @PostMapping("/pw/recovery/{token}")
-    public ResponseEntity<?> recoveryPassword(
-            @PathVariable("token") String token,
-            String password) {
+    public ResponseEntity<?> recoveryPassword(@PathVariable("token") String token, String password) {
         boolean result = authenticationService.recoveryPassword(token, password);
-        if (result) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        if (result) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 
 
     @GetMapping("/me")

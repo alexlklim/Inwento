@@ -1,6 +1,8 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.email.EmailService;
+import com.alex.asset.email.Mail;
+import com.alex.asset.email.MailStructure;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.UserMapper;
 import com.alex.asset.security.domain.dto.PasswordDto;
@@ -34,6 +36,8 @@ public class UserAuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepo.save(user);
         log.info(TAG + "User with email {} was successfully created", request.getEmail());
+
+        emailService.accountWasCreated(user);
         return true;
     }
 
@@ -53,10 +57,12 @@ public class UserAuthService {
     public void changePasswordForgot(String email, String password) {
         log.info(TAG + "Change password for user: {}", email);
         User user = userRepo.getUserByEmail(email).orElse(null);
-        if (user == null) return;
+        if (user == null) {
+            log.info(TAG + "User with email {} was not found", email);
+            return;
+        }
         user.setPassword(passwordEncoder.encode(password));
         userRepo.save(user);
-        emailService.passwordWasChanged(user.getEmail());
     }
 
 

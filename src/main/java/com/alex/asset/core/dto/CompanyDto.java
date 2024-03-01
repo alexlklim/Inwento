@@ -22,7 +22,4 @@ public class CompanyDto {
     String country,city, address;
 
     String ownerFirstName, ownerLastName, ownerEmail;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    List<UserDto> employees;
 }

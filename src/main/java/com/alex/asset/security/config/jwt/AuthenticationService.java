@@ -99,7 +99,7 @@ public class AuthenticationService {
         }
 
         tokenService.deleteTokenByUser(user);
-//        emailService.forgotPassword(tokenService.createRefreshToken(user).getId().toString(), user.getEmail());
+        emailService.forgotPassword(tokenService.createRefreshToken(user).getId().toString(), user.getEmail());
         return true;
     }
 

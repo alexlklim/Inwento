@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class ProductDto {
     Long id;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    boolean isActive;
+    boolean active;
 
     String title;
     String description;

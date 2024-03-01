@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CompanyMapper {
 
-    public static CompanyDto toDto(Company entity, List<UserDto> employeeDTOs){
+    public static CompanyDto toDto(Company entity){
         CompanyDto dto = new CompanyDto();
         dto.setCompany(entity.getCompany());
         dto.setInfo(entity.getInfo());
@@ -18,7 +18,6 @@ public class CompanyMapper {
         dto.setOwnerFirstName(entity.getOwner().getFirstname());
         dto.setOwnerLastName(entity.getOwner().getLastname());
         dto.setOwnerEmail(entity.getOwner().getEmail());
-        dto.setEmployees(employeeDTOs);
         return dto;
     }
 

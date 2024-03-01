@@ -78,4 +78,14 @@ public class TypeService {
         subtypeRepo.updateVisibility(dto.isActive(), dto.getId());
         return true;
     }
+
+    public boolean addSubtypes(Long id, List<String> list) {
+        Type type = typeRepo.findById(id).orElse(null);
+        if (type == null) {
+            log.warn(TAG + "Type with id {} not found", id);
+            return false;
+        }
+        list.stream().map(subtype -> new Subtype(subtype, type)).forEach(subtypeRepo::save);
+        return true;
+    }
 }

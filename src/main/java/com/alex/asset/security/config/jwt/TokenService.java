@@ -19,17 +19,21 @@ import java.util.UUID;
 public class TokenService {
     private final TokenRepo tokenRepo;
 
+    private final String TAG = "TOKEN SERVICE - ";
+
+
     public void deleteTokenByUser(User user) {
-        log.info("Delete refresh token for user with email: {}", user.getEmail());
+        log.info(TAG + "Delete refresh token for user with email: {}", user.getEmail());
         tokenRepo.deleteAllByUser(user);
     }
 
     public Token getTokenById(Long tokenID){
+        log.info(TAG + "Get token by id {}", tokenID);
         return tokenRepo.findById(tokenID).orElse(null);
     }
 
     public Token createRefreshToken(User user){
-        log.info("Create refresh token for user with email: {}", user.getEmail());
+        log.info(TAG + "Create refresh token for user with email: {}", user.getEmail());
         tokenRepo.deleteAllByUser(user);
         Token token = new Token();
         token.setUser(user);
@@ -41,10 +45,13 @@ public class TokenService {
 
 
     public boolean checkIfTokenValid(UUID refreshToken, User user) {
-        log.info("Check if token belong to user: {} and not expired", user.getEmail());
+        log.info(TAG + "Check if token belong to user: {} and not expired", user.getEmail());
         Optional<Token> optionalToken = tokenRepo.findByUserAndToken(user, refreshToken);
 
-        if (optionalToken.isEmpty()) return false;
+        if (optionalToken.isEmpty()) {
+            log.error(TAG + "Token {} not exist in DB for user {}", refreshToken, user.getEmail());
+            return false;
+        }
 
         // check if token expired
         Token token = optionalToken.get();
@@ -53,6 +60,7 @@ public class TokenService {
 
 
     public Token getTokenByToken(UUID refreshToken) {
+        log.info(TAG + "Get token by token {}", refreshToken);
         return tokenRepo.findByToken(refreshToken);
     }
 }

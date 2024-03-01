@@ -37,7 +37,7 @@ public class CompanyService {
     public CompanyDto getInfoAboutCompany() {
         log.info(TAG + "Get information about company");
         Company company = companyRepo.findAll().get(0);
-        return CompanyMapper.toDto(company, getActiveEmployee());
+        return CompanyMapper.toDto(company);
     }
 
     private List<UserDto> getActiveEmployee() {
@@ -52,7 +52,7 @@ public class CompanyService {
     public CompanyDto updateCompany(CompanyDto dto) {
         log.info(TAG + "Update company");
         Company updatedCompany = CompanyMapper.updateCompany(companyRepo.findAll().get(0), dto);
-        return CompanyMapper.toDto(companyRepo.save(updatedCompany), getActiveEmployee());
+        return CompanyMapper.toDto(companyRepo.save(updatedCompany));
     }
 
 

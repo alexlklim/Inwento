@@ -31,4 +31,9 @@ public class Subtype {
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     private Type type;
 
+    public Subtype(String subtype, Type type) {
+        this.isActive = true;
+        this.subtype = subtype;
+        this.type = type;
+    }
 }

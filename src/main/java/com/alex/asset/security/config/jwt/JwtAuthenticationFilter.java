@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final String TAG = "JWT AUTHENTICATION FILTER - ";
 
     private final JwtService jwtService;
     private final UserAuthService userAuthService;
@@ -39,7 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         String jwt, userEmail;
