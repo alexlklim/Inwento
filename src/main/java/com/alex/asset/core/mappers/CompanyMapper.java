@@ -35,6 +35,10 @@ public class CompanyMapper {
         company.setCountry(dto.getCountry());
         company.setCity(dto.getCity());
         company.setAddress(dto.getAddress());
+        company.setLogo(dto.getLogo());
+        company.setPhone(dto.getPhone());
+        company.setNip(dto.getNip());
+        company.setRegon(dto.getRegon());
         return company;
     }
 }
