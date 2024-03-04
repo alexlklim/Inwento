@@ -24,4 +24,15 @@ public enum Role {
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return authorities;
     }
+
+
+    public static Role fromString(String roleName) {
+        for (Role role : Role.values()) {
+            if (role.name().equalsIgnoreCase(roleName)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant " + roleName + " found in Role");
+    }
+
 }

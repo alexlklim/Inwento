@@ -15,6 +15,14 @@ public class CompanyMapper {
         dto.setCountry(entity.getCountry());
         dto.setCity(entity.getCity());
         dto.setAddress(entity.getAddress());
+
+        dto.setZipCode(entity.getZipCode());
+
+        dto.setLogo(entity.getLogo());
+        dto.setNip(entity.getNip());
+        dto.setRegon(entity.getRegon());
+
+        dto.setLastInventoryDate(entity.getLastInventoryDate());
         dto.setOwnerFirstName(entity.getOwner().getFirstname());
         dto.setOwnerLastName(entity.getOwner().getLastname());
         dto.setOwnerEmail(entity.getOwner().getEmail());

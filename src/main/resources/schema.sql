@@ -23,6 +23,12 @@ CREATE TABLE IF NOT EXISTS company (
     country VARCHAR(255),
     city VARCHAR(255),
     address TEXT,
+    zip_code VARCHAR(255),
+    phone VARCHAR(255),
+    nip VARCHAR(255),
+    regon VARCHAR(255),
+    logo TEXT,
+    last_inventory_date DATETIME,
     owner_id BIGINT,
     FOREIGN KEY (owner_id) REFERENCES users(id)
 );

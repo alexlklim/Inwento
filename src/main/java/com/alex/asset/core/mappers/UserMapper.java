@@ -1,6 +1,7 @@
 package com.alex.asset.core.mappers;
 
 import com.alex.asset.core.dto.DataDto;
+import com.alex.asset.core.dto.EmpDto;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.dto.UserDto;
 
@@ -31,5 +32,21 @@ public class UserMapper {
         dto.setLastName(user.getLastname());
         return dto;
     }
+
+
+
+    public static EmpDto toEmpDTO(User user) {
+        EmpDto dto = new EmpDto();
+        dto.setId(user.getId());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstname());
+        dto.setLastName(user.getLastname());
+        dto.setPhone(user.getPhone());
+        dto.setActive(user.isActive());
+        dto.setLastActivity(user.getLastActivity());
+        dto.setRole(List.of(user.getRoles().name()));
+        return dto;
+    }
+
 
 }

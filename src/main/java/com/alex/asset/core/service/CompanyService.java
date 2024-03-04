@@ -4,6 +4,7 @@ package com.alex.asset.core.service;
 import com.alex.asset.core.domain.Company;
 import com.alex.asset.core.dto.CompanyDto;
 import com.alex.asset.core.dto.DataDto;
+import com.alex.asset.core.dto.EmpDto;
 import com.alex.asset.core.dto.simple.ActiveDto;
 import com.alex.asset.core.mappers.CompanyMapper;
 import com.alex.asset.core.mappers.UserMapper;
@@ -56,12 +57,10 @@ public class CompanyService {
     }
 
 
-    public void deleteUser(String email) {
-        userRepo.delete(Objects.requireNonNull(userRepo.getUser(email)));
-    }
 
-    public UserDto getInfoAboutEmpById(Long id) {
-        return UserMapper.toDTO(userRepo.getUser(id));
+
+    public EmpDto getInfoAboutEmpById(Long id) {
+        return UserMapper.toEmpDTO(userRepo.getUser(id));
     }
 
     public List<UserDto> getAllEmployee(){

@@ -13,7 +13,7 @@ public class UserMapper {
         user.setLastname(dto.getLastName());
         user.setPhone(dto.getPhone());
         user.setEmail(dto.getEmail());
-        user.setRoles(Role.EMP);
+        user.setRoles(Role.fromString(dto.getRole()));
         user.setActive(true);
         user.setLastActivity(DateService.getDateNow());
         return user;

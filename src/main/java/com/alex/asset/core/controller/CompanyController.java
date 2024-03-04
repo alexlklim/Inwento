@@ -1,8 +1,8 @@
 package com.alex.asset.core.controller;
 
 import com.alex.asset.core.dto.CompanyDto;
+import com.alex.asset.core.dto.EmpDto;
 import com.alex.asset.core.dto.simple.ActiveDto;
-import com.alex.asset.core.dto.simple.DtoName;
 import com.alex.asset.core.service.CompanyService;
 import com.alex.asset.security.domain.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getInfoAboutEmployee(@PathVariable("id") Long id) {
+    public ResponseEntity<EmpDto> getInfoAboutEmployee(@PathVariable("id") Long id) {
         return new ResponseEntity<>(companyService.getInfoAboutEmpById(id), HttpStatus.OK);
     }
 
@@ -52,12 +52,6 @@ public class CompanyController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
-    @DeleteMapping("/emp/del")
-    public ResponseEntity<HttpStatus> deleteUser(@RequestBody DtoName dto) {
-        log.info(TAG + "Try to delete user");
-        companyService.deleteUser(dto.getName());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 
 }

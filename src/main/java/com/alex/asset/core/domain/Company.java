@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter @Getter @AllArgsConstructor @NoArgsConstructor
@@ -27,6 +28,17 @@ public class Company {
 
     String company, info;
     String country,city, address;
+
+    String phone, nip, regon;
+    String logo;
+
+    @Column(name = "zip_code")
+    String zipCode;
+
+    @Column(name = "last_inventory_date")
+    LocalDate lastInventoryDate;
+
+
 
     @ManyToOne @JoinColumn(name = "owner_id")
     User owner;

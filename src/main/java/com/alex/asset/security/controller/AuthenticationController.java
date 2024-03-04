@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody RegisterDto request) {
         boolean registerResult = userAuthService.register(request);
@@ -32,8 +34,6 @@ public class AuthenticationController {
             log.error(TAG + "Registration for user {} failed", request.getEmail());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
-        // send email that user was created for this email
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -89,10 +89,6 @@ public class AuthenticationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    // request to change password
-    // after user click link, front needs to open form to recovery password, get token from link
-    // ask user to write new password and sent token and new password to server
     @PostMapping("/pw/recovery/{token}")
     public ResponseEntity<?> recoveryPassword(@PathVariable("token") String token, String password) {
         boolean result = authenticationService.recoveryPassword(token, password);
