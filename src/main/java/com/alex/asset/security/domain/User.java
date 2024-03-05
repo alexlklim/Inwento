@@ -1,6 +1,5 @@
 package com.alex.asset.security.domain;
 
-import com.alex.asset.core.domain.Company;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.UUID;
 
 @Data
 @Builder

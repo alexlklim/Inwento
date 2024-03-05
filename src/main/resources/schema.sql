@@ -2,6 +2,7 @@
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created DATETIME, updated DATETIME,
     is_active BOOLEAN  NOT NULL,
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
@@ -9,8 +10,6 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     last_activity DATETIME NOT NULL,
-    created DATETIME NOT NULL,
-    updated DATETIME NOT NULL,
     roles ENUM('ADMIN', 'EMP') NOT NULL
 );
 
@@ -19,18 +18,13 @@ CREATE TABLE IF NOT EXISTS company (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created DATETIME, updated DATETIME,
     company VARCHAR(255) UNIQUE NOT NULL,
-    info TEXT,
-    country VARCHAR(255),
     city VARCHAR(255),
-    address TEXT,
+    street VARCHAR(255),
     zip_code VARCHAR(255),
-    phone VARCHAR(255),
     nip VARCHAR(255),
     regon VARCHAR(255),
-    logo TEXT,
-    last_inventory_date DATETIME,
-    owner_id BIGINT,
-    FOREIGN KEY (owner_id) REFERENCES users(id)
+    phone VARCHAR(255),
+    email VARCHAR(255)
 );
 
 
@@ -88,8 +82,9 @@ CREATE TABLE IF NOT EXISTS types (
 CREATE TABLE IF NOT EXISTS subtypes (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     is_active BOOLEAN  NOT NULL,
-    subtype VARCHAR(255) UNIQUE NOT NULL,
+    subtype VARCHAR(255) NOT NULL,
     type_id BIGINT,
+    UNIQUE(subtype, type_id),
     FOREIGN KEY (type_id) REFERENCES types(id)
 );
 
@@ -100,16 +95,21 @@ CREATE TABLE IF NOT EXISTS products (
     is_active BOOLEAN  NOT NULL, created DATETIME, updated DATETIME,
     title VARCHAR(255), description TEXT, price DOUBLE,
     bar_code VARCHAR(255) UNIQUE, rfid_code VARCHAR(255) UNIQUE,
+    inventory_number VARCHAR(255),
     created_by_id BIGINT, liable_id BIGINT, receiver VARCHAR(255),
     kst_id BIGINT, asset_status_id BIGINT, unit_id BIGINT,
-    branch_id BIGINT, mpk_id BIGINT, type_id BIGINT, subtype_id BIGINT,
+    branch_id BIGINT, mpk_id BIGINT,
+    type_id BIGINT, subtype_id BIGINT,
     producer VARCHAR(255), supplier VARCHAR(255),
+
     is_scrapping BOOLEAN,
     scrapping_date DATETIME,
     scrapping_reason VARCHAR(255),
+
     document TEXT, document_date DATE, warranty_period DATE, inspection_date DATE,
     last_inventory_date DATE,
     longitude DOUBLE, latitude DOUBLE,
+
     FOREIGN KEY (created_by_id) REFERENCES users(id),
     FOREIGN KEY (liable_id) REFERENCES users(id),
     FOREIGN KEY (kst_id) REFERENCES ksts(id),
@@ -120,3 +120,31 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (branch_id) REFERENCES branches(id),
     FOREIGN KEY (mpk_id) REFERENCES mpks(id));
 
+
+
+
+# for inventarization
+CREATE TABLE IF NOT EXISTS inventarization (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active BOOLEAN  NOT NULL, created DATETIME, updated DATETIME,
+    start_date DATE, finish_date DATE,
+    info VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS event (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active BOOLEAN  NOT NULL, created DATETIME, updated DATETIME,
+    user_id BIGINT,
+    branch_id BIGINT
+);
+
+CREATE TABLE IF NOT EXISTS event_product_shortage (
+    event_id BIGINT,
+    product_id BIGINT,
+    PRIMARY KEY (event_id, product_id)
+);
+CREATE TABLE IF NOT EXISTS event_product_ok (
+    event_id BIGINT,
+    product_id BIGINT,
+    PRIMARY KEY (event_id, product_id)
+);
