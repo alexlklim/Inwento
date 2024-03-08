@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/branch")
+@RequestMapping("/api/v1/company/branch")
 @Tag(name = "Branch Controller", description = "Branch API")
 public class BranchController {
     private final String TAG = "BRANCH_CONTROLLER - ";

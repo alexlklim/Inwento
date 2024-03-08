@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/unit")
+@RequestMapping("/api/v1/company/unit")
 @Tag(name = "Unit Controller", description = "Unit API")
 public class UnitController {
 

@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/product")
+@RequestMapping("/api/v1/product")
 public class ProductController {
     private final String TAG = "PRODUCT_CONTROLLER - ";
 

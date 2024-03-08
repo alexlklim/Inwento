@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/asset-status")
+@RequestMapping("/api/v1/company/asset-status")
 @Tag(name = "AssetStatus Controller", description = "Asset API")
 public class AssetStatusController {
     private final String TAG = "ASSEt_STATUS_CONTROLLER - ";

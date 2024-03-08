@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company")
+@RequestMapping("/api/v1/company")
 @Tag(name = "Company Controller", description = "Company API")
 public class CompanyController {
     private final String TAG = "COMPANY_CONTROLLER - ";

@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/type")
+@RequestMapping("/api/v1/company/type")
 @Tag(name = "Type Controller", description = "Type API")
 public class TypeController {
 

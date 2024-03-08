@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/mpk")
+@RequestMapping("/api/v1/company/mpk")
 @Tag(name = "MPK Controller", description = "MPK API")
 public class MpkController {
 

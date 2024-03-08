@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/core/company/kst")
+@RequestMapping("/api/v1/company/kst")
 @Tag(name = "KST Controller", description = "KST API")
 public class KstController {
     private final String TAG = "KST_CONTROLLER - ";
