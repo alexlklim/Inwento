@@ -1,18 +1,10 @@
 package com.alex.asset.configure.services;
 
 
-import com.alex.asset.configure.domain.Branch;
-import com.alex.asset.configure.domain.MPK;
-import com.alex.asset.configure.domain.AssetStatus;
-import com.alex.asset.configure.domain.KST;
-import com.alex.asset.configure.domain.Unit;
+import com.alex.asset.configure.domain.*;
+import com.alex.asset.configure.repo.*;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
-import com.alex.asset.configure.repo.BranchRepo;
-import com.alex.asset.configure.repo.MpkRepo;
-import com.alex.asset.configure.repo.AssetStatusRepo;
-import com.alex.asset.configure.repo.KstRepo;
-import com.alex.asset.configure.repo.UnitRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,32 +27,44 @@ public class ConfigureService {
     private final KstRepo kstRepo;
 
 
-
-    public List<Branch> getBranches(){
+    public List<Branch> getBranches() {
         return branchRepo.getActive();
     }
-    public List<Unit> getUnits(){
+
+    public List<Unit> getUnits() {
         return unitRepo.getActive();
     }
-    public List<MPK> getMPKs(){
+
+    public List<MPK> getMPKs() {
         return mpkRepo.getActive();
     }
-    public List<AssetStatus> getAssetStatuses(){
+
+    public List<AssetStatus> getAssetStatuses() {
         return assetStatusRepo.getActive();
     }
 
+    public List<KST> getAllKSTs() {
+        return kstRepo.findAll();
+    }
 
     public void updateUnits(List<DtoActive> DTOs) {
         log.info(TAG + "Update units");
-        for (DtoActive dto: DTOs){
+        for (DtoActive dto : DTOs) {
             unitRepo.update(dto.isActive(), dto.getId());
         }
     }
 
     public void updateAssetStatuses(List<DtoActive> DTOs) {
         log.info(TAG + "Update asset statuses");
-        for (DtoActive dto: DTOs){
+        for (DtoActive dto : DTOs) {
             assetStatusRepo.update(dto.isActive(), dto.getId());
+        }
+    }
+
+    public void updateKSTs(List<DtoActive> DTOs) {
+        log.info(TAG + "Update KSTs");
+        for (DtoActive dto : DTOs) {
+            kstRepo.update(dto.isActive(), dto.getId());
         }
     }
 
@@ -73,6 +77,7 @@ public class ConfigureService {
         log.info(TAG + "Add branch {}", dto.getName());
         return branchRepo.save(new Branch(dto.getName()));
     }
+
     public void updateBranch(DtoActive dto) {
         log.info(TAG + "Update branch {}", dto.getId());
         branchRepo.update(dto.isActive(), dto.getId());
@@ -83,34 +88,32 @@ public class ConfigureService {
         log.info(TAG + "Add MPK {}", dto.getName());
         return mpkRepo.save(new MPK(dto.getName()));
     }
+
     public void updateMPK(DtoActive dto) {
         log.info(TAG + "Update MPK {}", dto.getId());
         mpkRepo.update(dto.isActive(), dto.getId());
     }
 
 
-    public AssetStatus getAssetStatusById(Long id){
+    public AssetStatus getAssetStatusById(Long id) {
         return assetStatusRepo.get(id);
     }
 
-    public Unit getUnitById(Long id){
+    public Unit getUnitById(Long id) {
         return unitRepo.get(id);
     }
 
-    public KST getKSTById(Long id){
+    public KST getKSTById(Long id) {
         return kstRepo.get(id);
     }
 
-    public MPK getMPKById(Long id){
+    public MPK getMPKById(Long id) {
         return mpkRepo.get(id);
     }
 
 
-    public Branch getBranchById(Long id){
+    public Branch getBranchById(Long id) {
         return branchRepo.get(id);
     }
-
-
-
 
 }
