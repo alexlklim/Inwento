@@ -47,19 +47,9 @@ public class UserService {
     }
 
 
-    private List<UserDto> getActiveUsers() {
-        log.info(TAG + "Get all active users");
-        return userRepo.getActiveUsers()
-                .stream()
-                .map(UserMapper::toDto)
-                .collect(Collectors.toList());
-    }
 
 
-    private boolean checkIfRoleADMIN(Long id) {
-        log.error(TAG + "Check if role ADMIN");
-        return userRepo.checkIfRole("ADMIN", id);
-    }
+
 
     public UserDto updateUser(Long id, UserDto dto) {
         log.error(TAG + "Update user with id {}", id);

@@ -3,11 +3,11 @@ package com.alex.asset.product.service;
 
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.dto.ProductDto;
-import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.dto.ScrapDto;
+import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
-import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.security.repo.UserRepo;
+import com.alex.asset.utils.dto.DtoActive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -66,10 +66,6 @@ public class ProductService {
 
     }
 
-    public boolean deleteById(Long id) {
-        productRepo.deleteById(id);
-        return true;
-    }
 
     public Map<Long, String> getByTitle(String title) {
         // it doesnt produce errors
@@ -81,7 +77,7 @@ public class ProductService {
 
     public boolean updateVisibility(DtoActive dto) {
         productRepo.updateVisibility(dto.isActive(), dto.getId());
-        return  true;
+        return true;
     }
 
     public boolean scraping(ScrapDto dto) {
@@ -101,7 +97,6 @@ public class ProductService {
     }
 
 
-
     public Product updateProduct(Product existingProduct, ProductDto productDto) {
         BeanUtils.copyProperties(productDto, existingProduct, getNullPropertyNames(productDto));
         return existingProduct;
@@ -119,7 +114,6 @@ public class ProductService {
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
     }
-
 
 
 }
