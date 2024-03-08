@@ -2,8 +2,8 @@ package com.alex.asset.product.mappers;
 
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.dto.ProductDto;
-import com.alex.asset.company.service.ConfigureService;
-import com.alex.asset.company.service.TypeService;
+import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.configure.services.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

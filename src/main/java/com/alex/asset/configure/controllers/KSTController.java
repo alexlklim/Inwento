@@ -1,9 +1,8 @@
-package com.alex.asset.company.controller.configure;
+package com.alex.asset.configure.controllers;
 
 
-import com.alex.asset.company.domain.KST;
-import com.alex.asset.company.service.CompanyService;
-import com.alex.asset.company.service.ConfigureService;
+import com.alex.asset.configure.domain.KST;
+import com.alex.asset.configure.services.ConfigureService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

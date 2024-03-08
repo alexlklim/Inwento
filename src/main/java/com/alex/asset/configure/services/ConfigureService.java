@@ -1,18 +1,18 @@
-package com.alex.asset.company.service;
+package com.alex.asset.configure.services;
 
 
-import com.alex.asset.company.domain.Branch;
-import com.alex.asset.company.domain.MPK;
-import com.alex.asset.company.domain.AssetStatus;
-import com.alex.asset.company.domain.KST;
-import com.alex.asset.company.domain.Unit;
+import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.configure.domain.MPK;
+import com.alex.asset.configure.domain.AssetStatus;
+import com.alex.asset.configure.domain.KST;
+import com.alex.asset.configure.domain.Unit;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
-import com.alex.asset.company.repo.BranchRepo;
-import com.alex.asset.company.repo.MpkRepo;
-import com.alex.asset.company.repo.AssetStatusRepo;
-import com.alex.asset.company.repo.KstRepo;
-import com.alex.asset.company.repo.UnitRepo;
+import com.alex.asset.configure.repo.BranchRepo;
+import com.alex.asset.configure.repo.MpkRepo;
+import com.alex.asset.configure.repo.AssetStatusRepo;
+import com.alex.asset.configure.repo.KstRepo;
+import com.alex.asset.configure.repo.UnitRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,10 @@
-package com.alex.asset.company.domain;
+package com.alex.asset.configure.domain;
 
+import com.alex.asset.utils.BaseEntityActive;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,15 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "types")
-public class Type {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @Column(name = "is_active")
-    boolean isActive;
-
+public class Type extends BaseEntityActive {
 
     String type;
 
@@ -33,7 +28,6 @@ public class Type {
 
 
     public Type(String type) {
-        this.isActive = true;
         this.type = type;
         this.subtypes = new ArrayList<>();
     }

@@ -1,31 +1,36 @@
-package com.alex.asset.company.domain;
+package com.alex.asset.utils;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 
 @Getter
 @Setter
-@Entity
+@MappedSuperclass
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-@Table(name = "mpks")
-public class MPK {
+@EntityListeners(AuditingEntityListener.class)
+public class BaseEntityActive implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(name = "is_active") @JsonIgnore
     boolean isActive;
-    String mpk;
 
-    public MPK(String mpk) {
+
+    public BaseEntityActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public BaseEntityActive() {
         this.isActive = true;
-        this.mpk = mpk;
     }
 }

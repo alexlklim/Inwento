@@ -1,8 +1,7 @@
-package com.alex.asset.company.controller.configure;
+package com.alex.asset.configure.controllers;
 
 
-import com.alex.asset.company.service.CompanyService;
-import com.alex.asset.company.service.ConfigureService;
+import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +28,7 @@ public class UnitController {
 
     @Operation(summary = "Update units, send id of unit and it's new status: active or not)")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateUnits(@RequestBody List<DtoActive> DTOs){
+    public ResponseEntity<HttpStatus> updateUnits(@RequestBody List<DtoActive> DTOs) {
         log.info(TAG + "Try to update units");
         configureService.updateUnits(DTOs);
         return new ResponseEntity<>(HttpStatus.OK);

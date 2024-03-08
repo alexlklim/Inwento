@@ -1,10 +1,10 @@
 package com.alex.asset.company.dto;
 
 
-import com.alex.asset.company.domain.Branch;
-import com.alex.asset.company.domain.MPK;
-import com.alex.asset.company.domain.AssetStatus;
-import com.alex.asset.company.domain.Unit;
+import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.configure.domain.MPK;
+import com.alex.asset.configure.domain.AssetStatus;
+import com.alex.asset.configure.domain.Unit;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AccessLevel;

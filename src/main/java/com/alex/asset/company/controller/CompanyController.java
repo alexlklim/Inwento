@@ -3,9 +3,9 @@ package com.alex.asset.company.controller;
 import com.alex.asset.company.dto.CompanyDto;
 import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.company.dto.EmpDto;
+import com.alex.asset.company.dto.UserDto;
 import com.alex.asset.company.service.CompanyService;
 import com.alex.asset.utils.dto.DtoActive;
-import com.alex.asset.company.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +17,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j 
-@RestController 
+@Slf4j
+@RestController
 @CrossOrigin
-@RequiredArgsConstructor 
+@RequiredArgsConstructor
 @RequestMapping("/api/core/company")
 @Tag(name = "Company Controller", description = "Company API")
 public class CompanyController {
     private final String TAG = "COMPANY_CONTROLLER - ";
     private final CompanyService companyService;
 
+
+    @Operation(summary = "Get info about company")
     @GetMapping
-    @Operation(summary = "get info about company")
     public ResponseEntity<CompanyDto> getInfo() {
         return new ResponseEntity<>(companyService.getInfoAboutCompany(), HttpStatus.OK);
     }
+
+    @Operation(summary = "Update company info, only for ADMIN")
     @Secured("ROLE_ADMIN")
     @PutMapping
     public ResponseEntity<CompanyDto> updateCompany(@RequestBody CompanyDto dto) {
@@ -49,6 +52,7 @@ public class CompanyController {
     public ResponseEntity<List<UserDto>> getAllEmployee() {
         return new ResponseEntity<>(companyService.getAllEmployee(), HttpStatus.OK);
     }
+
     @Secured("ROLE_ADMIN")
     @PutMapping("/emp")
     public ResponseEntity<HttpStatus> changeUserVisibility(@RequestBody DtoActive dto) {
@@ -58,13 +62,11 @@ public class CompanyController {
     }
 
 
-
     @GetMapping("/all")
     public ResponseEntity<DataDto> getAllFields() {
         log.info(TAG + "Try to get all fields");
         return new ResponseEntity<>(companyService.getAllFields(), HttpStatus.OK);
     }
-
 
 
 }

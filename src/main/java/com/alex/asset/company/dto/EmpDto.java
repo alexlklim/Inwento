@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,13 +17,22 @@ import java.util.List;
 @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class EmpDto {
-
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
+
+
+    @Schema(description = "Email", example = "alex@gmail.com")
     String email;
 
-    String firstName, lastName, phone;
+    @Schema(description = "First name", example = "Alex")
+    private String firstName;
+
+    @Schema(description = "Last name", example = "Klim")
+    private String lastName;
+
+    @Schema(description = "Phone", example = "+48 877 202 134")
+    private String phone;
+
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     boolean isActive;

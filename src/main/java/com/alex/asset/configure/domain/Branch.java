@@ -1,7 +1,8 @@
-package com.alex.asset.company.domain;
+package com.alex.asset.configure.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import com.alex.asset.utils.BaseEntityActive;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,17 +16,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "branches")
-public class Branch {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Branch extends BaseEntityActive {
 
-    @Column(name = "is_active") @JsonIgnore
-    boolean isActive;
     String branch;
 
     public Branch(String branch) {
-        this.isActive = true;
         this.branch = branch;
     }
 }

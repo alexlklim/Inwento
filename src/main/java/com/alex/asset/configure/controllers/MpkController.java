@@ -1,7 +1,7 @@
-package com.alex.asset.company.controller.configure;
+package com.alex.asset.configure.controllers;
 
-import com.alex.asset.company.domain.MPK;
-import com.alex.asset.company.service.ConfigureService;
+import com.alex.asset.configure.domain.MPK;
+import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
 import io.swagger.v3.oas.annotations.Operation;

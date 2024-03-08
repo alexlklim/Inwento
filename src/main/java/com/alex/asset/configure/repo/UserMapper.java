@@ -1,4 +1,4 @@
-package com.alex.asset.company.repo;
+package com.alex.asset.configure.repo;
 
 import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.company.dto.EmpDto;

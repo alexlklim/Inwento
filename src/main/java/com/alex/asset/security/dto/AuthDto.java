@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Authentication DTO")
+@Schema(description = "Auth DTO")
 public class AuthDto {
 
     @Schema(description = "First name", example = "Alex")

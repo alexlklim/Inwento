@@ -1,9 +1,7 @@
-package com.alex.asset.company.controller.configure;
+package com.alex.asset.configure.controllers;
 
-import com.alex.asset.company.service.CompanyService;
-import com.alex.asset.company.service.ConfigureService;
+import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.utils.dto.DtoActive;
-import com.alex.asset.company.service.TypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -45,8 +43,6 @@ public class TypeController {
     }
 
 
-
-
     @Operation(summary = "Add new Subtype to special type")
     @PostMapping("/{id}/subtype")
     public ResponseEntity<HttpStatus> addSubtypes(@PathVariable("id") Long id, @RequestBody List<String> list) {
@@ -63,6 +59,7 @@ public class TypeController {
         log.info(TAG + "Try to change visibility of subtype with id {} to status {}", dto.getId(), dto.isActive());
         boolean result = typeService.changeVisibilityOfSubtype(dto);
         if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(HttpStatus.OK);    }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

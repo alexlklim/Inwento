@@ -1,6 +1,6 @@
-package com.alex.asset.company.repo;
+package com.alex.asset.configure.repo;
 
-import com.alex.asset.company.domain.Type;
+import com.alex.asset.configure.domain.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

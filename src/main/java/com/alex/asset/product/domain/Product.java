@@ -1,12 +1,12 @@
 package com.alex.asset.product.domain;
 
-import com.alex.asset.company.domain.Branch;
-import com.alex.asset.company.domain.MPK;
-import com.alex.asset.company.domain.Subtype;
-import com.alex.asset.company.domain.Type;
-import com.alex.asset.company.domain.AssetStatus;
-import com.alex.asset.company.domain.KST;
-import com.alex.asset.company.domain.Unit;
+import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.configure.domain.MPK;
+import com.alex.asset.configure.domain.Subtype;
+import com.alex.asset.configure.domain.Type;
+import com.alex.asset.configure.domain.AssetStatus;
+import com.alex.asset.configure.domain.KST;
+import com.alex.asset.configure.domain.Unit;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -14,12 +14,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor

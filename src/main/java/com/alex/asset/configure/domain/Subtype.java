@@ -1,5 +1,6 @@
-package com.alex.asset.company.domain;
+package com.alex.asset.configure.domain;
 
+import com.alex.asset.utils.BaseEntityActive;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,14 +15,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "subtypes")
-public class Subtype {
+public class Subtype extends BaseEntityActive {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @Column(name = "is_active")
-    boolean isActive;
 
     String subtype;
 
@@ -31,7 +26,6 @@ public class Subtype {
     private Type type;
 
     public Subtype(String subtype, Type type) {
-        this.isActive = true;
         this.subtype = subtype;
         this.type = type;
     }

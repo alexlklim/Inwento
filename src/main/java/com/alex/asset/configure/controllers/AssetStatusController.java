@@ -1,6 +1,6 @@
-package com.alex.asset.company.controller.configure;
+package com.alex.asset.configure.controllers;
 
-import com.alex.asset.company.service.ConfigureService;
+import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +26,7 @@ public class AssetStatusController {
 
     @Operation(summary = "update asset status, change their visibility by id")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateAssetStatuses(@RequestBody List<DtoActive> DTOs){
+    public ResponseEntity<HttpStatus> updateAssetStatuses(@RequestBody List<DtoActive> DTOs) {
         log.info(TAG + "Try to update asset statuses");
         configureService.updateAssetStatuses(DTOs);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,12 +1,12 @@
-package com.alex.asset.company.service;
+package com.alex.asset.configure.services;
 
 
-import com.alex.asset.company.domain.Subtype;
-import com.alex.asset.company.domain.Type;
+import com.alex.asset.configure.domain.Subtype;
+import com.alex.asset.configure.domain.Type;
 import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.utils.dto.DtoActive;
-import com.alex.asset.company.repo.SubtypeRepo;
-import com.alex.asset.company.repo.TypeRepo;
+import com.alex.asset.configure.repo.SubtypeRepo;
+import com.alex.asset.configure.repo.TypeRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
