@@ -6,6 +6,9 @@ import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
+import com.sun.net.httpserver.HttpsServer;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,11 +25,13 @@ import java.util.Map;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
+@Tag(name = "Product Controller", description = "Product API")
 public class ProductController {
     private final String TAG = "PRODUCT_CONTROLLER - ";
 
     private final ProductService productService;
 
+    @Operation(summary = "Get products (only active)")
     @GetMapping
     public ResponseEntity<List<ProductDto>> getActiveProducts() {
         log.info(TAG + "Try to get all active products");
@@ -37,6 +42,8 @@ public class ProductController {
         }
         return new ResponseEntity<>(productDTOs, HttpStatus.OK);
     }
+
+    @Operation(summary = "Get all products (active and not)")
     @Secured("ROLE_ADMIN")
     @GetMapping("/all")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
@@ -48,6 +55,9 @@ public class ProductController {
         }
         return new ResponseEntity<>(productDTOs, HttpStatus.OK);
     }
+
+
+    @Operation(summary = "Get product by id")
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getById(@PathVariable("id") Long id) {
         log.info(TAG + "Try to get product by id {}", id);
@@ -58,6 +68,8 @@ public class ProductController {
         }
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
+
+    @Operation(summary = "Add new product")
     @PostMapping
     public ResponseEntity<ProductDto> addNewProduct(@RequestBody ProductDto dto, Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
@@ -70,13 +82,15 @@ public class ProductController {
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
+    @Operation(summary = "Update Product")
     @PutMapping
-    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto dto) {
+    public ResponseEntity<HttpStatus> updateProduct(@RequestBody ProductDto dto) {
         log.info(TAG + "get all products for company");
-        ProductDto productDto = productService.update(dto);
-        return new ResponseEntity<>(productDto, HttpStatus.OK);
+        boolean result =  productService.update(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Update visibility fo product by id and its new active status")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> updateVisibilityOfProduct(@RequestBody DtoActive dto) {
@@ -89,6 +103,7 @@ public class ProductController {
     }
 
 
+    @Operation(summary = "Get short products by title")
     @GetMapping("/filter/{title}")
     public ResponseEntity<Map<Long, String>> getProductsByTitle(@PathVariable("title") String title) {
         log.info(TAG + "Try to get all products by title {}", title);
@@ -101,6 +116,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @Operation(summary = "Scur product")
     @PutMapping("/scrap")
     public ResponseEntity<HttpStatus> scrapProduct(@RequestBody ScrapDto dto) {
         log.info(TAG + "Scrap product with id {}", dto.getId());

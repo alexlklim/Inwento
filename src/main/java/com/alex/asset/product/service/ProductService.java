@@ -79,7 +79,6 @@ public class ProductService {
         productRepo.updateVisibility(dto.isActive(), dto.getId());
         return true;
     }
-    ////frfrfrfrfr
 
     public boolean scraping(ScrapDto dto) {
         Product product = productRepo.get(dto.getId());
@@ -91,10 +90,10 @@ public class ProductService {
         return true;
     }
 
-    public ProductDto update(ProductDto dto) {
+    public Boolean update(ProductDto dto) {
         Product product = updateProduct(productRepo.get(dto.getId()), dto);
         product.setActive(true);
-        return productMapper.toDto(product);
+        return true;
     }
 
 

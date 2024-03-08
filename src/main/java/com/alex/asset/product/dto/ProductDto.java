@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductDto {
     Long id;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     boolean active;
 
@@ -25,18 +26,28 @@ public class ProductDto {
     String description;
     Double price;
     String barCode, rfidCode;
+    String inventoryNumber, serialNumber;
     Long liableId;
     String receiver;
     Long kstId, assetStatusId, unitId, branchId, mpkId, typeId, subtypeId;
     String producer, supplier;
-    boolean isScrapping;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    boolean scrapping;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate scrappingDate;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String scrappingReason;
+
+
     String document;
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate documentDate, warrantyPeriod, inspectionDate, lastInventoryDate;
+
+
     Double longitude, latitude;
 }
 

@@ -16,8 +16,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
   @Query("SELECT u FROM User u WHERE u.id  = ?1")
   User getUser(Long id);
 
-  @Query("SELECT u FROM User u WHERE u.email  = ?1")
-  User getUser(String email);
 
   @Query("SELECT u FROM User u WHERE u.isActive = true")
   List<User> getActiveUsers();
@@ -32,7 +30,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
   Optional<User> getUserByEmail(String username);
 
-  @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM User u WHERE :role IN (u.roles) AND u.id = :id")
-  boolean checkIfRole(@Param("role") String role, @Param("id") Long id);
 
 }
