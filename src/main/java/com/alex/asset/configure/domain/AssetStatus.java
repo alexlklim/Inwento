@@ -1,7 +1,6 @@
 package com.alex.asset.configure.domain;
 
 
-import com.alex.asset.utils.BaseEntityActive;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @CrossOrigin
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication Controller", description = "Auth API")
 public class AuthenticationController {
@@ -29,19 +29,6 @@ public class AuthenticationController {
     private final UserAuthService userAuthService;
     private final AuthenticationService authenticationService;
 
-
-    @Operation(summary = "Register new user")
-    @Secured("ROLE_ADMIN")
-    @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody RegisterDto request) {
-        boolean registerResult = userAuthService.register(request);
-        if (!registerResult) {
-            log.error(TAG + "Registration for user {} failed", request.getEmail());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @Operation(summary = "Login user and get Auth DTO")
     @PostMapping("/login")

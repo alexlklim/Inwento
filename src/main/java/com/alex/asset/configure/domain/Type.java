@@ -1,6 +1,5 @@
 package com.alex.asset.configure.domain;
 
-import com.alex.asset.utils.BaseEntityActive;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

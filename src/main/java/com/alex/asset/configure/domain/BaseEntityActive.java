@@ -1,4 +1,4 @@
-package com.alex.asset.utils;
+package com.alex.asset.configure.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 
@@ -15,7 +14,6 @@ import java.io.Serializable;
 @Setter
 @MappedSuperclass
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@EntityListeners(AuditingEntityListener.class)
 public class BaseEntityActive implements Serializable {
 
     @Id
@@ -24,11 +22,6 @@ public class BaseEntityActive implements Serializable {
 
     @Column(name = "is_active") @JsonIgnore
     boolean isActive;
-
-
-    public BaseEntityActive(boolean isActive) {
-        this.isActive = isActive;
-    }
 
     public BaseEntityActive() {
         this.isActive = true;
