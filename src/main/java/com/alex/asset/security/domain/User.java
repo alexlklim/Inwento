@@ -1,5 +1,6 @@
 package com.alex.asset.security.domain;
 
+import com.alex.asset.security.domain.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

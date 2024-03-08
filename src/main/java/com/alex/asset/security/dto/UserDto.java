@@ -1,4 +1,4 @@
-package com.alex.asset.company.dto;
+package com.alex.asset.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,17 +20,29 @@ import java.util.List;
 public class UserDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
+
+
+    @Schema(description = "Email", example = "alex@gmail.com")
     String email;
 
-    String firstName, lastName, phone;
+    @Schema(description = "First name", example = "Alex")
+    private String firstName;
 
+    @Schema(description = "Last name", example = "Klim")
+    private String lastName;
+
+    @Schema(description = "Phone", example = "+48 877 202 134")
+    private String phone;
+
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     boolean isActive;
 
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     LocalDateTime lastActivity;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDateTime createdAt, updatedAt;
-
-    List<String> role = new ArrayList<>();
+    @Schema(description = "Role", example = "ADMIN")
+    private String role;
 }

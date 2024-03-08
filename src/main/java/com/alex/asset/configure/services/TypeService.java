@@ -1,12 +1,12 @@
 package com.alex.asset.configure.services;
 
 
+import com.alex.asset.configure.repo.TypeRepo;
 import com.alex.asset.configure.domain.Subtype;
 import com.alex.asset.configure.domain.Type;
 import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.configure.repo.SubtypeRepo;
-import com.alex.asset.configure.repo.TypeRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,11 +63,13 @@ public class TypeService {
     }
 
     public boolean changeVisibilityOfType(DtoActive dto) {
-        if (typeRepo.existsById(dto.getId())){
+        if (!typeRepo.existsById(dto.getId())){
             log.warn(TAG + "Type with id {} not found", dto.getId());
             return false;
         }
-        typeRepo.updateVisibility(dto.isActive(), dto.getId());
+        Type type = typeRepo.get(dto.getId());
+        type.setActive(dto.isActive());
+        typeRepo.save(type);
         return true;
     }
     public boolean changeVisibilityOfSubtype(DtoActive dto) {
@@ -75,7 +77,10 @@ public class TypeService {
             log.warn(TAG + "Subtype with id {} not found", dto.getId());
             return false;
         }
-        subtypeRepo.updateVisibility(dto.isActive(), dto.getId());
+
+        Subtype subtype = subtypeRepo.get(dto.getId());
+        subtype.setActive(dto.isActive());
+        subtypeRepo.save(subtype);
         return true;
     }
 

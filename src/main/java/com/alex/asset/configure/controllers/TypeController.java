@@ -1,5 +1,6 @@
 package com.alex.asset.configure.controllers;
 
+import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +25,15 @@ public class TypeController {
     private final String TAG = "TYPE_CONTROLLER - ";
 
     private final TypeService typeService;
+
+
+    @Operation(summary = "Get all types and subtypes")
+    @GetMapping("/all")
+    public ResponseEntity<List<DataDto.Type>> getAllTypesAndSubtypes() {
+        log.info(TAG + "Try to get all types and subtypes");
+        typeService.getTypes();
+        return new ResponseEntity<>(typeService.getTypes(), HttpStatus.OK);
+    }
 
     @Operation(summary = "Add new Types")
     @PostMapping
@@ -61,5 +71,7 @@ public class TypeController {
         if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 
 }

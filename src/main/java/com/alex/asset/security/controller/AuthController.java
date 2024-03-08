@@ -1,17 +1,18 @@
 package com.alex.asset.security.controller;
 
-import com.alex.asset.company.dto.UserDto;
 import com.alex.asset.security.config.jwt.AuthenticationService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.security.config.jwt.UserAuthService;
-import com.alex.asset.security.dto.*;
+import com.alex.asset.security.dto.AuthDto;
+import com.alex.asset.security.dto.LoginDto;
+import com.alex.asset.security.dto.PasswordDto;
+import com.alex.asset.security.dto.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication Controller", description = "Auth API")
-public class AuthenticationController {
+public class AuthController {
     private final String TAG = "AUTHENTICATION_CONTROLLER - ";
 
     private final UserAuthService userAuthService;
@@ -38,6 +39,7 @@ public class AuthenticationController {
             log.error(TAG + "Authentication for user {} failed", request.getEmail());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        log.info(TAG + "Authentication for user {} success", request.getEmail());
         return new ResponseEntity<>(authDto, HttpStatus.OK);
     }
 
