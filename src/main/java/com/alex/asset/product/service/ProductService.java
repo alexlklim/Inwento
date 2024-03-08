@@ -79,6 +79,7 @@ public class ProductService {
         productRepo.updateVisibility(dto.isActive(), dto.getId());
         return true;
     }
+    ////frfrfrfrfr
 
     public boolean scraping(ScrapDto dto) {
         Product product = productRepo.get(dto.getId());
