@@ -1,6 +1,9 @@
 package com.alex.asset.security.config;
 
 import com.alex.asset.security.repo.UserRepo;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +31,19 @@ public class AppConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*");
     }
+
+
+    @Bean
+    public OpenAPI openAPI(){
+        return new OpenAPI()
+                .info(
+                        new Info()
+                                .title("Asset Track Pro")
+                                .description("Application for inventarization")
+                                .version("1.0")
+                );
+    }
+
 
     @Bean
     public UserDetailsService userDetailsService() {

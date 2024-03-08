@@ -1,6 +1,6 @@
 package com.alex.asset.security.domain;
 
-import com.alex.asset.security.domain.dto.RegisterDto;
+import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.utils.DateService;
 import lombok.Data;
 

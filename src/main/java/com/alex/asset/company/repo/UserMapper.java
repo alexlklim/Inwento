@@ -3,7 +3,7 @@ package com.alex.asset.company.repo;
 import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.company.dto.EmpDto;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.security.domain.dto.UserDto;
+import com.alex.asset.company.dto.UserDto;
 
 import java.util.List;
 

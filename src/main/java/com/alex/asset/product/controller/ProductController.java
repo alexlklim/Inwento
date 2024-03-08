@@ -3,7 +3,7 @@ package com.alex.asset.product.controller;
 
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ScrapDto;
-import com.alex.asset.utils.dto.ActiveDto;
+import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -79,22 +79,10 @@ public class ProductController {
 
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> updateVisibilityOfProduct(@RequestBody ActiveDto dto) {
+    public ResponseEntity<HttpStatus> updateVisibilityOfProduct(@RequestBody DtoActive dto) {
         log.info(TAG + "Update product visibility with id {} and value {}", dto.getId(), dto.isActive());
         boolean result = productService.updateVisibility(dto);
         if (!result) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Secured("ROLE_ADMIN")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteById(@PathVariable("id") Long id) {
-        log.info(TAG + "Try to delete product with id {}", id);
-        boolean result = productService.deleteById(id);
-        if (!result) {
-            log.error(TAG + "Products with id {} not found", id);
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(HttpStatus.OK);

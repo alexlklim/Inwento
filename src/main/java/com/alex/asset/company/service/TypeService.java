@@ -4,7 +4,7 @@ package com.alex.asset.company.service;
 import com.alex.asset.company.domain.Subtype;
 import com.alex.asset.company.domain.Type;
 import com.alex.asset.company.dto.DataDto;
-import com.alex.asset.utils.dto.ActiveDto;
+import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.company.repo.SubtypeRepo;
 import com.alex.asset.company.repo.TypeRepo;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class TypeService {
         }
     }
 
-    public boolean changeVisibilityOfType(ActiveDto dto) {
+    public boolean changeVisibilityOfType(DtoActive dto) {
         if (typeRepo.existsById(dto.getId())){
             log.warn(TAG + "Type with id {} not found", dto.getId());
             return false;
@@ -70,7 +70,7 @@ public class TypeService {
         typeRepo.updateVisibility(dto.isActive(), dto.getId());
         return true;
     }
-    public boolean changeVisibilityOfSubtype(ActiveDto dto) {
+    public boolean changeVisibilityOfSubtype(DtoActive dto) {
         if (!typeRepo.existsById(dto.getId())) {
             log.warn(TAG + "Subtype with id {} not found", dto.getId());
             return false;

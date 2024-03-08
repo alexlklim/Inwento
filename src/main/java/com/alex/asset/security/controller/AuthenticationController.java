@@ -1,9 +1,12 @@
 package com.alex.asset.security.controller;
 
+import com.alex.asset.company.dto.UserDto;
 import com.alex.asset.security.config.jwt.AuthenticationService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.security.config.jwt.UserAuthService;
-import com.alex.asset.security.domain.dto.*;
+import com.alex.asset.security.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication Controller", description = "Auth API")
 public class AuthenticationController {
     private final String TAG = "AUTHENTICATION_CONTROLLER - ";
 
@@ -26,6 +30,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
 
+    @Operation(summary = "Register new user")
     @Secured("ROLE_ADMIN")
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody RegisterDto request) {
@@ -38,6 +43,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Login user and get Auth DTO")
     @PostMapping("/login")
     public ResponseEntity<AuthDto> authenticate(@RequestBody LoginDto request) {
         AuthDto authDto = authenticationService.authenticate(request);
@@ -48,6 +54,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(authDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "logout user, inactive refresh token")
     @GetMapping("/logout")
     public ResponseEntity<AuthDto> logout(Authentication authentication) {
         authenticationService.logout((CustomPrincipal) authentication.getPrincipal());
@@ -55,6 +62,7 @@ public class AuthenticationController {
     }
 
 
+    @Operation(summary = "refresh token and get new Auth DTO")
     @PostMapping("/refresh")
     public ResponseEntity<AuthDto> refreshToken(@RequestBody TokenDto request) {
         AuthDto authDto = authenticationService.refreshToken(request);
@@ -67,6 +75,7 @@ public class AuthenticationController {
     }
 
 
+    @Operation(summary = "change password for authenticated users")
     @PostMapping("/pw/change")
     public ResponseEntity<AuthDto> changePassword(@RequestBody PasswordDto request) {
         CustomPrincipal principal = (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -79,6 +88,8 @@ public class AuthenticationController {
     }
 
     // request which send email with the link with token to recovery password
+
+    @Operation(summary = "send link to email to recovery password")
     @PostMapping("/pw/forgot")
     public ResponseEntity<String> forgotPassword(String email) {
         // send link to restore account to email
@@ -89,6 +100,8 @@ public class AuthenticationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @Operation(summary = "change password")
     @PostMapping("/pw/recovery/{token}")
     public ResponseEntity<?> recoveryPassword(@PathVariable("token") String token, String password) {
         boolean result = authenticationService.recoveryPassword(token, password);
@@ -99,9 +112,4 @@ public class AuthenticationController {
     }
 
 
-    @GetMapping("/me")
-    public ResponseEntity<CustomPrincipal> info(Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        return new ResponseEntity<>(principal, HttpStatus.OK);
-    }
 }

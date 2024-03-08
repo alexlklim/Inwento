@@ -11,10 +11,10 @@ spring:
       mode: always
       continue-on-error: false
       schema-locations:
-        - classpath:schema.sql
-        - classpath:init/init.sql
-        - classpath:init/kst.sql
-        - classpath:init/products.sql
+        - classpath:database/schema.sql
+        - classpath:database/init.sql
+        - classpath:database/kst.sql
+        - classpath:database/products.sql
   mail:
     host: smtp.gmail.com
     port: 587
@@ -36,4 +36,5 @@ server:
 
 
 
-
+springdoc:
+  override-with-generic-response: false

@@ -6,7 +6,7 @@ import com.alex.asset.company.domain.MPK;
 import com.alex.asset.company.domain.AssetStatus;
 import com.alex.asset.company.domain.KST;
 import com.alex.asset.company.domain.Unit;
-import com.alex.asset.utils.dto.ActiveDto;
+import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
 import com.alex.asset.company.repo.BranchRepo;
 import com.alex.asset.company.repo.MpkRepo;
@@ -50,16 +50,16 @@ public class ConfigureService {
     }
 
 
-    public void updateUnits(List<ActiveDto> DTOs) {
+    public void updateUnits(List<DtoActive> DTOs) {
         log.info(TAG + "Update units");
-        for (ActiveDto dto: DTOs){
+        for (DtoActive dto: DTOs){
             unitRepo.update(dto.isActive(), dto.getId());
         }
     }
 
-    public void updateAssetStatuses(List<ActiveDto> DTOs) {
+    public void updateAssetStatuses(List<DtoActive> DTOs) {
         log.info(TAG + "Update asset statuses");
-        for (ActiveDto dto: DTOs){
+        for (DtoActive dto: DTOs){
             assetStatusRepo.update(dto.isActive(), dto.getId());
         }
     }
@@ -73,7 +73,7 @@ public class ConfigureService {
         log.info(TAG + "Add branch {}", dto.getName());
         return branchRepo.save(new Branch(dto.getName()));
     }
-    public void updateBranch(ActiveDto dto) {
+    public void updateBranch(DtoActive dto) {
         log.info(TAG + "Update branch {}", dto.getId());
         branchRepo.update(dto.isActive(), dto.getId());
     }
@@ -83,7 +83,7 @@ public class ConfigureService {
         log.info(TAG + "Add MPK {}", dto.getName());
         return mpkRepo.save(new MPK(dto.getName()));
     }
-    public void updateMPK(ActiveDto dto) {
+    public void updateMPK(DtoActive dto) {
         log.info(TAG + "Update MPK {}", dto.getId());
         mpkRepo.update(dto.isActive(), dto.getId());
     }

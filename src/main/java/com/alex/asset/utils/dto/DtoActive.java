@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ActiveDto {
+public class DtoActive {
     private Long id;
     private boolean isActive;
 }

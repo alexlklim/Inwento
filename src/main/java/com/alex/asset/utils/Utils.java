@@ -8,6 +8,8 @@ public class Utils {
             "/api/auth/refresh",
             "/api/auth/pw/forgot",
             "/api/core/get",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
             "/api/auth/pw/recovery/**"
     };
 

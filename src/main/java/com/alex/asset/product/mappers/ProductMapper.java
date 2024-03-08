@@ -46,7 +46,6 @@ public class ProductMapper {
         dto.setDocumentDate(product.getDocumentDate());
         dto.setWarrantyPeriod(product.getWarrantyPeriod());
         dto.setInspectionDate(product.getInspectionDate());
-        dto.setLastInventoryDate(product.getLastInventoryDate());
         dto.setLongitude(product.getLongitude());
         dto.setLatitude(product.getLatitude());
 
@@ -84,7 +83,6 @@ public class ProductMapper {
         product.setDocumentDate(dto.getDocumentDate());
         product.setWarrantyPeriod(dto.getWarrantyPeriod());
         product.setInspectionDate(dto.getInspectionDate());
-        product.setLastInventoryDate(dto.getLastInventoryDate());
         product.setLongitude(dto.getLongitude());
         product.setLatitude(dto.getLatitude());
 

@@ -95,7 +95,8 @@ CREATE TABLE IF NOT EXISTS products (
     is_active BOOLEAN  NOT NULL, created DATETIME, updated DATETIME,
     title VARCHAR(255), description TEXT, price DOUBLE,
     bar_code VARCHAR(255) UNIQUE, rfid_code VARCHAR(255) UNIQUE,
-    inventory_number VARCHAR(255),
+    inventory_number VARCHAR(255) UNIQUE,
+    serial_number VARCHAR(255) UNIQUE,
     created_by_id BIGINT, liable_id BIGINT, receiver VARCHAR(255),
     kst_id BIGINT, asset_status_id BIGINT, unit_id BIGINT,
     branch_id BIGINT, mpk_id BIGINT,
@@ -107,7 +108,7 @@ CREATE TABLE IF NOT EXISTS products (
     scrapping_reason VARCHAR(255),
 
     document TEXT, document_date DATE, warranty_period DATE, inspection_date DATE,
-    last_inventory_date DATE,
+
     longitude DOUBLE, latitude DOUBLE,
 
     FOREIGN KEY (created_by_id) REFERENCES users(id),
@@ -121,30 +122,77 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (mpk_id) REFERENCES mpks(id));
 
 
-
-
-# for inventarization
-CREATE TABLE IF NOT EXISTS inventarization (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active BOOLEAN  NOT NULL, created DATETIME, updated DATETIME,
-    start_date DATE, finish_date DATE,
-    info VARCHAR(255)
+# for invent
+CREATE TABLE IF NOT EXISTS invents
+(
+    id          BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active   BOOLEAN NOT NULL,
+    created     DATETIME,
+    updated     DATETIME,
+    start_date  DATE,
+    finish_date DATE,
+    info        VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS event (
-    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active BOOLEAN  NOT NULL, created DATETIME, updated DATETIME,
+CREATE TABLE IF NOT EXISTS events
+(
+    id                 BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active          BOOLEAN NOT NULL,
+    created            DATETIME,
+    updated            DATETIME,
+    invent_id BIGINT,
+    user_id            BIGINT,
+    branch_id          BIGINT,
+    FOREIGN KEY (invent_id) REFERENCES invents (id),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (branch_id) REFERENCES branches (id)
+);
+
+CREATE TABLE IF NOT EXISTS event_product_shortage
+(
+    event_id   BIGINT,
+    product_id BIGINT,
+    FOREIGN KEY (event_id) REFERENCES events (id),
+    FOREIGN KEY (product_id) REFERENCES products (id),
+    PRIMARY KEY (event_id, product_id)
+);
+CREATE TABLE IF NOT EXISTS event_product_ok
+(
+    event_id   BIGINT,
+    product_id BIGINT,
+    FOREIGN KEY (event_id) REFERENCES events (id),
+    FOREIGN KEY (product_id) REFERENCES products (id),
+    PRIMARY KEY (event_id, product_id)
+);
+
+
+
+CREATE TABLE IF NOT EXISTS logs
+(
+    id      BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created DATETIME,
+    updated DATETIME,
     user_id BIGINT,
-    branch_id BIGINT
+    action  ENUM ('CREATE', 'UPDATE', 'DELETE') NOT NULL,
+    data    ENUM ('USERS', 'COMPANY', 'ASSET_STATUS', 'KST', 'UNIT',
+        'BRANCH', 'MPK', 'TYPE', 'SUBTYPE','PRODUCT', 'INVENT', 'EVENT') NOT NULL,
+    text    VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS event_product_shortage (
-    event_id BIGINT,
-    product_id BIGINT,
-    PRIMARY KEY (event_id, product_id)
+CREATE TABLE IF NOT EXISTS notifications
+(
+    id         BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active  BOOLEAN NOT NULL,
+    created    DATETIME,
+    updated    DATETIME,
+    is_read    BOOLEAN NOT NULL,
+    reason     ENUM (''),
+    message    VARCHAR(255),
+    to_user_id BIGINT,
+    FOREIGN KEY (to_user_id) REFERENCES users (id)
 );
-CREATE TABLE IF NOT EXISTS event_product_ok (
-    event_id BIGINT,
-    product_id BIGINT,
-    PRIMARY KEY (event_id, product_id)
-);
+
+
+
+select password from users;

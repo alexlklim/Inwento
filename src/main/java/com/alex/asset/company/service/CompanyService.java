@@ -7,9 +7,9 @@ import com.alex.asset.company.dto.DataDto;
 import com.alex.asset.company.dto.EmpDto;
 import com.alex.asset.company.mappers.CompanyMapper;
 import com.alex.asset.company.repo.CompanyRepo;
-import com.alex.asset.utils.dto.ActiveDto;
+import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.company.repo.UserMapper;
-import com.alex.asset.security.domain.dto.UserDto;
+import com.alex.asset.company.dto.UserDto;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +85,7 @@ public class CompanyService {
 
     @Modifying
     @Transactional
-    public boolean changeUserVisibility(ActiveDto dto) {
+    public boolean changeUserVisibility(DtoActive dto) {
         if (checkIfRoleADMIN(dto.getId())) {
             log.error(TAG + "User which you trying to change visibility is ADMIN");
             return false;

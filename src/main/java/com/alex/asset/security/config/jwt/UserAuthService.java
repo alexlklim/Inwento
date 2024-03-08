@@ -1,12 +1,10 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.email.EmailService;
-import com.alex.asset.email.Mail;
-import com.alex.asset.email.MailStructure;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.domain.UserMapper;
-import com.alex.asset.security.domain.dto.PasswordDto;
-import com.alex.asset.security.domain.dto.RegisterDto;
+import com.alex.asset.security.dto.PasswordDto;
+import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

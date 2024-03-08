@@ -19,11 +19,10 @@ VALUES
 
 
 -- Insert a company into the companies table
-INSERT IGNORE INTO company (created, updated, company, info, country, city, address, owner_id)
-VALUES (NOW(), NOW(), 'Cyfore Sieci Multimedialne', 'Some information about the company',
-        'Poland', 'Stalowa Wola', 'Kwiatkowskiego 1', (SELECT id FROM users WHERE email = 'admin@gmail.com') );
+INSERT IGNORE INTO company (created, updated, company, city, street, zip_code, nip, regon, phone, email)
+VALUES (NOW(), NOW(), 'Cyfore Sieci Multimedialne', 'Warsaw', 'Kwiatkowskiego 2', '23-345', '33232323', '434343', '4800585885', 'alex@gmail.com');
 
-SET @company_name = 'Cyfore Sieci Multimedialne';
+
 SET @user_email = 'admin@gmail.com';
 SET @user_id = (SELECT id FROM users WHERE email = @user_email);
 

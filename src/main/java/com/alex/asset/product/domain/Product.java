@@ -8,6 +8,7 @@ import com.alex.asset.company.domain.AssetStatus;
 import com.alex.asset.company.domain.KST;
 import com.alex.asset.company.domain.Unit;
 import com.alex.asset.security.domain.User;
+import com.alex.asset.utils.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -21,21 +22,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
-@Data @Getter @Setter @AllArgsConstructor @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity @Table(name = "products")
-public class Product {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+public class Product extends BaseEntity {
 
     @Column(name = "is_active")
     boolean isActive;
-
-    @CreatedDate @Column(name = "created")
-    LocalDateTime created;
-    @LastModifiedDate @Column(name = "updated")
-    LocalDateTime updated;
 
     String title, description;
     Double price;
@@ -45,6 +38,11 @@ public class Product {
 
     @Column(name = "rfid_code")
     String rfidCode;
+    @Column(name = "inventory_number")
+    String inventoryNumber;
+
+    @Column(name = "serial_number")
+    String serialNumber;
 
 
     @ManyToOne @JoinColumn(name = "created_by_id") @JsonIgnore
@@ -87,7 +85,6 @@ public class Product {
     @Column(name = "inspection_date")
     LocalDate inspectionDate;
 
-    @Column(name = "last_inventory_date")
-    LocalDate lastInventoryDate;
+
     Double longitude, latitude;
 }

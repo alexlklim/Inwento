@@ -6,7 +6,7 @@ import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.product.repo.ProductRepo;
-import com.alex.asset.utils.dto.ActiveDto;
+import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +79,7 @@ public class ProductService {
 
     }
 
-    public boolean updateVisibility(ActiveDto dto) {
+    public boolean updateVisibility(DtoActive dto) {
         productRepo.updateVisibility(dto.isActive(), dto.getId());
         return  true;
     }

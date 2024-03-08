@@ -10,7 +10,7 @@ import java.util.List;
 public interface KstRepo extends JpaRepository<KST, Long> {
 
 
-    @Query("SELECT k FROM KST k WHERE k.num LIKE :prefix%")
+    @Query("SELECT k FROM KST k WHERE k.num LIKE :prefix% and k.isActive = true")
     List<KST> findByNum(@Param("prefix") String prefix);
 
 
