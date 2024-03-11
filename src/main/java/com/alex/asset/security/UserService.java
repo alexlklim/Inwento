@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,7 @@ public class UserService {
         user.setPhone(dto.getPhone());
         user.setRoles(Role.fromString(dto.getRole()));
         return UserMapper.toDto(userRepo.save(user));
-
     }
+
+
 }

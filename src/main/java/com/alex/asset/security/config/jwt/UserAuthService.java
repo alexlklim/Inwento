@@ -1,8 +1,8 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.email.EmailService;
-import com.alex.asset.security.domain.User;
 import com.alex.asset.security.UserMapper;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.PasswordDto;
 import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -40,7 +42,6 @@ public class UserAuthService {
     }
 
 
-
     public boolean changePassword(PasswordDto dto, CustomPrincipal principal) {
         log.info(TAG + "Change password for user with email: {}", principal.getName());
         User user = userRepo.getUserByEmail(principal.getName()).orElse(null);
@@ -64,9 +65,7 @@ public class UserAuthService {
     }
 
 
-
-
-    public boolean existsByEmail(String email){
+    public boolean existsByEmail(String email) {
         log.info(TAG + "Exists by email: {}", email);
         return userRepo.existsByEmail(email);
     }
@@ -80,8 +79,13 @@ public class UserAuthService {
     public User getById(Long userId) {
         log.info(TAG + "Exists by user id: {}", userId);
         return userRepo.findById(userId).orElse(null);
-        }
+    }
 
-
+    @Transactional
+    public void updateLastActivity(Long userId) {
+        User user = userRepo.getUser(userId);
+        user.setLastActivity(LocalDateTime.now());
+        userRepo.save(user);
+    }
 
 }

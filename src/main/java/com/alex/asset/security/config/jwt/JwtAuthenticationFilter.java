@@ -49,32 +49,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authHeader.substring(7);
-        try {
-            userEmail = jwtService.extractUsername(jwt);
-            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                if (jwtService.isTokenValid(jwt, userDetails)) {
-                    User user = userAuthService.getByEmail(userEmail);
-                    if (user.isEnabled()){
-                        CustomPrincipal principal = new CustomPrincipal(user);
-                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                                principal, null,
-                                Stream.of(user.getRoles().name())
-                                        .map(SimpleGrantedAuthority::new)
-                                        .collect(Collectors.toList()));
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                    }
+        userEmail = jwtService.extractUsername(jwt);
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                User user = userAuthService.getByEmail(userEmail);
+                if (user.isEnabled()){
+                    CustomPrincipal principal = new CustomPrincipal(user);
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            principal, null,
+                            Stream.of(user.getRoles().name())
+                                    .map(SimpleGrantedAuthority::new)
+                                    .collect(Collectors.toList()));
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    userAuthService.updateLastActivity(user.getId());
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-            }
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
-                 SignatureException | IllegalArgumentException e) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            return;
-        } catch (AuthenticationException e) {
-            if (e instanceof NonceExpiredException) {
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                return;
             }
         }
         filterChain.doFilter(request, response);
