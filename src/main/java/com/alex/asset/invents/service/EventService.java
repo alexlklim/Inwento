@@ -25,7 +25,7 @@ public class EventService {
 
 
 
-    public boolean updateEvent(Long inventId ,InventDto dto){
+    public boolean updateEvent(Long inventId , InventDto dto){
         return false;
     }
 

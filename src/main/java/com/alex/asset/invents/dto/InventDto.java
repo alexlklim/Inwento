@@ -19,7 +19,7 @@ public class InventDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
-
+    boolean isActive;
     LocalDate startDate;
     LocalDate finishDate;
     String info;

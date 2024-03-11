@@ -2,6 +2,7 @@ package com.alex.asset.invents.service;
 
 
 import com.alex.asset.invents.dto.InventDto;
+import com.alex.asset.invents.dto.InventV1Representation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,12 @@ public class InventService {
     }
 
 
-    public boolean updateInvent(Long inventId ,InventDto dto){
+    public boolean updateInvent(Long inventId , InventDto dto){
         return false;
     }
 
-    public boolean isAnyInventActive() {
+    public InventV1Representation isAnyInventActive() {
 
-        return false;
+        return null;
     }
 }
