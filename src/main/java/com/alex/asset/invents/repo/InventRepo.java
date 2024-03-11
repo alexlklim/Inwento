@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface InventRepo extends JpaRepository<Invent, Long> {
 
@@ -13,4 +14,12 @@ public interface InventRepo extends JpaRepository<Invent, Long> {
             "FROM Invent i " +
             "WHERE i.startDate <= :now AND i.finishDate >= :now AND i.isActive = true")
     boolean isInventNow(@Param("now") LocalDate now);
+
+
+
+
+    @Query("SELECT i FROM Invent i WHERE i.isActive = true " +
+            "AND i.startDate <= :currentDate " +
+            "AND i.finishDate >= :currentDate")
+    Optional<Invent> findActiveInventByDate(LocalDate currentDate);
 }

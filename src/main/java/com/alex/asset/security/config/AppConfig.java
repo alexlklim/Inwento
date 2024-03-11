@@ -1,5 +1,10 @@
 package com.alex.asset.security.config;
 
+
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import com.alex.asset.security.repo.UserRepo;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -33,14 +38,17 @@ public class AppConfig implements WebMvcConfigurer {
 
 
     @Bean
-    public OpenAPI openAPI(){
+    public OpenAPI customOpenAPI() {
+        SecurityScheme securityScheme = new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT");
+
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
         return new OpenAPI()
-                .info(
-                        new Info()
-                                .title("Asset Track Pro")
-                                .description("Application for inventarization")
-                                .version("1.0")
-                );
+                .info(new Info().title("Asset Track Pro").description("Application for inventarization").version("1.0"))
+                .addSecurityItem(securityRequirement)
+                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme));
     }
 
 

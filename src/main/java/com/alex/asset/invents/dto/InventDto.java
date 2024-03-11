@@ -1,6 +1,7 @@
 package com.alex.asset.invents.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -23,6 +24,8 @@ public class InventDto {
     @Schema(description = "Id", example = "1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
+
+    @JsonIgnore
     @Schema(description = "Is active", example = "true")
     boolean isActive;
 

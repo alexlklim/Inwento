@@ -3,6 +3,7 @@ package com.alex.asset.invents.service;
 
 import com.alex.asset.invents.domain.Invent;
 import com.alex.asset.invents.dto.InventDto;
+import com.alex.asset.invents.mapper.InventMapper;
 import com.alex.asset.invents.repo.InventRepo;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
@@ -27,6 +28,7 @@ public class InventService {
 
     private final InventRepo inventRepo;
     private final UserRepo userRepo;
+    private final InventMapper inventMapper;
 
 
     public boolean isAnyInventActive() {
@@ -58,7 +60,7 @@ public class InventService {
         Invent invent = inventRepo.findById(inventId).orElseThrow(
                 () -> new ResourceNotFoundException("Invent with id " + inventId + " not found"));
         LocalDate now = LocalDate.now();
-        if (now.isAfter(invent.getStartDate())) {
+        if (now.isAfter(invent.getStartDate()) || now.equals(invent.getStartDate())) {
             invent.setFinishDate(now);
             inventRepo.save(invent);
         } else {
@@ -77,5 +79,18 @@ public class InventService {
         }
         invent.setActive(false);
         inventRepo.save(invent);
+    }
+
+    public InventDto getInventById(Long inventId) {
+        log.info(TAG + "Get invent by id {}", inventId);
+        return inventMapper.toDto(inventRepo.findById(inventId).orElseThrow(
+                () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")));
+    }
+
+    public InventDto getCurrentInvent() {
+        log.info(TAG + "Get current invent");
+        return inventMapper.toDto(inventRepo.findActiveInventByDate(LocalDate.now()).orElseThrow(
+                () -> new ResourceNotFoundException("No active invent at this moment")));
+
     }
 }

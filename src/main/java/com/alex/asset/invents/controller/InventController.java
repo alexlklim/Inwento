@@ -1,5 +1,6 @@
 package com.alex.asset.invents.controller;
 
+import com.alex.asset.invents.dto.EventDto;
 import com.alex.asset.invents.dto.InventDto;
 import com.alex.asset.invents.service.InventService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
@@ -31,14 +32,21 @@ public class InventController {
     @GetMapping("/{id}")
     public ResponseEntity<InventDto> getInventById(@PathVariable("id") Long inventId) {
         log.info(TAG + "Get invent with id {}", inventId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(inventService.getInventById(inventId), HttpStatus.OK);
     }
 
-    @Operation(summary = "Check if any invent is active at this time, it returns short representation of active or last invent")
+    @Operation(summary = "Get active invent")
     @GetMapping("/active")
     public ResponseEntity<Boolean> isInventActive() {
         log.info(TAG + "Check is inventory taking place now or not");
         return new ResponseEntity<>(inventService.isAnyInventActive(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "get active invent")
+    @GetMapping("/current")
+    public ResponseEntity<InventDto> getCurrentEvent() {
+        log.info(TAG + "get current envent");
+        return new ResponseEntity<>(inventService.getCurrentInvent(), HttpStatus.OK);
     }
 
     @Operation(summary = "Start new inventarization")
