@@ -1,4 +1,4 @@
-package com.alex.asset.logs;
+package com.alex.asset.logs.domain;
 
 
 import com.alex.asset.security.domain.User;
@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -16,16 +17,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "logs")
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "logs") @Entity
 public class Log extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JsonIgnore
-    @CreatedDate
-    @Column(name = "created")
+    @JsonIgnore @CreatedDate @Column(name = "created")
     LocalDateTime created;
 
     @ManyToOne @JoinColumn(name = "user_id")
@@ -36,7 +34,7 @@ public class Log extends BaseEntity {
     private Action action;
 
     @Enumerated(EnumType.STRING)
-    private Data data;
+    private Section section;
 
     String text;
 
