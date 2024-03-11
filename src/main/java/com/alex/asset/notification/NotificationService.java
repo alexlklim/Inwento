@@ -2,6 +2,7 @@ package com.alex.asset.notification;
 
 
 import com.alex.asset.notification.domain.Notification;
+import com.alex.asset.notification.domain.NotificationDto;
 import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;

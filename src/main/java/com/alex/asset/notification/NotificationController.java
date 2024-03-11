@@ -1,6 +1,7 @@
 package com.alex.asset.notification;
 
 
+import com.alex.asset.notification.domain.NotificationDto;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;

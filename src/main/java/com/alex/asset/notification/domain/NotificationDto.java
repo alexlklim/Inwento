@@ -1,4 +1,4 @@
-package com.alex.asset.notification;
+package com.alex.asset.notification.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
