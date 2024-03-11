@@ -1,9 +1,6 @@
 package com.alex.asset.logs;
 
 
-import com.alex.asset.invents.dto.InventDto;
-import com.alex.asset.invents.service.InventService;
-import com.alex.asset.logs.domain.Log;
 import com.alex.asset.logs.domain.LogDto;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
