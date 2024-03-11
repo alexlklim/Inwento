@@ -31,5 +31,7 @@ public class Notification extends BaseEntity {
     @ManyToOne @JoinColumn(name = "to_user_id")
     User user;
 
+    @ManyToOne @JoinColumn(name = "created_by")
+    User createdBy;
 
 }
