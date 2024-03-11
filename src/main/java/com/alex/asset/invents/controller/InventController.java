@@ -1,9 +1,7 @@
 package com.alex.asset.invents.controller;
 
-import com.alex.asset.invents.dto.InventV1Representation;
 import com.alex.asset.invents.dto.InventDto;
 import com.alex.asset.invents.service.InventService;
-import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,51 +31,45 @@ public class InventController {
     @GetMapping("/{id}")
     public ResponseEntity<InventDto> getInventById(@PathVariable("id") Long inventId) {
         log.info(TAG + "Get invent with id {}", inventId);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Check if any invent is active at this time, it returns short representation of active or last invent")
     @GetMapping("/active")
-    public ResponseEntity<InventV1Representation> isInventActive() {
-        // check if any invent is active at this time and return info about active invent or last invent
-        // today is a day between start and finish
-        InventV1Representation invent = inventService.isAnyInventActive();
-        return new ResponseEntity<>(invent, HttpStatus.OK);
+    public ResponseEntity<Boolean> isInventActive() {
+        log.info(TAG + "Check is inventory taking place now or not");
+        return new ResponseEntity<>(inventService.isAnyInventActive(), HttpStatus.OK);
     }
 
     @Operation(summary = "Start new inventarization")
     @Secured("ROLE_ADMIN")
-    @GetMapping("/start")
+    @PostMapping("/start")
     public ResponseEntity<HttpStatus> startInvent(@RequestBody InventDto dto, Authentication authentication) {
-        log.info(TAG + "Start invent");
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        boolean result = inventService.startInvent(principal.getUserId(), dto);
-
-        // check if other invent is not active at this time
-        // create new invent by this user
-        // send notification for all user that invent is started
-
+        log.info(TAG + "Start invent");
+        inventService.startInvent(principal.getUserId(), dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Finish inventarization")
     @Secured("ROLE_ADMIN")
-    @PutMapping("/finish")
-    public ResponseEntity<List<ProductDto>> finishInvent() {
+    @PutMapping("/finish/{id}")
+    public ResponseEntity<HttpStatus> finishInvent(
+            @PathVariable("id") Long inventId,
+            Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Finish invent");
-
+        inventService.finishInvent(principal.getUserId(), inventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Change visibility of invent")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<List<ProductDto>> changeVisibilityOfInvent(@RequestBody DtoActive dto) {
+    public ResponseEntity<HttpStatus> changeVisibilityOfInvent(@RequestBody DtoActive dto, Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Finish invent");
-
-        // event should be not finished
-
+        inventService.changeVisibility(principal.getUserId(), dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
