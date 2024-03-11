@@ -116,7 +116,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "Scur product")
+    @Operation(summary = "Scrap product (use isScrap to make product scrap or not)")
     @PutMapping("/scrap")
     public ResponseEntity<HttpStatus> scrapProduct(@RequestBody ScrapDto dto) {
         log.info(TAG + "Scrap product with id {}", dto.getId());
