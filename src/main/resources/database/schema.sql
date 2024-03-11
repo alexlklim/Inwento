@@ -193,7 +193,9 @@ CREATE TABLE IF NOT EXISTS notifications
     reason     ENUM ('INVENT', 'CONTROL', 'NEED_TO_APPROVE', 'HIDE_OPERATION'),
     message    VARCHAR(255),
     to_user_id BIGINT,
-    FOREIGN KEY (to_user_id) REFERENCES users (id)
+    created_by BIGINT,
+    FOREIGN KEY (to_user_id) REFERENCES users (id),
+    FOREIGN KEY (created_by) REFERENCES users (id)
 );
 
 
