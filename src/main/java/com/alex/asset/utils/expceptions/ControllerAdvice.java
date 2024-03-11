@@ -22,6 +22,11 @@ public class ControllerAdvice {
         return new ExceptionBody(404, ex.getMessage());
     }
 
-
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleIllegalArgument(IllegalArgumentException ex) {
+        log.error(TAG + ex.getMessage());
+        return new ExceptionBody(400, ex.getMessage());
+    }
 
 }
