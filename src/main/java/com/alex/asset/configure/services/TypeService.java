@@ -4,7 +4,7 @@ package com.alex.asset.configure.services;
 import com.alex.asset.configure.repo.TypeRepo;
 import com.alex.asset.configure.domain.Subtype;
 import com.alex.asset.configure.domain.Type;
-import com.alex.asset.company.dto.DataDto;
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.configure.repo.SubtypeRepo;
 import lombok.RequiredArgsConstructor;

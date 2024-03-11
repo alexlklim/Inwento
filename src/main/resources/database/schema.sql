@@ -131,7 +131,9 @@ CREATE TABLE IF NOT EXISTS invents
     updated     DATETIME,
     start_date  DATE,
     finish_date DATE,
-    info        VARCHAR(255)
+    info        VARCHAR(255),
+    user_id   BIGINT,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS events

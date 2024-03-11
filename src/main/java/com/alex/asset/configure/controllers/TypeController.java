@@ -1,6 +1,6 @@
 package com.alex.asset.configure.controllers;
 
-import com.alex.asset.company.dto.DataDto;
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;

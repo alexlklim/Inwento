@@ -1,6 +1,6 @@
 package com.alex.asset.security;
 
-import com.alex.asset.company.dto.DataDto;
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.RegisterDto;

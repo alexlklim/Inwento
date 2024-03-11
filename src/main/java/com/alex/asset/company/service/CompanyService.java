@@ -2,10 +2,8 @@ package com.alex.asset.company.service;
 
 
 import com.alex.asset.company.domain.Company;
-import com.alex.asset.company.dto.CompanyDto;
-import com.alex.asset.company.dto.DataDto;
-import com.alex.asset.company.mappers.CompanyMapper;
-import com.alex.asset.company.repo.CompanyRepo;
+import com.alex.asset.company.domain.CompanyDto;
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.security.UserMapper;

@@ -1,4 +1,4 @@
-package com.alex.asset.company.dto;
+package com.alex.asset.company.domain;
 
 
 import com.alex.asset.configure.domain.Branch;

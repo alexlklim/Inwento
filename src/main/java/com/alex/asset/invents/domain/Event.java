@@ -2,12 +2,15 @@ package com.alex.asset.invents.domain;
 
 
 import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.BaseEntity;
+import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,5 +36,24 @@ public class Event extends BaseEntity {
 
     @ManyToOne @JoinColumn(name = "branch_id") @JsonBackReference
     Branch branch;
+
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_product_shortage",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    List<Product> productsShortage;
+
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_product_ok",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    List<Product> productsOk;
+
 
 }

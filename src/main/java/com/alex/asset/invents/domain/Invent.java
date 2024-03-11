@@ -1,10 +1,10 @@
 package com.alex.asset.invents.domain;
 
 
-import com.alex.asset.utils.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.alex.asset.security.domain.User;
+import com.alex.asset.utils.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -29,6 +29,10 @@ public class Invent extends BaseEntity {
     LocalDate finishDate;
 
     String info;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id") @JsonBackReference
+    User user;
 
 
 }

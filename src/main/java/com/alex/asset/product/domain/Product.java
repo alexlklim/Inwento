@@ -8,7 +8,7 @@ import com.alex.asset.configure.domain.AssetStatus;
 import com.alex.asset.configure.domain.KST;
 import com.alex.asset.configure.domain.Unit;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.BaseEntity;
+import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

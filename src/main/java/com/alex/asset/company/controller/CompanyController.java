@@ -1,7 +1,7 @@
 package com.alex.asset.company.controller;
 
-import com.alex.asset.company.dto.CompanyDto;
-import com.alex.asset.company.dto.DataDto;
+import com.alex.asset.company.domain.CompanyDto;
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.company.service.CompanyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

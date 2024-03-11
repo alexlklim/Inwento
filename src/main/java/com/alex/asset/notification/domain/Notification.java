@@ -2,7 +2,7 @@ package com.alex.asset.notification.domain;
 
 
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.BaseEntity;
+import com.alex.asset.utils.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

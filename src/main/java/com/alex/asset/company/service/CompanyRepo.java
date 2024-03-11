@@ -1,4 +1,4 @@
-package com.alex.asset.company.repo;
+package com.alex.asset.company.service;
 
 import com.alex.asset.company.domain.Company;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,7 +1,7 @@
-package com.alex.asset.company.mappers;
+package com.alex.asset.company.service;
 
 import com.alex.asset.company.domain.Company;
-import com.alex.asset.company.dto.CompanyDto;
+import com.alex.asset.company.domain.CompanyDto;
 
 public class CompanyMapper {
 
