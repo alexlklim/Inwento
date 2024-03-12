@@ -49,7 +49,7 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler({ExpiredJwtException.class, UnsupportedJwtException.class, MalformedJwtException.class,
-            SignatureException.class, IllegalArgumentException.class, NonceExpiredException.class})
+            SignatureException.class, NonceExpiredException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionBody handleJwtExceptions(Exception ex) {
         log.error(TAG + ex.getMessage());

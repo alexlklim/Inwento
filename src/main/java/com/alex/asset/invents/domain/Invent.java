@@ -28,11 +28,17 @@ public class Invent extends BaseEntity {
     @Column(name = "finish_date")
     LocalDate finishDate;
 
+    @Column(name = "is_finished")
+    boolean isFinished;
+
     String info;
 
     @ManyToOne
     @JoinColumn(name = "user_id") @JsonBackReference
     User user;
+
+
+
 
 
 }

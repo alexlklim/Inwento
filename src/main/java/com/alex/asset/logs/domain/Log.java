@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "logs") @Entity
-public class Log extends BaseEntity {
+public class Log {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
@@ -31,9 +31,11 @@ public class Log extends BaseEntity {
 
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "action")
     private Action action;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "section")
     private Section section;
 
     String text;

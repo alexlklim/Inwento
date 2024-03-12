@@ -3,6 +3,7 @@ package com.alex.asset.configure.controllers;
 
 import com.alex.asset.configure.domain.KST;
 import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,8 @@ public class KstController {
 
     @Operation(summary = "Get all active KST by KST num")
     @GetMapping("/{num}")
-    public ResponseEntity<List<KST>> getKSTByNum(@PathVariable("num") String num) {
+    public ResponseEntity<List<KST>> getKSTByNum(
+            @PathVariable("num") String num) {
         log.info(TAG + "Try to get KST by num {}", num);
         if (num.length() < 2) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(configureService.getKSTsByNum(num), HttpStatus.OK);
@@ -42,9 +45,12 @@ public class KstController {
 
     @Operation(summary = "Update visibility of KSTs by id and its new status")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateMPKs(@RequestBody List<DtoActive> DTOs) {
+    public ResponseEntity<HttpStatus> updateMPKs(
+            @RequestBody List<DtoActive> DTOs,
+            Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update visibility of KSTs");
-        configureService.updateKSTs(DTOs);
+        configureService.updateKSTs(DTOs, principal.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

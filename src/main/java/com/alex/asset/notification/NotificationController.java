@@ -31,7 +31,8 @@ public class NotificationController {
 
     @Operation(summary = "Get all notification for authorized user")
     @GetMapping
-    public ResponseEntity<List<NotificationDto>> getNotifications(Authentication authentication) {
+    public ResponseEntity<List<NotificationDto>> getNotifications(
+            Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Get all notification for user with id {}", principal.getUserId());
         return new ResponseEntity<>(notificationService.getNotifications(principal.getUserId()), HttpStatus.OK);
@@ -40,7 +41,8 @@ public class NotificationController {
 
     @Operation(summary = "Read all notification")
     @GetMapping("/read")
-    public ResponseEntity<HttpStatus> readAllNotifications(Authentication authentication) {
+    public ResponseEntity<HttpStatus> readAllNotifications(
+            Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Read all notifications by user with id {}", principal.getUserId());
 

@@ -25,15 +25,15 @@ public class InventDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
-    @JsonIgnore
-    @Schema(description = "Is active", example = "true")
-    boolean isActive;
-
     @Schema(description = "Start date", example = "2024-03-12")
     LocalDate startDate;
 
-    @Schema(description = "Finish date", example = "2024-03-12")
+    @Schema(description = "Finish date (will be sel automatically", example = "2024-03-12")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     LocalDate finishDate;
+
+    @Schema(description = "Is finished", example = "false")
+    boolean isFinished;
 
     @Schema(description = "Info", example = "Please, check all products in your branch")
     String info;

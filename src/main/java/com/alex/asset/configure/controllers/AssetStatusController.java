@@ -1,6 +1,7 @@
 package com.alex.asset.configure.controllers;
 
 import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,9 +28,12 @@ public class AssetStatusController {
 
     @Operation(summary = "update asset status, change their visibility by id")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateAssetStatuses(@RequestBody List<DtoActive> DTOs) {
+    public ResponseEntity<HttpStatus> updateAssetStatuses(
+            @RequestBody List<DtoActive> DTOs,
+            Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update asset statuses");
-        configureService.updateAssetStatuses(DTOs);
+        configureService.updateAssetStatuses(DTOs, principal.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -1,5 +1,7 @@
-DROP TABLE IF EXISTS event_product_shortage;
-DROP TABLE IF EXISTS event_product_ok;
+DROP TABLE IF EXISTS event_products;
+DROP TABLE IF EXISTS unknown_products;
+
+
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS invents;
 DROP TABLE IF EXISTS products;
@@ -14,4 +16,7 @@ DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS company;
 DROP TABLE IF EXISTS logs;
 DROP TABLE IF EXISTS notifications;
+
+
+DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS users;

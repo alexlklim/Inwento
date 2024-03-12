@@ -6,6 +6,9 @@ import com.alex.asset.company.domain.CompanyDto;
 import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.logs.LogService;
+import com.alex.asset.logs.domain.Action;
+import com.alex.asset.logs.domain.Section;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,7 @@ public class CompanyService {
 
     private final TypeService typeService;
     private final ConfigureService configureService;
+    private final LogService logService;
 
 
     public CompanyDto getInfoAboutCompany() {
@@ -37,9 +41,10 @@ public class CompanyService {
 
     @Modifying
     @Transactional
-    public CompanyDto updateCompany(CompanyDto dto) {
-        log.info(TAG + "Update company");
+    public CompanyDto updateCompany(CompanyDto dto, Long userId) {
+        log.info(TAG + "Update company by user with id {}", userId);
         Company updatedCompany = CompanyMapper.updateCompany(companyRepo.findAll().get(0), dto);
+        logService.addLog(userId, Action.UPDATE, Section.COMPANY, dto.toString());
         return CompanyMapper.toDto(companyRepo.save(updatedCompany));
     }
 

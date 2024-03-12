@@ -1,8 +1,9 @@
 package com.alex.asset.configure.controllers;
 
 
-import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,16 +37,22 @@ public class BranchController {
 
     @Operation(summary = "Add new branch")
     @PostMapping
-    public ResponseEntity<Branch> addBranch(@RequestBody DtoName dto) {
+    public ResponseEntity<Branch> addBranch(
+            @RequestBody DtoName dto,
+            Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to add branch {}", dto.getName());
-        return new ResponseEntity<>(configureService.addBranch(dto), HttpStatus.OK);
+        return new ResponseEntity<>(configureService.addBranch(dto, principal.getUserId()), HttpStatus.OK);
     }
 
     @Operation(summary = "Update branch, send id of branch and it's new status: active or not)")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateBranch(@RequestBody DtoActive dto) {
+    public ResponseEntity<HttpStatus> updateBranch(
+            @RequestBody DtoActive dto,
+            Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update branch {}", dto.getId());
-        configureService.updateBranch(dto);
+        configureService.updateBranch(dto, principal.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

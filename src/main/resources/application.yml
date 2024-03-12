@@ -34,7 +34,9 @@ server:
   port: 9091
   address: 0.0.0.0
 
-
-
+logging:
+  level:
+    root: INFO
+    com.alex.asset: DEBUG   # Set the logging level for your package or specific classes
 springdoc:
   override-with-generic-response: false

@@ -3,6 +3,7 @@ package com.alex.asset.company.controller;
 import com.alex.asset.company.domain.CompanyDto;
 import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.company.service.CompanyService;
+import com.alex.asset.security.config.jwt.CustomPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -32,9 +34,12 @@ public class CompanyController {
     @Operation(summary = "Update company info, only for ADMIN")
     @Secured("ROLE_ADMIN")
     @PutMapping
-    public ResponseEntity<CompanyDto> updateCompany(@RequestBody CompanyDto dto) {
+    public ResponseEntity<CompanyDto> updateCompany(
+            @RequestBody CompanyDto dto,
+            Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "try to update company ");
-        return new ResponseEntity<>(companyService.updateCompany(dto), HttpStatus.OK);
+        return new ResponseEntity<>(companyService.updateCompany(dto, principal.getUserId()), HttpStatus.OK);
     }
 
 

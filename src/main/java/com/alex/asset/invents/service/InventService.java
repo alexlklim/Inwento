@@ -8,8 +8,6 @@ import com.alex.asset.invents.repo.InventRepo;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.InventIsAlreadyInProgress;
-import com.alex.asset.utils.expceptions.errors.InventIsAlreadyNotActive;
-import com.alex.asset.utils.expceptions.errors.InventIsNotStartedYet;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -31,7 +29,7 @@ public class InventService {
     private final InventMapper inventMapper;
 
 
-    public boolean isAnyInventActive() {
+    public boolean isInventNow() {
         log.info(TAG + "Check is any invent active now or not");
         return inventRepo.isInventNow(LocalDate.now());
     }
@@ -39,15 +37,15 @@ public class InventService {
 
     @SneakyThrows
     public void startInvent(Long userId, InventDto dto) {
-        log.info(TAG + "Start new invent by user with id {}", userId);
-        if (isAnyInventActive()) {
-            throw new InventIsAlreadyInProgress("Invent is already in progress this time");
-        }
         log.info(TAG + "User {} create new invent", userId);
+        if (isInventNow()) throw new InventIsAlreadyInProgress("Invent is already in progress this time");
+
         Invent invent = new Invent();
         invent.setActive(true);
         invent.setStartDate(dto.getStartDate());
-        invent.setFinishDate(dto.getFinishDate());
+        invent.setFinished(dto.isFinished());
+        if (dto.isFinished()) invent.setFinishDate(LocalDate.now());
+        else invent.setFinishDate(null);
         invent.setInfo(dto.getInfo());
         invent.setUser(userRepo.getUser(userId));
         inventRepo.save(invent);
@@ -55,17 +53,16 @@ public class InventService {
 
 
     @SneakyThrows
-    public void finishInvent(Long userId, Long inventId) {
-        log.info(TAG + "Finish invent by user with id {}", userId);
+    public void updateInvent(Long userId, Long inventId, InventDto dto) {
+        log.info(TAG + "Update invent by user with id {}", userId);
         Invent invent = inventRepo.findById(inventId).orElseThrow(
                 () -> new ResourceNotFoundException("Invent with id " + inventId + " not found"));
-        LocalDate now = LocalDate.now();
-        if (now.isAfter(invent.getStartDate()) || now.equals(invent.getStartDate())) {
-            invent.setFinishDate(now);
-            inventRepo.save(invent);
-        } else {
-            throw new InventIsNotStartedYet("Invent with " + inventId + " is not started yet");
-        }
+        invent.setStartDate(dto.getStartDate());
+        invent.setFinished(dto.isFinished());
+        if (dto.isFinished()) invent.setFinishDate(LocalDate.now());
+        else invent.setFinishDate(null);
+        invent.setInfo(dto.getInfo());
+        inventRepo.save(invent);
     }
 
 
@@ -74,10 +71,7 @@ public class InventService {
         log.info(TAG + "Change visibility of invent with id {} by user with id {}", dto.getId(), userId);
         Invent invent = inventRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Invent with id " + dto.getId() + " not found"));
-        if (!invent.isActive()) {
-            throw new InventIsAlreadyNotActive("Invent with " + dto.getId() + " is already not active");
-        }
-        invent.setActive(false);
+        invent.setActive(dto.isActive());
         inventRepo.save(invent);
     }
 
@@ -89,8 +83,17 @@ public class InventService {
 
     public InventDto getCurrentInvent() {
         log.info(TAG + "Get current invent");
-        return inventMapper.toDto(inventRepo.findActiveInventByDate(LocalDate.now()).orElseThrow(
+        return inventMapper.toDto(inventRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
                 () -> new ResourceNotFoundException("No active invent at this moment")));
 
     }
+
+
+    public Long getIdOfCurrentInvent(){
+        return inventRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
+                () -> new ResourceNotFoundException("No active invent at this moment"))
+                .getId();
+
+    }
+
 }

@@ -26,6 +26,8 @@ public class NotificationService {
     private final NotificationRepo notificationRepo;
     private final NotificationMapper notificationMapper;
     private final UserRepo userRepo;
+
+
     public List<NotificationDto> getNotifications(Long userId) {
         log.info(TAG + "get notifications for user with id {}", userId);
         return notificationRepo.getNotificationsByUser(userRepo.getUser(userId))

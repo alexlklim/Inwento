@@ -1,7 +1,5 @@
 package com.alex.asset.invents.dto;
 
-
-import com.alex.asset.product.dto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,37 +10,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Event DTO")
-public class EventDto {
+@Schema(description = "Event DTO GET")
+public class EventV2Get {
+
     @Schema(description = "Id", example = "1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
-    @Schema(description = "Is active", example = "true")
-    boolean isActive;
-
     @Schema(description = "Invent id", example = "1")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long inventId;
 
-    @Schema(description = "User id", example = "1")
-    Long userId;
-
-    @Schema(description = "Branch id", example = "1")
-    Long branchId;
-
-    @Schema(description = "Product shortage", example = "[...]")
+    @Schema(description = "Username", example = "Alex Klim")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    List<ProductDto> productsShortage;
+    String username;
 
-    @Schema(description = "Product ok", example = "[...]")
+    @Schema(description = "Username", example = "alex@gmail.com")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    List<ProductDto> productsOk;
+    String email;
 
+    @Schema(description = "Branch", example = "Main office")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    String branch;
 }

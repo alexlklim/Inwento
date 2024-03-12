@@ -3,6 +3,9 @@ package com.alex.asset.configure.services;
 
 import com.alex.asset.configure.domain.*;
 import com.alex.asset.configure.repo.*;
+import com.alex.asset.logs.LogService;
+import com.alex.asset.logs.domain.Action;
+import com.alex.asset.logs.domain.Section;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConfigureService {
     private final String TAG = "FIELD_SERVICE - ";
+
+    private final LogService logService;
 
     private final BranchRepo branchRepo;
     private final MpkRepo mpkRepo;
@@ -47,51 +52,62 @@ public class ConfigureService {
         return kstRepo.findAll();
     }
 
-    public void updateUnits(List<DtoActive> DTOs) {
-        log.info(TAG + "Update units");
-        for (DtoActive dto : DTOs) {
-            unitRepo.update(dto.isActive(), dto.getId());
-        }
-    }
-
-    public void updateAssetStatuses(List<DtoActive> DTOs) {
-        log.info(TAG + "Update asset statuses");
-        for (DtoActive dto : DTOs) {
-            assetStatusRepo.update(dto.isActive(), dto.getId());
-        }
-    }
-
-    public void updateKSTs(List<DtoActive> DTOs) {
-        log.info(TAG + "Update KSTs");
-        for (DtoActive dto : DTOs) {
-            kstRepo.update(dto.isActive(), dto.getId());
-        }
-    }
-
     public List<KST> getKSTsByNum(String name) {
         log.info(TAG + "Get KST by num");
         return kstRepo.findByNum(name);
     }
 
-    public Branch addBranch(DtoName dto) {
+    public void updateUnits(List<DtoActive> DTOs, Long userId) {
+        log.info(TAG + "Update units");
+        for (DtoActive dto : DTOs) {
+            unitRepo.update(dto.isActive(), dto.getId());
+        }
+        logService.addLog(userId, Action.UPDATE, Section.UNIT, DTOs.toString());
+    }
+
+    public void updateAssetStatuses(List<DtoActive> DTOs, Long userId) {
+        log.info(TAG + "Update asset statuses");
+        for (DtoActive dto : DTOs) {
+            assetStatusRepo.update(dto.isActive(), dto.getId());
+        }
+        logService.addLog(userId, Action.UPDATE, Section.ASSET_STATUS, DTOs.toString());
+
+    }
+
+    public void updateKSTs(List<DtoActive> DTOs, Long userId) {
+        log.info(TAG + "Update KSTs");
+        for (DtoActive dto : DTOs) {
+            kstRepo.update(dto.isActive(), dto.getId());
+        }
+        logService.addLog(userId, Action.UPDATE, Section.KST, DTOs.toString());
+
+    }
+
+
+    public Branch addBranch(DtoName dto, Long userId) {
         log.info(TAG + "Add branch {}", dto.getName());
+        logService.addLog(userId, Action.CREATE, Section.BRANCH, dto.toString());
         return branchRepo.save(new Branch(dto.getName()));
     }
 
-    public void updateBranch(DtoActive dto) {
+    public void updateBranch(DtoActive dto, Long userId) {
         log.info(TAG + "Update branch {}", dto.getId());
         branchRepo.update(dto.isActive(), dto.getId());
+        logService.addLog(userId, Action.UPDATE, Section.BRANCH, dto.toString());
+
     }
 
 
-    public MPK addMPK(DtoName dto) {
+    public MPK addMPK(DtoName dto, Long userId) {
         log.info(TAG + "Add MPK {}", dto.getName());
+        logService.addLog(userId, Action.CREATE, Section.MPK, dto.toString());
         return mpkRepo.save(new MPK(dto.getName()));
     }
 
-    public void updateMPK(DtoActive dto) {
+    public void updateMPK(DtoActive dto, Long userId) {
         log.info(TAG + "Update MPK {}", dto.getId());
         mpkRepo.update(dto.isActive(), dto.getId());
+        logService.addLog(userId, Action.UPDATE, Section.MPK, dto.toString());
     }
 
 

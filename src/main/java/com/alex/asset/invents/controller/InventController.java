@@ -1,6 +1,5 @@
 package com.alex.asset.invents.controller;
 
-import com.alex.asset.invents.dto.EventDto;
 import com.alex.asset.invents.dto.InventDto;
 import com.alex.asset.invents.service.InventService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
@@ -30,51 +29,61 @@ public class InventController {
     @Operation(summary = "Get invent by id")
     @Secured("ROLE_ADMIN")
     @GetMapping("/{id}")
-    public ResponseEntity<InventDto> getInventById(@PathVariable("id") Long inventId) {
+    public ResponseEntity<InventDto> getInventById(
+            @PathVariable("id") Long inventId) {
         log.info(TAG + "Get invent with id {}", inventId);
         return new ResponseEntity<>(inventService.getInventById(inventId), HttpStatus.OK);
     }
 
-    @Operation(summary = "Get active invent")
+
+    @Operation(summary = "Check is invent now or not " +
+            "(it will be used in android app (main page) to notify users that invent is started")
     @GetMapping("/active")
     public ResponseEntity<Boolean> isInventActive() {
         log.info(TAG + "Check is inventory taking place now or not");
-        return new ResponseEntity<>(inventService.isAnyInventActive(), HttpStatus.OK);
+        return new ResponseEntity<>(inventService.isInventNow(), HttpStatus.OK);
     }
 
-    @Operation(summary = "get active invent")
+    @Operation(summary = "get current active invent (it returns 404 if no active invent now")
     @GetMapping("/current")
     public ResponseEntity<InventDto> getCurrentEvent() {
-        log.info(TAG + "get current envent");
+        log.info(TAG + "get current invent");
         return new ResponseEntity<>(inventService.getCurrentInvent(), HttpStatus.OK);
     }
 
+
+
     @Operation(summary = "Start new inventarization")
     @Secured("ROLE_ADMIN")
-    @PostMapping("/start")
-    public ResponseEntity<HttpStatus> startInvent(@RequestBody InventDto dto, Authentication authentication) {
+    @PostMapping
+    public ResponseEntity<HttpStatus> create(
+            @RequestBody InventDto dto,
+            Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Start invent");
+        log.info(TAG + "Create invent");
         inventService.startInvent(principal.getUserId(), dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "Finish inventarization")
+    @Operation(summary = "Update inventarization")
     @Secured("ROLE_ADMIN")
-    @PutMapping("/finish/{id}")
-    public ResponseEntity<HttpStatus> finishInvent(
+    @PutMapping("/{id}")
+    public ResponseEntity<HttpStatus> update(
             @PathVariable("id") Long inventId,
+            @RequestBody InventDto dto,
             Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Finish invent");
-        inventService.finishInvent(principal.getUserId(), inventId);
+        log.info(TAG + "Update invent");
+        inventService.updateInvent(principal.getUserId(), inventId, dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Change visibility of invent")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> changeVisibilityOfInvent(@RequestBody DtoActive dto, Authentication authentication) {
+    public ResponseEntity<HttpStatus> changeVisibility(
+            @RequestBody DtoActive dto,
+            Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Finish invent");
         inventService.changeVisibility(principal.getUserId(), dto);

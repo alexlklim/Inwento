@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class LogService {
     }
 
 
+    @Transactional
     @SneakyThrows
     public void addLog(Long userId, Action action, Section section, String text) {
         log.info(TAG + "add new log");

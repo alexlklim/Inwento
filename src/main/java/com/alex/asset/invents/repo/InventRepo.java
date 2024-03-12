@@ -12,7 +12,9 @@ public interface InventRepo extends JpaRepository<Invent, Long> {
 
     @Query("SELECT CASE WHEN COUNT(i) > 0 THEN true ELSE false END " +
             "FROM Invent i " +
-            "WHERE i.startDate <= :now AND i.finishDate >= :now AND i.isActive = true")
+            "WHERE i.startDate <= :now " +
+            "AND i.isActive = true " +
+            "AND i.isFinished = false")
     boolean isInventNow(@Param("now") LocalDate now);
 
 
@@ -20,6 +22,6 @@ public interface InventRepo extends JpaRepository<Invent, Long> {
 
     @Query("SELECT i FROM Invent i WHERE i.isActive = true " +
             "AND i.startDate <= :currentDate " +
-            "AND i.finishDate >= :currentDate")
-    Optional<Invent> findActiveInventByDate(LocalDate currentDate);
+            "AND i.isFinished = false ")
+    Optional<Invent> getCurrentInvent(LocalDate currentDate);
 }

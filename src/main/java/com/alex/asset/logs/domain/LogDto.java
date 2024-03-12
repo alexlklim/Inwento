@@ -1,6 +1,7 @@
 package com.alex.asset.logs.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -19,6 +20,7 @@ public class LogDto {
 
     Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     LocalDateTime created;
 
     String userEmail;

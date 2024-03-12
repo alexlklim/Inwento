@@ -32,7 +32,8 @@ public class ImageController {
 
     @Operation(summary = "Upload new image")
     @PostMapping
-    public ResponseEntity<HttpStatus> uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<HttpStatus> uploadImage(
+            @RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

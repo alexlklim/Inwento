@@ -59,7 +59,8 @@ public class ProductController {
 
     @Operation(summary = "Get product by id")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductDto> getById(
+            @PathVariable("id") Long id) {
         log.info(TAG + "Try to get product by id {}", id);
         ProductDto productDTO = productService.getById(id);
         if (productDTO == null) {
@@ -71,7 +72,9 @@ public class ProductController {
 
     @Operation(summary = "Add new product")
     @PostMapping
-    public ResponseEntity<ProductDto> addNewProduct(@RequestBody ProductDto dto, Authentication authentication) {
+    public ResponseEntity<ProductDto> addNewProduct(
+            @RequestBody ProductDto dto,
+            Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "get all products for company");
         ProductDto productDTO = productService.create(dto, principal.getUserId());
@@ -84,7 +87,9 @@ public class ProductController {
 
     @Operation(summary = "Update Product")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateProduct(@RequestBody ProductDto dto) {
+    public ResponseEntity<HttpStatus> updateProduct(
+            @RequestBody ProductDto dto,
+            Authentication authentication) {
         log.info(TAG + "get all products for company");
         boolean result =  productService.update(dto);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -93,7 +98,9 @@ public class ProductController {
     @Operation(summary = "Update visibility fo product by id and its new active status")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> updateVisibilityOfProduct(@RequestBody DtoActive dto) {
+    public ResponseEntity<HttpStatus> updateVisibilityOfProduct(
+            @RequestBody DtoActive dto,
+            Authentication authentication) {
         log.info(TAG + "Update product visibility with id {} and value {}", dto.getId(), dto.isActive());
         boolean result = productService.updateVisibility(dto);
         if (!result) {
@@ -105,7 +112,8 @@ public class ProductController {
 
     @Operation(summary = "Get short products by title")
     @GetMapping("/filter/{title}")
-    public ResponseEntity<Map<Long, String>> getProductsByTitle(@PathVariable("title") String title) {
+    public ResponseEntity<Map<Long, String>> getProductsByTitle(
+            @PathVariable("title") String title) {
         log.info(TAG + "Try to get all products by title {}", title);
         Map<Long, String> products = productService.getByTitle(title);
         if (products.isEmpty()) {
@@ -118,7 +126,9 @@ public class ProductController {
 
     @Operation(summary = "Scrap product (use isScrap to make product scrap or not)")
     @PutMapping("/scrap")
-    public ResponseEntity<HttpStatus> scrapProduct(@RequestBody ScrapDto dto) {
+    public ResponseEntity<HttpStatus> scrapProduct(
+            @RequestBody ScrapDto dto,
+            Authentication authentication) {
         log.info(TAG + "Scrap product with id {}", dto.getId());
         boolean result = productService.scraping(dto);
         if (!result) return new ResponseEntity<>(HttpStatus.CONFLICT);
