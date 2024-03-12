@@ -1,10 +1,7 @@
 package com.alex.asset.utils.expceptions;
 
 
-import com.alex.asset.utils.expceptions.errors.InventIsAlreadyInProgress;
-import com.alex.asset.utils.expceptions.errors.InventIsAlreadyNotActive;
-import com.alex.asset.utils.expceptions.errors.InventIsNotStartedYet;
-import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.expceptions.errors.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -36,6 +33,16 @@ public class ControllerAdvice {
         log.error(TAG + ex.getMessage());
         return new ExceptionBody(400, ex.getMessage());
     }
+
+
+    @ExceptionHandler({UserAlreadyExistException.class, UserNotRegisterYet.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionBody handleUserAlreadyExistException(UserAlreadyExistException ex) {
+        log.error(TAG + ex.getMessage());
+        return new ExceptionBody(409, ex.getMessage());
+    }
+
+
 
 
     @ExceptionHandler({InventIsAlreadyInProgress.class, InventIsAlreadyNotActive.class, InventIsNotStartedYet.class})

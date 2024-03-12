@@ -3,10 +3,9 @@ package com.alex.asset.product.controller;
 
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ScrapDto;
-import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
-import com.sun.net.httpserver.HttpsServer;
+import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -90,8 +89,9 @@ public class ProductController {
     public ResponseEntity<HttpStatus> updateProduct(
             @RequestBody ProductDto dto,
             Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "get all products for company");
-        boolean result =  productService.update(dto);
+        productService.update(dto, principal.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -101,8 +101,9 @@ public class ProductController {
     public ResponseEntity<HttpStatus> updateVisibilityOfProduct(
             @RequestBody DtoActive dto,
             Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Update product visibility with id {} and value {}", dto.getId(), dto.isActive());
-        boolean result = productService.updateVisibility(dto);
+        boolean result = productService.updateVisibility(dto, principal.getUserId());
         if (!result) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -129,8 +130,9 @@ public class ProductController {
     public ResponseEntity<HttpStatus> scrapProduct(
             @RequestBody ScrapDto dto,
             Authentication authentication) {
+        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Scrap product with id {}", dto.getId());
-        boolean result = productService.scraping(dto);
+        boolean result = productService.scraping(dto, principal.getUserId());
         if (!result) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(HttpStatus.OK);
     }

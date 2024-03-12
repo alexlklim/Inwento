@@ -32,10 +32,8 @@ public class LogController {
     @Operation(summary = "Get all logs")
     @Secured("ROLE_ADMIN")
     @GetMapping
-    public ResponseEntity<List<LogDto>> getAllLogs(
-            Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Get all logs by user with id {}", principal.getUserId());
+    public ResponseEntity<List<LogDto>> getAllLogs() {
+        log.info(TAG + "Get all logs");
         return new ResponseEntity<>(logService.getAllLogs(), HttpStatus.OK);
     }
 
@@ -44,8 +42,7 @@ public class LogController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/user/{id}")
     public ResponseEntity<List<LogDto>> getLogsForSpecificUser(
-            @PathVariable("id") Long userId,
-            Authentication authentication) {
+            @PathVariable("id") Long userId) {
         log.info(TAG + "Get logs for user with id {}", userId);
         return new ResponseEntity<>(logService.getLogsForSpecificUser(userId), HttpStatus.OK);
     }

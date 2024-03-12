@@ -1,6 +1,9 @@
 package com.alex.asset.product.service;
 
 
+import com.alex.asset.logs.LogService;
+import com.alex.asset.logs.domain.Action;
+import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ScrapDto;
@@ -8,7 +11,9 @@ import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
+import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -30,6 +35,7 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final String TAG = "PRODUCT_SERVICE - ";
+    private final LogService logService;
 
     private final ProductMapper productMapper;
     private final ProductRepo productRepo;
@@ -52,17 +58,21 @@ public class ProductService {
     }
 
 
-    public ProductDto create(ProductDto dto, Long id) {
+    public ProductDto create(ProductDto dto, Long userId) {
         Product product = productMapper.toEntity(dto);
-        product.setCreatedBy(userRepo.getUser(id));
+        product.setCreatedBy(userRepo.getUser(userId));
         product.setLiable(userRepo.getUser(dto.getLiableId()));
         product.setBarCode(null);
         product.setRfidCode(null);
+        logService.addLog(userId, Action.CREATE, Section.PRODUCT, dto.toString());
         return productMapper.toDto(productRepo.save(product));
     }
 
-    public ProductDto getById(Long id) {
-        return productMapper.toDto(productRepo.get(id));
+    @SneakyThrows
+    public ProductDto getById(Long productId) {
+        return productMapper.toDto(productRepo.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException("Product with id " + productId + " not found")
+        ));
 
     }
 
@@ -75,25 +85,36 @@ public class ProductService {
 
     }
 
-    public boolean updateVisibility(DtoActive dto) {
-        productRepo.updateVisibility(dto.isActive(), dto.getId());
+    @SneakyThrows
+    public boolean updateVisibility(DtoActive dto, Long userId) {
+        Product product = productRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
+        product.setActive(dto.isActive());
+        productRepo.save(product);
+        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
         return true;
     }
 
-    public boolean scraping(ScrapDto dto) {
-        Product product = productRepo.get(dto.getId());
+    @SneakyThrows
+    public boolean scraping(ScrapDto dto, Long userId) {
+        Product product = productRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
         product.setScrapping(dto.isScrap());
         product.setScrappingReason(dto.getScrappingReason());
         product.setScrappingDate(dto.getScrappingDate());
         product.setActive(!dto.isScrap());
         productRepo.save(product);
+        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
         return true;
     }
 
-    public Boolean update(ProductDto dto) {
-        Product product = updateProduct(productRepo.get(dto.getId()), dto);
+    @SneakyThrows
+    public void update(ProductDto dto, Long userId) {
+        Product product = updateProduct(productRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found")
+        ), dto);
         product.setActive(true);
-        return true;
+        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
     }
 
 
