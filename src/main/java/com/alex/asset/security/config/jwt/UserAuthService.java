@@ -13,7 +13,6 @@ import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.expceptions.errors.user_error.UserAlreadyExistException;
 import com.alex.asset.utils.expceptions.errors.user_error.UserNotRegisterYet;
-import jdk.dynalink.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +80,6 @@ public class UserAuthService {
     }
 
 
-
     public User getById(Long userId) {
         log.info(TAG + "Exists by user id: {}", userId);
         return userRepo.findById(userId).orElse(null);
@@ -95,8 +93,7 @@ public class UserAuthService {
     }
 
 
-
-    public Optional<User> getUserByEmail(String email){
+    public Optional<User> getUserByEmail(String email) {
         return userRepo.getUserByEmail(email);
     }
 

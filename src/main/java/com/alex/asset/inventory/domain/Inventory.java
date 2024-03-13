@@ -1,10 +1,10 @@
 package com.alex.asset.inventory.domain;
 
 
-import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -32,7 +32,6 @@ public class Inventory extends BaseEntity {
     boolean isFinished;
 
     String info;
-
 
 
 }

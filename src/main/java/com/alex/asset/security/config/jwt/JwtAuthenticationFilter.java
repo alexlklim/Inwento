@@ -2,25 +2,18 @@ package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.expceptions.errors.user_error.UserFailedAuthentication;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.NonceExpiredException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -57,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 User user = userAuthService.getUserByEmail(userEmail)
                         .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
 
-                if (user.isEnabled()){
+                if (user.isEnabled()) {
                     CustomPrincipal principal = new CustomPrincipal(user);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             principal, null,

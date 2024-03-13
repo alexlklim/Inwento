@@ -37,10 +37,12 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<UserDto> register(
-            @RequestBody RegisterDto request,
+            @RequestBody RegisterDto registerDto,
             Authentication authentication) {
         log.info(TAG + "Register new user");
-        userAuthService.register(request, ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+        userAuthService.register(
+                registerDto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -50,7 +52,9 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         log.info(TAG + "Get all users");
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                userService.getAllUsers(),
+                HttpStatus.OK);
     }
 
 
@@ -58,11 +62,11 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> changeUserVisibility(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
         log.info(TAG + "Try to change user visibility");
         userService.changeUserVisibility(
-                dto,
+                dtoActive,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -72,19 +76,24 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getInfoAboutUser(
             @PathVariable("id") Long userId) {
-        log.info(TAG + "Get info about user with id {}", userId);
-        return new ResponseEntity<>(userService.getInfoAboutUserById(userId), HttpStatus.OK);
+        log.info(TAG + "Get info about user");
+        return new ResponseEntity<>(
+                userService.getInfoAboutUserById(userId),
+                HttpStatus.OK);
     }
     @Operation(summary = "Update info about user by id (only for admin)")
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateInfoAboutUser(
-            @PathVariable("id") Long id,
-            @RequestBody UserDto dto,
+            @PathVariable("id") Long userId,
+            @RequestBody UserDto userDto,
             Authentication authentication) {
-        log.info(TAG + "Update info about user with id {}", id);
+        log.info(TAG + "Update info about user");
         return new ResponseEntity<>(
-                userService.updateUser(id, dto, ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                userService.updateUser(
+                        userId,
+                        userDto,
+                        ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
                 HttpStatus.OK);
     }
 
