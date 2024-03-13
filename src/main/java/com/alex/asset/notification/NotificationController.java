@@ -100,7 +100,7 @@ public class NotificationController {
             Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Change visibility of notification with id {} to status {}", dto.getId(), dto.isActive());
-        notificationService.changeNotificationVisibility(dto);
+        notificationService.changeNotificationVisibility(dto, principal.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

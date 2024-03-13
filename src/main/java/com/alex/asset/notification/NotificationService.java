@@ -1,6 +1,7 @@
 package com.alex.asset.notification;
 
 
+import com.alex.asset.logs.LogService;
 import com.alex.asset.notification.domain.Notification;
 import com.alex.asset.notification.domain.NotificationDto;
 import com.alex.asset.notification.domain.Reason;
@@ -23,6 +24,7 @@ public class NotificationService {
 
     private final String TAG = "NOTIFICATION_SERVICE - ";
 
+    private final LogService logService;
     private final NotificationRepo notificationRepo;
     private final NotificationMapper notificationMapper;
     private final UserRepo userRepo;
@@ -95,7 +97,7 @@ public class NotificationService {
         users.forEach(user ->  sendSystemNotificationToSpecificUser(reason, user));
     }
 
-    public void changeNotificationVisibility(DtoActive dto) {
+    public void changeNotificationVisibility(DtoActive dto, Long userId) {
         log.info(TAG + "Change notification visibility with id {} to status {}", dto.getId(), dto.isActive());
         Notification notification = notificationRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Notification with id "+ dto.getId() + " not found"));

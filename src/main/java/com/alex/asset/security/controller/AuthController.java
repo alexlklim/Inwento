@@ -68,11 +68,7 @@ public class AuthController {
     @PostMapping("/pw/change")
     public ResponseEntity<AuthDto> changePassword(@RequestBody PasswordDto request) {
         CustomPrincipal principal = (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean result = userAuthService.changePassword(request, principal);
-        if (!result) {
-            log.error(TAG + "Change password action for user {} failed", principal.getName());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        userAuthService.changePassword(request, principal);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

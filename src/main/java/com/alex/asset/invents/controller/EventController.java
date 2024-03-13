@@ -44,9 +44,7 @@ public class EventController {
     @Secured("ROLE_ADMIN")
     @GetMapping("/invent/{id}/all")
     public ResponseEntity<List<EventV2Get>> getAllEventsForSpecificInvent(
-            @PathVariable("id") Long inventId,
-            Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
+            @PathVariable("id") Long inventId) {
         log.info(TAG + "Get all events for specific user for specific invent");
 
         return new ResponseEntity<>(eventService.getAllEventsForSpecificInvent(inventId), HttpStatus.OK);

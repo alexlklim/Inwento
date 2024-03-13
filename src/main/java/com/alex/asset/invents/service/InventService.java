@@ -89,11 +89,4 @@ public class InventService {
     }
 
 
-    public Long getIdOfCurrentInvent(){
-        return inventRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
-                () -> new ResourceNotFoundException("No active invent at this moment"))
-                .getId();
-
-    }
-
 }

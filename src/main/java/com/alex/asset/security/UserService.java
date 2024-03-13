@@ -15,7 +15,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +49,6 @@ public class UserService {
         log.info(TAG + "Change user visibility");
         userRepo.updateVisibility(dto.isActive(), dto.getId());
         logService.addLog(userId, Action.UPDATE, Section.USERS, dto.toString());
-
     }
 
 
@@ -61,8 +59,7 @@ public class UserService {
     public UserDto updateUser(Long id, UserDto dto, Long userId) {
         log.error(TAG + "Update user with id {} by user with id {}", id, userId);
         User user = userRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User with id " + id + " not found")
-        );
+                () -> new ResourceNotFoundException("User with id " + id + " not found"));
         user.setFirstname(dto.getFirstName());
         user.setLastname(dto.getLastName());
         user.setEmail(dto.getEmail());
@@ -71,6 +68,9 @@ public class UserService {
         logService.addLog(userId, Action.UPDATE, Section.USERS, dto.toString());
         return UserMapper.toDto(userRepo.save(user));
     }
+
+
+
 
 
 }

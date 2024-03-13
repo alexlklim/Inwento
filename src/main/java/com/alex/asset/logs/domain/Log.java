@@ -2,7 +2,6 @@ package com.alex.asset.logs.domain;
 
 
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

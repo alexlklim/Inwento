@@ -8,8 +8,6 @@ import com.alex.asset.invents.dto.EventV2Get;
 import com.alex.asset.invents.mapper.EventMapper;
 import com.alex.asset.invents.repo.EventRepo;
 import com.alex.asset.invents.repo.InventRepo;
-import com.alex.asset.product.domain.Product;
-import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
