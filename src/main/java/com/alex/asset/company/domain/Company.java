@@ -8,9 +8,13 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity @Table(name = "company", uniqueConstraints = {@UniqueConstraint(columnNames = {"company"})})
+@Entity
+@Table(name = "company", uniqueConstraints = {@UniqueConstraint(columnNames = {"company"})})
 public class Company extends BaseEntity {
 
     String company;
@@ -25,5 +29,20 @@ public class Company extends BaseEntity {
 
     String phone;
     String email;
+
+
+    @Column(name = "label_width")
+    Long labelWidth;
+
+    @Column(name = "label_height")
+    Long labelHeight;
+
+    @Column(name = "label_type")
+    String labelType;
+
+    @Column(name = "is_email_configured")
+    Boolean isEmailConfigured;
+    String host, port, username, password, protocol;
+
 
 }

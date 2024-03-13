@@ -27,7 +27,22 @@ CREATE TABLE IF NOT EXISTS company
     nip      VARCHAR(255),
     regon    VARCHAR(255),
     phone    VARCHAR(255),
-    email    VARCHAR(255)
+    email    VARCHAR(255),
+
+
+    label_width INTEGER,
+    label_height INTEGER,
+    label_type VARCHAR(255),
+
+
+    is_email_configured BOOLEAN NOT NULL,
+    host VARCHAR(255),
+    port VARCHAR(255),
+    username VARCHAR(255),
+    password VARCHAR(255),
+    protocol VARCHAR(255)
+
+
 );
 
 

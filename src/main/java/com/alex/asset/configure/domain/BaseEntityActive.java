@@ -20,7 +20,7 @@ public class BaseEntityActive implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "is_active") @JsonIgnore
+    @Column(name = "is_active")
     boolean isActive;
 
     public BaseEntityActive() {

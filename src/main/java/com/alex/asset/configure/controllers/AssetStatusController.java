@@ -1,5 +1,6 @@
 package com.alex.asset.configure.controllers;
 
+import com.alex.asset.configure.domain.AssetStatus;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
@@ -25,6 +26,17 @@ public class AssetStatusController {
     private final String TAG = "ASSEt_STATUS_CONTROLLER - ";
 
     private final ConfigureService configureService;
+
+
+    @Operation(summary = "get asset statuses (active or not)")
+    @GetMapping
+    public ResponseEntity<List<AssetStatus>> getAssetStatuses() {
+        log.info(TAG + "Try to update asset statuses");
+        return new ResponseEntity<>(
+                configureService.getAssetStatuses(),
+                HttpStatus.OK);
+    }
+
 
     @Operation(summary = "update asset status, change their visibility by id")
     @PutMapping

@@ -40,12 +40,21 @@ public class ConfigureService {
         return unitRepo.getActive();
     }
 
+    public List<Unit> getAllUnits() {
+        return unitRepo.findAll();
+    }
+
+
     public List<MPK> getMPKs() {
         return mpkRepo.getActive();
     }
 
     public List<AssetStatus> getAssetStatuses() {
         return assetStatusRepo.getActive();
+    }
+
+    public List<AssetStatus> getAllAssetStatuses() {
+        return assetStatusRepo.findAll();
     }
 
     public List<KST> getAllKSTs() {

@@ -1,6 +1,8 @@
 package com.alex.asset.configure.controllers;
 
 
+import com.alex.asset.configure.domain.AssetStatus;
+import com.alex.asset.configure.domain.Unit;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
@@ -22,11 +24,19 @@ import java.util.List;
 @RequestMapping("/api/v1/company/unit")
 @Tag(name = "Unit Controller", description = "Unit API")
 public class UnitController {
-
     private final String TAG = "UNIT_CONTROLLER - ";
 
-
     private final ConfigureService configureService;
+
+
+    @Operation(summary = "get all units (active or not)")
+    @GetMapping
+    public ResponseEntity<List<Unit>> getUnits() {
+        log.info(TAG + "Get all units");
+        return new ResponseEntity<>(
+                configureService.getAllUnits(),
+                HttpStatus.OK);
+    }
 
     @Operation(summary = "Update units, send id of unit and it's new status: active or not)")
     @PutMapping
