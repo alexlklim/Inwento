@@ -21,7 +21,4 @@ public interface SubtypeRepo extends JpaRepository<Subtype, Long> {
     List<Subtype> findByActiveTrueAndType(Type type);
 
 
-    @Query("SELECT s FROM Subtype s WHERE s.id = ?1")
-    Subtype get(Long id);
-
 }

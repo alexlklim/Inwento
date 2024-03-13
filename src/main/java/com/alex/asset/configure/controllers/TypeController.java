@@ -34,17 +34,19 @@ public class TypeController {
     public ResponseEntity<List<DataDto.Type>> getAllTypesAndSubtypes() {
         log.info(TAG + "Try to get all types and subtypes");
         typeService.getTypes();
-        return new ResponseEntity<>(typeService.getTypes(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                typeService.getTypes(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Add new Types")
     @PostMapping
     public ResponseEntity<HttpStatus> addTypes(
-            @RequestBody List<String> list,
+            @RequestBody List<String> listTypes,
             Authentication authentication) {
-        log.info(TAG + "Try to add types {}", list.stream().toList());
+        log.info(TAG + "Try to add types");
         typeService.addTypes(
-                list,
+                listTypes,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -52,13 +54,12 @@ public class TypeController {
     @Operation(summary = "Change visibility of type by id")
     @PutMapping
     public ResponseEntity<HttpStatus> changeVisibilityOfType(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
-        log.info(TAG + "Try to change visibility of type with id {} to status {}", dto.getId(), dto.isActive());
-        boolean result = typeService.changeVisibilityOfType(
-                dto,
+        log.info(TAG + "Try to change visibility of type");
+        typeService.changeVisibilityOfType(
+                dtoActive,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -66,29 +67,27 @@ public class TypeController {
     @Operation(summary = "Add new Subtype to special type")
     @PostMapping("/{id}/subtype")
     public ResponseEntity<HttpStatus> addSubtypes(
-            @PathVariable("id") Long id,
-            @RequestBody List<String> list,
+            @PathVariable("id") Long typeId,
+            @RequestBody List<String> listSubtype,
             Authentication authentication) {
-        log.info(TAG + "Try to add subtypes {} to type with id {}", list.stream().toList(), id);
-        boolean result = typeService.addSubtypes(
-                id,
-                list,
+        log.info(TAG + "Try to add subtypes");
+        typeService.addSubtypes(
+                typeId,
+                listSubtype,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @Operation(summary = "Change visibility of subtype by id")
     @PutMapping("/subtype")
     public ResponseEntity<HttpStatus> changeVisibilityOfSubtype(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
-        log.info(TAG + "Try to change visibility of subtype with id {} to status {}", dto.getId(), dto.isActive());
-        boolean result = typeService.changeVisibilityOfSubtype(
-                dto,
+        log.info(TAG + "Try to change visibility of subtype");
+        typeService.changeVisibilityOfSubtype(
+                dtoActive,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

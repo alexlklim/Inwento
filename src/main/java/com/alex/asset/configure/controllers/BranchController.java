@@ -32,28 +32,32 @@ public class BranchController {
     @GetMapping
     public ResponseEntity<List<Branch>> getAllBranches() {
         log.info(TAG + "Try to get all branches");
-        return new ResponseEntity<>(configureService.getBranches(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                configureService.getBranches(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Add new branch")
     @PostMapping
     public ResponseEntity<Branch> addBranch(
-            @RequestBody DtoName dto,
+            @RequestBody DtoName dtoName,
             Authentication authentication) {
-        log.info(TAG + "Try to add branch {}", dto.getName());
-        return new ResponseEntity<>(configureService.addBranch(
-                dto,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
+        log.info(TAG + "Try to add branch");
+        return new ResponseEntity<>(
+                configureService.addBranch(
+                        dtoName,
+                        ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Update branch, send id of branch and it's new status: active or not)")
     @PutMapping
     public ResponseEntity<HttpStatus> updateBranch(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
-        log.info(TAG + "Try to update branch {}", dto.getId());
+        log.info(TAG + "Try to update branch");
         configureService.updateBranch(
-                dto,
+                dtoActive,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }

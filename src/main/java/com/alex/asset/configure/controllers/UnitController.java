@@ -31,11 +31,11 @@ public class UnitController {
     @Operation(summary = "Update units, send id of unit and it's new status: active or not)")
     @PutMapping
     public ResponseEntity<HttpStatus> updateUnits(
-            @RequestBody List<DtoActive> DTOs,
+            @RequestBody List<DtoActive> dtoActiveList,
             Authentication authentication) {
         log.info(TAG + "Try to update units");
         configureService.updateUnits(
-                DTOs,
+                dtoActiveList,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }

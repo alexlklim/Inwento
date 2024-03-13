@@ -28,17 +28,23 @@ public class CompanyController {
     @Operation(summary = "Get info about company")
     @GetMapping
     public ResponseEntity<CompanyDto> getInfo() {
-        return new ResponseEntity<>(companyService.getInfoAboutCompany(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                companyService.getInfoAboutCompany(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Update company info, only for ADMIN")
     @Secured("ROLE_ADMIN")
     @PutMapping
     public ResponseEntity<CompanyDto> updateCompany(
-            @RequestBody CompanyDto dto,
+            @RequestBody CompanyDto companyDto,
             Authentication authentication) {
         log.info(TAG + "try to update company ");
-        return new ResponseEntity<>(companyService.updateCompany(dto, ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                companyService.updateCompany(
+                        companyDto,
+                        ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                HttpStatus.OK);
     }
 
 
@@ -46,7 +52,9 @@ public class CompanyController {
     @GetMapping("/all")
     public ResponseEntity<DataDto> getAllFields() {
         log.info(TAG + "Try to get all fields");
-        return new ResponseEntity<>(companyService.getAllFields(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                companyService.getAllFields(),
+                HttpStatus.OK);
     }
 
 

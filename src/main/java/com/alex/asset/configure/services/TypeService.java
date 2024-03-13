@@ -10,7 +10,9 @@ import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.utils.dto.DtoActive;
+import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -30,16 +32,26 @@ public class TypeService {
     private final SubtypeRepo subtypeRepo;
     private final LogService logService;
 
+
+    @SneakyThrows
     public Type getTypeById(Long id) {
-        return typeRepo.get(id);
+        log.info(TAG + "Get type by id {}", id);
+        return typeRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Type with id " + id + " was not found")
+        );
     }
 
+    @SneakyThrows
     public Subtype getSubtypeById(Long id) {
-        return subtypeRepo.get(id);
+        log.info(TAG + "Get subtype by id {}", id);
+        return subtypeRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Subtype with id " + id + " was not found")
+        );
     }
 
 
     public List<DataDto.Type> getTypes() {
+        log.info(TAG + "Get types");
         return convertTypesToDTOs(typeRepo.getActive());
     }
 
@@ -59,6 +71,7 @@ public class TypeService {
     }
 
     public void addTypes(List<String> list, Long userId) {
+        log.info(TAG + "Add types {} by user with id {}", list, userId);
         for (String type : list) {
             if (!typeRepo.existsByType(type)) {
                 typeRepo.save(new Type(type));
@@ -67,36 +80,30 @@ public class TypeService {
         }
     }
 
-    public boolean changeVisibilityOfType(DtoActive dto, Long userId) {
-        if (!typeRepo.existsById(dto.getId())) {
-            log.warn(TAG + "Type with id {} not found", dto.getId());
-            return false;
-        }
-        Type type = typeRepo.get(dto.getId());
+    @SneakyThrows
+    public void changeVisibilityOfType(DtoActive dto, Long userId) {
+        log.info(TAG + "Change visibility of type {} by user with id {}", dto.getId(), userId);
+        Type type = typeRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Type with id " + dto.getId() + " was not found"));
         type.setActive(dto.isActive());
         typeRepo.save(type);
         logService.addLog(userId, Action.UPDATE, Section.TYPE, "Change visibility of type " + type.getType());
-        return true;
     }
 
-    public boolean changeVisibilityOfSubtype(DtoActive dto, Long userId) {
-        if (!typeRepo.existsById(dto.getId())) {
-            log.warn(TAG + "Subtype with id {} not found", dto.getId());
-            return false;
-        }
-        Subtype subtype = subtypeRepo.get(dto.getId());
+    @SneakyThrows
+    public void changeVisibilityOfSubtype(DtoActive dto, Long userId) {
+        log.info(TAG + "Change visibility of subtype {} by user with id {}", dto.getId(), userId);
+        Subtype subtype = subtypeRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Subtype with id " + dto.getId() + " was not found"));
         subtype.setActive(dto.isActive());
         subtypeRepo.save(subtype);
         logService.addLog(userId, Action.UPDATE, Section.SUBTYPE, "Change visibility of type " + subtype.getSubtype());
-        return true;
     }
 
-    public boolean addSubtypes(Long typeId, List<String> list, Long userId) {
-        Type type = typeRepo.findById(typeId).orElse(null);
-        if (type == null) {
-            log.warn(TAG + "Type with id {} not found", typeId);
-            return false;
-        }
+    public void addSubtypes(Long typeId, List<String> list, Long userId) {
+        log.info(TAG + "Add subtypes {} by user with id {}", list, userId);
+        Type type = typeRepo.findById(typeId).orElseThrow(
+                () -> new ResourceNotFoundException("Type with id " + typeId + " was not found"));
 
         list.stream().map(subtype -> {
             Subtype newSubtype = new Subtype(subtype, type);
@@ -106,6 +113,5 @@ public class TypeService {
         }).forEach(subtype -> {
         });
 
-        return true;
     }
 }

@@ -31,26 +31,31 @@ public class KstController {
     @GetMapping
     public ResponseEntity<List<KST>> getAllKST() {
         log.info(TAG + "Try to get all KST");
-        return new ResponseEntity<>(configureService.getAllKSTs(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                configureService.getAllKSTs(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Get all active KST by KST num")
     @GetMapping("/{num}")
     public ResponseEntity<List<KST>> getKSTByNum(
             @PathVariable("num") String num) {
-        log.info(TAG + "Try to get KST by num {}", num);
-        if (num.length() < 2) return new ResponseEntity<>(HttpStatus.CONFLICT);
-        return new ResponseEntity<>(configureService.getKSTsByNum(num), HttpStatus.OK);
+        log.info(TAG + "Try to get KST by num");
+        if (num.length() < 2)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(
+                configureService.getKSTsByNum(num),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Update visibility of KSTs by id and its new status")
     @PutMapping
     public ResponseEntity<HttpStatus> updateMPKs(
-            @RequestBody List<DtoActive> DTOs,
+            @RequestBody List<DtoActive> dtoActiveList,
             Authentication authentication) {
         log.info(TAG + "Try to update visibility of KSTs");
         configureService.updateKSTs(
-                DTOs,
+                dtoActiveList,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -13,10 +13,5 @@ public interface TypeRepo extends JpaRepository<Type, Long> {
     @Query("SELECT t FROM Type t WHERE t.isActive = true")
     List<Type> getActive();
 
-    @Query("SELECT t FROM Type t WHERE t.id = ?1")
-    Type get(Long id);
-
-
     boolean existsByType(String type);
-//    boolean existsById(Long id);
 }

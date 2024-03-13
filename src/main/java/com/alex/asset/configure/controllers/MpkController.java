@@ -32,29 +32,32 @@ public class MpkController {
     @GetMapping
     public ResponseEntity<List<MPK>> getAllMPKs() {
         log.info(TAG + "Try to get all MPK");
-        return new ResponseEntity<>(configureService.getMPKs(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                configureService.getMPKs(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Add new MPK")
     @PostMapping
     public ResponseEntity<MPK> addMPK(
-            @RequestBody DtoName dto,
+            @RequestBody DtoName dtoName,
             Authentication authentication) {
-        log.info(TAG + "Try to add MPK {}", dto.getName());
-        return new ResponseEntity<>(configureService.addMPK(
-                dto,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
+        log.info(TAG + "Try to add MPK");
+        return new ResponseEntity<>(
+                configureService.addMPK(
+                        dtoName,
+                        ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Update MPK visibility by id")
     @PutMapping
     public ResponseEntity<HttpStatus> updateMPKs(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Try to update MPK {}", dto.getId());
+        log.info(TAG + "Try to update MPK");
         configureService.updateMPK(
-                dto,
+                dtoActive,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
