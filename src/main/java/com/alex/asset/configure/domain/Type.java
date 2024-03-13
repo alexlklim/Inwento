@@ -1,6 +1,7 @@
 package com.alex.asset.configure.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -17,8 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "types")
+@Schema(description = "Type")
 public class Type extends BaseEntityActive {
 
+    @Schema(description = "Type", example = "Office Equipment")
     String type;
 
     @JsonManagedReference
