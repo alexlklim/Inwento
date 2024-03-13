@@ -86,7 +86,6 @@ public class NotificationController {
             Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Send notification to all users from user with id {}", principal.getUserId());
-
         notificationService.saveNotificationToAllUsers(dto, principal.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }

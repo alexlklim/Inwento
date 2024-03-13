@@ -8,6 +8,8 @@ import com.alex.asset.invents.dto.EventV2Get;
 import com.alex.asset.invents.mapper.EventMapper;
 import com.alex.asset.invents.repo.EventRepo;
 import com.alex.asset.invents.repo.InventRepo;
+import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
@@ -34,7 +36,7 @@ public class EventService {
     private final InventRepo inventRepo;
     private final BranchRepo branchRepo;
 
-//    private final ProductRepo productRepo;
+    private final ProductService productService;
 
 
 
@@ -101,9 +103,9 @@ public class EventService {
 
     @SneakyThrows
     public void addProductsToEventByBarCode(Long userId, Long eventId, List<String> list) {
-//        log.info(TAG + "Add products to event by bar code by user with id {}", userId);
-//        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
-//
+        log.info(TAG + "Add products to event by bar code by user with id {}", userId);
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
 //        for (String barCode : list){
 //            Product product = productRepo.findByBarCodeAndActive(barCode, true)
 //                    .orElse(null);
