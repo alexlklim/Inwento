@@ -1,7 +1,7 @@
 package com.alex.asset.inventory.domain.event;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
@@ -17,6 +17,5 @@ public class UnknownProduct {
     private Event event;
 
     @Id
-    @Column(length = 255)
     private String code;
 }

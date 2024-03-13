@@ -33,7 +33,7 @@ public class AssetStatusController {
     public ResponseEntity<List<AssetStatus>> getAssetStatuses() {
         log.info(TAG + "Try to update asset statuses");
         return new ResponseEntity<>(
-                configureService.getAssetStatuses(),
+                configureService.getAllAssetStatuses(),
                 HttpStatus.OK);
     }
 

@@ -48,7 +48,6 @@ public class CompanyController {
     }
 
 
-
     @GetMapping("/all")
     public ResponseEntity<DataDto> getAllFields() {
         log.info(TAG + "Try to get all fields");

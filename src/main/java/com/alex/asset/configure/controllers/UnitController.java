@@ -1,7 +1,6 @@
 package com.alex.asset.configure.controllers;
 
 
-import com.alex.asset.configure.domain.AssetStatus;
 import com.alex.asset.configure.domain.Unit;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
