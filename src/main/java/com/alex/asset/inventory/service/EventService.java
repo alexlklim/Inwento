@@ -8,10 +8,13 @@ import com.alex.asset.inventory.dto.EventV2Get;
 import com.alex.asset.inventory.mapper.EventMapper;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.service.ProductService;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.expceptions.errors.UserIsNotOwnerOfEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +52,7 @@ public class EventService {
     @SneakyThrows
     public List<EventV2Get> getEventsForSpecificUserAndInvent(Long userId, Long inventId) {
         log.info(TAG + "Get event for user with id {} and invent with id {}", userId, inventId);
-        return eventRepo.findAllByUserAndInventoryOrderByCreatedDesc(
+        return eventRepo.findAllByUserAndInventory(
                 userRepo.getUser(userId), inventoryRepo.findById(inventId).orElseThrow(
                         () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
@@ -61,7 +64,7 @@ public class EventService {
     @SneakyThrows
     public List<EventV2Get> getAllEventsForSpecificInvent(Long inventId) {
         log.info(TAG + "Get event for invent with id {}", inventId);
-        return eventRepo.findAllByInventoryOrderByCreatedDesc(inventoryRepo.findById(inventId).orElseThrow(
+        return eventRepo.findAllByInventory(inventoryRepo.findById(inventId).orElseThrow(
                         () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
                 .map(eventMapper::toDto)
@@ -101,17 +104,25 @@ public class EventService {
     @SneakyThrows
     public void addProductsToEventByBarCode(Long userId, Long eventId, List<String> list) {
         log.info(TAG + "Add products to event by bar code by user with id {}", userId);
-        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
-//        for (String barCode : list){
-//            Product product = productRepo.findByBarCodeAndActive(barCode, true)
-//                    .orElse(null);
-//            if (product != null){
-//                event.getProducts().add(product);
-//            } else {
-//                event.getUnknownProducts().add(barCode);
-//            }
-//        }
+        Event event = eventRepo.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
+        User user = userRepo.getUser(userId);
+        if (event.getUser() != user){
+            throw new UserIsNotOwnerOfEvent("User with id " + userId + " is not owner of event with id " + eventId);
+        }
+
+
+        for (String barCode : list){
+            Product product = productService.getByBarCode(barCode)
+                    .orElse(null);
+            if (product != null){
+                if (!event.getProducts().contains(product))
+                    event.getProducts().add(product);
+            } else {
+                event.getUnknownProducts().add(barCode);
+            }
+        }
 
 
     }

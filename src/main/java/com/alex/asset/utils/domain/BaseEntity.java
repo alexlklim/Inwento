@@ -27,6 +27,7 @@ public class BaseEntity implements Serializable {
 
     @JsonIgnore @CreatedDate @Column(name = "created")
     LocalDateTime created;
+
     @JsonIgnore @LastModifiedDate @Column(name = "updated")
     LocalDateTime updated;
 

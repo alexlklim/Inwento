@@ -55,48 +55,50 @@ public class EventController {
     public ResponseEntity<EventV2Get> getEventById(
             @PathVariable("id") Long eventId) {
         log.info(TAG + "Get event by id");
-        return new ResponseEntity<>(eventService.getEvent(eventId), HttpStatus.OK);
+        return new ResponseEntity<>(
+                eventService.getEvent(eventId),
+                HttpStatus.OK);
     }
 
 
     @Operation(summary = "Create event for current invent")
     @PostMapping
     public ResponseEntity<EventV2Get> create(
-            @RequestBody EventV1Create dto,
+            @RequestBody EventV1Create eventV1CreateDto,
             Authentication authentication) {
         log.info(TAG + "Create new event for current invent");
         return new ResponseEntity<>(
                 eventService.createEvent(
                         ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
-                        dto),
+                        eventV1CreateDto),
                 HttpStatus.CREATED);
     }
 
 
     @Operation(summary = "Update visibility of event")
     @Secured("ROLE_ADMIN")
-    @PutMapping("/id") //change visibility
+    @PutMapping("/active")
     public ResponseEntity<HttpStatus> updateVisibility(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
         log.info(TAG + "Update visibility of event");
         eventService.updateVisibility(
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
-                dto);
+                dtoActive);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Add products to event")
-    @PutMapping("/{id}/bar-code/products")
+    @PutMapping("/{id}/products/bar-code")
     public ResponseEntity<HttpStatus> addProductsToEvent(
             @PathVariable("id") Long eventId,
-            @RequestBody List<String> list,
+            @RequestBody List<String> listOfBarCodes,
             Authentication authentication) {
         log.info(TAG + "Add product which exists in fact");
         eventService.addProductsToEventByBarCode(
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
                 eventId,
-                list);
+                listOfBarCodes);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

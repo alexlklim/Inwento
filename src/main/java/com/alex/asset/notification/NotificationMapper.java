@@ -13,6 +13,7 @@ public class NotificationMapper {
 
     public NotificationDto mapToDto(Notification notification){
         NotificationDto dto = new NotificationDto();
+        dto.setCreated(notification.getCreated());
         dto.setRead(notification.isViewed());
         dto.setReason(notification.getReason().name());
         dto.setMessage(notification.getMessage());

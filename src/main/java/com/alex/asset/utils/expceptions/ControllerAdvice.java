@@ -27,7 +27,9 @@ public class ControllerAdvice {
         return new ExceptionBody(404, ex.getMessage());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            UserIsNotOwnerOfEvent.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleIllegalArgument(IllegalArgumentException ex) {
         log.error(TAG + ex.getMessage());
@@ -35,7 +37,9 @@ public class ControllerAdvice {
     }
 
 
-    @ExceptionHandler({UserAlreadyExistException.class, UserNotRegisterYet.class})
+    @ExceptionHandler({
+            UserAlreadyExistException.class,
+            UserNotRegisterYet.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionBody handleUserAlreadyExistException(UserAlreadyExistException ex) {
         log.error(TAG + ex.getMessage());
@@ -45,7 +49,10 @@ public class ControllerAdvice {
 
 
 
-    @ExceptionHandler({InventIsAlreadyInProgress.class, InventIsAlreadyNotActive.class, InventIsNotStartedYet.class})
+    @ExceptionHandler({
+            InventIsAlreadyInProgress.class,
+            InventIsAlreadyNotActive.class,
+            InventIsNotStartedYet.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionBody handleInventConflict(Exception ex) {
         log.error(TAG + ex.getMessage());
@@ -55,8 +62,12 @@ public class ControllerAdvice {
 
 
 
-    @ExceptionHandler({ExpiredJwtException.class, UnsupportedJwtException.class, MalformedJwtException.class,
-            SignatureException.class, NonceExpiredException.class})
+    @ExceptionHandler({
+            ExpiredJwtException.class,
+            UnsupportedJwtException.class,
+            MalformedJwtException.class,
+            SignatureException.class,
+            NonceExpiredException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionBody handleJwtExceptions(Exception ex) {
         log.error(TAG + ex.getMessage());

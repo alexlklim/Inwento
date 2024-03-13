@@ -33,12 +33,8 @@ public class Inventory extends BaseEntity {
 
     String info;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id") @JsonBackReference
+    @ManyToOne @JoinColumn(name = "user_id")
     User user;
-
-
-
 
 
 }

@@ -5,13 +5,16 @@ spring:
     password: 1Qazimodo237!
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: update
 
   sql:
     init:
       mode: always
-      continue-on-error: false
+      continue-on-error: true
       schema-locations:
         - classpath:database/schema.sql
+        - classpath:database/schema_inventory.sql
         - classpath:database/init.sql
         - classpath:database/kst.sql
         - classpath:database/products.sql

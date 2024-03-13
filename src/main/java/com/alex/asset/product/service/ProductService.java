@@ -21,10 +21,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -59,6 +56,7 @@ public class ProductService {
 
 
     public ProductDto create(ProductDto dto, Long userId) {
+        log.info(TAG + "Create product by user with id {}", userId);
         Product product = productMapper.toEntity(dto);
         product.setCreatedBy(userRepo.getUser(userId));
         product.setLiable(userRepo.getUser(dto.getLiableId()));
@@ -70,6 +68,7 @@ public class ProductService {
 
     @SneakyThrows
     public ProductDto getById(Long productId) {
+        log.info(TAG + "get product by id");
         return productMapper.toDto(productRepo.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + productId + " not found")
         ));
@@ -78,7 +77,7 @@ public class ProductService {
 
 
     public Map<Long, String> getByTitle(String title) {
-        // it doesnt produce errors
+        log.info(TAG + "get product by title");
         return productRepo.getByTitle(title)
                 .stream()
                 .collect(Collectors.toMap(Product::getId, Product::getTitle));
@@ -87,6 +86,7 @@ public class ProductService {
 
     @SneakyThrows
     public boolean updateVisibility(DtoActive dto, Long userId) {
+        log.info(TAG + "Update product visibility by user with id {}", userId);
         Product product = productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
         product.setActive(dto.isActive());
@@ -97,6 +97,7 @@ public class ProductService {
 
     @SneakyThrows
     public boolean scraping(ScrapDto dto, Long userId) {
+        log.info(TAG + "Scrap product with id {} by user with id {}",dto.getId(), userId);
         Product product = productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
         product.setScrapping(dto.isScrap());
@@ -110,11 +111,17 @@ public class ProductService {
 
     @SneakyThrows
     public void update(ProductDto dto, Long userId) {
+        log.info(TAG + "Update product with id {} by user with id {}",dto.getId(), userId);
         Product product = updateProduct(productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found")
         ), dto);
         product.setActive(true);
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
+    }
+
+
+    public Optional<Product> getByBarCode(String barCode) {
+        return productRepo.getByBarCode(barCode);
     }
 
 

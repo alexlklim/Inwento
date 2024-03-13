@@ -10,11 +10,20 @@ import java.util.Optional;
 
 public interface NotificationRepo extends JpaRepository<Notification, Long> {
 
+
+
     Optional<Notification> getNotificationByIdAndUser(Long id, User user);
 
+    @Query("SELECT n " +
+            "FROM Notification n " +
+            "WHERE n.isActive = true AND n.user = ?1 " +
+            "ORDER BY n.created DESC")
     List<Notification> getNotificationsByUser(User user);
 
-    @Query("SELECT n FROM Notification n WHERE n.isActive = true AND n.isViewed = false AND n.user = ?1")
+    @Query("SELECT n " +
+            "FROM Notification n " +
+            "WHERE n.isActive = true AND n.isViewed = false AND n.user = ?1 " +
+            "ORDER BY n.created DESC")
     List<Notification> getNotViewedNotifications(User user);
 
 

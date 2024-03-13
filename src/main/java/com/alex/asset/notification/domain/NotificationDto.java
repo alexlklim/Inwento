@@ -1,10 +1,14 @@
 package com.alex.asset.notification.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Schema(description = "Notification Dto")
@@ -28,5 +32,10 @@ public class NotificationDto {
 
     @Schema(description = "From who", example = "Inwento")
     String fromWho;
+
+
+    @Schema(description = "Created", example = "2024-03-12")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    LocalDateTime created;
 
 }
