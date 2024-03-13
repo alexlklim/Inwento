@@ -8,9 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@Schema(description = "Password DTO")
+
 @Getter @Setter @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Schema(description = "Password DTO")
 public class PasswordDto {
     @Schema(description = "Current password", example = "1122")
     private String currentPassword;

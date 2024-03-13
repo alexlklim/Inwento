@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 
 
 
-@Schema(description = "Register DTO")
+
 @Data @Builder
 @AllArgsConstructor @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Schema(description = "Register DTO")
 public class RegisterDto {
 
   @Schema(description = "First name", example = "Alex")

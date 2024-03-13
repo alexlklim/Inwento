@@ -8,9 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "Login DTO")
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Schema(description = "Login DTO")
 public class LoginDto {
 
   @Schema(description = "Email", example = "alex@gmail.com")
