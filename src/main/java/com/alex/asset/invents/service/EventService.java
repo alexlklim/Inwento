@@ -8,7 +8,6 @@ import com.alex.asset.invents.dto.EventV2Get;
 import com.alex.asset.invents.mapper.EventMapper;
 import com.alex.asset.invents.repo.EventRepo;
 import com.alex.asset.invents.repo.InventRepo;
-import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
@@ -39,8 +38,6 @@ public class EventService {
     private final ProductService productService;
 
 
-
-
     public EventV2Get getEvent(Long eventId) {
         log.info(TAG + "Get invent with id {}", eventId);
         return eventMapper.toDto(eventRepo.findById(eventId).orElseThrow(
@@ -64,7 +61,7 @@ public class EventService {
     public List<EventV2Get> getAllEventsForSpecificInvent(Long inventId) {
         log.info(TAG + "Get event for invent with id {}", inventId);
         return eventRepo.findAllByInventOrderByCreatedDesc(inventRepo.findById(inventId).orElseThrow(
-                () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
+                        () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
                 .map(eventMapper::toDto)
                 .toList();
@@ -100,7 +97,6 @@ public class EventService {
     }
 
 
-
     @SneakyThrows
     public void addProductsToEventByBarCode(Long userId, Long eventId, List<String> list) {
         log.info(TAG + "Add products to event by bar code by user with id {}", userId);
@@ -115,8 +111,6 @@ public class EventService {
 //                event.getUnknownProducts().add(barCode);
 //            }
 //        }
-
-
 
 
     }
