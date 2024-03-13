@@ -29,11 +29,12 @@ public class AssetStatusController {
     @Operation(summary = "update asset status, change their visibility by id")
     @PutMapping
     public ResponseEntity<HttpStatus> updateAssetStatuses(
-            @RequestBody List<DtoActive> DTOs,
+            @RequestBody List<DtoActive> listActiveDto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update asset statuses");
-        configureService.updateAssetStatuses(DTOs, principal.getUserId());
+        configureService.updateAssetStatuses(
+                listActiveDto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

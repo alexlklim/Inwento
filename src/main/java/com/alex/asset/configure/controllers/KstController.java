@@ -48,9 +48,10 @@ public class KstController {
     public ResponseEntity<HttpStatus> updateMPKs(
             @RequestBody List<DtoActive> DTOs,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update visibility of KSTs");
-        configureService.updateKSTs(DTOs, principal.getUserId());
+        configureService.updateKSTs(
+                DTOs,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

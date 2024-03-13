@@ -40,9 +40,10 @@ public class MpkController {
     public ResponseEntity<MPK> addMPK(
             @RequestBody DtoName dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to add MPK {}", dto.getName());
-        return new ResponseEntity<>(configureService.addMPK(dto, principal.getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(configureService.addMPK(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
     }
 
     @Operation(summary = "Update MPK visibility by id")
@@ -52,7 +53,9 @@ public class MpkController {
             Authentication authentication) {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update MPK {}", dto.getId());
-        configureService.updateMPK(dto, principal.getUserId());
+        configureService.updateMPK(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

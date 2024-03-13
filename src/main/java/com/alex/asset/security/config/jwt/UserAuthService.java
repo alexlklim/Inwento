@@ -4,6 +4,8 @@ import com.alex.asset.email.EmailService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
+import com.alex.asset.notification.NotificationService;
+import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.PasswordDto;
@@ -32,6 +34,7 @@ public class UserAuthService {
     private final UserRepo userRepo;
     private final EmailService emailService;
     private final LogService logService;
+    private final NotificationService notificationService;
 
 
     @SneakyThrows
@@ -45,6 +48,8 @@ public class UserAuthService {
         userRepo.save(user);
         emailService.accountWasCreated(user);
         logService.addLog(userId, Action.CREATE, Section.USERS, dto.toString());
+        notificationService.sendSystemNotificationToSpecificUser(Reason.USER_WAS_CREATED, userRepo.getUser(userId));
+        notificationService.sendSystemNotificationToSpecificUser(Reason.NEW_USER, user);
     }
 
 
@@ -57,6 +62,7 @@ public class UserAuthService {
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepo.save(user);
         logService.addLog(principal.getUserId(), Action.UPDATE, Section.USERS, "Change password");
+        notificationService.sendSystemNotificationToSpecificUser(Reason.PASSWORD_WAS_CHANGED, user);
 
     }
 
@@ -64,10 +70,12 @@ public class UserAuthService {
     @SneakyThrows
     public void changePasswordForgot(String email, String password) {
         log.info(TAG + "Change password for user: {}", email);
-        User user = userRepo.getUserByEmail(email).orElseThrow(() -> new UserNotRegisterYet("User with email " + email + " is not registered"));
+        User user = userRepo.getUserByEmail(email).orElseThrow(
+                () -> new UserNotRegisterYet("User with email " + email + " is not registered"));
         user.setPassword(passwordEncoder.encode(password));
         userRepo.save(user);
         logService.addLog(user.getId(), Action.UPDATE, Section.USERS, "Change password");
+        notificationService.sendSystemNotificationToSpecificUser(Reason.PASSWORD_WAS_CHANGED, user);
     }
 
 

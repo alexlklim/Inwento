@@ -1,13 +1,13 @@
-package com.alex.asset.invents.service;
+package com.alex.asset.inventory.service;
 
 
 import com.alex.asset.configure.repo.BranchRepo;
-import com.alex.asset.invents.domain.event.Event;
-import com.alex.asset.invents.dto.EventV1Create;
-import com.alex.asset.invents.dto.EventV2Get;
-import com.alex.asset.invents.mapper.EventMapper;
-import com.alex.asset.invents.repo.EventRepo;
-import com.alex.asset.invents.repo.InventRepo;
+import com.alex.asset.inventory.domain.event.Event;
+import com.alex.asset.inventory.dto.EventV1Create;
+import com.alex.asset.inventory.dto.EventV2Get;
+import com.alex.asset.inventory.mapper.EventMapper;
+import com.alex.asset.inventory.repo.EventRepo;
+import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
@@ -32,12 +32,12 @@ public class EventService {
     private final EventMapper eventMapper;
     private final EventRepo eventRepo;
     private final UserRepo userRepo;
-    private final InventRepo inventRepo;
+    private final InventoryRepo inventoryRepo;
     private final BranchRepo branchRepo;
 
     private final ProductService productService;
 
-
+    @SneakyThrows
     public EventV2Get getEvent(Long eventId) {
         log.info(TAG + "Get invent with id {}", eventId);
         return eventMapper.toDto(eventRepo.findById(eventId).orElseThrow(
@@ -49,7 +49,8 @@ public class EventService {
     @SneakyThrows
     public List<EventV2Get> getEventsForSpecificUserAndInvent(Long userId, Long inventId) {
         log.info(TAG + "Get event for user with id {} and invent with id {}", userId, inventId);
-        return eventRepo.findAllByUserAndInventOrderByCreatedDesc(userRepo.getUser(userId), inventRepo.findById(inventId).orElseThrow(
+        return eventRepo.findAllByUserAndInventoryOrderByCreatedDesc(
+                userRepo.getUser(userId), inventoryRepo.findById(inventId).orElseThrow(
                         () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
                 .map(eventMapper::toDto)
@@ -60,7 +61,7 @@ public class EventService {
     @SneakyThrows
     public List<EventV2Get> getAllEventsForSpecificInvent(Long inventId) {
         log.info(TAG + "Get event for invent with id {}", inventId);
-        return eventRepo.findAllByInventOrderByCreatedDesc(inventRepo.findById(inventId).orElseThrow(
+        return eventRepo.findAllByInventoryOrderByCreatedDesc(inventoryRepo.findById(inventId).orElseThrow(
                         () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
                 .map(eventMapper::toDto)
@@ -74,7 +75,7 @@ public class EventService {
         log.info(TAG + "Create event by user with id {}", userId);
         Event event = new Event();
         event.setActive(true);
-        event.setInvent(inventRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
+        event.setInventory(inventoryRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
                 () -> new ResourceNotFoundException("No active event at this time")));
         event.setUser(userRepo.getUser(userId));
         event.setBranch(branchRepo.findById(dto.getBranchId()).orElseThrow(

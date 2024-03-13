@@ -1,6 +1,6 @@
-package com.alex.asset.invents.repo;
+package com.alex.asset.inventory.repo;
 
-import com.alex.asset.invents.domain.Invent;
+import com.alex.asset.inventory.domain.Inventory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface InventRepo extends JpaRepository<Invent, Long> {
+public interface InventoryRepo extends JpaRepository<Inventory, Long> {
 
     @Query("SELECT CASE WHEN COUNT(i) > 0 THEN true ELSE false END " +
-            "FROM Invent i " +
+            "FROM Inventory i " +
             "WHERE i.startDate <= :now " +
             "AND i.isActive = true " +
             "AND i.isFinished = false")
@@ -20,8 +20,8 @@ public interface InventRepo extends JpaRepository<Invent, Long> {
 
 
 
-    @Query("SELECT i FROM Invent i WHERE i.isActive = true " +
+    @Query("SELECT i FROM Inventory i WHERE i.isActive = true " +
             "AND i.startDate <= :currentDate " +
             "AND i.isFinished = false ")
-    Optional<Invent> getCurrentInvent(LocalDate currentDate);
+    Optional<Inventory> getCurrentInvent(LocalDate currentDate);
 }

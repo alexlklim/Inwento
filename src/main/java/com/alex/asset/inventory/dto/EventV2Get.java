@@ -1,4 +1,4 @@
-package com.alex.asset.invents.dto;
+package com.alex.asset.inventory.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

@@ -19,8 +19,8 @@ public class Notification extends BaseEntity {
     @Column(name = "is_active")
     boolean isActive;
 
-    @Column(name = "is_read")
-    boolean isRead;
+    @Column(name = "is_viewed")
+    boolean isViewed;
 
     @Enumerated(EnumType.STRING)
     private Reason reason;

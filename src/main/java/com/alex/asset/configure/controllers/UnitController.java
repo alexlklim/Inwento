@@ -33,9 +33,10 @@ public class UnitController {
     public ResponseEntity<HttpStatus> updateUnits(
             @RequestBody List<DtoActive> DTOs,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update units");
-        configureService.updateUnits(DTOs, principal.getUserId());
+        configureService.updateUnits(
+                DTOs,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

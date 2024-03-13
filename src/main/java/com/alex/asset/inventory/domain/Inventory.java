@@ -1,4 +1,4 @@
-package com.alex.asset.invents.domain;
+package com.alex.asset.inventory.domain;
 
 
 import com.alex.asset.security.domain.User;
@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "invents")
-public class Invent extends BaseEntity {
+@Table(name = "inventories")
+public class Inventory extends BaseEntity {
 
     @Column(name = "is_active")
     boolean isActive;

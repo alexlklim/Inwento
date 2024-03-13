@@ -40,9 +40,10 @@ public class BranchController {
     public ResponseEntity<Branch> addBranch(
             @RequestBody DtoName dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to add branch {}", dto.getName());
-        return new ResponseEntity<>(configureService.addBranch(dto, principal.getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(configureService.addBranch(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
     }
 
     @Operation(summary = "Update branch, send id of branch and it's new status: active or not)")
@@ -50,9 +51,10 @@ public class BranchController {
     public ResponseEntity<HttpStatus> updateBranch(
             @RequestBody DtoActive dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to update branch {}", dto.getId());
-        configureService.updateBranch(dto, principal.getUserId());
+        configureService.updateBranch(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

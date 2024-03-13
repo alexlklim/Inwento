@@ -163,17 +163,19 @@ CREATE TABLE IF NOT EXISTS logs
 );
 
 
-CREATE TABLE IF NOT EXISTS notifications
-(
-    id         BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active  BOOLEAN NOT NULL,
-    created    DATETIME,
-    updated    DATETIME,
-    is_read    BOOLEAN NOT NULL,
-    reason     ENUM ('INVENT', 'CONTROL', 'NEED_TO_APPROVE', 'HIDE_OPERATION'),
-    message    VARCHAR(255),
-    to_user_id BIGINT,
-    created_by BIGINT,
+CREATE TABLE IF NOT EXISTS notifications (
+    id          BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active   BOOLEAN       NOT NULL,
+    created     DATETIME,
+    updated     DATETIME,
+    is_viewed     BOOLEAN       NOT NULL,
+    reason      ENUM ('COMPANY_WAS_UPDATED', 'PASSWORD_WAS_CHANGED', 'USER_WAS_CREATED', 'NEW_USER',
+        'USER_WAS_DISABLED', 'YOU_WERE_DISABLED', 'USER_WAS_ENABLED', 'YOU_WERE_ENABLED', 'USER_WAS_UPDATED', 'YOU_WERE_UPDATED',
+        'INVENTORY_IS_START', 'INVENTORY_IS_FINISHED', 'PLANNED_INVENTORY',
+        'PRODUCT_WAS_DISABLED', 'PRODUCT_WAS_ENABLED', 'PRODUCT_WAS_SCRAPPED') NOT NULL,
+    message     VARCHAR(255),
+    to_user_id  BIGINT,
+    created_by  BIGINT,
     FOREIGN KEY (to_user_id) REFERENCES users (id),
     FOREIGN KEY (created_by) REFERENCES users (id)
 );
@@ -183,8 +185,8 @@ CREATE TABLE IF NOT EXISTS notifications
 
 
 
-# for invent
-CREATE TABLE IF NOT EXISTS invents
+# for inventory
+CREATE TABLE IF NOT EXISTS inventories
 (
     id           BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created      DATETIME,
@@ -209,7 +211,7 @@ CREATE TABLE IF NOT EXISTS events (
     user_id BIGINT,
     branch_id BIGINT,
     info VARCHAR(255),
-    FOREIGN KEY (invent_id) REFERENCES invents (id),
+    FOREIGN KEY (invent_id) REFERENCES inventories (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (branch_id) REFERENCES branches (id)
 );

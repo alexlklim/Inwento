@@ -1,9 +1,9 @@
-package com.alex.asset.invents.controller;
+package com.alex.asset.inventory.controller;
 
 
-import com.alex.asset.invents.dto.EventV1Create;
-import com.alex.asset.invents.dto.EventV2Get;
-import com.alex.asset.invents.service.EventService;
+import com.alex.asset.inventory.dto.EventV1Create;
+import com.alex.asset.inventory.dto.EventV2Get;
+import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,10 +34,10 @@ public class EventController {
     public ResponseEntity<List<EventV2Get>> getEventsForSpecificUser(
             @PathVariable("id") Long inventId,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Get all events for specific user for specific invent");
-
-        return new ResponseEntity<>(eventService.getEventsForSpecificUserAndInvent(principal.getUserId(), inventId), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.getEventsForSpecificUserAndInvent(
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                inventId), HttpStatus.OK);
     }
 
     @Operation(summary = "Get all events for specific invent")
@@ -64,9 +64,12 @@ public class EventController {
     public ResponseEntity<EventV2Get> create(
             @RequestBody EventV1Create dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Create new event for current invent");
-        return new ResponseEntity<>(eventService.createEvent(principal.getUserId(), dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                eventService.createEvent(
+                        ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                        dto),
+                HttpStatus.CREATED);
     }
 
 
@@ -76,9 +79,10 @@ public class EventController {
     public ResponseEntity<HttpStatus> updateVisibility(
             @RequestBody DtoActive dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Update visibility of event");
-        eventService.updateVisibility(principal.getUserId(), dto);
+        eventService.updateVisibility(
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -88,9 +92,11 @@ public class EventController {
             @PathVariable("id") Long eventId,
             @RequestBody List<String> list,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Add product which exists in fact");
-        eventService.addProductsToEventByBarCode(principal.getUserId(), eventId, list);
+        eventService.addProductsToEventByBarCode(
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                eventId,
+                list);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -40,8 +40,7 @@ public class UserController {
             @RequestBody RegisterDto request,
             Authentication authentication) {
         log.info(TAG + "Register new user");
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        userAuthService.register(request, principal.getUserId());
+        userAuthService.register(request, ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -61,9 +60,10 @@ public class UserController {
     public ResponseEntity<HttpStatus> changeUserVisibility(
             @RequestBody DtoActive dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to change user visibility");
-        userService.changeUserVisibility(dto, principal.getUserId());
+        userService.changeUserVisibility(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -83,8 +83,9 @@ public class UserController {
             @RequestBody UserDto dto,
             Authentication authentication) {
         log.info(TAG + "Update info about user with id {}", id);
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        return new ResponseEntity<>(userService.updateUser(id, dto, principal.getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                userService.updateUser(id, dto, ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                HttpStatus.OK);
     }
 
 

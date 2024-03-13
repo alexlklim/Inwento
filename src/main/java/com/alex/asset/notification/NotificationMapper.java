@@ -13,7 +13,7 @@ public class NotificationMapper {
 
     public NotificationDto mapToDto(Notification notification){
         NotificationDto dto = new NotificationDto();
-        dto.setRead(notification.isRead());
+        dto.setRead(notification.isViewed());
         dto.setReason(notification.getReason().name());
         dto.setMessage(notification.getMessage());
         dto.setFromWho(notification.getCreatedBy() != null ?
@@ -27,7 +27,7 @@ public class NotificationMapper {
     public Notification mapToEntity(NotificationDto dto, User userTo, User userFrom){
         Notification notification = new Notification();
         notification.setActive(true);
-        notification.setRead(false);
+        notification.setViewed(false);
         notification.setReason(Reason.fromString(dto.getReason()));
         notification.setMessage(dto.getMessage());
         notification.setCreatedBy(userFrom);

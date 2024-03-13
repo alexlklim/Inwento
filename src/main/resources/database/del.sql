@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS unknown_products;
 
 
 DROP TABLE IF EXISTS events;
-DROP TABLE IF EXISTS invents;
+DROP TABLE IF EXISTS inventories;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS subtypes;
 DROP TABLE IF EXISTS types;

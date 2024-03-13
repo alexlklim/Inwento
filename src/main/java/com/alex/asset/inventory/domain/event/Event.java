@@ -1,8 +1,8 @@
-package com.alex.asset.invents.domain.event;
+package com.alex.asset.inventory.domain.event;
 
 
 import com.alex.asset.configure.domain.Branch;
-import com.alex.asset.invents.domain.Invent;
+import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
@@ -26,7 +26,7 @@ public class Event extends BaseEntity {
     boolean isActive;
 
     @ManyToOne @JoinColumn(name = "invent_id") @JsonBackReference
-    Invent invent;
+    Inventory inventory;
 
     @ManyToOne @JoinColumn(name = "user_id") @JsonBackReference
     User user;

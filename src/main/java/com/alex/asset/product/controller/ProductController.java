@@ -74,9 +74,10 @@ public class ProductController {
     public ResponseEntity<ProductDto> addNewProduct(
             @RequestBody ProductDto dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "get all products for company");
-        ProductDto productDTO = productService.create(dto, principal.getUserId());
+        ProductDto productDTO = productService.create(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         if (productDTO == null) {
             log.error(TAG + "Something wrong");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,9 +90,10 @@ public class ProductController {
     public ResponseEntity<HttpStatus> updateProduct(
             @RequestBody ProductDto dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "get all products for company");
-        productService.update(dto, principal.getUserId());
+        productService.update(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -101,9 +103,10 @@ public class ProductController {
     public ResponseEntity<HttpStatus> updateVisibilityOfProduct(
             @RequestBody DtoActive dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Update product visibility with id {} and value {}", dto.getId(), dto.isActive());
-        boolean result = productService.updateVisibility(dto, principal.getUserId());
+        boolean result = productService.updateVisibility(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         if (!result) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -130,9 +133,10 @@ public class ProductController {
     public ResponseEntity<HttpStatus> scrapProduct(
             @RequestBody ScrapDto dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Scrap product with id {}", dto.getId());
-        boolean result = productService.scraping(dto, principal.getUserId());
+        boolean result = productService.scraping(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         if (!result) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(HttpStatus.OK);
     }

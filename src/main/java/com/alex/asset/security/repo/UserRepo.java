@@ -1,5 +1,6 @@
 package com.alex.asset.security.repo;
 
+import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,6 +20,9 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
   @Query("SELECT u FROM User u WHERE u.isActive = true")
   List<User> getActiveUsers();
+
+  @Query("SELECT u FROM User u WHERE u.isActive = true AND u.roles = ?1")
+  List<User> getActiveUsersByRole(Role role);
 
   @Modifying
   @Query("UPDATE User u SET u.isActive = ?1 WHERE u.id = ?2")

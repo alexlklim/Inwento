@@ -37,9 +37,8 @@ public class CompanyController {
     public ResponseEntity<CompanyDto> updateCompany(
             @RequestBody CompanyDto dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "try to update company ");
-        return new ResponseEntity<>(companyService.updateCompany(dto, principal.getUserId()), HttpStatus.OK);
+        return new ResponseEntity<>(companyService.updateCompany(dto, ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
     }
 
 

@@ -19,7 +19,6 @@ import lombok.experimental.FieldDefaults;
 public class NotificationDto {
 
     @Schema(description = "Is read", example = "true")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     boolean isRead;
 
     @Schema(description = "Reason", example = "Inventarization")

@@ -1,4 +1,4 @@
-package com.alex.asset.invents.dto;
+package com.alex.asset.inventory.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,8 +20,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Invent DTO")
-public class InventDto {
+@Schema(description = "Inventory DTO")
+public class InventoryDto {
 
     @Schema(description = "Id", example = "1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

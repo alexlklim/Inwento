@@ -9,7 +9,10 @@ import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
+import com.alex.asset.notification.NotificationService;
+import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.UserMapper;
+import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +33,7 @@ public class CompanyService {
     private final TypeService typeService;
     private final ConfigureService configureService;
     private final LogService logService;
+    private final NotificationService notificationService;
 
 
     public CompanyDto getInfoAboutCompany() {
@@ -45,6 +49,7 @@ public class CompanyService {
         log.info(TAG + "Update company by user with id {}", userId);
         Company updatedCompany = CompanyMapper.updateCompany(companyRepo.findAll().get(0), dto);
         logService.addLog(userId, Action.UPDATE, Section.COMPANY, dto.toString());
+        notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
         return CompanyMapper.toDto(companyRepo.save(updatedCompany));
     }
 

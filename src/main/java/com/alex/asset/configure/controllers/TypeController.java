@@ -42,9 +42,10 @@ public class TypeController {
     public ResponseEntity<HttpStatus> addTypes(
             @RequestBody List<String> list,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to add types {}", list.stream().toList());
-        typeService.addTypes(list, principal.getUserId());
+        typeService.addTypes(
+                list,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -53,9 +54,10 @@ public class TypeController {
     public ResponseEntity<HttpStatus> changeVisibilityOfType(
             @RequestBody DtoActive dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to change visibility of type with id {} to status {}", dto.getId(), dto.isActive());
-        boolean result = typeService.changeVisibilityOfType(dto, principal.getUserId());
+        boolean result = typeService.changeVisibilityOfType(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -67,9 +69,11 @@ public class TypeController {
             @PathVariable("id") Long id,
             @RequestBody List<String> list,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to add subtypes {} to type with id {}", list.stream().toList(), id);
-        boolean result = typeService.addSubtypes(id, list, principal.getUserId());
+        boolean result = typeService.addSubtypes(
+                id,
+                list,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -80,9 +84,10 @@ public class TypeController {
     public ResponseEntity<HttpStatus> changeVisibilityOfSubtype(
             @RequestBody DtoActive dto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         log.info(TAG + "Try to change visibility of subtype with id {} to status {}", dto.getId(), dto.isActive());
-        boolean result = typeService.changeVisibilityOfSubtype(dto, principal.getUserId());
+        boolean result = typeService.changeVisibilityOfSubtype(
+                dto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
     }

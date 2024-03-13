@@ -1,16 +1,16 @@
-package com.alex.asset.invents.mapper;
+package com.alex.asset.inventory.mapper;
 
 
-import com.alex.asset.invents.domain.Invent;
-import com.alex.asset.invents.dto.InventDto;
+import com.alex.asset.inventory.domain.Inventory;
+import com.alex.asset.inventory.dto.InventoryDto;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InventMapper {
+public class InventoryMapper {
 
 
-    public InventDto toDto(Invent entity) {
-        InventDto dto = new InventDto();
+    public InventoryDto toDto(Inventory entity) {
+        InventoryDto dto = new InventoryDto();
         dto.setId(entity.getId());
         dto.setStartDate(entity.getStartDate());
         dto.setFinishDate(entity.getFinishDate());

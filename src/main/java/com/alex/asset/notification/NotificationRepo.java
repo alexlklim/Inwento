@@ -17,14 +17,8 @@ public interface NotificationRepo extends JpaRepository<Notification, Long> {
 
     List<Notification> getNotificationsByUser(User user);
 
-
-
-
-
-    @Modifying
-    @Query("UPDATE Notification n SET n.isRead = true WHERE n.user = ?1")
-    void readAllNotifications( User user);
-
+    @Query("SELECT n FROM Notification n WHERE n.isActive = true AND n.isViewed = false AND n.user = ?1")
+    List<Notification> getNotViewedNotifications(User user);
 
 
 

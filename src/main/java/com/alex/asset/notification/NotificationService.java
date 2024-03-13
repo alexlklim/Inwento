@@ -7,6 +7,7 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.domain.Notification;
 import com.alex.asset.notification.domain.NotificationDto;
 import com.alex.asset.notification.domain.Reason;
+import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
@@ -44,16 +45,18 @@ public class NotificationService {
 
     public void readAllNotifications(Long userId) {
         log.info(TAG + "Read all notifications for user with id {}", userId);
-        notificationRepo.readAllNotifications(userRepo.getUser(userId));
+        notificationRepo.getNotViewedNotifications(userRepo.getUser(userId))
+                .stream()
+                .peek(notification -> notification.setViewed(true))
+                .forEach(notificationRepo::save);
     }
 
 
-    @SneakyThrows
     public void readNotification(Long userId, Long notificationId) {
         log.info(TAG + "Read notification with id {} by user with id {}", notificationId, userId);
         Notification notification = notificationRepo.getNotificationByIdAndUser(notificationId, userRepo.getUser(userId))
                 .orElseThrow(() -> new ResourceNotFoundException("Notification not found"));
-        notification.setRead(true);
+        notification.setViewed(true);
         notificationRepo.save(notification);
     }
 
@@ -82,7 +85,7 @@ public class NotificationService {
         log.info(TAG + "Send system notification to use with id {}", user.getId());
         Notification notification = new Notification();
         notification.setActive(true);
-        notification.setRead(false);
+        notification.setViewed(false);
         notification.setReason(reason);
         notification.setMessage("System message");
         notification.setUser(user);
@@ -95,6 +98,14 @@ public class NotificationService {
         List<User> users = userRepo.getActiveUsers();
         users.forEach(user -> sendSystemNotificationToSpecificUser(reason, user));
     }
+
+
+    public void sendSystemNotificationToUsersWithRole(Reason reason, Role role) {
+        log.info(TAG + "Send system notification to users with rol {}", role.name());
+        List<User> users = userRepo.getActiveUsersByRole(role);
+        users.forEach(user -> sendSystemNotificationToSpecificUser(reason, user));
+    }
+
 
     public void changeNotificationVisibility(DtoActive dto, Long userId) {
         log.info(TAG + "Change notification visibility with id {} to status {}", dto.getId(), dto.isActive());

@@ -3,6 +3,8 @@ package com.alex.asset.security;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
+import com.alex.asset.notification.NotificationService;
+import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.UserDto;
@@ -10,6 +12,7 @@ import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ public class UserService {
     private final String TAG = "USER_SERVICE - ";
     private final UserRepo userRepo;
     private final LogService logService;
-
+    private final NotificationService notificationService;
 
     public UserDto getInfoAboutUserById(Long id) {
         return UserMapper.toDto(userRepo.getUser(id));
@@ -43,17 +46,24 @@ public class UserService {
     }
 
 
+    @SneakyThrows
     @Modifying
     @Transactional
     public void changeUserVisibility(DtoActive dto, Long userId) {
         log.info(TAG + "Change user visibility");
-        userRepo.updateVisibility(dto.isActive(), dto.getId());
+        User user = userRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("User with id " + dto.getId() + " was not found"));
+        user.setActive(dto.isActive());
+        userRepo.save(user);
+
         logService.addLog(userId, Action.UPDATE, Section.USERS, dto.toString());
+        if (dto.isActive()) {
+            notificationService.sendSystemNotificationToSpecificUser(Reason.USER_WAS_ENABLED, userRepo.getUser(userId));
+            notificationService.sendSystemNotificationToSpecificUser(Reason.YOU_WERE_ENABLED, user);
+        }
+        notificationService.sendSystemNotificationToSpecificUser(Reason.USER_WAS_DISABLED, userRepo.getUser(userId));
+        notificationService.sendSystemNotificationToSpecificUser(Reason.YOU_WERE_DISABLED, user);
     }
-
-
-
-
 
 
     public UserDto updateUser(Long id, UserDto dto, Long userId) {
@@ -66,11 +76,10 @@ public class UserService {
         user.setPhone(dto.getPhone());
         user.setRoles(Role.fromString(dto.getRole()));
         logService.addLog(userId, Action.UPDATE, Section.USERS, dto.toString());
+        notificationService.sendSystemNotificationToSpecificUser(Reason.USER_WAS_UPDATED, userRepo.getUser(userId));
+        notificationService.sendSystemNotificationToSpecificUser(Reason.YOU_WERE_UPDATED, user);
         return UserMapper.toDto(userRepo.save(user));
     }
-
-
-
 
 
 }

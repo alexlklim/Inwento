@@ -33,9 +33,9 @@ public class NotificationController {
     @GetMapping
     public ResponseEntity<List<NotificationDto>> getNotifications(
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Get all notification for user with id {}", principal.getUserId());
-        return new ResponseEntity<>(notificationService.getNotifications(principal.getUserId()), HttpStatus.OK);
+        log.info(TAG + "Get all notifications");
+        return new ResponseEntity<>(notificationService.getNotifications(
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId()), HttpStatus.OK);
     }
 
 
@@ -43,10 +43,9 @@ public class NotificationController {
     @GetMapping("/read")
     public ResponseEntity<HttpStatus> readAllNotifications(
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Read all notifications by user with id {}", principal.getUserId());
-
-        notificationService.readAllNotifications(principal.getUserId());
+        log.info(TAG + "Read all notifications");
+        notificationService.readAllNotifications(
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -57,9 +56,10 @@ public class NotificationController {
     public ResponseEntity<HttpStatus> readNotificationById(
             @PathVariable("id") Long notificationId,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Read notification with id {} by user with id {}", notificationId, principal.getUserId());
-        notificationService.readNotification(principal.getUserId(), notificationId);
+        log.info(TAG + "Read notification with id {}", notificationId);
+        notificationService.readNotification(
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                notificationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -70,11 +70,13 @@ public class NotificationController {
     @PostMapping("/notify/{id}")
     public ResponseEntity<HttpStatus> sendNotificationToSpecificUser(
             @PathVariable("id") Long userToId,
-            @RequestBody NotificationDto dto,
+            @RequestBody NotificationDto notificationDto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Send notification to user with id {} from user with id {}", userToId, principal.getUserId());
-        notificationService.saveNotificationToSpecificUser(dto, userToId, principal.getUserId());
+        log.info(TAG + "Send notification to user with id {}", userToId);
+        notificationService.saveNotificationToSpecificUser(
+                notificationDto,
+                userToId,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -82,11 +84,12 @@ public class NotificationController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/notify")
     public ResponseEntity<HttpStatus> sendNotificationToAllUsers(
-            @RequestBody NotificationDto dto,
+            @RequestBody NotificationDto notificationDto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Send notification to all users from user with id {}", principal.getUserId());
-        notificationService.saveNotificationToAllUsers(dto, principal.getUserId());
+        log.info(TAG + "Send notification to all users");
+        notificationService.saveNotificationToAllUsers(
+                notificationDto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -95,11 +98,13 @@ public class NotificationController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> changeVisibilityOfNotification(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive activeDto,
             Authentication authentication) {
-        CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
-        log.info(TAG + "Change visibility of notification with id {} to status {}", dto.getId(), dto.isActive());
-        notificationService.changeNotificationVisibility(dto, principal.getUserId());
+        log.info(TAG + "Change visibility of notification with id {} to status {}",
+                activeDto.getId(), activeDto.isActive());
+        notificationService.changeNotificationVisibility(
+                activeDto,
+                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
