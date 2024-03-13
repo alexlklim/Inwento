@@ -36,20 +36,20 @@ public class Event extends BaseEntity {
 
     String info;
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_products",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    List<Product> products;
-
-
-    @ElementCollection
-    @CollectionTable(
-            name = "unknown_products",
-            joinColumns = @JoinColumn(name = "event_id"))
-    @Column(name = "code")
-    List<String> unknownProducts;
-
+//    @ManyToMany
+//    @JoinTable(
+//            name = "event_products",
+//            joinColumns = @JoinColumn(name = "event_id"),
+//            inverseJoinColumns = @JoinColumn(name = "product_id"))
+//    List<Product> products;
+//
+//
+//    @ElementCollection
+//    @CollectionTable(
+//            name = "unknown_products",
+//            joinColumns = @JoinColumn(name = "event_id"))
+//    @Column(name = "code")
+//    List<String> unknownProducts;
+//
 
 }

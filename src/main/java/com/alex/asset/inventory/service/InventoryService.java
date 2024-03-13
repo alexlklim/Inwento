@@ -10,7 +10,6 @@ import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
-import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.InventIsAlreadyInProgress;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
@@ -30,7 +29,6 @@ public class InventoryService {
     private final String TAG = "INVENTORY_SERVICE - ";
 
     private final InventoryRepo inventoryRepo;
-    private final UserRepo userRepo;
     private final InventoryMapper inventoryMapper;
 
     private final LogService logService;
@@ -54,7 +52,7 @@ public class InventoryService {
         if (dto.isFinished()) inventory.setFinishDate(LocalDate.now());
         else inventory.setFinishDate(null);
         inventory.setInfo(dto.getInfo());
-        inventory.setUser(userRepo.getUser(userId));
+//        inventory.setUser(userRepo.getUser(userId));
         inventoryRepo.save(inventory);
 
         logService.addLog(userId, Action.CREATE, Section.INVENT, dto.toString());

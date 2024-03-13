@@ -6,11 +6,12 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.AuthDto;
 import com.alex.asset.security.dto.LoginDto;
 import com.alex.asset.security.dto.TokenDto;
+import com.alex.asset.utils.expceptions.errors.user_error.UserFailedAuthentication;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,95 +32,68 @@ public class AuthenticationService {
     private final EmailService emailService;
 
 
+    @SneakyThrows
     public AuthDto authenticate(LoginDto request) {
         log.info(TAG + "Try to authenticate user with email: {}", request.getEmail());
-        if (!userAuthService.existsByEmail(request.getEmail())) {
-            log.error(TAG + "User with username {} doesnt exists", request.getEmail());
-            return null;
-        }
-        User user = userAuthService.getByEmail(request.getEmail());
-        if (!user.isEnabled()) {
-            log.error(TAG + "User with username {} doesnt enabled", request.getEmail());
-            return null;
-        }
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-            log.info(TAG + "Authentication success for user with email {}", request.getEmail());
-        } catch (AuthenticationException e) {
-            log.error(TAG + "Authentication failed for user with email {}", request.getEmail());
-            return null;
-        }
-
+        User user = userAuthService.getUserByEmail(request.getEmail())
+                .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
+        if (!user.isEnabled())
+            throw new UserFailedAuthentication("Authentication failed");
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         return getAuthDto(user);
     }
 
-    private AuthDto getAuthDto(User user){
+    private AuthDto getAuthDto(User user) {
         log.info(TAG + "Get authentication dto for user with email: {}", user.getEmail());
-        CustomPrincipal principal = new CustomPrincipal(user);
-        String accessToken = jwtService.generateToken(principal);
         Token refreshToken = tokenService.createRefreshToken(user);
         AuthDto authDto = new AuthDto();
         authDto.setFirstName(user.getFirstname());
         authDto.setLastName(user.getLastname());
         authDto.setExpiresAt(tokenService.getTokenById(refreshToken.getId()).getExpired());
-        authDto.setAccessToken(accessToken);
+        authDto.setAccessToken(jwtService.generateToken(new CustomPrincipal(user)));
         authDto.setRefreshToken(refreshToken.getToken());
         authDto.setRole(Collections.singletonList(user.getRoles().name()));
         return authDto;
     }
 
+    @SneakyThrows
     public AuthDto refreshToken(TokenDto request) {
         log.info(TAG + "Refresh access and refresh tokens for user: {}", request.getEmail());
-        User user = userAuthService.getByEmail(request.getEmail());
-
-        if (user == null) {
-            log.error(TAG + "User with email {} not found", request.getEmail());
-            return null;
-        }
-
-        // check if token belong to this user and not expired
-        boolean result =  tokenService.checkIfTokenValid(request.getRefreshToken(), user);
-        if (!result) {
-            log.info(TAG + "Token is not valid {}", request.getRefreshToken());
-            return null;
-        }
-        // if token valid -> delete old tokens
+        User user = userAuthService.getUserByEmail(request.getEmail())
+                .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
+        if (!tokenService.checkIfTokenValid(request.getRefreshToken(), user))
+            throw new UserFailedAuthentication("Authentication failed");
         tokenService.deleteTokenByUser(user);
         return getAuthDto(user);
     }
 
-    public boolean forgotPasswordAction(String email) {
+    @SneakyThrows
+    public void forgotPasswordAction(String email) {
         log.info(TAG + "Forgot password action: {}", email);
-
-        User user = userAuthService.getByEmail(email);
-        if (user == null) {
-            log.error(TAG + "User with email {} not found", email);
-            return false;
-        }
-
+        User user = userAuthService.getUserByEmail(email)
+                .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
         tokenService.deleteTokenByUser(user);
-        emailService.forgotPassword(tokenService.createRefreshToken(user).getId().toString(), user.getEmail());
-        return true;
+        emailService.forgotPassword(
+                tokenService.createRefreshToken(user).getId().toString(),
+                user.getEmail());
     }
 
-    public boolean recoveryPassword(String token, String password) {
+    @SneakyThrows
+    public void recoveryPassword(String token, String password) {
         log.info(TAG + "Recovery password for user with token: {}", token);
-        Token tokenFromDB = tokenService.getTokenByToken(UUID.fromString(token));
-        if (tokenFromDB == null) {
-            log.error(TAG + "Token from DB is null for token {} ", token);
-            return false;
-        }
+        Token tokenFromDB = tokenService.getTokenByToken(UUID.fromString(token))
+                .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
         User user = userAuthService.getById(tokenFromDB.getUser().getId());
         tokenService.deleteTokenByUser(user);
         userAuthService.changePasswordForgot(user.getEmail(), password);
-        return true;
     }
 
     @Transactional
     public void logout(CustomPrincipal principal) {
         log.info(TAG + "Logout user with email {}", principal.getName());
-        User user = userAuthService.getByEmail(principal.getName());
+        User user = userAuthService.getUserByEmail(principal.getName())
+                .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
         tokenService.deleteTokenByUser(user);
         SecurityContextHolder.clearContext();
     }

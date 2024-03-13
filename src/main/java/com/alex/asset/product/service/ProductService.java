@@ -55,15 +55,15 @@ public class ProductService {
     }
 
 
-    public ProductDto create(ProductDto dto, Long userId) {
+    public void create(ProductDto dto, Long userId) {
         log.info(TAG + "Create product by user with id {}", userId);
         Product product = productMapper.toEntity(dto);
         product.setCreatedBy(userRepo.getUser(userId));
         product.setLiable(userRepo.getUser(dto.getLiableId()));
         product.setBarCode(null);
         product.setRfidCode(null);
+        productMapper.toDto(productRepo.save(product));
         logService.addLog(userId, Action.CREATE, Section.PRODUCT, dto.toString());
-        return productMapper.toDto(productRepo.save(product));
     }
 
     @SneakyThrows
@@ -85,18 +85,17 @@ public class ProductService {
     }
 
     @SneakyThrows
-    public boolean updateVisibility(DtoActive dto, Long userId) {
+    public void updateVisibility(DtoActive dto, Long userId) {
         log.info(TAG + "Update product visibility by user with id {}", userId);
         Product product = productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
         product.setActive(dto.isActive());
         productRepo.save(product);
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
-        return true;
     }
 
     @SneakyThrows
-    public boolean scraping(ScrapDto dto, Long userId) {
+    public void scraping(ScrapDto dto, Long userId) {
         log.info(TAG + "Scrap product with id {} by user with id {}",dto.getId(), userId);
         Product product = productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
@@ -106,7 +105,6 @@ public class ProductService {
         product.setActive(!dto.isScrap());
         productRepo.save(product);
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
-        return true;
     }
 
     @SneakyThrows

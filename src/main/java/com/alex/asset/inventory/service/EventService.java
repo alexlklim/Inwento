@@ -14,7 +14,7 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
-import com.alex.asset.utils.expceptions.errors.UserIsNotOwnerOfEvent;
+import com.alex.asset.utils.expceptions.errors.user_error.UserIsNotOwnerOfEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -84,8 +83,8 @@ public class EventService {
         event.setBranch(branchRepo.findById(dto.getBranchId()).orElseThrow(
                 () -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found")));
         event.setInfo(dto.getInfo());
-        event.setProducts(new ArrayList<>());
-        event.setUnknownProducts(new ArrayList<>());
+//        event.setProducts(new ArrayList<>());
+//        event.setUnknownProducts(new ArrayList<>());
         return eventMapper.toDto(eventRepo.save(event));
     }
 
@@ -116,12 +115,12 @@ public class EventService {
         for (String barCode : list){
             Product product = productService.getByBarCode(barCode)
                     .orElse(null);
-            if (product != null){
-                if (!event.getProducts().contains(product))
-                    event.getProducts().add(product);
-            } else {
-                event.getUnknownProducts().add(barCode);
-            }
+//            if (product != null){
+//                if (!event.getProducts().contains(product))
+//                    event.getProducts().add(product);
+//            } else {
+//                event.getUnknownProducts().add(barCode);
+//            }
         }
 
 

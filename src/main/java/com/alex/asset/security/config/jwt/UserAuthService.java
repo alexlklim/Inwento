@@ -11,8 +11,9 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.PasswordDto;
 import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.expceptions.errors.UserAlreadyExistException;
-import com.alex.asset.utils.expceptions.errors.UserNotRegisterYet;
+import com.alex.asset.utils.expceptions.errors.user_error.UserAlreadyExistException;
+import com.alex.asset.utils.expceptions.errors.user_error.UserNotRegisterYet;
+import jdk.dynalink.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -79,16 +81,6 @@ public class UserAuthService {
     }
 
 
-    public boolean existsByEmail(String email) {
-        log.info(TAG + "Exists by email: {}", email);
-        return userRepo.existsByEmail(email);
-    }
-
-    @Transactional(readOnly = true)
-    public User getByEmail(String email) {
-        log.info(TAG + "Get by email: {}", email);
-        return userRepo.getUserByEmail(email).orElse(null);
-    }
 
     public User getById(Long userId) {
         log.info(TAG + "Exists by user id: {}", userId);
@@ -100,6 +92,12 @@ public class UserAuthService {
         User user = userRepo.getUser(userId);
         user.setLastActivity(LocalDateTime.now());
         userRepo.save(user);
+    }
+
+
+
+    public Optional<User> getUserByEmail(String email){
+        return userRepo.getUserByEmail(email);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.security.domain.User;
+import com.alex.asset.utils.expceptions.errors.user_error.UserFailedAuthentication;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -53,7 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             if (jwtService.isTokenValid(jwt, userDetails)) {
-                User user = userAuthService.getByEmail(userEmail);
+                User user = userAuthService.getUserByEmail(userEmail)
+                        .orElseThrow(() -> new UserFailedAuthentication("Authentication failed"));
+
                 if (user.isEnabled()){
                     CustomPrincipal principal = new CustomPrincipal(user);
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

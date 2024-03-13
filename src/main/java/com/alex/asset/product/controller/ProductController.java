@@ -34,12 +34,9 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getActiveProducts() {
         log.info(TAG + "Try to get all active products");
-        List<ProductDto> productDTOs = productService.getActive();
-        if (productDTOs.isEmpty()) {
-            log.warn(TAG + "Where are not products to show");
-            return new ResponseEntity<>(productDTOs, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(productDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(
+                productService.getActive(),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Get all products (active and not)")
@@ -47,12 +44,9 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<List<ProductDto>> getAllProducts() {
         log.info(TAG + "Try to get all products");
-        List<ProductDto> productDTOs = productService.getAll();
-        if (productDTOs.isEmpty()) {
-            log.warn(TAG + "Where are not products to show");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(productDTOs, HttpStatus.OK);
+        return new ResponseEntity<>(
+                productService.getAll(),
+                HttpStatus.OK);
     }
 
 
@@ -61,38 +55,31 @@ public class ProductController {
     public ResponseEntity<ProductDto> getById(
             @PathVariable("id") Long id) {
         log.info(TAG + "Try to get product by id {}", id);
-        ProductDto productDTO = productService.getById(id);
-        if (productDTO == null) {
-            log.error(TAG + "Products with id {} not found", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+        return new ResponseEntity<>(
+                productService.getById(id),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Add new product")
     @PostMapping
-    public ResponseEntity<ProductDto> addNewProduct(
-            @RequestBody ProductDto dto,
+    public ResponseEntity<HttpStatus> addNewProduct(
+            @RequestBody ProductDto productDto,
             Authentication authentication) {
         log.info(TAG + "get all products for company");
-        ProductDto productDTO = productService.create(
-                dto,
+        productService.create(
+                productDto,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
-        if (productDTO == null) {
-            log.error(TAG + "Something wrong");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(productDTO, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Update Product")
     @PutMapping
     public ResponseEntity<HttpStatus> updateProduct(
-            @RequestBody ProductDto dto,
+            @RequestBody ProductDto productDto,
             Authentication authentication) {
         log.info(TAG + "get all products for company");
         productService.update(
-                dto,
+                productDto,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -101,15 +88,12 @@ public class ProductController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> updateVisibilityOfProduct(
-            @RequestBody DtoActive dto,
+            @RequestBody DtoActive dtoActive,
             Authentication authentication) {
-        log.info(TAG + "Update product visibility with id {} and value {}", dto.getId(), dto.isActive());
-        boolean result = productService.updateVisibility(
-                dto,
+        log.info(TAG + "Update product visibility");
+        productService.updateVisibility(
+                dtoActive,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
-        if (!result) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -119,25 +103,20 @@ public class ProductController {
     public ResponseEntity<Map<Long, String>> getProductsByTitle(
             @PathVariable("title") String title) {
         log.info(TAG + "Try to get all products by title {}", title);
-        Map<Long, String> products = productService.getByTitle(title);
-        if (products.isEmpty()) {
-            log.warn(TAG + "Products with title {} not found", title);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(
+                productService.getByTitle(title),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Scrap product (use isScrap to make product scrap or not)")
     @PutMapping("/scrap")
     public ResponseEntity<HttpStatus> scrapProduct(
-            @RequestBody ScrapDto dto,
+            @RequestBody ScrapDto scrapDto,
             Authentication authentication) {
-        log.info(TAG + "Scrap product with id {}", dto.getId());
-        boolean result = productService.scraping(
-                dto,
+        log.info(TAG + "Scrap product");
+        productService.scraping(
+                scrapDto,
                 ((CustomPrincipal) authentication.getPrincipal()).getUserId());
-        if (!result) return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
