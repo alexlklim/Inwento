@@ -1,9 +1,12 @@
 package com.alex.asset.product.mappers;
 
+import com.alex.asset.inventory.domain.event.Event;
+import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.product.dto.ProductV2Dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +91,17 @@ public class ProductMapper {
 
         return product;
     }
-    
+
+
+
+    public ProductV2Dto toProductV2Dto(Product product, InventoryStatus inventoryStatus){
+        ProductV2Dto dto = new ProductV2Dto();
+        dto.setId(product.getId());
+        dto.setTitle(product.getTitle());
+        dto.setBarCode(product.getBarCode());
+        dto.setInventoryStatus(inventoryStatus);
+        return dto;
+    }
     
     
 }

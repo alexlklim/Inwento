@@ -1,5 +1,6 @@
 package com.alex.asset.inventory.domain.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,15 +8,17 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "unknown_products")
 public class UnknownProduct {
-    @Id
-    @ManyToOne
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Id
+
     private String code;
 }

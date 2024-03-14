@@ -100,6 +100,7 @@ public class TypeService {
         logService.addLog(userId, Action.UPDATE, Section.SUBTYPE, "Change visibility of type " + subtype.getSubtype());
     }
 
+    @SneakyThrows
     public void addSubtypes(Long typeId, List<String> list, Long userId) {
         log.info(TAG + "Add subtypes {} by user with id {}", list, userId);
         Type type = typeRepo.findById(typeId).orElseThrow(

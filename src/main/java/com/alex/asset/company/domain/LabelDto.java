@@ -16,10 +16,10 @@ public class LabelDto {
 
 
     @Schema(description = "Label width", example = "40.3")
-    Long labelWidth;
+    Double labelWidth;
 
     @Schema(description = "Label height", example = "20.0")
-    Long labelHeight;
+    Double labelHeight;
 
     @Schema(description = "Label type", example = "EAN")
     String labelType;

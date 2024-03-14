@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS company
     email    VARCHAR(255),
 
 
-    label_width INTEGER,
-    label_height INTEGER,
+    label_width DECIMAL(5, 2),
+    label_height DECIMAL(5, 2),
     label_type VARCHAR(255),
 
 

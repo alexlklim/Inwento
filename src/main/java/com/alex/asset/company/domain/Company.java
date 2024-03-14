@@ -32,10 +32,10 @@ public class Company extends BaseEntity {
 
 
     @Column(name = "label_width")
-    Long labelWidth;
+    Double labelWidth;
 
     @Column(name = "label_height")
-    Long labelHeight;
+    Double labelHeight;
 
     @Column(name = "label_type")
     String labelType;

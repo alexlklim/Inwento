@@ -21,4 +21,6 @@ public interface BranchRepo extends JpaRepository<Branch, Long> {
 
     @Query("SELECT b FROM Branch b WHERE b.id = ?1")
     Branch get(Long id);
+
+    boolean existsByBranch(String name);
 }

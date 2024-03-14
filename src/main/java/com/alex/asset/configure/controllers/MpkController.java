@@ -42,9 +42,7 @@ public class MpkController {
             @RequestBody DtoName dtoName) {
         log.info(TAG + "Try to add MPK");
         return new ResponseEntity<>(
-                configureService.addMPK(
-                        dtoName,
-                        SecHolder.getUserId()),
+                configureService.addMPK(dtoName, SecHolder.getUserId()),
                 HttpStatus.OK);
     }
 
@@ -53,9 +51,7 @@ public class MpkController {
     public ResponseEntity<HttpStatus> updateMPKs(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to update MPK");
-        configureService.updateMPK(
-                dtoActive,
-                SecHolder.getUserId());
+        configureService.updateMPK(dtoActive, SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

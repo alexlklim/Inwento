@@ -40,10 +40,11 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler({
-            UserAlreadyExistException.class,
+            ObjectAlreadyExistException.class,
+            UserAlreadyCreateEventForThisBranch.class,
             UserNotRegisterYet.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionBody handleUserAlreadyExistException(UserAlreadyExistException ex) {
+    public ExceptionBody handleUserAlreadyExistException(ObjectAlreadyExistException ex) {
         log.error(TAG + ex.getMessage());
         return new ExceptionBody(HttpStatus.CONFLICT.value(), ex.getMessage());
     }

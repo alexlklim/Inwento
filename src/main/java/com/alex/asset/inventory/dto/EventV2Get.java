@@ -1,5 +1,7 @@
 package com.alex.asset.inventory.dto;
 
+import com.alex.asset.inventory.domain.event.UnknownProduct;
+import com.alex.asset.product.dto.ProductV2Dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,22 +23,23 @@ import lombok.experimental.FieldDefaults;
 public class EventV2Get {
 
     @Schema(description = "Id", example = "1")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long id;
 
-    @Schema(description = "Invent id", example = "1")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    Long inventId;
 
     @Schema(description = "Username", example = "Alex Klim")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String username;
 
-    @Schema(description = "Username", example = "alex@gmail.com")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Email", example = "alex@gmail.com")
     String email;
 
     @Schema(description = "Branch", example = "Main office")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     String branch;
+
+
+    @Schema(description = "Unknown Products", example = "[...]")
+    List<UnknownProduct> unknownProducts;
+
+    @Schema(description = "Products", example = "[...]")
+    List<ProductV2Dto> products;
+
 }

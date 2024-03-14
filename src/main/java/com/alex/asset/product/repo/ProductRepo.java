@@ -1,5 +1,6 @@
 package com.alex.asset.product.repo;
 
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.product.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,4 +37,5 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     Optional<Product> getByBarCode(String barCode);
 
 
+    List<Product> findAllByBranch(Branch branch);
 }

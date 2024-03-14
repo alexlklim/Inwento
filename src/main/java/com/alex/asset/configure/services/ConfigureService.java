@@ -8,7 +8,10 @@ import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
+import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.expceptions.errors.user_error.ObjectAlreadyExistException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,12 +92,15 @@ public class ConfigureService {
             kstRepo.update(dto.isActive(), dto.getId());
         }
         logService.addLog(userId, Action.UPDATE, Section.KST, DTOs.toString());
-
     }
 
 
+    @SneakyThrows
     public Branch addBranch(DtoName dto, Long userId) {
         log.info(TAG + "Add branch {}", dto.getName());
+        if (branchRepo.existsByBranch(dto.getName()))
+            throw new ObjectAlreadyExistException("Branch with name " + dto.getName() + " already exists");
+
         logService.addLog(userId, Action.CREATE, Section.BRANCH, dto.toString());
         return branchRepo.save(new Branch(dto.getName()));
     }
@@ -107,15 +113,21 @@ public class ConfigureService {
     }
 
 
+    @SneakyThrows
     public MPK addMPK(DtoName dto, Long userId) {
         log.info(TAG + "Add MPK {}", dto.getName());
+        if (mpkRepo.existsByMpk(dto.getName()))
+            throw new ObjectAlreadyExistException("MPK with name " + dto.getName() + " already exists");
         logService.addLog(userId, Action.CREATE, Section.MPK, dto.toString());
         return mpkRepo.save(new MPK(dto.getName()));
     }
 
     public void updateMPK(DtoActive dto, Long userId) {
         log.info(TAG + "Update MPK {}", dto.getId());
-        mpkRepo.update(dto.isActive(), dto.getId());
+        MPK mpk = mpkRepo.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("MPK with id " + dto.getId() + " was not found"));
+        mpk.setActive(dto.isActive());
+        mpkRepo.save(mpk);
         logService.addLog(userId, Action.UPDATE, Section.MPK, dto.toString());
     }
 

@@ -21,4 +21,5 @@ public interface MpkRepo extends JpaRepository<MPK, Long> {
     @Query("SELECT m FROM MPK m WHERE m.id = ?1")
     MPK get(Long id);
 
+    boolean existsByMpk(String name);
 }

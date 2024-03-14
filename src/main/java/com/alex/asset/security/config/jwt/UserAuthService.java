@@ -11,7 +11,7 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.PasswordDto;
 import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.expceptions.errors.user_error.UserAlreadyExistException;
+import com.alex.asset.utils.expceptions.errors.user_error.ObjectAlreadyExistException;
 import com.alex.asset.utils.expceptions.errors.user_error.UserNotRegisterYet;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -42,7 +42,7 @@ public class UserAuthService {
     public void register(RegisterDto dto, Long userId) {
         log.info(TAG + "Register user with email: {}", dto.getEmail());
         if (userRepo.existsByEmail(dto.getEmail())) {
-            throw new UserAlreadyExistException("User with email {} is already exists");
+            throw new ObjectAlreadyExistException("User with email {} is already exists");
         }
         User user = UserMapper.toUser(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));

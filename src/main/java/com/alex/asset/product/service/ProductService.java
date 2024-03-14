@@ -1,6 +1,7 @@
 package com.alex.asset.product.service;
 
 
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -49,10 +50,22 @@ public class ProductService {
 
     public List<ProductDto> getActive() {
         log.info(TAG + "get all active products");
-        return productRepo.getActive().stream()
+        return getActiveProducts().stream()
                 .map(productMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    public List<Product> getActiveProducts() {
+        return productRepo.getActive();
+    }
+
+
+    public List<Product> getActiveProductsByBranch(Branch branch) {
+
+        return productRepo.findAllByBranch(branch);
+    }
+
+
 
 
     public void create(ProductDto dto, Long userId) {
@@ -96,7 +109,7 @@ public class ProductService {
 
     @SneakyThrows
     public void scraping(ScrapDto dto, Long userId) {
-        log.info(TAG + "Scrap product with id {} by user with id {}",dto.getId(), userId);
+        log.info(TAG + "Scrap product with id {} by user with id {}", dto.getId(), userId);
         Product product = productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found"));
         product.setScrapping(dto.isScrap());
@@ -109,7 +122,7 @@ public class ProductService {
 
     @SneakyThrows
     public void update(ProductDto dto, Long userId) {
-        log.info(TAG + "Update product with id {} by user with id {}",dto.getId(), userId);
+        log.info(TAG + "Update product with id {} by user with id {}", dto.getId(), userId);
         Product product = updateProduct(productRepo.findById(dto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found")
         ), dto);
@@ -117,6 +130,11 @@ public class ProductService {
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
     }
 
+
+    public void productMovedToAnotherBranch(Product product, Branch branch) {
+        product.setBranch(branch);
+        productRepo.save(product);
+    }
 
     public Optional<Product> getByBarCode(String barCode) {
         return productRepo.getByBarCode(barCode);
@@ -142,4 +160,7 @@ public class ProductService {
     }
 
 
+    public List<Product> getScannedProductsInBranch(Branch branch) {
+        return  productRepo.findAllByBranch(branch);
+    }
 }
