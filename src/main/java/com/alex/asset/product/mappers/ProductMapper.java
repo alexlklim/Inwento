@@ -1,22 +1,20 @@
 package com.alex.asset.product.mappers;
 
-import com.alex.asset.inventory.domain.event.Event;
+import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.dto.ProductDto;
-import com.alex.asset.configure.services.ConfigureService;
-import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.product.dto.ProductV2Dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 
 @RequiredArgsConstructor
 @Service
 public class ProductMapper {
 
-    
+
     private final ConfigureService service;
     private final TypeService typeService;
 
@@ -56,22 +54,21 @@ public class ProductMapper {
     }
 
 
-
     public Product toEntity(ProductDto dto) {
         Product product = new Product();
-        
+
         product.setActive(true);
         product.setTitle(dto.getTitle());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
-        
+
         product.setBarCode(dto.getBarCode());
         product.setRfidCode(dto.getRfidCode());
 
         product.setReceiver(dto.getReceiver());
         product.setProducer(dto.getProducer());
         product.setSupplier(dto.getSupplier());
-        
+
         product.setScrapping(false);
 
         product.setKst(service.getKSTById(dto.getKstId()));
@@ -93,8 +90,7 @@ public class ProductMapper {
     }
 
 
-
-    public ProductV2Dto toProductV2Dto(Product product, InventoryStatus inventoryStatus){
+    public ProductV2Dto toProductV2Dto(Product product, InventoryStatus inventoryStatus) {
         ProductV2Dto dto = new ProductV2Dto();
         dto.setId(product.getId());
         dto.setTitle(product.getTitle());
@@ -102,6 +98,6 @@ public class ProductMapper {
         dto.setInventoryStatus(inventoryStatus);
         return dto;
     }
-    
-    
+
+
 }

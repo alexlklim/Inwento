@@ -159,8 +159,4 @@ public class ProductService {
         return emptyNames.toArray(result);
     }
 
-
-    public List<Product> getScannedProductsInBranch(Branch branch) {
-        return  productRepo.findAllByBranch(branch);
-    }
 }
