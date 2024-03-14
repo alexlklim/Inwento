@@ -74,8 +74,6 @@ public class EmailService {
     private void sendMail(MailStructure mailStructure) {
         Company company = companyRepo.findAll().get(0);
         if (!company.getIsEmailConfigured()) throw new EmailIsNotConfigured("Email is not configured");
-
-
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromMail);
         simpleMailMessage.setTo(mailStructure.getEmail());

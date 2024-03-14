@@ -64,7 +64,7 @@ public class UserAuthService {
         userRepo.save(user);
         logService.addLog(principal.getUserId(), Action.UPDATE, Section.USERS, "Change password");
         notificationService.sendSystemNotificationToSpecificUser(Reason.PASSWORD_WAS_CHANGED, user);
-
+        emailService.passwordWasChanged(principal.getName());
     }
 
 
@@ -77,6 +77,7 @@ public class UserAuthService {
         userRepo.save(user);
         logService.addLog(user.getId(), Action.UPDATE, Section.USERS, "Change password");
         notificationService.sendSystemNotificationToSpecificUser(Reason.PASSWORD_WAS_CHANGED, user);
+        emailService.passwordWasChanged(email);
     }
 
 
