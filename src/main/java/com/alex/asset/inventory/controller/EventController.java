@@ -4,7 +4,7 @@ package com.alex.asset.inventory.controller;
 import com.alex.asset.inventory.dto.EventV1Create;
 import com.alex.asset.inventory.dto.EventV2Get;
 import com.alex.asset.inventory.service.EventService;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
+import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,12 +31,11 @@ public class EventController {
     @Operation(summary = "Get events for specific user for specific invent")
     @GetMapping("/invent/{id}")
     public ResponseEntity<List<EventV2Get>> getEventsForSpecificUser(
-            @PathVariable("id") Long inventId,
-            Authentication authentication) {
+            @PathVariable("id") Long inventId) {
         log.info(TAG + "Get all events for specific user for specific invent");
-        return new ResponseEntity<>(eventService.getEventsForSpecificUserAndInvent(
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
-                inventId), HttpStatus.OK);
+        return new ResponseEntity<>(
+                eventService.getEventsForSpecificUserAndInvent(SecHolder.getUserId(), inventId),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Get all events for specific invent")
@@ -46,8 +44,9 @@ public class EventController {
     public ResponseEntity<List<EventV2Get>> getAllEventsForSpecificInvent(
             @PathVariable("id") Long inventId) {
         log.info(TAG + "Get all events for specific user for specific invent");
-
-        return new ResponseEntity<>(eventService.getAllEventsForSpecificInvent(inventId), HttpStatus.OK);
+        return new ResponseEntity<>(
+                eventService.getAllEventsForSpecificInvent(inventId),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "Get event by id")
@@ -64,12 +63,11 @@ public class EventController {
     @Operation(summary = "Create event for current invent")
     @PostMapping
     public ResponseEntity<EventV2Get> create(
-            @RequestBody EventV1Create eventV1CreateDto,
-            Authentication authentication) {
+            @RequestBody EventV1Create eventV1CreateDto) {
         log.info(TAG + "Create new event for current invent");
         return new ResponseEntity<>(
                 eventService.createEvent(
-                        ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                        SecHolder.getUserId(),
                         eventV1CreateDto),
                 HttpStatus.CREATED);
     }
@@ -79,11 +77,10 @@ public class EventController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> updateVisibility(
-            @RequestBody DtoActive dtoActive,
-            Authentication authentication) {
+            @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Update visibility of event");
         eventService.updateVisibility(
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                SecHolder.getUserId(),
                 dtoActive);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -92,11 +89,10 @@ public class EventController {
     @PutMapping("/{id}/products/bar-code")
     public ResponseEntity<HttpStatus> addProductsToEvent(
             @PathVariable("id") Long eventId,
-            @RequestBody List<String> listOfBarCodes,
-            Authentication authentication) {
+            @RequestBody List<String> listOfBarCodes) {
         log.info(TAG + "Add product which exists in fact");
         eventService.addProductsToEventByBarCode(
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId(),
+                SecHolder.getUserId(),
                 eventId,
                 listOfBarCodes);
         return new ResponseEntity<>(HttpStatus.OK);

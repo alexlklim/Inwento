@@ -7,6 +7,7 @@ import com.alex.asset.security.dto.AuthDto;
 import com.alex.asset.security.dto.LoginDto;
 import com.alex.asset.security.dto.PasswordDto;
 import com.alex.asset.security.dto.TokenDto;
+import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoName;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,10 +45,9 @@ public class AuthController {
 
     @Operation(summary = "logout user, inactive refresh token")
     @GetMapping("/logout")
-    public ResponseEntity<AuthDto> logout(
-            Authentication authentication) {
+    public ResponseEntity<AuthDto> logout() {
         log.info(TAG + "Log out");
-        authenticationService.logout((CustomPrincipal) authentication.getPrincipal());
+        authenticationService.logout(SecHolder.getPrincipal());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -70,7 +70,7 @@ public class AuthController {
         log.info(TAG + "Change password for authenticated user");
         userAuthService.changePassword(
                 passwordDto,
-                (CustomPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+                SecHolder.getPrincipal());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -1,9 +1,7 @@
 package com.alex.asset.company.service;
 
 
-import com.alex.asset.company.domain.Company;
-import com.alex.asset.company.domain.CompanyDto;
-import com.alex.asset.company.domain.DataDto;
+import com.alex.asset.company.domain.*;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.logs.LogService;
@@ -45,16 +43,17 @@ public class CompanyService {
 
     @Modifying
     @Transactional
-    public CompanyDto updateCompany(CompanyDto dto, Long userId) {
+    public CompanyDto updateCompany(CompanyDto companyDto, Long userId) {
         log.info(TAG + "Update company by user with id {}", userId);
-        Company updatedCompany = CompanyMapper.updateCompany(companyRepo.findAll().get(0), dto);
-        logService.addLog(userId, Action.UPDATE, Section.COMPANY, dto.toString());
+        Company updatedCompany = CompanyMapper.updateCompany(companyRepo.findAll().get(0), companyDto);
+        logService.addLog(userId, Action.UPDATE, Section.COMPANY, companyDto.toString());
         notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
         return CompanyMapper.toDto(companyRepo.save(updatedCompany));
     }
 
 
     public DataDto getAllFields() {
+        log.info(TAG + "Get all fields");
         DataDto dto = new DataDto();
         dto.setEmployees(userRepo.getActiveUsers()
                 .stream().map(UserMapper::toEmployee)
@@ -65,6 +64,56 @@ public class CompanyService {
         dto.setBranches(configureService.getBranches());
         dto.setMPKs(configureService.getMPKs());
         return dto;
+    }
+
+
+    public LabelDto getLabelConfig() {
+        log.info(TAG + "Get label info");
+        Company company = companyRepo.findAll().get(0);
+        LabelDto labelDto = new LabelDto();
+        labelDto.setLabelHeight(company.getLabelHeight());
+        labelDto.setLabelWidth(company.getLabelWidth());
+        labelDto.setLabelType(company.getLabelType());
+        return labelDto;
+    }
+
+    public void updateLabelConfig(Long userId, LabelDto labelDto) {
+        log.info(TAG + "Update label info by user wid id {}", userId);
+        Company company = companyRepo.findAll().get(0);
+        company.setLabelHeight(labelDto.getLabelHeight());
+        company.setLabelWidth(labelDto.getLabelWidth());
+        company.setLabelType(labelDto.getLabelType());
+        companyRepo.save(company);
+        logService.addLog(userId, Action.UPDATE, Section.COMPANY, labelDto.toString());
+    }
+
+
+    public EmailDto getEmailConfig() {
+        log.info(TAG + "Get email info");
+        Company company = companyRepo.findAll().get(0);
+        return new EmailDto().toBuilder()
+                .host(company.getHost())
+                .port(company.getPort())
+                .protocol(company.getProtocol())
+                .username(company.getUsername())
+                .password(company.getPassword())
+                .isEmailConfigured(company.getIsEmailConfigured())
+                .build();
+    }
+
+    public void updateEmailConfig(Long userId, EmailDto emailDto) {
+        log.info(TAG + "Update email info by user wid id {}", userId);
+        Company company = companyRepo.findAll().get(0);
+        company.setHost(emailDto.getHost());
+        company.setPort(emailDto.getPort());
+        company.setUsername(emailDto.getUsername());
+        company.setPassword(emailDto.getPassword());
+        company.setProtocol(emailDto.getProtocol());
+        company.setIsEmailConfigured(true);
+        companyRepo.save(company);
+
+        logService.addLog(userId, Action.UPDATE, Section.COMPANY, emailDto.toString());
+
     }
 
 

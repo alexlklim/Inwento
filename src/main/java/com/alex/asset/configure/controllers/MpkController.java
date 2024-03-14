@@ -2,7 +2,7 @@ package com.alex.asset.configure.controllers;
 
 import com.alex.asset.configure.domain.MPK;
 import com.alex.asset.configure.services.ConfigureService;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
+import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.dto.DtoName;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,25 +39,23 @@ public class MpkController {
     @Operation(summary = "Add new MPK")
     @PostMapping
     public ResponseEntity<MPK> addMPK(
-            @RequestBody DtoName dtoName,
-            Authentication authentication) {
+            @RequestBody DtoName dtoName) {
         log.info(TAG + "Try to add MPK");
         return new ResponseEntity<>(
                 configureService.addMPK(
                         dtoName,
-                        ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                        SecHolder.getUserId()),
                 HttpStatus.OK);
     }
 
     @Operation(summary = "Update MPK visibility by id")
     @PutMapping
     public ResponseEntity<HttpStatus> updateMPKs(
-            @RequestBody DtoActive dtoActive,
-            Authentication authentication) {
+            @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to update MPK");
         configureService.updateMPK(
                 dtoActive,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

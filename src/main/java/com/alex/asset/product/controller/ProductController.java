@@ -4,7 +4,7 @@ package com.alex.asset.product.controller;
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.product.service.ProductService;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
+import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,24 +62,22 @@ public class ProductController {
     @Operation(summary = "Add new product")
     @PostMapping
     public ResponseEntity<HttpStatus> addNewProduct(
-            @RequestBody ProductDto productDto,
-            Authentication authentication) {
+            @RequestBody ProductDto productDto) {
         log.info(TAG + "get all products for company");
         productService.create(
                 productDto,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Update Product")
     @PutMapping
     public ResponseEntity<HttpStatus> updateProduct(
-            @RequestBody ProductDto productDto,
-            Authentication authentication) {
+            @RequestBody ProductDto productDto) {
         log.info(TAG + "get all products for company");
         productService.update(
                 productDto,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -88,12 +85,11 @@ public class ProductController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> updateVisibilityOfProduct(
-            @RequestBody DtoActive dtoActive,
-            Authentication authentication) {
+            @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Update product visibility");
         productService.updateVisibility(
                 dtoActive,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -111,12 +107,11 @@ public class ProductController {
     @Operation(summary = "Scrap product (use isScrap to make product scrap or not)")
     @PutMapping("/scrap")
     public ResponseEntity<HttpStatus> scrapProduct(
-            @RequestBody ScrapDto scrapDto,
-            Authentication authentication) {
+            @RequestBody ScrapDto scrapDto) {
         log.info(TAG + "Scrap product");
         productService.scraping(
                 scrapDto,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

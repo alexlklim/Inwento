@@ -2,10 +2,10 @@ package com.alex.asset.security.controller;
 
 
 import com.alex.asset.security.UserService;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
 import com.alex.asset.security.config.jwt.UserAuthService;
 import com.alex.asset.security.dto.RegisterDto;
 import com.alex.asset.security.dto.UserDto;
+import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,12 +36,11 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<UserDto> register(
-            @RequestBody RegisterDto registerDto,
-            Authentication authentication) {
+            @RequestBody RegisterDto registerDto) {
         log.info(TAG + "Register new user");
         userAuthService.register(
                 registerDto,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -62,12 +60,11 @@ public class UserController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     public ResponseEntity<HttpStatus> changeUserVisibility(
-            @RequestBody DtoActive dtoActive,
-            Authentication authentication) {
+            @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to change user visibility");
         userService.changeUserVisibility(
                 dtoActive,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -81,19 +78,16 @@ public class UserController {
                 userService.getInfoAboutUserById(userId),
                 HttpStatus.OK);
     }
+
     @Operation(summary = "Update info about user by id (only for admin)")
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateInfoAboutUser(
             @PathVariable("id") Long userId,
-            @RequestBody UserDto userDto,
-            Authentication authentication) {
+            @RequestBody UserDto userDto) {
         log.info(TAG + "Update info about user");
         return new ResponseEntity<>(
-                userService.updateUser(
-                        userId,
-                        userDto,
-                        ((CustomPrincipal) authentication.getPrincipal()).getUserId()),
+                userService.updateUser(userId, userDto, SecHolder.getUserId()),
                 HttpStatus.OK);
     }
 

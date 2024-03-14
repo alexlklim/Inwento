@@ -52,6 +52,7 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler({
+            EmailIsNotConfigured.class,
             InventIsAlreadyInProgress.class,
             InventIsAlreadyNotActive.class,
             InventIsNotStartedYet.class})

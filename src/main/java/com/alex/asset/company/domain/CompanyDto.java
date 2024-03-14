@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@Schema(description = "Company Dto")
 public class CompanyDto {
 
     @Schema(description = "Company name", example = "Cyfrowe Sieci Multimedialne")

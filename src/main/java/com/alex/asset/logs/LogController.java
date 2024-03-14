@@ -32,7 +32,9 @@ public class LogController {
     @GetMapping
     public ResponseEntity<List<LogDto>> getAllLogs() {
         log.info(TAG + "Get all logs");
-        return new ResponseEntity<>(logService.getAllLogs(), HttpStatus.OK);
+        return new ResponseEntity<>(
+                logService.getAllLogs(),
+                HttpStatus.OK);
     }
 
 
@@ -42,7 +44,9 @@ public class LogController {
     public ResponseEntity<List<LogDto>> getLogsForSpecificUser(
             @PathVariable("id") Long userId) {
         log.info(TAG + "Get logs for user with id {}", userId);
-        return new ResponseEntity<>(logService.getLogsForSpecificUser(userId), HttpStatus.OK);
+        return new ResponseEntity<>(
+                logService.getLogsForSpecificUser(userId),
+                HttpStatus.OK);
     }
 
 

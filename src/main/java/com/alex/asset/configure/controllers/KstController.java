@@ -3,7 +3,7 @@ package com.alex.asset.configure.controllers;
 
 import com.alex.asset.configure.domain.KST;
 import com.alex.asset.configure.services.ConfigureService;
-import com.alex.asset.security.config.jwt.CustomPrincipal;
+import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,12 +50,11 @@ public class KstController {
     @Operation(summary = "Update visibility of KSTs by id and its new status")
     @PutMapping
     public ResponseEntity<HttpStatus> updateMPKs(
-            @RequestBody List<DtoActive> dtoActiveList,
-            Authentication authentication) {
+            @RequestBody List<DtoActive> dtoActiveList) {
         log.info(TAG + "Try to update visibility of KSTs");
         configureService.updateKSTs(
                 dtoActiveList,
-                ((CustomPrincipal) authentication.getPrincipal()).getUserId());
+                SecHolder.getUserId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

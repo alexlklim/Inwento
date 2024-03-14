@@ -1,9 +1,13 @@
 package com.alex.asset.email;
 
 
+import com.alex.asset.company.domain.Company;
+import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.expceptions.errors.EmailIsNotConfigured;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,13 +25,15 @@ public class EmailService {
 
 
     private JavaMailSender mailSender;
+    private CompanyRepo companyRepo;
 
     @Value("${spring.mail.username}")
     private String fromMail;
 
     @Autowired
-    public EmailService(JavaMailSender mailSender) {
+    public EmailService(JavaMailSender mailSender, CompanyRepo companyRepo) {
         this.mailSender = mailSender;
+        this.companyRepo = companyRepo;
     }
 
 
@@ -64,7 +70,12 @@ public class EmailService {
     }
 
 
+    @SneakyThrows
     private void sendMail(MailStructure mailStructure) {
+        Company company = companyRepo.findAll().get(0);
+        if (!company.getIsEmailConfigured()) throw new EmailIsNotConfigured("Email is not configured");
+
+
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromMail);
         simpleMailMessage.setTo(mailStructure.getEmail());
