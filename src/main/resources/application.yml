@@ -20,7 +20,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: asset.track.pro@gmail.com
-    password: ubum fcfe xntw xcxq
+    password: khzv asqz sqcu rlxv
     properties:
       mail:
         debug: false

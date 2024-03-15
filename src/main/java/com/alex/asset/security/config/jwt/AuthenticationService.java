@@ -23,7 +23,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final String TAG = "AUTHENTICATION SERVICE - ";
+    private final String TAG = "AUTHENTICATION_SERVICE - ";
 
     private final UserAuthService userAuthService;
     private final JwtService jwtService;

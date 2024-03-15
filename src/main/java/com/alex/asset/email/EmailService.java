@@ -6,9 +6,6 @@ import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.expceptions.errors.EmailIsNotConfigured;
-import jakarta.mail.Authenticator;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import java.util.Properties;
 
 
 @Slf4j
@@ -39,22 +34,12 @@ public class EmailService {
 
     public void applyNewConfiguration() {
         Company company = companyRepo.findAll().get(0);
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", company.getHost());
-        properties.put("mail.smtp.port", company.getPort());
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
 
-        Session.getInstance(properties,
-                new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(company.getUsername(), company.getPassword());
-                    }
-                });
     }
 
 
     public void accountWasCreated(User user) {
+        applyNewConfiguration();
         log.info("Send email about creating account to user with email: {}", user.getEmail());
         MailStructure mail = new MailStructure();
         mail.setEmail(user.getEmail());

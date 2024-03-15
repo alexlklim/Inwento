@@ -4,6 +4,7 @@ package com.alex.asset.company.service;
 import com.alex.asset.company.domain.*;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.email.EmailService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -32,6 +33,8 @@ public class CompanyService {
     private final ConfigureService configureService;
     private final LogService logService;
     private final NotificationService notificationService;
+
+    private final EmailService emailService;
 
 
     public CompanyDto getInfoAboutCompany() {
@@ -112,6 +115,7 @@ public class CompanyService {
         company.setIsEmailConfigured(true);
         companyRepo.save(company);
 
+        emailService.applyNewConfiguration();
         logService.addLog(userId, Action.UPDATE, Section.COMPANY, emailDto.toString());
 
     }

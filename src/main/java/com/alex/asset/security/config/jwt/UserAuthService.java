@@ -29,7 +29,7 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class UserAuthService {
-    private final String TAG = "USER AUTHENTICATION SERVICE - ";
+    private final String TAG = "USER_AUTHENTICATION_SERVICE - ";
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
