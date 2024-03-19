@@ -11,7 +11,7 @@ import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dto.DtoActive;
-import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.alex.asset.email;
 
-public enum Mail {
+public enum MailType {
 
 
     REGISTRATION,

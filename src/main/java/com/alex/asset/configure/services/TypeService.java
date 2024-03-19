@@ -10,7 +10,7 @@ import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.utils.dto.DtoActive;
-import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

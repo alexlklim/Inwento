@@ -166,13 +166,33 @@ CREATE TABLE IF NOT EXISTS products
     FOREIGN KEY (mpk_id) REFERENCES mpks (id)
 );
 
+
+CREATE TABLE IF NOT EXISTS product_history
+(
+    id      BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created DATETIME,
+    user_id BIGINT,
+    product_id BIGINT,
+    activity ENUM('VISIBILITY', 'PRODUCT_WAS_CREATED', 'TITLE', 'PRICE', 'BAR_CODE', 'RFID_CODE', 'INVENTORY_NUMBER',
+        'SERIAL_NUMBER', 'LIABLE',
+        'RECEIVER',  'KST', 'ASSET_STATUS', 'UNIT', 'BRANCH', 'MPK', 'TYPE', 'SUBTYPE', 'PRODUCER',
+        'SUPPLIER', 'SCRAPPING', 'DOCUMENT', 'DOCUMENT_DATE', 'WARRANTY_PERIOD', 'INSPECTION_DATE', 'GPS'),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (product_id) REFERENCES products (id)
+);
+
 CREATE TABLE IF NOT EXISTS logs
 (
     id      BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created DATETIME,
     user_id BIGINT,
     action  ENUM ('CREATE', 'UPDATE', 'DELETE')                       NOT NULL,
-    section    ENUM ('USERS', 'COMPANY', 'INVENT', 'EVENT', 'TYPE', 'SUBTYPE', 'UNIT', 'ASSET_STATUS', 'MPK', 'KST', 'BRANCH') NOT NULL,
+    section    ENUM ('USERS', 'COMPANY',
+        'INVENTORY', 'EVENT',
+        'NOTIFICATION', 'PRODUCT',
+        'TYPE', 'SUBTYPE',
+        'UNIT', 'ASSET_STATUS', 'KST',
+        'MPK', 'BRANCH') NOT NULL,
     text    VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -196,7 +216,7 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 
 
-# for inventory
+
 CREATE TABLE IF NOT EXISTS inventories
 (
     id          BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -208,7 +228,6 @@ CREATE TABLE IF NOT EXISTS inventories
     is_finished BOOLEAN,
     info        VARCHAR(255)
 );
-
 
 
 CREATE TABLE IF NOT EXISTS events
@@ -229,8 +248,8 @@ CREATE TABLE IF NOT EXISTS events
 
 CREATE TABLE IF NOT EXISTS event_products
 (
-    event_id         BIGINT                                         NOT NULL,
-    product_id       BIGINT                                         NOT NULL,
+    event_id   BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
     FOREIGN KEY (event_id) REFERENCES events (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
 );
@@ -244,3 +263,5 @@ CREATE TABLE IF NOT EXISTS unknown_products
     event_id BIGINT       NOT NULL,
     FOREIGN KEY (event_id) REFERENCES events (id)
 );
+
+

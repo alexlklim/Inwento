@@ -1,8 +1,11 @@
-package com.alex.asset.utils.expceptions;
+package com.alex.asset.utils.exceptions;
 
 
-import com.alex.asset.utils.expceptions.errors.*;
-import com.alex.asset.utils.expceptions.errors.user_error.*;
+import com.alex.asset.utils.exceptions.errors.*;
+import com.alex.asset.utils.exceptions.errors.user_error.ObjectAlreadyExistException;
+import com.alex.asset.utils.exceptions.errors.user_error.UserFailedAuthentication;
+import com.alex.asset.utils.exceptions.errors.user_error.UserIsNotOwnerOfEvent;
+import com.alex.asset.utils.exceptions.errors.user_error.UserNotRegisterYet;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;

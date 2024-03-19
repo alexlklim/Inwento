@@ -5,7 +5,7 @@ import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.Utils;
-import com.alex.asset.utils.expceptions.errors.EmailIsNotConfigured;
+import com.alex.asset.utils.exceptions.errors.EmailIsNotConfigured;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

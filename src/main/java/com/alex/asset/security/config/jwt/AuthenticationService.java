@@ -6,7 +6,7 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.security.dto.AuthDto;
 import com.alex.asset.security.dto.LoginDto;
 import com.alex.asset.security.dto.TokenDto;
-import com.alex.asset.utils.expceptions.errors.user_error.UserFailedAuthentication;
+import com.alex.asset.utils.exceptions.errors.user_error.UserFailedAuthentication;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

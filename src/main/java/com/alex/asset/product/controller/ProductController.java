@@ -2,6 +2,7 @@ package com.alex.asset.product.controller;
 
 
 import com.alex.asset.product.dto.ProductDto;
+import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
@@ -35,7 +36,8 @@ public class ProductController {
         log.info(TAG + "Try to get all active products");
         return new ResponseEntity<>(
                 productService.getActive(),
-                HttpStatus.OK);
+                HttpStatus.OK
+        );
     }
 
     @Operation(summary = "Get all products (active and not)")
@@ -45,7 +47,8 @@ public class ProductController {
         log.info(TAG + "Try to get all products");
         return new ResponseEntity<>(
                 productService.getAll(),
-                HttpStatus.OK);
+                HttpStatus.OK
+        );
     }
 
 
@@ -56,18 +59,22 @@ public class ProductController {
         log.info(TAG + "Try to get product by id {}", id);
         return new ResponseEntity<>(
                 productService.getById(id),
-                HttpStatus.OK);
+                HttpStatus.OK
+        );
     }
 
     @Operation(summary = "Add new product")
     @PostMapping
-    public ResponseEntity<HttpStatus> addNewProduct(
+    public ResponseEntity<ProductDto> addNewProduct(
             @RequestBody ProductDto productDto) {
         log.info(TAG + "get all products for company");
-        productService.create(
-                productDto,
-                SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(
+                productService.create(
+                        productDto,
+                        SecHolder.getUserId()
+                ),
+                HttpStatus.OK
+        );
     }
 
     @Operation(summary = "Update Product")
@@ -77,7 +84,8 @@ public class ProductController {
         log.info(TAG + "get all products for company");
         productService.update(
                 productDto,
-                SecHolder.getUserId());
+                SecHolder.getUserId()
+        );
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -89,7 +97,8 @@ public class ProductController {
         log.info(TAG + "Update product visibility");
         productService.updateVisibility(
                 dtoActive,
-                SecHolder.getUserId());
+                SecHolder.getUserId()
+        );
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -101,7 +110,8 @@ public class ProductController {
         log.info(TAG + "Try to get all products by title {}", title);
         return new ResponseEntity<>(
                 productService.getByTitle(title),
-                HttpStatus.OK);
+                HttpStatus.OK
+        );
     }
 
     @Operation(summary = "Scrap product (use isScrap to make product scrap or not)")
@@ -111,8 +121,21 @@ public class ProductController {
         log.info(TAG + "Scrap product");
         productService.scraping(
                 scrapDto,
-                SecHolder.getUserId());
+                SecHolder.getUserId()
+        );
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Get product history by id")
+    @GetMapping("/history/{id}")
+    public ResponseEntity<List<ProductHistoryDto>> getHistoryOfProductById(
+            @PathVariable("id") Long productId) {
+        log.info(TAG + "Get history of product");
+        return new ResponseEntity<>(
+                productService.getHistoryOfProductById(productId),
+                HttpStatus.OK
+        );
     }
 
 

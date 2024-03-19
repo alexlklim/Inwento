@@ -1,4 +1,4 @@
-package com.alex.asset.utils.expceptions.errors.user_error;
+package com.alex.asset.utils.exceptions.errors.user_error;
 
 public class UserFailedAuthentication extends RuntimeException{
 

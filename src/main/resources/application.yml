@@ -12,7 +12,6 @@ spring:
       continue-on-error: false
       schema-locations:
         - classpath:database/schema.sql
-        - classpath:database/schema_inventory.sql
         - classpath:database/init.sql
         - classpath:database/kst.sql
         - classpath:database/products.sql
@@ -40,6 +39,6 @@ server:
 logging:
   level:
     root: INFO
-    com.alex.asset: DEBUG   # Set the logging level for your package or specific classes
+    com.alex.asset: DEBUG
 springdoc:
   override-with-generic-response: false

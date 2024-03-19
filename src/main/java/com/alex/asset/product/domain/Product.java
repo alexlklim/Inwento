@@ -83,4 +83,38 @@ public class Product extends BaseEntity {
 
 
     Double longitude, latitude;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "isActive=" + isActive +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", barCode='" + barCode + '\'' +
+                ", rfidCode='" + rfidCode + '\'' +
+                ", inventoryNumber='" + inventoryNumber + '\'' +
+                ", serialNumber='" + serialNumber + '\'' +
+                ", liable=" + liable.getEmail() +
+                ", receiver='" + receiver + '\'' +
+                ", kst=" + kst.getKst() +
+                ", assetStatus=" + assetStatus.getAssetStatus() +
+                ", unit=" + unit.getUnit() +
+                ", branch=" + branch.getBranch() +
+                ", mpk=" + mpk.getMpk() +
+                ", type=" + type.getType() +
+                ", subtype=" + subtype.getSubtype() +
+                ", producer='" + producer + '\'' +
+                ", supplier='" + supplier + '\'' +
+                ", isScrapping=" + isScrapping +
+                ", scrappingDate=" + scrappingDate +
+                ", scrappingReason='" + scrappingReason + '\'' +
+                ", document='" + document + '\'' +
+                ", documentDate=" + documentDate +
+                ", warrantyPeriod=" + warrantyPeriod +
+                ", inspectionDate=" + inspectionDate +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package com.alex.asset.utils.expceptions.errors;
+package com.alex.asset.utils.exceptions.errors;
 
 public class ResourceNotFoundException extends RuntimeException{
 

@@ -4,7 +4,9 @@ import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.product.domain.Product;
+import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductDto;
+import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.dto.ProductV2Dto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,6 @@ public class ProductMapper {
 
     public ProductDto toDto(Product product) {
         ProductDto dto = new ProductDto();
-
         dto.setId(product.getId());
         dto.setActive(product.isActive());
         dto.setTitle(product.getTitle());
@@ -49,22 +50,18 @@ public class ProductMapper {
         dto.setInspectionDate(product.getInspectionDate());
         dto.setLongitude(product.getLongitude());
         dto.setLatitude(product.getLatitude());
-
         return dto;
     }
 
 
     public Product toEntity(ProductDto dto) {
         Product product = new Product();
-
         product.setActive(true);
         product.setTitle(dto.getTitle());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
-
         product.setBarCode(dto.getBarCode());
         product.setRfidCode(dto.getRfidCode());
-
         product.setReceiver(dto.getReceiver());
         product.setProducer(dto.getProducer());
         product.setSupplier(dto.getSupplier());
@@ -78,14 +75,12 @@ public class ProductMapper {
         product.setMpk(service.getMPKById(dto.getMpkId()));
         product.setType(typeService.getTypeById(dto.getTypeId()));
         product.setSubtype(typeService.getSubtypeById(dto.getSubtypeId()));
-
         product.setDocument(dto.getDocument());
         product.setDocumentDate(dto.getDocumentDate());
         product.setWarrantyPeriod(dto.getWarrantyPeriod());
         product.setInspectionDate(dto.getInspectionDate());
         product.setLongitude(dto.getLongitude());
         product.setLatitude(dto.getLatitude());
-
         return product;
     }
 
@@ -96,6 +91,16 @@ public class ProductMapper {
         dto.setTitle(product.getTitle());
         dto.setBarCode(product.getBarCode());
         dto.setInventoryStatus(inventoryStatus);
+        return dto;
+    }
+
+
+    public ProductHistoryDto toProductHistoryDto(ProductHistory productHistory) {
+        ProductHistoryDto dto = new ProductHistoryDto();
+        dto.setCreated(productHistory.getCreated());
+        dto.setUsername(productHistory.getUser().getFirstname() + productHistory.getUser().getLastname());
+        dto.setEmail(productHistory.getUser().getEmail());
+        dto.setActivity(productHistory.getActivity());
         return dto;
     }
 

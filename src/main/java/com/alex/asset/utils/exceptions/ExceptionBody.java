@@ -1,11 +1,8 @@
-package com.alex.asset.utils.expceptions;
+package com.alex.asset.utils.exceptions;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Map;
 
 @Getter
 @Setter

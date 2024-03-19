@@ -11,8 +11,8 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.utils.dto.DtoActive;
-import com.alex.asset.utils.expceptions.errors.InventIsAlreadyInProgress;
-import com.alex.asset.utils.expceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.exceptions.errors.InventIsAlreadyInProgress;
+import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class InventoryService {
 //        inventory.setUser(userRepo.getUser(userId));
         inventoryRepo.save(inventory);
 
-        logService.addLog(userId, Action.CREATE, Section.INVENT, dto.toString());
+        logService.addLog(userId, Action.CREATE, Section.INVENTORY, dto.toString());
         notificationService.sendSystemNotificationToAllUsers(Reason.PLANNED_INVENTORY);
 
     }
@@ -73,7 +73,7 @@ public class InventoryService {
         inventory.setInfo(dto.getInfo());
         inventoryRepo.save(inventory);
 
-        logService.addLog(userId, Action.UPDATE, Section.INVENT, dto.toString());
+        logService.addLog(userId, Action.UPDATE, Section.INVENTORY, dto.toString());
 
     }
 
@@ -86,7 +86,7 @@ public class InventoryService {
         inventory.setActive(dto.isActive());
         inventoryRepo.save(inventory);
 
-        logService.addLog(userId, Action.UPDATE, Section.INVENT, dto.toString());
+        logService.addLog(userId, Action.UPDATE, Section.INVENTORY, dto.toString());
     }
 
     @SneakyThrows

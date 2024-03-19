@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS unknown_products;
 
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS inventories;
+
+DROP TABLE IF EXISTS product_history;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS subtypes;
 DROP TABLE IF EXISTS types;
@@ -20,3 +22,9 @@ DROP TABLE IF EXISTS notifications;
 
 DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS tmp;
+
+
+
+
+
