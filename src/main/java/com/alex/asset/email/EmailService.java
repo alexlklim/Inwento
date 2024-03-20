@@ -34,7 +34,7 @@ public class EmailService {
 
     public void applyNewConfiguration() {
         Company company = companyRepo.findAll().get(0);
-
+        System.out.println(company.toString());
     }
 
 
