@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EventMapper {
 
-
-
     public EventV2Get toDto(Event entity) {
         EventV2Get dto = new EventV2Get();
         dto.setId(entity.getId());

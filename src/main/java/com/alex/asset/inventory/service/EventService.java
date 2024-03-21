@@ -12,9 +12,13 @@ import com.alex.asset.inventory.mapper.EventMapper;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
+import com.alex.asset.logs.LogService;
+import com.alex.asset.logs.domain.Action;
+import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.dto.ProductV2Dto;
 import com.alex.asset.product.mappers.ProductMapper;
+import com.alex.asset.product.mappers.ProductUtils;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
@@ -52,6 +56,8 @@ public class EventService {
     private final ProductService productService;
     private final ProductMapper productMapper;
 
+    private final LogService logService;
+
     @SneakyThrows
     public EventV2Get getEvent(Long eventId) {
         log.info(TAG + "Get invent with id {}", eventId);
@@ -60,6 +66,9 @@ public class EventService {
         dto.setUnknownProducts(getUnknownProductsForEvent(eventId));
         dto.setProducts(getAllProductsV2ForBranch(eventId));
 
+        dto.setUnknownProductAmount(dto.getUnknownProducts().size());
+        dto.setScannedProductAmount(ProductUtils.countScannedProducts(dto.getProducts()));
+        dto.setTotalProductAmount(dto.getProducts().size() - dto.getScannedProductAmount());
         return dto;
     }
 
@@ -71,9 +80,17 @@ public class EventService {
                         userRepo.getUser(userId), inventoryRepo.findById(inventId).orElseThrow(
                                 () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
-                .map(eventMapper::toDto)
+                .map(this::mapEventToDto)
                 .toList();
+    }
 
+
+    private EventV2Get mapEventToDto(Event event) {
+        EventV2Get dto = eventMapper.toDto(event);
+        dto.setUnknownProductAmount(getUnknownProductsForEvent(event.getId()).size());
+        dto.setScannedProductAmount(ProductUtils.countScannedProducts(getAllProductsV2ForBranch(event.getId())));
+        dto.setTotalProductAmount(getAllProductsV2ForBranch(event.getId()).size());
+        return dto;
     }
 
     @SneakyThrows
@@ -82,10 +99,8 @@ public class EventService {
         return eventRepo.findAllByInventory(inventoryRepo.findById(inventId).orElseThrow(
                         () -> new ResourceNotFoundException("Invent with id " + inventId + " not found")))
                 .stream()
-                .map(eventMapper::toDto)
+                .map(this::mapEventToDto)
                 .toList();
-
-
     }
 
     @SneakyThrows
@@ -113,6 +128,9 @@ public class EventService {
                 () -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found")));
         event.setInfo(dto.getInfo());
         event.setProducts(new ArrayList<>());
+
+        logService.addLog(userId, Action.CREATE, Section.EVENT, dto.toString());
+
         return eventMapper.toDto(eventRepo.save(event));
 
     }
@@ -125,6 +143,7 @@ public class EventService {
                 () -> new ResourceNotFoundException("Event with this id not found"));
         event.setActive(dto.isActive());
         eventRepo.save(event);
+        logService.addLog(userId, Action.UPDATE, Section.EVENT, dto.toString());
 
     }
 
@@ -178,6 +197,7 @@ public class EventService {
 
         eventRepo.save(event);
 
+        logService.addLog(userId, Action.CREATE, Section.EVENT, "Add products to event ");
 
     }
 

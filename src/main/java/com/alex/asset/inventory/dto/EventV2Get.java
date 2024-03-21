@@ -41,4 +41,9 @@ public class EventV2Get {
     @Schema(description = "Products", example = "[...]")
     List<ProductV2Dto> products;
 
+
+    int unknownProductAmount;
+    int totalProductAmount;
+    int scannedProductAmount;
+
 }
