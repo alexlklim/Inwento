@@ -16,15 +16,4 @@ public class ProductUtils {
         }
         return scannedCount;
     }
-
-
-    public static int countNotScannedProducts(List<ProductV2Dto> productList) {
-        int scannedCount = 0;
-        for (ProductV2Dto product : productList) {
-            if (product.getInventoryStatus() == InventoryStatus.NOT_SCANNED) {
-                scannedCount++;
-            }
-        }
-        return scannedCount;
-    }
 }
