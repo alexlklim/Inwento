@@ -6,9 +6,11 @@ import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Inventory;
 import com.alex.inwento.dto.AuthDto;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonMng {
@@ -54,10 +56,25 @@ public class JsonMng {
         return null;
     }
 
-    public static List<Event> parseJsonToEvents(String json) {
+    public static List<Event> parseJsonToEvents(String json) throws JSONException {
+        List<Event> events = new ArrayList<>();
+        JSONArray jsonArray = new JSONArray(json);
 
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            Event event = new Event();
+            event.setId(jsonObject.getInt("id"));
+            event.setBranch(jsonObject.getString("branch"));
+            event.setUsername(jsonObject.getString("username"));
+            event.setEmail(jsonObject.getString("email"));
+            event.setUnknownProductAmount(jsonObject.isNull("unknown_products") ? 0 : jsonObject.getInt("unknown_product_amount"));
+            event.setTotalProductAmount(jsonObject.getInt("total_product_amount"));
+            event.setScannedProductAmount(jsonObject.getInt("scanned_product_amount"));
+            events.add(event);
+        }
 
-        return null;
+        return events;
+
     }
 
 

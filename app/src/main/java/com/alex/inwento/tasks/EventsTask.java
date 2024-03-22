@@ -7,6 +7,8 @@ import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +57,7 @@ public class EventsTask extends AsyncTask<Void, Void, List<Event>> {
                     response.append(line);
                 }
 
+                System.out.println(response.toString());
                 inputStream.close();
 
                 return JsonMng.parseJsonToEvents(String.valueOf(response));
@@ -62,6 +65,8 @@ public class EventsTask extends AsyncTask<Void, Void, List<Event>> {
                 Log.e(TAG, "Error response code: " + responseCode);
             }
         } catch (IOException e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+        } catch (JSONException e) {
             Log.e(TAG, "Error: " + e.getMessage());
         } finally {
             if (urlConnection != null) {
@@ -74,7 +79,7 @@ public class EventsTask extends AsyncTask<Void, Void, List<Event>> {
 
     @Override
     protected void onPostExecute(List<Event> events) {
-        if (events != null && !events.isEmpty()) {
+        if (!events.isEmpty()) {
             listener.onEventsSuccess(events);
         } else {
             listener.onEventsFailure("No events found.");

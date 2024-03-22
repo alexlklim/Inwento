@@ -9,6 +9,9 @@ public class Event {
     private int totalProductAmount;
     private int scannedProductAmount;
 
+    public Event() {
+    }
+
     public Event(int id, String branch, String username, String email, int unknownProducts, int totalAmountProducts, int scannedProducts) {
         this.id = id;
         this.branch = branch;
