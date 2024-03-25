@@ -37,10 +37,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
 
         holder.branch.setText(event.getBranch());
         holder.username.setText("by " + event.getUsername());
-        holder.products.setText(event.getScannedProductAmount() + " / " + event.getTotalProductAmount());
-        holder.unknown.setText("unknown " + event.getUnknownProductAmount());
+        holder.products.setText(event.getScannedProductsAmount() + " / " + event.getTotalProductsAmount());
+        holder.unknown.setText("unknown " + event.getUnknownProductsAmount());
 
-        if (event.getScannedProductAmount() == event.getTotalProductAmount()) {
+        if (event.getScannedProductsAmount() == event.getTotalProductsAmount()) {
             holder.event_status.setImageResource(R.drawable.ic_done);
         } else {
             holder.event_status.setImageResource(R.drawable.ic_in_process);

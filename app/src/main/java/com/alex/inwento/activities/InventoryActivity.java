@@ -28,7 +28,9 @@ public class InventoryActivity extends AppCompatActivity
     private static final String TAG = "InventoryActivity";
 
     SettingsMng settingsMng;
+    RecyclerView recyclerView;
 
+    EventAdapter eventAdapter;
     int inventoryId;
 
     @Override
@@ -74,21 +76,14 @@ public class InventoryActivity extends AppCompatActivity
     @Override
     public void onEventsSuccess(List<Event> events) {
         Log.i(TAG, "onEventsSuccess: + " + events.toString());
-
-
         initializeRecyclerView(events);
     }
 
     @Override
     public void onEventsFailure(String errorMessage) {
         Log.i(TAG, "onEventsFailure: + " + errorMessage);
-
     }
 
-
-    RecyclerView recyclerView;
-
-    EventAdapter eventAdapter;
 
     private void initializeRecyclerView(List<Event> events) {
         recyclerView = findViewById(R.id.rv_events);

@@ -1,25 +1,32 @@
 package com.alex.inwento.database.domain;
 
+import java.util.List;
+
 public class Event {
     private int id;
     private String branch;
     private String username;
     private String email;
-    private int unknownProductAmount;
-    private int totalProductAmount;
-    private int scannedProductAmount;
+    private int unknown_products_amount;
+    private int total_product_amount;
+    private int scanned_product_amount;
+
+    private List<UnknownProduct> unknown_products;
+    private List<Product> products;
 
     public Event() {
     }
 
-    public Event(int id, String branch, String username, String email, int unknownProducts, int totalAmountProducts, int scannedProducts) {
+    public Event(int id, String branch, String username, String email, int unknownProductAmount, int totalProductAmount, int scannedProductAmount, List<UnknownProduct> unknownProducts, List<Product> products) {
         this.id = id;
         this.branch = branch;
         this.username = username;
         this.email = email;
-        this.unknownProductAmount = unknownProducts;
-        this.totalProductAmount = totalAmountProducts;
-        this.scannedProductAmount = scannedProducts;
+        this.unknown_products_amount = unknownProductAmount;
+        this.total_product_amount = totalProductAmount;
+        this.scanned_product_amount = scannedProductAmount;
+        this.unknown_products = unknownProducts;
+        this.products = products;
     }
 
     public int getId() {
@@ -54,27 +61,59 @@ public class Event {
         this.email = email;
     }
 
-    public int getUnknownProductAmount() {
-        return unknownProductAmount;
+    public int getUnknownProductsAmount() {
+        return unknown_products_amount;
     }
 
-    public void setUnknownProductAmount(int unknownProductAmount) {
-        this.unknownProductAmount = unknownProductAmount;
+    public void setUnknownProductsAmount(int unknown_products_amount) {
+        this.unknown_products_amount = unknown_products_amount;
     }
 
-    public int getTotalProductAmount() {
-        return totalProductAmount;
+    public int getTotalProductsAmount() {
+        return total_product_amount;
     }
 
-    public void setTotalProductAmount(int totalProductAmount) {
-        this.totalProductAmount = totalProductAmount;
+    public void setTotalProductsAmount(int total_product_amount) {
+        this.total_product_amount = total_product_amount;
     }
 
-    public int getScannedProductAmount() {
-        return scannedProductAmount;
+    public int getScannedProductsAmount() {
+        return scanned_product_amount;
     }
 
-    public void setScannedProductAmount(int scannedProductAmount) {
-        this.scannedProductAmount = scannedProductAmount;
+    public void setScannedProductsAmount(int scanned_product_amount) {
+        this.scanned_product_amount = scanned_product_amount;
+    }
+
+    public List<UnknownProduct> getUnknownProducts() {
+        return unknown_products;
+    }
+
+    public void setUnknownProducts(List<UnknownProduct> unknown_products) {
+        this.unknown_products = unknown_products;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", branch='" + branch + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", unknown_products_amount=" + unknown_products_amount +
+                ", total_product_amount=" + total_product_amount +
+                ", scanned_product_amount=" + scanned_product_amount +
+                ", unknown_products=" + unknown_products +
+                ", products=" + products +
+                '}';
     }
 }

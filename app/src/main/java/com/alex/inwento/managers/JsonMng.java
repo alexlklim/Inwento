@@ -5,6 +5,8 @@ import android.util.Log;
 import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Inventory;
 import com.alex.inwento.dto.AuthDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,15 +69,21 @@ public class JsonMng {
             event.setBranch(jsonObject.getString("branch"));
             event.setUsername(jsonObject.getString("username"));
             event.setEmail(jsonObject.getString("email"));
-            event.setUnknownProductAmount(jsonObject.isNull("unknown_products") ? 0 : jsonObject.getInt("unknown_product_amount"));
-            event.setTotalProductAmount(jsonObject.getInt("total_product_amount"));
-            event.setScannedProductAmount(jsonObject.getInt("scanned_product_amount"));
+            event.setUnknownProductsAmount(jsonObject.isNull("unknown_products") ? 0 : jsonObject.getInt("unknown_product_amount"));
+            event.setTotalProductsAmount(jsonObject.getInt("total_product_amount"));
+            event.setScannedProductsAmount(jsonObject.getInt("scanned_product_amount"));
             events.add(event);
         }
 
         return events;
 
     }
+
+    public static Event parseJsonToEventAndProducts(String jsonResponse) {
+        Gson gson = new Gson();
+        return gson.fromJson(jsonResponse, Event.class);
+    }
+
 
 
 }
