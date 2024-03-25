@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.alex.inwento"
-        minSdk = 31
+        minSdk = 29
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -39,7 +39,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // for json data binding
     implementation ("com.google.code.gson:gson:2.8.8")
 
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.13.1")
+    // for scaning
+    compileOnly("com.symbol:emdk:+")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+
+
 }

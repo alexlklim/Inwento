@@ -38,7 +38,7 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
         UnknownProduct unknownProduct = unknownProductList.get(position);
 
         holder.id.setText(String.valueOf(unknownProduct.getId()));
-        holder.code.setText("Code: " + unknownProduct.getCode());
+        holder.code.setText(unknownProduct.getCode());
         // set date
         holder.date.setText(DateMng.convertDateToString(LocalDate.now()));
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemUnknownProductClick(unknownProduct.getId()));
