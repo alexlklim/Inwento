@@ -13,7 +13,6 @@ import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.dto.ProductV3Dto;
-import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductHistoryRepo;
 import com.alex.asset.product.repo.ProductRepo;
@@ -23,14 +22,14 @@ import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -139,9 +138,6 @@ public class ProductService {
         addHistoryToProduct(userId, product.getId(), Activity.VISIBILITY);
 
     }
-
-
-
 
 
     @SneakyThrows
