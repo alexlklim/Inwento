@@ -3,6 +3,7 @@ package com.alex.asset.product.controller;
 
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ProductHistoryDto;
+import com.alex.asset.product.dto.ProductV3Dto;
 import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
@@ -63,6 +64,18 @@ public class ProductController {
         );
     }
 
+    @Operation(summary = "Get short product by id (for android app")
+    @GetMapping("/app/{id}")
+    public ResponseEntity<ProductV3Dto> getShortProductById(
+            @PathVariable("id") Long id) {
+        log.info(TAG + "Try to get product by id {}", id);
+        return new ResponseEntity<>(
+                productService.getShortProductById(id),
+                HttpStatus.OK
+        );
+    }
+
+
     @Operation(summary = "Add new product")
     @PostMapping
     public ResponseEntity<ProductDto> addNewProduct(
@@ -77,17 +90,18 @@ public class ProductController {
         );
     }
 
-    @Operation(summary = "Update Product")
+    @Operation(summary = "Update product by id and its new active status")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateProduct(
-            @RequestBody ProductDto productDto) {
-        log.info(TAG + "get all products for company");
-        productService.update(
-                productDto,
-                SecHolder.getUserId()
+    public ResponseEntity<?> updateProduct(
+            @RequestBody Map<String, Object> updates) {
+        log.info(TAG + "Update product");
+        productService.updateProduct(
+                SecHolder.getUserId(),
+                updates
         );
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @Operation(summary = "Update visibility fo product by id and its new active status")
     @Secured("ROLE_ADMIN")
@@ -103,27 +117,15 @@ public class ProductController {
     }
 
 
-    @Operation(summary = "Get short products by title")
-    @GetMapping("/filter/{title}")
-    public ResponseEntity<Map<Long, String>> getProductsByTitle(
-            @PathVariable("title") String title) {
-        log.info(TAG + "Try to get all products by title {}", title);
+    @Operation(summary = "Get short products by title or bar code")
+    @GetMapping("/filter/{key_word}")
+    public ResponseEntity<Map<Long, String>> getProductsByTitleOrBarCode(
+            @PathVariable("key_word") String keyWord) {
+        log.info(TAG + "Try to get all products by key word {}", keyWord);
         return new ResponseEntity<>(
-                productService.getByTitle(title),
+                productService.getByTitleOrBarCode(keyWord),
                 HttpStatus.OK
         );
-    }
-
-    @Operation(summary = "Scrap product (use isScrap to make product scrap or not)")
-    @PutMapping("/scrap")
-    public ResponseEntity<HttpStatus> scrapProduct(
-            @RequestBody ScrapDto scrapDto) {
-        log.info(TAG + "Scrap product");
-        productService.scraping(
-                scrapDto,
-                SecHolder.getUserId()
-        );
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

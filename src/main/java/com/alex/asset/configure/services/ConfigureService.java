@@ -122,6 +122,7 @@ public class ConfigureService {
         return mpkRepo.save(new MPK(dto.getName()));
     }
 
+    @SneakyThrows
     public void updateMPK(DtoActive dto, Long userId) {
         log.info(TAG + "Update MPK {}", dto.getId());
         MPK mpk = mpkRepo.findById(dto.getId()).orElseThrow(
@@ -132,25 +133,40 @@ public class ConfigureService {
     }
 
 
+    @SneakyThrows
     public AssetStatus getAssetStatusById(Long id) {
-        return assetStatusRepo.get(id);
+        return assetStatusRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Asset status with id " + id + " not found")
+        );
     }
 
+    @SneakyThrows
     public Unit getUnitById(Long id) {
-        return unitRepo.get(id);
+        return unitRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Unit with id " + id + " not found")
+        );
     }
 
+    @SneakyThrows
     public KST getKSTById(Long id) {
-        return kstRepo.get(id);
+        return kstRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("KST with id " + id + " not found")
+        );
     }
 
+    @SneakyThrows
     public MPK getMPKById(Long id) {
-        return mpkRepo.get(id);
+        return mpkRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("MPK with id " + id + " not found")
+        );
     }
 
 
+    @SneakyThrows
     public Branch getBranchById(Long id) {
-        return branchRepo.get(id);
+        return branchRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Branch with id " + id + " not found")
+        );
     }
 
 }

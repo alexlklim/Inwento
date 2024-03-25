@@ -27,9 +27,9 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     @Query("SELECT p " +
             "FROM Product p " +
-            "WHERE p.title LIKE :prefix%")
-    List<Product> getByTitle(@Param("prefix") String prefix);
-
+            "WHERE LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
+            "LOWER(p.barCode) LIKE CONCAT('%', LOWER(:prefix), '%')")
+    List<Product> getByTitleOrBarCode(@Param("prefix") String prefix);
 
     @Query("SELECT p " +
             "FROM Product p " +

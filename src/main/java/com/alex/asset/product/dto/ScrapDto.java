@@ -23,6 +23,7 @@ public class ScrapDto {
 
     @Schema(description = "Product id", example = "10")
     Long id; //product id
+
     @Schema(description = "Is scrap", example = "true")
     boolean isScrap;
 
