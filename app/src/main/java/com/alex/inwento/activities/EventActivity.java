@@ -3,6 +3,7 @@ package com.alex.inwento.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.ProductAdapter;
+import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Product;
 import com.alex.inwento.managers.SettingsMng;
@@ -22,21 +24,24 @@ import java.util.List;
 
 public class EventActivity extends AppCompatActivity
         implements ProductsTask.ProductsListener,
-        ProductAdapter.OnItemProductClickListener {
+        ProductAdapter.OnItemProductClickListener,
+        UnknownProductAdapter.OnItemUnknownProductClickListener {
     private static final String TAG = "EventActivity";
 
     ImageButton btnSynch;
     Button btnShowAll, btnShowScanned, btnShowNotScanned, btnShowUnknown;
-    RecyclerView recyclerView;
+    RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
 
     SettingsMng settingsMng;
 
+    UnknownProductAdapter unknownProductAdapter;
     ProductAdapter productAdapter;
     Event event;
     int eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         settingsMng = new SettingsMng(this);
@@ -52,35 +57,29 @@ public class EventActivity extends AppCompatActivity
     }
 
     private void setOnClickListenersToBtn() {
+        Log.i(TAG, "setOnClickListenersToBtn: ");
         btnShowAll.setOnClickListener(view -> {
-            setGreenColorToBtn(btnShowAll);
-            setGrayColorToBtn(btnShowScanned, btnShowNotScanned, btnShowUnknown);
+            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
             initializeRecyclerView(event.getProducts());
 
         });
         btnShowScanned.setOnClickListener(view -> {
-            setGreenColorToBtn(btnShowScanned);
-            setGrayColorToBtn(btnShowAll, btnShowNotScanned, btnShowUnknown);
+            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
             initializeRecyclerView(filterProductsByStatus(event.getProducts(), "SCANNED"));
-
         });
 
         btnShowNotScanned.setOnClickListener(view -> {
-            setGreenColorToBtn(btnShowNotScanned);
-            setGrayColorToBtn(btnShowScanned, btnShowAll, btnShowUnknown);
+            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
             initializeRecyclerView(filterProductsByStatus(event.getProducts(), "NOT_SCANNED"));
-
         });
         btnShowUnknown.setOnClickListener(view -> {
-            setGreenColorToBtn(btnShowUnknown);
-            setGrayColorToBtn(btnShowScanned, btnShowNotScanned, btnShowAll);
-
+            setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
         });
     }
 
     private void initializeButtons() {
+        Log.i(TAG, "initializeButtons: ");
         btnShowAll = findViewById(R.id.ev_show_all);
-        setGreenColorToBtn(btnShowAll);
         btnShowScanned = findViewById(R.id.ev_show_scanned);
         btnShowNotScanned = findViewById(R.id.ev_show_not_scanned);
         btnShowUnknown = findViewById(R.id.ev_show_unknown);
@@ -88,23 +87,26 @@ public class EventActivity extends AppCompatActivity
 
     }
 
-    private void setGreenColorToBtn(Button button) {
-        button.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
-    }
-
-    private void setGrayColorToBtn(Button... buttons) {
-        for (Button button : buttons) {
-            button.setBackgroundColor(getResources().getColor(R.color.gray));
-        }
-    }
-
 
     private void initializeRecyclerView(List<Product> products) {
-        recyclerView = findViewById(R.id.rv_products);
+        Log.i(TAG, "initializeRecyclerView: + " + products.size());
+
+// Initialize RecyclerView for products
+        recyclerViewProduct = findViewById(R.id.rv_products);
         productAdapter = new ProductAdapter(products, this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(productAdapter);
+        LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
+        recyclerViewProduct.setLayoutManager(productLayoutManager);
+        recyclerViewProduct.setAdapter(productAdapter);
+
+// Initialize RecyclerView for unknown products
+        recyclerViewUnknownProduct = findViewById(R.id.rv_unknown_products);
+        unknownProductAdapter = new UnknownProductAdapter(event.getUnknownProducts(), this);
+        LinearLayoutManager unknownProductLayoutManager = new LinearLayoutManager(this);
+        recyclerViewUnknownProduct.setLayoutManager(unknownProductLayoutManager);
+        recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
+
+        setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+
     }
 
 
@@ -123,7 +125,7 @@ public class EventActivity extends AppCompatActivity
 
     @Override
     public void onItemProductClick(int orderId) {
-        Log.e(TAG, "onItemClick: + " + orderId);
+        Log.e(TAG, "onItemProductClick: + " + orderId);
         Intent intent = new Intent(this, ProductActivity.class);
         intent.putExtra("PRODUCT_ID", orderId);
         startActivity(intent);
@@ -131,6 +133,7 @@ public class EventActivity extends AppCompatActivity
     }
 
     private List<Product> filterProductsByStatus(List<Product> products, String status) {
+        Log.e(TAG, "filterProductsByStatus: + " + status);
         List<Product> filteredProducts = new ArrayList<>();
         for (Product product : products) {
             if (status.equals(product.getInventoryStatus())) {
@@ -138,5 +141,15 @@ public class EventActivity extends AppCompatActivity
             }
         }
         return filteredProducts;
+    }
+
+    @Override
+    public void onItemUnknownProductClick(int orderId) {
+        Log.e(TAG, "onItemUnknownProductClick: + " + orderId);
+    }
+
+    public void setVisibilityToRecyclers(RecyclerView visibleRV, RecyclerView invisibleRV) {
+        visibleRV.setVisibility(View.VISIBLE);
+        invisibleRV.setVisibility(View.INVISIBLE);
     }
 }

@@ -5,7 +5,6 @@ import android.util.Log;
 import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Inventory;
 import com.alex.inwento.dto.AuthDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;

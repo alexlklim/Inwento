@@ -1,8 +1,10 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal()
+        jcenter()
+        maven(url = "https://jitpack.io")
     }
 }
 dependencyResolutionManagement {
@@ -10,9 +12,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter()
+        maven(url = "https://jitpack.io")
     }
 }
 
-rootProject.name = "Inwento"
+rootProject.name = "EcoScan"
 include(":app")
  
