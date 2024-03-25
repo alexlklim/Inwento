@@ -4,7 +4,6 @@ package com.alex.asset.product.controller;
 import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.dto.ProductV3Dto;
-import com.alex.asset.product.dto.ScrapDto;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;

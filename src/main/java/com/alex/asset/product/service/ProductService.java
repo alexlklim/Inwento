@@ -23,7 +23,6 @@ import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.stereotype.Service;
@@ -49,6 +48,7 @@ public class ProductService {
     private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
     private final ConfigureService configureService;
+    private final TypeService typeService;
 
 
     public List<ProductDto> getAll() {
@@ -140,21 +140,6 @@ public class ProductService {
 
     }
 
-    @SneakyThrows
-    public void scraping(ScrapDto dto, Long userId) {
-        log.info(TAG + "Scrap product with id {} by user with id {}", dto.getId(), userId);
-        Product product = productRepo.findById(dto.getId())
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found")
-                );
-        product.setScrapping(dto.isScrap());
-        product.setScrappingReason(dto.getScrappingReason());
-        product.setScrappingDate(dto.getScrappingDate());
-        product.setActive(!dto.isScrap());
-        productRepo.save(product);
-        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
-        addHistoryToProduct(userId, product.getId(), Activity.SCRAPPING);
-    }
 
 
 
@@ -185,29 +170,10 @@ public class ProductService {
     }
 
 
-    private String[] getNullPropertyNames(ProductDto source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for (java.beans.PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null) emptyNames.add(pd.getName());
-        }
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
-    }
-
-
-
-
-    private final TypeService typeService;
-
     @SneakyThrows
     public void updateProduct(Long userId, Map<String, Object> updates) {
         log.info(TAG + "Update product by user with id {}", userId);
         Long productId = ((Number) updates.getOrDefault("id", null)).longValue();
-        if (productId == null) throw new ResourceNotFoundException("Product with this id not found");
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found"));
         updates.forEach((key, value) -> {
