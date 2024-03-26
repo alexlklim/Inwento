@@ -1,18 +1,20 @@
 package com.alex.inwento.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.location.Location;
-import android.Manifest;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -25,6 +27,7 @@ import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Product;
 import com.alex.inwento.database.domain.UnknownProduct;
+import com.alex.inwento.dialog.ProductScannedDialog;
 import com.alex.inwento.managers.SettingsMng;
 import com.alex.inwento.tasks.ProductsTask;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,6 +54,8 @@ public class EventActivity extends AppCompatActivity
     ProductAdapter productAdapter;
     Event event;
     int eventId;
+
+    TextView ev_branch_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,20 +88,28 @@ public class EventActivity extends AppCompatActivity
         Log.i(TAG, "setOnClickListenersToBtn: ");
         btnShowAll.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+            setGreenColorToBtn(btnShowAll);
+            setGrayColorToBtn(btnShowScanned, btnShowNotScanned, btnShowUnknown);
             initializeRecyclerView(event.getProducts());
 
         });
         btnShowScanned.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+            setGreenColorToBtn(btnShowScanned);
+            setGrayColorToBtn(btnShowAll, btnShowNotScanned, btnShowUnknown);
             initializeRecyclerView(filterProductsByStatus(event.getProducts(), "SCANNED"));
         });
 
         btnShowNotScanned.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+            setGreenColorToBtn(btnShowNotScanned);
+            setGrayColorToBtn(btnShowScanned, btnShowAll, btnShowUnknown);
             initializeRecyclerView(filterProductsByStatus(event.getProducts(), "NOT_SCANNED"));
         });
         btnShowUnknown.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
+            setGreenColorToBtn(btnShowUnknown);
+            setGrayColorToBtn(btnShowScanned, btnShowNotScanned, btnShowAll);
         });
     }
 
@@ -107,28 +120,44 @@ public class EventActivity extends AppCompatActivity
         btnShowNotScanned = findViewById(R.id.ev_show_not_scanned);
         btnShowUnknown = findViewById(R.id.ev_show_unknown);
         btnSynch = findViewById(R.id.ev_synch);
-
+        ev_branch_name = findViewById(R.id.ev_branch_name);
     }
 
+    private void setGreenColorToBtn(Button button) {
+        button.setBackgroundTintList(ColorStateList.valueOf(Color.DKGRAY));
+    }
+
+    private void setGrayColorToBtn(Button... buttons) {
+        for (Button button : buttons) {
+            button.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+        }
+    }
 
     private void initializeRecyclerView(List<Product> products) {
         Log.i(TAG, "initializeRecyclerView: + " + products.size());
 
-// Initialize RecyclerView for products
+        ev_branch_name.setText(event.getBranch());
+        btnShowAll.setText("all (" + event.getTotalProductsAmount() + ")");
+        btnShowScanned.setText("ok (" + event.getScannedProductsAmount() + ")");
+        btnShowNotScanned.setText("to scan (" + (event.getTotalProductsAmount()- event.getScannedProductsAmount()) + ")");
+
+        // Initialize RecyclerView for products
         recyclerViewProduct = findViewById(R.id.rv_products);
         productAdapter = new ProductAdapter(products, this);
         LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
         recyclerViewProduct.setLayoutManager(productLayoutManager);
         recyclerViewProduct.setAdapter(productAdapter);
 
-// Initialize RecyclerView for unknown products
+        // Initialize RecyclerView for unknown products
         recyclerViewUnknownProduct = findViewById(R.id.rv_unknown_products);
         unknownProductAdapter = new UnknownProductAdapter(event.getUnknownProducts(), this);
         LinearLayoutManager unknownProductLayoutManager = new LinearLayoutManager(this);
         recyclerViewUnknownProduct.setLayoutManager(unknownProductLayoutManager);
-        recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
+                    recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
 
         setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+
+
 
     }
 
@@ -137,6 +166,7 @@ public class EventActivity extends AppCompatActivity
     public void onProductsSuccess(Event eventWithProducts) {
         Log.i(TAG, "onProductsSuccess: + " + eventWithProducts.toString());
         event = eventWithProducts;
+
         initializeRecyclerView(event.getProducts());
     }
 
@@ -177,7 +207,6 @@ public class EventActivity extends AppCompatActivity
     }
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-        // get events (codes)
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "BroadcastReceiver");
@@ -192,6 +221,7 @@ public class EventActivity extends AppCompatActivity
             }
         }
     };
+
     private void getLastLocation() {
         Log.i(TAG, "getLastLocation");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -199,9 +229,14 @@ public class EventActivity extends AppCompatActivity
                 != PackageManager.PERMISSION_GRANTED) {
             int FINE_PERMISSION_CODE = 1;
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
-            return;}
+            return;
+        }
         Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(location -> {if (location != null) {currentLocation = location;}});
+        task.addOnSuccessListener(location -> {
+            if (location != null) {
+                currentLocation = location;
+            }
+        });
     }
 
     private void handleScanResult(Intent initiatingIntent) {
@@ -223,18 +258,17 @@ public class EventActivity extends AppCompatActivity
     private void handleCode(String code) {
         boolean found = false;
         for (Product product : event.getProducts()) {
-            if (product.getBarCode().equalsIgnoreCase(code)) {
-                product.setInventoryStatus("SCANNED");
-                found = true;
-                break;
-            }
+            ProductScannedDialog dialog = ProductScannedDialog.newInstance(code);
+            dialog.show(getSupportFragmentManager(), "product_scanned_dialog");
+//            if (product.getBarCode().equalsIgnoreCase(code)) {
+//                product.setInventoryStatus("SCANNED");
+//                found = true;
+//                break;
+//            }
         }
         if (!found) event.getUnknownProducts().add(new UnknownProduct(0, code));
-
         initializeRecyclerView(event.getProducts());
-
     }
-
 
     @Override
     protected void onDestroy() {

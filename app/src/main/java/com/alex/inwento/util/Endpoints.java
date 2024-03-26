@@ -2,7 +2,8 @@ package com.alex.inwento.util;
 
 public class Endpoints {
 
-    private static final String SERVER = "http://10.30.0.66:9091/api";
+    private static final String SERVER_CSMM = "http://10.30.0.66:9091/api";
+    private static final String SERVER = "http://10.1.2.66:9091/api";
 
     public static final String LOGIN = SERVER + "/v1/auth/login";
     public static final String REFRESH_TOKEN = SERVER + "/v1/auth/refresh";

@@ -91,4 +91,19 @@ public class Inventory {
     public void setScannedProductAmount(int scannedProductAmount) {
         this.scannedProductAmount = scannedProductAmount;
     }
+
+
+    @Override
+    public String toString() {
+        return "Inventory{" +
+                "id=" + id +
+                ", startDate='" + startDate + '\'' +
+                ", finishDate='" + finishDate + '\'' +
+                ", info='" + info + '\'' +
+                ", isFinished=" + isFinished +
+                ", unknownProductAmount=" + unknownProductAmount +
+                ", totalProductAmount=" + totalProductAmount +
+                ", scannedProductAmount=" + scannedProductAmount +
+                '}';
+    }
 }

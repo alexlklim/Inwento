@@ -36,13 +36,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
 
         holder.title.setText(product.getTitle());
         holder.code.setText("code: " + product.getBarCode());
-        if (product.getInventoryStatus().equalsIgnoreCase("SCANNED")){
-            holder.status.setText("OK");
+        if (product.getInventoryStatus().equalsIgnoreCase("SCANNED")) holder.status.setText("OK");
+         else holder.status.setText("W TOKU");
 
-        } else {
-            holder.status.setText("W TOKU");
 
-        }
 
 
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemProductClick(product.getId()));

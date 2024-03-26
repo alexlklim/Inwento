@@ -3,6 +3,7 @@ package com.alex.inwento.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +32,7 @@ public class InventoryActivity extends AppCompatActivity
     RecyclerView recyclerView;
 
     EventAdapter eventAdapter;
+    TextView tvStartData, tvProductAmount;
     int inventoryId;
 
     @Override
@@ -39,6 +41,8 @@ public class InventoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
         settingsMng = new SettingsMng(this);
+        tvStartData = findViewById(R.id.ai_start_data);
+        tvProductAmount = findViewById(R.id.ai_product_amount);
 
         // check if inventory is active now
         CheckInventoryActiveTask checkInventoryActiveTask = new CheckInventoryActiveTask(this, settingsMng.getAccessToken());
@@ -62,7 +66,9 @@ public class InventoryActivity extends AppCompatActivity
     @Override
     public void onInventorySuccess(Inventory inventory) {
         Log.i(TAG, "onInventorySuccess: + " + inventory.getId());
-
+        System.out.println(inventory.toString());
+        tvStartData.setText("Data: " + inventory.getStartDate());
+        tvProductAmount.setText("Produkty " + inventory.getScannedProductAmount() + " / " + inventory.getTotalProductAmount());
         EventsTask eventsTask = new EventsTask(this, settingsMng.getAccessToken(), inventory.getId());
         eventsTask.execute();
     }

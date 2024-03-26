@@ -10,7 +10,6 @@
         <item name="android:background">@drawable/btn_rounded</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:gravity">center</item>
-        <item name="backgroundColor">@color/green</item>
     </style>
 
     <style name="Theme.Inwento" parent="Base.Theme.Inwento" />

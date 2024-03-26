@@ -46,9 +46,10 @@ public class JsonMng {
                     jsonResponse.getString("finish_date"),
                     jsonResponse.getString("info"),
                     false,
-                    10,
-                    10,
-                    10
+                    jsonResponse.getInt("unknown_product_amount"),
+                    jsonResponse.getInt("total_product_amount"),
+                    jsonResponse.getInt("scanned_product_amount")
+
             );
 
         } catch (JSONException e) {
