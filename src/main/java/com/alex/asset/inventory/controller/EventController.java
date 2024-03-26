@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,64 +29,62 @@ public class EventController {
 
     @Operation(summary = "Get events for specific user for specific invent")
     @GetMapping("/invent/{id}")
-    public ResponseEntity<List<EventV2Get>> getEventsForSpecificUser(
+    @ResponseStatus(HttpStatus.OK)
+    public List<EventV2Get> getEventsForSpecificUser(
             @PathVariable("id") Long inventId) {
         log.info(TAG + "Get all events for specific user for specific invent");
-        return new ResponseEntity<>(
-                eventService.getEventsForSpecificUserAndInvent(SecHolder.getUserId(), inventId),
-                HttpStatus.OK);
+        return eventService.getEventsForSpecificUserAndInvent(SecHolder.getUserId(), inventId);
     }
 
     @Operation(summary = "Get all events for specific invent")
     @Secured("ROLE_ADMIN")
     @GetMapping("/invent/{id}/all")
-    public ResponseEntity<List<EventV2Get>> getAllEventsForSpecificInvent(
+    @ResponseStatus(HttpStatus.OK)
+    public List<EventV2Get> getAllEventsForSpecificInvent(
             @PathVariable("id") Long inventId) {
         log.info(TAG + "Get all events for specific user for specific invent");
-        return new ResponseEntity<>(
-                eventService.getAllEventsForSpecificInvent(inventId),
-                HttpStatus.OK);
+        return eventService.getAllEventsForSpecificInvent(inventId);
     }
 
     @Operation(summary = "Get event by id")
     @GetMapping("/{id}")
-    public ResponseEntity<EventV2Get> getEventById(
+    @ResponseStatus(HttpStatus.OK)
+    public EventV2Get getEventById(
             @PathVariable("id") Long eventId) {
         log.info(TAG + "Get event by id");
-        return new ResponseEntity<>(
-                eventService.getEvent(eventId),
-                HttpStatus.OK);
+        return eventService.getEvent(eventId);
     }
 
 
     @Operation(summary = "Create event for current invent")
     @PostMapping
-    public ResponseEntity<EventV2Get> create(
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventV2Get create(
             @RequestBody EventV1Create eventV1CreateDto) {
         log.info(TAG + "Create new event for current invent");
-        return new ResponseEntity<>(
-                eventService.createEvent(
-                        SecHolder.getUserId(),
-                        eventV1CreateDto),
-                HttpStatus.CREATED);
+        return eventService.createEvent(
+                SecHolder.getUserId(),
+                eventV1CreateDto
+        );
     }
 
 
     @Operation(summary = "Update visibility of event")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> updateVisibility(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateVisibility(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Update visibility of event");
         eventService.updateVisibility(
                 SecHolder.getUserId(),
                 dtoActive);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Add products to event")
     @PutMapping("/{id}/products/bar-code")
-    public ResponseEntity<HttpStatus> addProductsToEvent(
+    @ResponseStatus(HttpStatus.OK)
+    public void addProductsToEvent(
             @PathVariable("id") Long eventId,
             @RequestBody List<String> listOfBarCodes) {
         log.info(TAG + "Add product which exists in fact");
@@ -95,9 +92,7 @@ public class EventController {
                 SecHolder.getUserId(),
                 eventId,
                 listOfBarCodes);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 
 }

@@ -5,7 +5,7 @@ import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
-import com.alex.asset.product.dto.ProductDto;
+import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.dto.ProductV2Dto;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class ProductMapper {
     private final TypeService typeService;
 
 
-    public ProductDto toDto(Product product) {
-        ProductDto dto = new ProductDto();
+    public ProductV1Dto toDto(Product product) {
+        ProductV1Dto dto = new ProductV1Dto();
         dto.setId(product.getId());
         dto.setActive(product.isActive());
         dto.setTitle(product.getTitle());
@@ -54,7 +54,7 @@ public class ProductMapper {
     }
 
 
-    public Product toEntity(ProductDto dto) {
+    public Product toEntity(ProductV1Dto dto) {
         Product product = new Product();
         product.setActive(true);
         product.setTitle(dto.getTitle());
@@ -65,9 +65,7 @@ public class ProductMapper {
         product.setReceiver(dto.getReceiver());
         product.setProducer(dto.getProducer());
         product.setSupplier(dto.getSupplier());
-
         product.setScrapping(false);
-
         product.setKst(service.getKSTById(dto.getKstId()));
         product.setAssetStatus(service.getAssetStatusById(dto.getAssetStatusId()));
         product.setUnit(service.getUnitById(dto.getUnitId()));
@@ -103,6 +101,11 @@ public class ProductMapper {
         dto.setActivity(productHistory.getActivity());
         return dto;
     }
+
+
+
+
+
 
 
 }

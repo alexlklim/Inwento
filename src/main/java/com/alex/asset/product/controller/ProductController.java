@@ -1,8 +1,8 @@
 package com.alex.asset.product.controller;
 
 
-import com.alex.asset.product.dto.ProductDto;
 import com.alex.asset.product.dto.ProductHistoryDto;
+import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductV3Dto;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,113 +29,99 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "Get products (only active)")
+    @Operation(summary = "Get products(only active)")
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getActiveProducts() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductV1Dto> getActiveProducts() {
         log.info(TAG + "Try to get all active products");
-        return new ResponseEntity<>(
-                productService.getActive(),
-                HttpStatus.OK
-        );
+        return productService.getActive();
     }
 
     @Operation(summary = "Get all products (active and not)")
     @Secured("ROLE_ADMIN")
     @GetMapping("/all")
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductV1Dto> getAllProducts() {
         log.info(TAG + "Try to get all products");
-        return new ResponseEntity<>(
-                productService.getAll(),
-                HttpStatus.OK
-        );
+        return productService.getAll();
     }
 
 
     @Operation(summary = "Get product by id")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getById(
+    @ResponseStatus(HttpStatus.OK)
+    public ProductV1Dto getById(
             @PathVariable("id") Long id) {
         log.info(TAG + "Try to get product by id {}", id);
-        return new ResponseEntity<>(
-                productService.getById(id),
-                HttpStatus.OK
-        );
+        return productService.getById(id);
     }
 
     @Operation(summary = "Get short product by id (for android app")
     @GetMapping("/app/{id}")
-    public ResponseEntity<ProductV3Dto> getShortProductById(
+    @ResponseStatus(HttpStatus.OK)
+    public ProductV3Dto getShortProductById(
             @PathVariable("id") Long id) {
         log.info(TAG + "Try to get product by id {}", id);
-        return new ResponseEntity<>(
-                productService.getShortProductById(id),
-                HttpStatus.OK
-        );
+        return productService.getShortProductById(id);
     }
 
 
     @Operation(summary = "Add new product")
     @PostMapping
-    public ResponseEntity<ProductDto> addNewProduct(
-            @RequestBody ProductDto productDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductV1Dto addNewProduct(
+            @RequestBody ProductV1Dto productV1Dto) {
         log.info(TAG + "get all products for company");
-        return new ResponseEntity<>(
-                productService.create(
-                        productDto,
-                        SecHolder.getUserId()
-                ),
-                HttpStatus.OK
+        return productService.create(
+                productV1Dto,
+                SecHolder.getUserId()
         );
     }
 
     @Operation(summary = "Update product by id and its new active status")
     @PutMapping
-    public ResponseEntity<?> updateProduct(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateProduct(
             @RequestBody Map<String, Object> updates) {
         log.info(TAG + "Update product");
         productService.updateProduct(
                 SecHolder.getUserId(),
                 updates
         );
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Update visibility fo product by id and its new active status")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> updateVisibilityOfProduct(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateVisibilityOfProduct(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Update product visibility");
         productService.updateVisibility(
                 dtoActive,
                 SecHolder.getUserId()
         );
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Get short products by title or bar code")
     @GetMapping("/filter/{key_word}")
-    public ResponseEntity<Map<Long, String>> getProductsByTitleOrBarCode(
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Long, String> getProductsByTitleOrBarCode(
             @PathVariable("key_word") String keyWord) {
         log.info(TAG + "Try to get all products by key word {}", keyWord);
-        return new ResponseEntity<>(
-                productService.getByTitleOrBarCode(keyWord),
-                HttpStatus.OK
-        );
+        return productService.getByTitleOrBarCode(keyWord);
     }
 
 
     @Operation(summary = "Get product history by id")
     @GetMapping("/history/{id}")
-    public ResponseEntity<List<ProductHistoryDto>> getHistoryOfProductById(
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductHistoryDto> getHistoryOfProductById(
             @PathVariable("id") Long productId) {
         log.info(TAG + "Get history of product");
-        return new ResponseEntity<>(
-                productService.getHistoryOfProductById(productId),
-                HttpStatus.OK
-        );
+        return productService.getHistoryOfProductById(productId);
     }
 
 

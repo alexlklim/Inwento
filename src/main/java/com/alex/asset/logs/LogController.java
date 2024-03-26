@@ -30,23 +30,21 @@ public class LogController {
     @Operation(summary = "Get all logs")
     @Secured("ROLE_ADMIN")
     @GetMapping
-    public ResponseEntity<List<LogDto>> getAllLogs() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<LogDto> getAllLogs() {
         log.info(TAG + "Get all logs");
-        return new ResponseEntity<>(
-                logService.getAllLogs(),
-                HttpStatus.OK);
+        return logService.getAllLogs();
     }
 
 
     @Operation(summary = "Get all logs")
     @Secured("ROLE_ADMIN")
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<LogDto>> getLogsForSpecificUser(
+    @ResponseStatus(HttpStatus.OK)
+    public List<LogDto> getLogsForSpecificUser(
             @PathVariable("id") Long userId) {
         log.info(TAG + "Get logs for user with id {}", userId);
-        return new ResponseEntity<>(
-                logService.getLogsForSpecificUser(userId),
-                HttpStatus.OK);
+        return logService.getLogsForSpecificUser(userId);
     }
 
 

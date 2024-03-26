@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,22 +28,21 @@ public class UnitController {
 
     @Operation(summary = "get all units (active or not)")
     @GetMapping
-    public ResponseEntity<List<Unit>> getUnits() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<Unit> getUnits() {
         log.info(TAG + "Get all units");
-        return new ResponseEntity<>(
-                configureService.getAllUnits(),
-                HttpStatus.OK);
+        return configureService.getAllUnits();
     }
 
     @Operation(summary = "Update units, send id of unit and it's new status: active or not)")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateUnits(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUnits(
             @RequestBody List<DtoActive> dtoActiveList) {
         log.info(TAG + "Try to update units");
         configureService.updateUnits(
                 dtoActiveList,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

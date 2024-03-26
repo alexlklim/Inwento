@@ -29,23 +29,22 @@ public class AssetStatusController {
 
     @Operation(summary = "get asset statuses (active or not)")
     @GetMapping
-    public ResponseEntity<List<AssetStatus>> getAssetStatuses() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<AssetStatus> getAssetStatuses() {
         log.info(TAG + "Try to update asset statuses");
-        return new ResponseEntity<>(
-                configureService.getAllAssetStatuses(),
-                HttpStatus.OK);
+        return configureService.getAllAssetStatuses();
     }
 
 
     @Operation(summary = "update asset status, change their visibility by id")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateAssetStatuses(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateAssetStatuses(
             @RequestBody List<DtoActive> listActiveDto) {
         log.info(TAG + "Try to update asset statuses");
         configureService.updateAssetStatuses(
                 listActiveDto,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

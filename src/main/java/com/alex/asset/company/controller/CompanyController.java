@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,72 +28,67 @@ public class CompanyController {
 
     @Operation(summary = "Get info about company")
     @GetMapping
-    public ResponseEntity<CompanyDto> getInfo() {
-        return new ResponseEntity<>(
-                companyService.getInfoAboutCompany(),
-                HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CompanyDto getInfo() {
+        return companyService.getInfoAboutCompany();
     }
 
     @Operation(summary = "Update company info, only for ADMIN")
     @Secured("ROLE_ADMIN")
     @PutMapping
-    public ResponseEntity<CompanyDto> updateCompany(
+    @ResponseStatus(HttpStatus.OK)
+    public CompanyDto updateCompany(
             @RequestBody CompanyDto companyDto) {
         log.info(TAG + "try to update company ");
-        return new ResponseEntity<>(
-                companyService.updateCompany(companyDto, getUserId()),
-                HttpStatus.OK);
+        return companyService.updateCompany(companyDto, getUserId());
     }
 
     @Operation(summary = "Get all fields for product")
     @GetMapping("/all")
-    public ResponseEntity<DataDto> getAllFields() {
+    @ResponseStatus(HttpStatus.OK)
+    public DataDto getAllFields() {
         log.info(TAG + "Try to get all fields");
-        return new ResponseEntity<>(
-                companyService.getAllFields(),
-                HttpStatus.OK);
+        return companyService.getAllFields();
     }
 
 
     @Operation(summary = "Get label configuration")
     @GetMapping("/label")
-    public ResponseEntity<LabelDto> getLabelConfig() {
+    @ResponseStatus(HttpStatus.OK)
+    public LabelDto getLabelConfig() {
         log.info(TAG + "Get label configuration");
-        return new ResponseEntity<>(
-                companyService.getLabelConfig(),
-                HttpStatus.OK);
+        return companyService.getLabelConfig();
     }
 
     @Operation(summary = "Update label configuration")
     @Secured("ROLE_ADMIN")
     @PutMapping("/label")
-    public ResponseEntity<HttpStatus> updateLabelConfig(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateLabelConfig(
             @RequestBody LabelDto labelDto) {
         log.info(TAG + "Update label configuration");
         companyService.updateLabelConfig(getUserId(), labelDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Get email configuration")
     @Secured("ROLE_ADMIN")
     @GetMapping("/email")
-    public ResponseEntity<EmailDto> getEmailConfig() {
+    @ResponseStatus(HttpStatus.OK)
+    public EmailDto getEmailConfig() {
         log.info(TAG + "Get email configuration");
-        return new ResponseEntity<>(
-                companyService.getEmailConfig(),
-                HttpStatus.OK);
+        return companyService.getEmailConfig();
     }
 
 
     @Operation(summary = "Update email configuration")
     @Secured("ROLE_ADMIN")
     @PutMapping("/email")
-    public ResponseEntity<HttpStatus> updateEmailConfig(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateEmailConfig(
             @RequestBody EmailDto emailDto) {
         log.info(TAG + "Update email configuration");
         companyService.updateEmailConfig(getUserId(), emailDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,30 +28,32 @@ public class MpkController {
 
     @Operation(summary = "Get all active MPK")
     @GetMapping
-    public ResponseEntity<List<MPK>> getAllMPKs() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<MPK> getAllMPKs() {
         log.info(TAG + "Try to get all MPK");
-        return new ResponseEntity<>(
-                configureService.getMPKs(),
-                HttpStatus.OK);
+        return configureService.getMPKs();
     }
 
     @Operation(summary = "Add new MPK")
     @PostMapping
-    public ResponseEntity<MPK> addMPK(
+    @ResponseStatus(HttpStatus.CREATED)
+    public MPK addMPK(
             @RequestBody DtoName dtoName) {
         log.info(TAG + "Try to add MPK");
-        return new ResponseEntity<>(
-                configureService.addMPK(dtoName, SecHolder.getUserId()),
-                HttpStatus.OK);
+        return configureService.addMPK(
+                dtoName,
+                SecHolder.getUserId());
     }
 
     @Operation(summary = "Update MPK visibility by id")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateMPKs(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateMPKs(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to update MPK");
-        configureService.updateMPK(dtoActive, SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        configureService.updateMPK(
+                dtoActive,
+                SecHolder.getUserId());
     }
 
 }

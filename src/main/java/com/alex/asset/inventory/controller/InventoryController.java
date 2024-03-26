@@ -28,51 +28,49 @@ public class InventoryController {
     @Operation(summary = "Get invent by id")
     @Secured("ROLE_ADMIN")
     @GetMapping("/{id}")
-    public ResponseEntity<InventoryDto> getInventById(
+    @ResponseStatus(HttpStatus.OK)
+    public InventoryDto getInventById(
             @PathVariable("id") Long inventId) {
         log.info(TAG + "Get invent with id {}", inventId);
-        return new ResponseEntity<>(
-                inventoryService.getInventById(inventId),
-                HttpStatus.OK);
+        return inventoryService.getInventById(inventId);
     }
 
 
     @Operation(summary = "Check is invent now or not " +
             "(it will be used in android app (main page) to notify users that invent is started")
     @GetMapping("/active")
-    public ResponseEntity<Boolean> isInventActive() {
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean isInventActive() {
         log.info(TAG + "Check is inventory taking place now or not");
-        return new ResponseEntity<>(
-                inventoryService.isInventNow(),
-                HttpStatus.OK);
+        return inventoryService.isInventNow();
     }
 
     @Operation(summary = "get current active invent (it returns 404 if no active invent now")
     @GetMapping("/current")
-    public ResponseEntity<InventoryDto> getCurrentEvent() {
+    @ResponseStatus(HttpStatus.OK)
+    public InventoryDto getCurrentEvent() {
         log.info(TAG + "get current invent");
-        return new ResponseEntity<>(
-                inventoryService.getCurrentInvent(),
-                HttpStatus.OK);
+        return inventoryService.getCurrentInvent();
     }
 
 
     @Operation(summary = "Start new inventarization")
     @Secured("ROLE_ADMIN")
     @PostMapping
-    public ResponseEntity<HttpStatus> create(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(
             @RequestBody InventoryDto inventoryDto) {
         log.info(TAG + "Create invent");
         inventoryService.startInvent(
                 SecHolder.getUserId(),
                 inventoryDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Update inventarization")
     @Secured("ROLE_ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(
+    @ResponseStatus(HttpStatus.OK)
+    public void update(
             @PathVariable("id") Long inventId,
             @RequestBody InventoryDto inventoryDto) {
         log.info(TAG + "Update invent");
@@ -80,19 +78,18 @@ public class InventoryController {
                 SecHolder.getUserId(),
                 inventId,
                 inventoryDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Change visibility of invent")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> changeVisibility(
+    @ResponseStatus(HttpStatus.OK)
+    public void changeVisibility(
             @RequestBody DtoActive activeDto) {
         log.info(TAG + "Finish invent");
         inventoryService.changeVisibility(
                 SecHolder.getUserId(),
                 activeDto);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Product Dto representation (for android app)")
+@Schema(description = "Product Dto (for android app)")
 public class ProductV3Dto {
 
     @Schema(description = "Id", example = "101")

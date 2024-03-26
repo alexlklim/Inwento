@@ -10,7 +10,7 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
-import com.alex.asset.product.dto.ProductDto;
+import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.dto.ProductV3Dto;
 import com.alex.asset.product.mappers.ProductMapper;
@@ -50,7 +50,7 @@ public class ProductService {
     private final TypeService typeService;
 
 
-    public List<ProductDto> getAll() {
+    public List<ProductV1Dto> getAll() {
         log.info(TAG + "get all products");
         return productRepo.findAll()
                 .stream()
@@ -59,7 +59,7 @@ public class ProductService {
     }
 
 
-    public List<ProductDto> getActive() {
+    public List<ProductV1Dto> getActive() {
         log.info(TAG + "get all active products");
         return getActiveProducts()
                 .stream()
@@ -77,7 +77,7 @@ public class ProductService {
     }
 
 
-    public ProductDto create(ProductDto dto, Long userId) {
+    public ProductV1Dto create(ProductV1Dto dto, Long userId) {
         log.info(TAG + "Create product by user with id {}", userId);
         Product product = productMapper.toEntity(dto);
         product.setCreatedBy(userRepo.getUser(userId));
@@ -91,7 +91,7 @@ public class ProductService {
     }
 
     @SneakyThrows
-    public ProductDto getById(Long productId) {
+    public ProductV1Dto getById(Long productId) {
         log.info(TAG + "get product by id");
         return productMapper.toDto(productRepo.findById(productId)
                 .orElseThrow(

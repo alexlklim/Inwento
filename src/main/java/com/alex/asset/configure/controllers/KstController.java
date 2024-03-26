@@ -28,11 +28,10 @@ public class KstController {
 
     @Operation(summary = "Get all KST (active and not)")
     @GetMapping
-    public ResponseEntity<List<KST>> getAllKST() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<KST> getAllKST() {
         log.info(TAG + "Try to get all KST");
-        return new ResponseEntity<>(
-                configureService.getAllKSTs(),
-                HttpStatus.OK);
+        return configureService.getAllKSTs();
     }
 
     @Operation(summary = "Get all active KST by KST num")
@@ -49,13 +48,13 @@ public class KstController {
 
     @Operation(summary = "Update visibility of KSTs by id and its new status")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateMPKs(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateKSTs(
             @RequestBody List<DtoActive> dtoActiveList) {
         log.info(TAG + "Try to update visibility of KSTs");
         configureService.updateKSTs(
                 dtoActiveList,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

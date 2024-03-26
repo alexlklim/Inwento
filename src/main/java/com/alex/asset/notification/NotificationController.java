@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,39 +29,39 @@ public class NotificationController {
 
     @Operation(summary = "Get all notification for authorized user")
     @GetMapping
-    public ResponseEntity<List<NotificationDto>> getNotifications() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<NotificationDto> getNotifications() {
         log.info(TAG + "Get all notifications");
-        return new ResponseEntity<>(
-                notificationService.getNotifications(SecHolder.getUserId()),
-                HttpStatus.OK);
+        return notificationService.getNotifications(SecHolder.getUserId());
     }
 
 
     @Operation(summary = "Read all notification")
     @GetMapping("/read")
-    public ResponseEntity<HttpStatus> readAllNotifications() {
+    @ResponseStatus(HttpStatus.OK)
+    public void readAllNotifications() {
         log.info(TAG + "Read all notifications");
         notificationService.readAllNotifications(SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Read notification by id")
     @PutMapping("/read/{id}")
-    public ResponseEntity<HttpStatus> readNotificationById(
+    @ResponseStatus(HttpStatus.OK)
+    public void readNotificationById(
             @PathVariable("id") Long notificationId) {
         log.info(TAG + "Read notification with id {}", notificationId);
         notificationService.readNotification(
                 SecHolder.getUserId(),
                 notificationId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Send notification to specific user")
     @Secured("ROLE_ADMIN")
     @PostMapping("/notify/{id}")
-    public ResponseEntity<HttpStatus> sendNotificationToSpecificUser(
+    @ResponseStatus(HttpStatus.OK)
+    public void sendNotificationToSpecificUser(
             @PathVariable("id") Long userToId,
             @RequestBody NotificationDto notificationDto) {
         log.info(TAG + "Send notification to user with id {}", userToId);
@@ -70,32 +69,31 @@ public class NotificationController {
                 notificationDto,
                 userToId,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Send notification to all users")
     @Secured("ROLE_ADMIN")
     @PostMapping("/notify")
-    public ResponseEntity<HttpStatus> sendNotificationToAllUsers(
+    @ResponseStatus(HttpStatus.OK)
+    public void sendNotificationToAllUsers(
             @RequestBody NotificationDto notificationDto) {
         log.info(TAG + "Send notification to all users");
         notificationService.saveNotificationToAllUsers(
                 notificationDto,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Change visibility of notification")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
-    public ResponseEntity<HttpStatus> changeVisibilityOfNotification(
+    @ResponseStatus(HttpStatus.OK)
+    public void changeVisibilityOfNotification(
             @RequestBody DtoActive activeDto) {
         log.info(TAG + "Change visibility of notification with id {} to status {}",
                 activeDto.getId(), activeDto.isActive());
         notificationService.changeNotificationVisibility(
                 activeDto,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

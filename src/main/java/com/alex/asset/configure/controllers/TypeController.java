@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,40 +29,40 @@ public class TypeController {
 
     @Operation(summary = "Get all types and subtypes")
     @GetMapping("/all")
-    public ResponseEntity<List<DataDto.Type>> getAllTypesAndSubtypes() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<DataDto.Type> getAllTypesAndSubtypes() {
         log.info(TAG + "Try to get all types and subtypes");
         typeService.getTypes();
-        return new ResponseEntity<>(
-                typeService.getTypes(),
-                HttpStatus.OK);
+        return typeService.getTypes();
     }
 
     @Operation(summary = "Add new Types")
     @PostMapping
-    public ResponseEntity<HttpStatus> addTypes(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addTypes(
             @RequestBody List<String> listTypes) {
         log.info(TAG + "Try to add types");
         typeService.addTypes(
                 listTypes,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "Change visibility of type by id")
     @PutMapping
-    public ResponseEntity<HttpStatus> changeVisibilityOfType(
+    @ResponseStatus(HttpStatus.OK)
+    public void changeVisibilityOfType(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to change visibility of type");
         typeService.changeVisibilityOfType(
                 dtoActive,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @Operation(summary = "Add new Subtype to special type")
     @PostMapping("/{id}/subtype")
-    public ResponseEntity<HttpStatus> addSubtypes(
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addSubtypes(
             @PathVariable("id") Long typeId,
             @RequestBody List<String> listSubtype) {
         log.info(TAG + "Try to add subtypes");
@@ -71,19 +70,18 @@ public class TypeController {
                 typeId,
                 listSubtype,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
     @Operation(summary = "Change visibility of subtype by id")
     @PutMapping("/subtype")
-    public ResponseEntity<HttpStatus> changeVisibilityOfSubtype(
+    @ResponseStatus(HttpStatus.OK)
+    public void changeVisibilityOfSubtype(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to change visibility of subtype");
         typeService.changeVisibilityOfSubtype(
                 dtoActive,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

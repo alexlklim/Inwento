@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,32 +28,30 @@ public class BranchController {
 
     @Operation(summary = "Get all active branches")
     @GetMapping
-    public ResponseEntity<List<Branch>> getAllBranches() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<Branch> getAllBranches() {
         log.info(TAG + "Try to get all branches");
-        return new ResponseEntity<>(
-                configureService.getBranches(),
-                HttpStatus.OK);
+        return configureService.getBranches();
     }
 
     @Operation(summary = "Add new branch")
     @PostMapping
-    public ResponseEntity<Branch> addBranch(
+    @ResponseStatus(HttpStatus.OK)
+    public Branch addBranch(
             @RequestBody DtoName dtoName) {
         log.info(TAG + "Try to add branch");
-        return new ResponseEntity<>(
-                configureService.addBranch(dtoName, SecHolder.getUserId()),
-                HttpStatus.OK);
+        return configureService.addBranch(dtoName, SecHolder.getUserId());
     }
 
     @Operation(summary = "Update branch, send id of branch and it's new status: active or not)")
     @PutMapping
-    public ResponseEntity<HttpStatus> updateBranch(
+    @ResponseStatus(HttpStatus.OK)
+    public void updateBranch(
             @RequestBody DtoActive dtoActive) {
         log.info(TAG + "Try to update branch");
         configureService.updateBranch(
                 dtoActive,
                 SecHolder.getUserId());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

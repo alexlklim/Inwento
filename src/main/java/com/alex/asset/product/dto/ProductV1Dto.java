@@ -17,8 +17,8 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Product Dto")
-public class ProductDto {
+@Schema(description = "Product Dto (to update)")
+public class ProductV1Dto {
     @Schema(description = "Id", example = "101")
     Long id;
 
@@ -104,11 +104,6 @@ public class ProductDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Schema(description = "Inspection date", example = "2024-03-12")
     LocalDate inspectionDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Schema(description = "Last inventory date", example = "2024-03-12")
-    LocalDate lastInventoryDate;
-
 
     @Schema(description = "Longitude", example = "-74.0060")
     Double longitude;

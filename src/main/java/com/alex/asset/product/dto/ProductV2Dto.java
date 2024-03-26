@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Product Dto representation for inventory")
+@Schema(description = "Product Dto (for short view)")
 public class ProductV2Dto {
 
     @Schema(description = "Id", example = "101")
