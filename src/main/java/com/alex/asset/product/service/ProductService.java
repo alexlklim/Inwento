@@ -112,6 +112,7 @@ public class ProductService {
         dto.setPrice(product.getPrice());
         dto.setBarCode(product.getBarCode());
         dto.setReceiver(product.getReceiver());
+        dto.setBranch(product.getBranch().getBranch());
         dto.setLiable(product.getLiable().getFirstname() + " " + product.getLiable().getLastname());
         return dto;
     }
@@ -122,6 +123,16 @@ public class ProductService {
         return productRepo.getByTitleOrBarCode(title)
                 .stream()
                 .collect(Collectors.toMap(Product::getId, Product::getTitle));
+
+    }
+
+    public ProductV3Dto getProductByBarCode(String barCode) {
+        return getShortProductById(
+                productRepo.getProductByBarCode(barCode).orElseThrow(
+                        () -> new ResourceNotFoundException("Product with bar code " + barCode + " not found")
+                ).getId()
+        );
+
 
     }
 

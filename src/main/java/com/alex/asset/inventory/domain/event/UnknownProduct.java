@@ -19,6 +19,5 @@ public class UnknownProduct {
     @JoinColumn(name = "event_id")
     private Event event;
 
-
     private String code;
 }

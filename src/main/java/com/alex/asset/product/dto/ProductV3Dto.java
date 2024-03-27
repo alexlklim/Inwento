@@ -36,4 +36,8 @@ public class ProductV3Dto {
 
     @Schema(description = "receiver", example = "Alex Klim")
     String receiver;
+
+
+    @Schema(description = "branch", example = "IT Department")
+    String branch;
 }

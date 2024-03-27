@@ -45,30 +45,32 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class EventService {
     private final String TAG = "EVENT_SERVICE - ";
-
-    private final EventMapper eventMapper;
     private final EventRepo eventRepo;
     private final UserRepo userRepo;
     private final InventoryRepo inventoryRepo;
     private final BranchRepo branchRepo;
     private final UnknownProductRepo unknownProductRepo;
-
     private final ProductService productService;
-    private final ProductMapper productMapper;
-
     private final LogService logService;
+    private final ProductMapper productMapper;
+    private final EventMapper eventMapper;
 
     @SneakyThrows
     public EventV2Get getEvent(Long eventId) {
-        log.info(TAG + "Get invent with id {}", eventId);
+        log.info(TAG + "Get event with id {}", eventId);
         EventV2Get dto = eventMapper.toDto(eventRepo.findById(eventId).orElseThrow(
-                () -> new ResourceNotFoundException("Event with id " + eventId + " not found")));
+                () -> new ResourceNotFoundException("Event with id " + eventId + " not found"))
+        );
         dto.setUnknownProducts(getUnknownProductsForEvent(eventId));
         dto.setProducts(getAllProductsV2ForBranch(eventId));
-
+    
         dto.setUnknownProductAmount(dto.getUnknownProducts().size());
-        dto.setScannedProductAmount(ProductUtils.countScannedProducts(dto.getProducts()));
-        dto.setTotalProductAmount(dto.getProducts().size() - dto.getScannedProductAmount());
+        dto.setTotalProductAmount(dto.getProducts().size());
+
+        dto.setScannedProductAmount(dto.getProducts().stream()
+                .filter(product -> product.getInventoryStatus() == InventoryStatus.SCANNED)
+                .mapToInt(product -> 1)
+                .sum());
         return dto;
     }
 
@@ -121,18 +123,21 @@ public class EventService {
         }
         Event event = new Event();
         event.setActive(true);
-        event.setInventory(inventoryRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
-                () -> new ResourceNotFoundException("No active inventory at this time")));
+        event.setInventory(inventoryRepo.getCurrentInvent(LocalDate.now())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("No active inventory at this time"))
+        );
         event.setUser(userRepo.getUser(userId));
-        event.setBranch(branchRepo.findById(dto.getBranchId()).orElseThrow(
-                () -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found")));
+        event.setBranch(branchRepo.findById(dto.getBranchId())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found"))
+        );
         event.setInfo(dto.getInfo());
         event.setProducts(new ArrayList<>());
 
         logService.addLog(userId, Action.CREATE, Section.EVENT, dto.toString());
 
-        return eventMapper.toDto(eventRepo.save(event));
-
+        return getEvent(eventRepo.save(event).getId());
     }
 
 
@@ -140,11 +145,50 @@ public class EventService {
     public void updateVisibility(Long userId, DtoActive dto) {
         log.info(TAG + "Update visibility of event by user with id {} for event with id {}", userId, dto.getId());
         Event event = eventRepo.findById(dto.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("Event with this id not found"));
+                () -> new ResourceNotFoundException("Event with this id not found")
+        );
         event.setActive(dto.isActive());
         eventRepo.save(event);
         logService.addLog(userId, Action.UPDATE, Section.EVENT, dto.toString());
 
+    }
+
+    @SneakyThrows
+    private List<UnknownProduct> getUnknownProductsForEvent(Long eventId) {
+        log.info(TAG + "Get unknown products of event with id {}", eventId);
+        Event event = eventRepo.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " was not found"));
+        return unknownProductRepo.findByEvent(event);
+    }
+
+
+    private List<ProductV2Dto> getAllProductsV2ForBranch(Long eventId) {
+        log.info(TAG + "Get all products by specific branch of event with id {}", eventId);
+        Branch branch = eventRepo.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " was not found"))
+                .getBranch();
+
+        return Stream.concat(getScannedProductsForBranch(branch).stream(),
+                        getNotScannedProductForBranch(branch).stream())
+                .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    private List<ProductV2Dto> getScannedProductsForBranch(Branch branch) {
+        log.info(TAG + "Get scanned products by branch with id {}", branch.getId());
+        return eventRepo.findProductsByBranch(branch).stream()
+                .map(product -> productMapper.toProductV2Dto(product, InventoryStatus.SCANNED))
+                .collect(Collectors.toList());
+
+    }
+
+    private List<ProductV2Dto> getNotScannedProductForBranch(Branch branch) {
+        log.info(TAG + "Get not scanned products by branch with id {}", branch.getId());
+        return productService.getActiveProductsByBranch(branch)
+                .stream()
+                .filter(product -> !eventRepo.findProductsByBranch(branch).contains(product))
+                .map(product -> productMapper.toProductV2Dto(product, InventoryStatus.NOT_SCANNED))
+                .collect(Collectors.toList());
     }
 
 
@@ -153,7 +197,8 @@ public class EventService {
     public void addProductsToEventByBarCode(Long userId, Long eventId, List<String> list) {
         log.info(TAG + "Add products to event by bar code by user with id {}", userId);
         Event event = eventRepo.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found")
+                );
         User user = userRepo.getUser(userId);
         if (event.getUser() != user)
             throw new UserIsNotOwnerOfEvent("User with id " + userId + " is not owner of event with id " + eventId);
@@ -198,46 +243,6 @@ public class EventService {
         eventRepo.save(event);
 
         logService.addLog(userId, Action.CREATE, Section.EVENT, "Add products to event ");
-
-    }
-
-
-    @SneakyThrows
-    private List<UnknownProduct> getUnknownProductsForEvent(Long eventId) {
-        log.info(TAG + "Get unknown products of event with id {}", eventId);
-        Event event = eventRepo.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " was not found"));
-        return unknownProductRepo.findByEvent(event);
-    }
-
-
-    private List<ProductV2Dto> getAllProductsV2ForBranch(Long eventId) {
-        log.info(TAG + "Get all products by specific branch of event with id {}", eventId);
-        Branch branch = eventRepo.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " was not found"))
-                .getBranch();
-
-        return Stream.concat(getScannedProductsForBranch(branch).stream(),
-                        getNotScannedProductForBranch(branch).stream())
-                .collect(Collectors.toList());
-    }
-
-    private List<ProductV2Dto> getNotScannedProductForBranch(Branch branch) {
-        log.info(TAG + "Get not scanned products by branch with id {}", branch.getId());
-        return productService.getActiveProductsByBranch(branch)
-                .stream()
-                .filter(product -> !eventRepo.findProductsByBranch(branch).contains(product))
-                .map(product -> productMapper.toProductV2Dto(product, InventoryStatus.NOT_SCANNED))
-                .collect(Collectors.toList());
-    }
-
-
-    @SneakyThrows
-    private List<ProductV2Dto> getScannedProductsForBranch(Branch branch) {
-        log.info(TAG + "Get scanned products by branch with id {}", branch.getId());
-        return eventRepo.findProductsByBranch(branch).stream()
-                .map(product -> productMapper.toProductV2Dto(product, InventoryStatus.SCANNED))
-                .collect(Collectors.toList());
 
     }
 

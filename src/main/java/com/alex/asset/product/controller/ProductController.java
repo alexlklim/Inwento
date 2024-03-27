@@ -115,6 +115,16 @@ public class ProductController {
     }
 
 
+    @Operation(summary = "Get short product by bar code (for android app to check if product from another branch)")
+    @GetMapping("/filter/bar-code/{bar_code}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductV3Dto getProductByBarCode(
+            @PathVariable("bar_code") String barCode) {
+        log.info(TAG + "Try to get  product by bar code {}", barCode);
+        return productService.getProductByBarCode(barCode);
+    }
+
+
     @Operation(summary = "Get product history by id")
     @GetMapping("/history/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -123,6 +133,9 @@ public class ProductController {
         log.info(TAG + "Get history of product");
         return productService.getHistoryOfProductById(productId);
     }
+
+
+
 
 
 }

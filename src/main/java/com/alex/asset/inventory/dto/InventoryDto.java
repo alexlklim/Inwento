@@ -5,17 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 
-
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -39,5 +37,14 @@ public class InventoryDto {
 
     @Schema(description = "Info", example = "Please, check all products in your branch")
     String info;
+
+    @Schema(description = "Amount of unknown products", example = "3")
+    Long unknownProductAmount;
+
+    @Schema(description = "Total amount of products (without unknown)", example = "2000")
+    Long totalProductAmount;
+
+    @Schema(description = "Amount of scanned product (without unknown)", example = "1500")
+    Long scannedProductAmount;
 
 }

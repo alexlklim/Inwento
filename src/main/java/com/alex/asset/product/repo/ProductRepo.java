@@ -18,6 +18,10 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "WHERE p.isActive = true")
     List<Product> getActive();
 
+    @Query("SELECT COUNT(p) " +
+            "FROM Product p " +
+            "WHERE p.isActive = true")
+    long getActiveProductCount();
 
     @Query("SELECT p " +
             "FROM Product p " +
@@ -30,6 +34,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "WHERE LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
             "LOWER(p.barCode) LIKE CONCAT('%', LOWER(:prefix), '%')")
     List<Product> getByTitleOrBarCode(@Param("prefix") String prefix);
+
+    Optional<Product> getProductByBarCode(String barCode);
 
     @Query("SELECT p " +
             "FROM Product p " +

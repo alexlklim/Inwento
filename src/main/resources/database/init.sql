@@ -1,100 +1,88 @@
--- insert default values for AssetStatus, KST, Unit
--- tables will be created and data inserted into db after application is run
 
-INSERT IGNORE INTO asset_statuses (is_active, asset_status)
-VALUES  (true, 'w użytkowaniu'), (true, 'w magazynie'), (true, 'w montażu'), (true, 'wycofane z użytkowania'),
-        (true, 'przeznaczone do sprzedaży'), (true, 'sprzedane'), (true, 'zniszczone lub utracone');
+INSERT IGNORE INTO asset_statuses (id, is_active, asset_status) VALUES
+(1, true, 'w użytkowaniu'),
+(2, true, 'w magazynie'),
+(3, true, 'w montażu'),
+(4, true, 'wycofane z użytkowania'),
+(5, true, 'przeznaczone do sprzedaży'),
+(6, true, 'sprzedane'),
+(7, true, 'zniszczone lub utracone');
 
-INSERT IGNORE INTO units (is_active, unit)
-VALUES (true, 'szt.'), (true, 'm'), (true, 'm2'), (true, 'm3'), (true, 'kg'), (true, 'kpl.'), (true, 'para');
+INSERT IGNORE INTO units (id, is_active, unit) VALUES
+(1, true, 'szt.'),
+(2, true, 'm'),
+(3, true, 'm2'),
+(4, true, 'm3'),
+(5, true, 'kg'),
+(6, true, 'kpl.'),
+(7, true, 'para');
 
 
 
-
-INSERT IGNORE INTO users (is_active, firstname, lastname, phone, email, password, last_activity, created, updated, roles)
+INSERT IGNORE INTO users (id, is_active, firstname, lastname, phone, email, password, last_activity, created, updated, roles)
 VALUES
-    (TRUE, 'Admin', 'Admin', '48 887 754 491', 'admin@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-    (TRUE, 'Alex', 'Klim', '48 887 754 491', 'alex@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP');
-
+(1, TRUE, 'Alex', 'Klim', '48 887 754 491', 'admin@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
+(2, TRUE, 'Den', 'Morgan', '48 887 754 491', 'alex@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP');
 
 
 -- Insert a company into the companies table
-INSERT IGNORE INTO company (created, updated, is_email_configured, company, city, street, zip_code, nip, regon, phone, email)
-VALUES (
-        NOW(), NOW(), false,
-        'Cyfore Sieci Multimedialne',
-        'Warsaw', 'Kwiatkowskiego 2', '23-345',
-        '33232323', '434343',
-        '4800585885', 'alex@gmail.com');
-
-
-SET @user_email = 'admin@gmail.com';
-SET @user_id = (SELECT id FROM users WHERE email = @user_email);
-
--- add fields to copmapny
-INSERT IGNORE INTO branches (is_active, branch)
+INSERT IGNORE INTO company (id, created, updated, is_email_configured, company, city, street, zip_code, nip, regon, phone, email)
 VALUES
-    (true, 'IT Department'),
-    (true, 'Production'),
-    (true, 'Directory'),
-    (true, 'Logistics'),
-    (true, 'Financial');
+(1,NOW(), NOW(), false, 'Cyfore Sieci Multimedialne','Warsaw', 'Kwiatkowskiego 2', '23-345','33232323', '434343', '4800585885', 'alex@gmail.com');
 
-INSERT IGNORE INTO mpks (is_active, mpk)
+
+INSERT IGNORE INTO branches (id, is_active, branch)
 VALUES
-    (true, 'MPK1'),
-    (true, 'MPK2'),
-    (true, 'MPK3'),
-    (true, 'MPK4'),
-    (true, 'MPK5');
+    (1, true, 'IT Department'),
+    (2, true, 'Production'),
+    (3, true, 'Directory'),
+    (4, true, 'Logistics'),
+    (5, true, 'Financial');
 
-
-
-INSERT IGNORE INTO types (is_active, type)
+INSERT IGNORE INTO mpks (id, is_active, mpk)
 VALUES
-    (true, 'Office Equipment'),
-    (true, 'Machinery'),
-    (true, 'Tools and Instruments'),
-    (true, 'Electronics'),
-    (true, 'Furniture');
+    (1, true, 'MPK1'),
+    (2, true, 'MPK2'),
+    (3, true, 'MPK3'),
+    (4, true, 'MPK4'),
+    (5, true, 'MPK5');
 
 
-SET @type1 = (SELECT id FROM types WHERE type = 'Office Equipment');
-SET @type2 = (SELECT id FROM types WHERE type = 'Machinery');
-SET @type3 = (SELECT id FROM types WHERE type = 'Tools and Instruments');
-SET @type4 = (SELECT id FROM types WHERE type = 'Electronics');
-SET @type5 = (SELECT id FROM types WHERE type = 'Furniture');
-
-
-
-INSERT IGNORE INTO subtypes (is_active, subtype, type_id)
+INSERT IGNORE INTO types (id, is_active, type)
 VALUES
-    (true, 'Computers', @type1),
-    (true, 'Printers', @type1),
-    (true, 'Fax machines', @type1);
+    (1, true, 'Office Equipment'),
+    (2, true, 'Machinery'),
+    (3, true, 'Tools and Instruments'),
+    (4, true, 'Electronics'),
+    (5, true, 'Furniture');
 
-INSERT IGNORE INTO subtypes (is_active, subtype, type_id)
+
+INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
 VALUES
-    (true, 'Manufacturing equipment', @type2),
-    (true, 'Construction machinery', @type2),
-    (true, 'Industrial robots', @type2);
+    (1, true, 'Computers', 1),
+    (2, true, 'Printers', 1),
+    (3, true, 'Fax machines', 1);
 
-
-INSERT IGNORE INTO subtypes (is_active, subtype, type_id)
+INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
 VALUES
-    (true, 'Power tools', @type3),
-    (true, 'Hand tools', @type3),
-    (true, 'Laboratory equipment', @type3);
+    (4, true, 'Manufacturing equipment', 2),
+    (5, true, 'Construction machinery', 2),
+    (6, true, 'Industrial robots', 2);
 
-INSERT IGNORE INTO subtypes (is_active, subtype, type_id)
+INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
 VALUES
-    (true, 'Televisions', @type4),
-    (true, 'Audiovisual equipment', @type4),
-    (true, 'Cameras', @type4);
+    (7, true, 'Power tools', 3),
+    (8, true, 'Hand tools', 3),
+    (9, true, 'Laboratory equipment', 3);
 
-INSERT IGNORE INTO subtypes (is_active, subtype, type_id)
+INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
 VALUES
-    (true, 'Desks', @type5),
-    (true, 'Chairs', @type5),
-    (true, 'Shelving units', @type5);
+    (10, true, 'Televisions', 4),
+    (11, true, 'Audiovisual equipment', 4),
+    (12, true, 'Cameras', 4);
 
+INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
+VALUES
+    (13, true, 'Desks', 5),
+    (14, true, 'Chairs', 5),
+    (15, true, 'Shelving units', 5);

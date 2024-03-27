@@ -24,32 +24,32 @@ public class InventoryController {
     private final InventoryService inventoryService;
 
 
-    @Operation(summary = "Get invent by id")
+    @Operation(summary = "Get inventory by id")
     @Secured("ROLE_ADMIN")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public InventoryDto getInventById(
-            @PathVariable("id") Long inventId) {
-        log.info(TAG + "Get invent with id {}", inventId);
-        return inventoryService.getInventById(inventId);
+    public InventoryDto getInventoryById(
+            @PathVariable("id") Long inventoryId) {
+        log.info(TAG + "Get inventory with id {}", inventoryId);
+        return inventoryService.getInventoryById(inventoryId);
     }
 
 
-    @Operation(summary = "Check is invent now or not " +
-            "(it will be used in android app (main page) to notify users that invent is started")
+    @Operation(summary = "Check is inventory now or not " +
+            "(it will be used in android app (main page) to notify users that inventory is started")
     @GetMapping("/active")
     @ResponseStatus(HttpStatus.OK)
-    public Boolean isInventActive() {
+    public Boolean isInventoryActive() {
         log.info(TAG + "Check is inventory taking place now or not");
-        return inventoryService.isInventNow();
+        return inventoryService.isInventoryNow();
     }
 
-    @Operation(summary = "get current active invent (it returns 404 if no active invent now")
+    @Operation(summary = "get current active inventory (it returns 404 if no active inventory now")
     @GetMapping("/current")
     @ResponseStatus(HttpStatus.OK)
-    public InventoryDto getCurrentEvent() {
-        log.info(TAG + "get current invent");
-        return inventoryService.getCurrentInvent();
+    public InventoryDto getCurrentInventory() {
+        log.info(TAG + "get current inventory");
+        return inventoryService.getCurrentInventory();
     }
 
 
@@ -59,8 +59,8 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public void create(
             @RequestBody InventoryDto inventoryDto) {
-        log.info(TAG + "Create invent");
-        inventoryService.startInvent(
+        log.info(TAG + "Create inventory");
+        inventoryService.startInventory(
                 SecHolder.getUserId(),
                 inventoryDto);
     }
@@ -70,22 +70,22 @@ public class InventoryController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(
-            @PathVariable("id") Long inventId,
+            @PathVariable("id") Long inventoryId,
             @RequestBody InventoryDto inventoryDto) {
-        log.info(TAG + "Update invent");
-        inventoryService.updateInvent(
+        log.info(TAG + "Update inventory");
+        inventoryService.updateInventory(
                 SecHolder.getUserId(),
-                inventId,
+                inventoryId,
                 inventoryDto);
     }
 
-    @Operation(summary = "Change visibility of invent")
+    @Operation(summary = "Change visibility of inventory")
     @Secured("ROLE_ADMIN")
     @PutMapping("/active")
     @ResponseStatus(HttpStatus.OK)
     public void changeVisibility(
             @RequestBody DtoActive activeDto) {
-        log.info(TAG + "Finish invent");
+        log.info(TAG + "Finish inventory");
         inventoryService.changeVisibility(
                 SecHolder.getUserId(),
                 activeDto);

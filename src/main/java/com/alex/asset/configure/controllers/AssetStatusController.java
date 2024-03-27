@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/v1/company/asset-status")
 @Tag(name = "AssetStatus Controller", description = "Asset API")
 public class AssetStatusController {
-    private final String TAG = "ASSEt_STATUS_CONTROLLER - ";
+    private final String TAG = "ASSET_STATUS_CONTROLLER - ";
 
     private final ConfigureService configureService;
 
