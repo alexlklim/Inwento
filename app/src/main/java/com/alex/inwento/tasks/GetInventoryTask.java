@@ -3,11 +3,9 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Event;
+import com.alex.inwento.database.domain.Inventory;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
-
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,34 +13,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
-public class EventsTask extends AsyncTask<Void, Void, List<Event>> {
-    private static final String TAG = "EventsTask";
+public class GetInventoryTask extends AsyncTask<Void, Void, Inventory> {
+
+    private static final String TAG = "InventoryTask";
 
 
-    private EventsListener listener;
+    private InventoryListener listener;
 
     private String token;
-    private int inventoryId;
 
-    public interface EventsListener {
-        void onEventsSuccess(List<Event> events);
+    public interface InventoryListener {
+        void onInventorySuccess(Inventory inventory);
 
-        void onEventsFailure(String errorMessage);
+        void onInventoryFailure(String errorMessage);
     }
 
-    public EventsTask(EventsListener listener, String token, int inventoryId) {
+    public GetInventoryTask(InventoryListener listener, String token) {
         this.token = token;
         this.listener = listener;
-        this.inventoryId = inventoryId;
     }
 
     @Override
-    protected List<Event> doInBackground(Void... voids) {
+    protected Inventory doInBackground(Void... voids) {
         HttpURLConnection urlConnection = null;
         try {
-            URL url = new URL(Endpoints.GET_ALL_MY_EVENTS + inventoryId);
+            URL url = new URL(Endpoints.GET_CURRENT_INVENTORY);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Authorization", "Bearer " + token);
@@ -56,17 +52,12 @@ public class EventsTask extends AsyncTask<Void, Void, List<Event>> {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-
-                System.out.println(response.toString());
                 inputStream.close();
-
-                return JsonMng.parseJsonToEvents(String.valueOf(response));
+                return JsonMng.getInventoryFromJson(String.valueOf(response));
             } else {
                 Log.e(TAG, "Error response code: " + responseCode);
             }
         } catch (IOException e) {
-            Log.e(TAG, "Error: " + e.getMessage());
-        } catch (JSONException e) {
             Log.e(TAG, "Error: " + e.getMessage());
         } finally {
             if (urlConnection != null) {
@@ -78,11 +69,11 @@ public class EventsTask extends AsyncTask<Void, Void, List<Event>> {
 
 
     @Override
-    protected void onPostExecute(List<Event> events) {
-        if (!events.isEmpty()) {
-            listener.onEventsSuccess(events);
+    protected void onPostExecute(Inventory inventory) {
+        if (inventory != null) {
+            listener.onInventorySuccess(inventory);
         } else {
-            listener.onEventsFailure("No events found.");
+            listener.onInventoryFailure("No inventory found.");
         }
     }
 }

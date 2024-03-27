@@ -3,7 +3,7 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Inventory;
+import com.alex.inwento.dto.ProductDto;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
 
@@ -14,31 +14,33 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class InventoryTask extends AsyncTask<Void, Void, Inventory> {
+public class GetProductTask extends AsyncTask<Void, Void, ProductDto> {
 
-    private static final String TAG = "InventoryTask";
+    private static final String TAG = "GetProductByBarCodeTask";
 
 
-    private InventoryListener listener;
+    private GetProductTask.GetProductByBarCodeListener listener;
 
     private String token;
+    private String barCode;
 
-    public interface InventoryListener {
-        void onInventorySuccess(Inventory inventory);
+    public interface GetProductByBarCodeListener {
+        void onProductByBarCodeSuccess(ProductDto productDto);
 
-        void onInventoryFailure(String errorMessage);
+        void onProductByBarCodeFailure(String errorMessage);
     }
 
-    public InventoryTask(InventoryListener listener, String token) {
+    public GetProductTask(GetProductTask.GetProductByBarCodeListener listener, String token, String barCode) {
         this.token = token;
         this.listener = listener;
+        this.barCode = barCode;
     }
 
     @Override
-    protected Inventory doInBackground(Void... voids) {
+    protected ProductDto doInBackground(Void... voids) {
         HttpURLConnection urlConnection = null;
         try {
-            URL url = new URL(Endpoints.GET_CURRENT_INVENTORY);
+            URL url = new URL(Endpoints.GET_SHORT_PRODUCT_BY_BAR_CODE + barCode);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Authorization", "Bearer " + token);
@@ -53,7 +55,8 @@ public class InventoryTask extends AsyncTask<Void, Void, Inventory> {
                     response.append(line);
                 }
                 inputStream.close();
-                return JsonMng.getInventoryFromJson(String.valueOf(response));
+
+                return JsonMng.parseJsonToProductDto(String.valueOf(response));
             } else {
                 Log.e(TAG, "Error response code: " + responseCode);
             }
@@ -69,11 +72,12 @@ public class InventoryTask extends AsyncTask<Void, Void, Inventory> {
 
 
     @Override
-    protected void onPostExecute(Inventory inventory) {
-        if (inventory != null) {
-            listener.onInventorySuccess(inventory);
+    protected void onPostExecute(ProductDto productDto) {
+        Log.i(TAG, "onPostExecute: + ");
+        if (productDto != null) {
+            listener.onProductByBarCodeSuccess(productDto);
         } else {
-            listener.onInventoryFailure("No inventory found.");
+            listener.onProductByBarCodeFailure("No Product found.");
         }
     }
 }

@@ -3,6 +3,8 @@ package com.alex.inwento.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,36 +15,46 @@ import com.alex.inwento.R;
 import com.alex.inwento.adapter.EventAdapter;
 import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Inventory;
+import com.alex.inwento.dialog.AddEventDialog;
 import com.alex.inwento.managers.SettingsMng;
 import com.alex.inwento.tasks.CheckInventoryActiveTask;
-import com.alex.inwento.tasks.EventsTask;
-import com.alex.inwento.tasks.InventoryTask;
+import com.alex.inwento.tasks.GetEventsTask;
+import com.alex.inwento.tasks.GetInventoryTask;
 
 import java.util.List;
 
-public class InventoryActivity extends AppCompatActivity
+public class EventsActivity extends AppCompatActivity
         implements
         CheckInventoryActiveTask.CheckInventoryActiveListener,
-        InventoryTask.InventoryListener,
-        EventsTask.EventsListener,
+        GetInventoryTask.InventoryListener,
+        GetEventsTask.EventsListener,
         EventAdapter.OnItemClickListener {
     private static final String TAG = "InventoryActivity";
-
     SettingsMng settingsMng;
     RecyclerView recyclerView;
 
     EventAdapter eventAdapter;
     TextView tvStartData, tvProductAmount;
+    ImageButton btnAddEvent;
     int inventoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventory);
+        setContentView(R.layout.activity_events);
         settingsMng = new SettingsMng(this);
         tvStartData = findViewById(R.id.ai_start_data);
         tvProductAmount = findViewById(R.id.ai_product_amount);
+        btnAddEvent = findViewById(R.id.ai_btn_add_event);
+
+        btnAddEvent.setOnClickListener(view -> {
+            Log.i(TAG, "setOnClickListener");
+
+            AddEventDialog dialog = new AddEventDialog();
+            dialog.setTokenAndUser(settingsMng.getAccessToken(), settingsMng.getFirstname(), settingsMng.getLastname());
+            dialog.show(getSupportFragmentManager(), "add_event_dialog");
+        });
 
         // check if inventory is active now
         CheckInventoryActiveTask checkInventoryActiveTask = new CheckInventoryActiveTask(this, settingsMng.getAccessToken());
@@ -59,8 +71,8 @@ public class InventoryActivity extends AppCompatActivity
             finish();
 //            startActivity(new Intent(InventoryActivity.this, InventoriesActivity.class));
         }
-        InventoryTask inventoryTask = new InventoryTask(this, settingsMng.getAccessToken());
-        inventoryTask.execute();
+        GetInventoryTask getInventoryTask = new GetInventoryTask(this, settingsMng.getAccessToken());
+        getInventoryTask.execute();
     }
 
     @Override
@@ -69,8 +81,8 @@ public class InventoryActivity extends AppCompatActivity
         System.out.println(inventory.toString());
         tvStartData.setText("Data: " + inventory.getStartDate());
         tvProductAmount.setText("Produkty " + inventory.getScannedProductAmount() + " / " + inventory.getTotalProductAmount());
-        EventsTask eventsTask = new EventsTask(this, settingsMng.getAccessToken(), inventory.getId());
-        eventsTask.execute();
+        GetEventsTask getEventsTask = new GetEventsTask(this, settingsMng.getAccessToken(), inventory.getId());
+        getEventsTask.execute();
     }
 
     @Override
@@ -81,7 +93,7 @@ public class InventoryActivity extends AppCompatActivity
 
     @Override
     public void onEventsSuccess(List<Event> events) {
-        Log.i(TAG, "onEventsSuccess: + " + events.toString());
+        Log.i(TAG, "onEventsSuccess: + ");
         initializeRecyclerView(events);
     }
 
@@ -93,8 +105,6 @@ public class InventoryActivity extends AppCompatActivity
 
     private void initializeRecyclerView(List<Event> events) {
         recyclerView = findViewById(R.id.rv_events);
-        System.out.println("events");
-        System.out.println(events);
 
         eventAdapter = new EventAdapter(events, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

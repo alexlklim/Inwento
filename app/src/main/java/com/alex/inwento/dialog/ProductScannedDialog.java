@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,26 +17,19 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
 import com.alex.inwento.dto.ProductDto;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
 public class ProductScannedDialog extends AppCompatDialogFragment {
     private static final String TAG = "ProductScannedDialog";
+    private ProductScannedListener productScannedListener;
 
     private FragmentActivity fragmentActivity;
     private ProductDto productDto;
-    private String barCode;
 
-    TextView title, desc, code, price, liable, receiver;
+    TextView title, desc, code, price, liable, receiver, warning;
     Button btnSave;
+
+    boolean isCurrentBranch;
 
     @NonNull
     @Override
@@ -53,67 +46,47 @@ public class ProductScannedDialog extends AppCompatDialogFragment {
         liable = view.findViewById(R.id.dp_liable);
         receiver = view.findViewById(R.id.dp_receiver);
         btnSave = view.findViewById(R.id.dp_save);
+        warning = view.findViewById(R.id.dp_warning);
 
         fragmentActivity = requireActivity();
 
+        title.setText(productDto.getTitle());
+        desc.setText(productDto.getDescription());
+        code.setText(productDto.getBar_code());
+        price.setText("Price: " + productDto.getPrice());
+        liable.setText(productDto.getLiable());
+        receiver.setText(productDto.getReceiver());
+
+        if (isCurrentBranch){
+            ViewGroup parentView = (ViewGroup) warning.getParent();
+            parentView.removeView(warning);
+        } else {
+            btnSave.setText("przesunięcie");
+        }
+
+
         btnSave.setOnClickListener(v -> {
-            /// send data to server
+            if (productScannedListener != null){
+                productScannedListener.onProductSaved(productDto.getBar_code());
+            }
             dismiss();
         });
 
         return builder.create();
     }
 
-    // Method to send GET request
-    private void sendGetRequest(String barCode) {
-        OkHttpClient client = new OkHttpClient();
-        String url = "YOUR_GET_REQUEST_URL" + barCode; // Replace "YOUR_GET_REQUEST_URL" with your actual URL
 
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "Error response code: " + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.i(TAG, "onResponse: " + response);
-                if (response.isSuccessful()) {
-                    String jsonResponse = response.body().string();
-                    // Parse the JSON response using Gson or any other JSON parsing library
-                    Gson gson = new Gson();
-                    productDto = gson.fromJson(jsonResponse, ProductDto.class);
-                    System.out.println(productDto.toString());
-                } else {
-                    Toast.makeText(requireDialog().getContext(), "Something wrong", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-    // Method to update UI with product data
-    private void updateUI() {
-        // Check if productDto is not null and update UI accordingly
-        if (productDto != null) {
-            // Update TextViews with productDto data
-            fragmentActivity.runOnUiThread(() -> {
-                title.setText(productDto.getTitle());
-                desc.setText(productDto.getDescription());
-                code.setText(productDto.getBar_code());
-                price.setText(String.valueOf(productDto.getPrice()));
-                liable.setText(productDto.getLiable());
-                receiver.setText(productDto.getReceiver());
-            });
-        }
-    }
-
-    // Static method to create an instance of ProductScannedDialog with barcode data
-    public static ProductScannedDialog newInstance(String code) {
+    public static ProductScannedDialog newInstance(ProductScannedListener listener, ProductDto productDto, boolean isCurrentBranch) {
         ProductScannedDialog dialog = new ProductScannedDialog();
-        dialog.barCode = code;
+        dialog.productDto = productDto;
+        dialog.productScannedListener = listener;
+        dialog.isCurrentBranch = isCurrentBranch;
         return dialog;
+    }
+
+
+
+    public interface ProductScannedListener {
+        void onProductSaved(String barCode);
     }
 }

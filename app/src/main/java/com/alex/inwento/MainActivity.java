@@ -1,7 +1,5 @@
 package com.alex.inwento;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,18 +7,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.alex.inwento.activities.InventoryActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.alex.inwento.activities.EventsActivity;
 import com.alex.inwento.activities.LoginActivity;
 import com.alex.inwento.dto.AuthDto;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.managers.SettingsMng;
 import com.alex.inwento.tasks.AuthTask;
 
-public class MainActivity extends AppCompatActivity  implements AuthTask.AuthListener{
+public class MainActivity extends AppCompatActivity implements AuthTask.AuthListener {
     private static final String TAG = "MainActivity";
     ImageButton btn_settings, btn_home, btn_search;
     Button btn_inventory, btn_scrap, btn_moved;
     SettingsMng settingsMng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: ");
@@ -34,9 +35,7 @@ public class MainActivity extends AppCompatActivity  implements AuthTask.AuthLis
         authTask.execute();
 
 
-
     }
-
 
 
     @Override
@@ -61,14 +60,16 @@ public class MainActivity extends AppCompatActivity  implements AuthTask.AuthLis
     private void addBtnListeners() {
 
 
-        btn_home.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, MainActivity.class))
+        btn_home.setOnClickListener(view -> {
+                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+                    finish();
+                }
         );
 
         btn_inventory.setOnClickListener(view ->
                 // send request if inventory is activ
 
-                startActivity(new Intent(MainActivity.this, InventoryActivity.class))
+                startActivity(new Intent(MainActivity.this, EventsActivity.class))
         );
 
     }
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity  implements AuthTask.AuthLis
 
         addBtnListeners();
     }
-
 
 
 }

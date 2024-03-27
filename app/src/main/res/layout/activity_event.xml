@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backColor"
     tools:context=".activities.EventActivity"
     android:orientation="vertical">
 
@@ -28,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:src="@drawable/ic_synch" />
     </LinearLayout>
 
@@ -50,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 style="@style/btnStyle"
-                app:backgroundTint="@color/gray"
+                app:backgroundTint="@color/btnColor"
                 android:text="all" />
 
             <Button
@@ -61,6 +62,7 @@
                 style="@style/btnStyle"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
+                app:backgroundTint="@color/btnColor"
                 android:text="ok" />
 
             <Button
@@ -69,6 +71,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 style="@style/btnStyle"
+                app:backgroundTint="@color/btnColor"
                 android:text="to scan" />
         </LinearLayout>
 
@@ -84,6 +87,7 @@
                 android:layout_height="match_parent"
                 style="@style/btnStyle"
                 android:layout_margin="10dp"
+                app:backgroundTint="@color/btnColor"
                 android:text="Unknown" />
         </LinearLayout>
     </LinearLayout>

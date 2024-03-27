@@ -8,6 +8,7 @@ public class ProductDto {
     private Double price;
     private String liable;
     private String receiver;
+    private String branch;
 
     public ProductDto() {
     }

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -28,8 +28,11 @@ import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Product;
 import com.alex.inwento.database.domain.UnknownProduct;
 import com.alex.inwento.dialog.ProductScannedDialog;
+import com.alex.inwento.dialog.UnknownProductDialog;
+import com.alex.inwento.dto.ProductDto;
 import com.alex.inwento.managers.SettingsMng;
-import com.alex.inwento.tasks.ProductsTask;
+import com.alex.inwento.tasks.GetProductTask;
+import com.alex.inwento.tasks.GetProductListTask;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
@@ -38,15 +41,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventActivity extends AppCompatActivity
-        implements ProductsTask.ProductsListener,
+        implements GetProductListTask.ProductsListener,
         ProductAdapter.OnItemProductClickListener,
-        UnknownProductAdapter.OnItemUnknownProductClickListener {
+        UnknownProductAdapter.OnItemUnknownProductClickListener,
+        GetProductTask.GetProductByBarCodeListener,
+        ProductScannedDialog.ProductScannedListener,
+        UnknownProductDialog.UnknownProductScannedListener {
     private static final String TAG = "EventActivity";
 
     ImageButton btnSynch;
     Button btnShowAll, btnShowScanned, btnShowNotScanned, btnShowUnknown;
     RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
-
+    String decodedData;
     SettingsMng settingsMng;
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -80,36 +86,36 @@ public class EventActivity extends AppCompatActivity
         Intent intent = getIntent();
         eventId = intent.getIntExtra("EVENT_ID", 0);
 
-        ProductsTask productsTask = new ProductsTask(this, settingsMng.getAccessToken(), eventId);
-        productsTask.execute();
+        GetProductListTask getProductListTask = new GetProductListTask(this, settingsMng.getAccessToken(), eventId);
+        getProductListTask.execute();
     }
 
     private void setOnClickListenersToBtn() {
         Log.i(TAG, "setOnClickListenersToBtn: ");
         btnShowAll.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-            setGreenColorToBtn(btnShowAll);
-            setGrayColorToBtn(btnShowScanned, btnShowNotScanned, btnShowUnknown);
+            setGrayColorToBtn(btnShowAll);
+            setBlackColorToBtn(btnShowScanned, btnShowNotScanned, btnShowUnknown);
             initializeRecyclerView(event.getProducts());
 
         });
         btnShowScanned.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-            setGreenColorToBtn(btnShowScanned);
-            setGrayColorToBtn(btnShowAll, btnShowNotScanned, btnShowUnknown);
+            setGrayColorToBtn(btnShowScanned);
+            setBlackColorToBtn(btnShowAll, btnShowNotScanned, btnShowUnknown);
             initializeRecyclerView(filterProductsByStatus(event.getProducts(), "SCANNED"));
         });
 
         btnShowNotScanned.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-            setGreenColorToBtn(btnShowNotScanned);
-            setGrayColorToBtn(btnShowScanned, btnShowAll, btnShowUnknown);
+            setGrayColorToBtn(btnShowNotScanned);
+            setBlackColorToBtn(btnShowScanned, btnShowAll, btnShowUnknown);
             initializeRecyclerView(filterProductsByStatus(event.getProducts(), "NOT_SCANNED"));
         });
         btnShowUnknown.setOnClickListener(view -> {
             setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
-            setGreenColorToBtn(btnShowUnknown);
-            setGrayColorToBtn(btnShowScanned, btnShowNotScanned, btnShowAll);
+            setGrayColorToBtn(btnShowUnknown);
+            setBlackColorToBtn(btnShowScanned, btnShowNotScanned, btnShowAll);
         });
     }
 
@@ -123,23 +129,31 @@ public class EventActivity extends AppCompatActivity
         ev_branch_name = findViewById(R.id.ev_branch_name);
     }
 
-    private void setGreenColorToBtn(Button button) {
-        button.setBackgroundTintList(ColorStateList.valueOf(Color.DKGRAY));
+    private void setGrayColorToBtn(Button button) {
+        int btnColor = getResources().getColor(R.color.btnColorDark);
+        button.setBackgroundTintList(ColorStateList.valueOf(btnColor));
     }
 
-    private void setGrayColorToBtn(Button... buttons) {
+    private void setBlackColorToBtn( Button... buttons) {
+        int btnColor = getResources().getColor(R.color.btnColor);
         for (Button button : buttons) {
-            button.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
+            button.setBackgroundTintList(ColorStateList.valueOf(btnColor));
         }
     }
 
+
     private void initializeRecyclerView(List<Product> products) {
-        Log.i(TAG, "initializeRecyclerView: + " + products.size());
+        Log.i(TAG, "initializeRecyclerView: + " + event.getProducts().size());
 
         ev_branch_name.setText(event.getBranch());
+        event.setTotalProductsAmount(event.getProducts().size());
+        event.setScannedProductsAmount((int) event.getProducts()
+                .stream()
+                .filter(one -> one.getInventoryStatus().equals("SCANNED"))
+                .count());
         btnShowAll.setText("all (" + event.getTotalProductsAmount() + ")");
         btnShowScanned.setText("ok (" + event.getScannedProductsAmount() + ")");
-        btnShowNotScanned.setText("to scan (" + (event.getTotalProductsAmount()- event.getScannedProductsAmount()) + ")");
+        btnShowNotScanned.setText("to scan (" + (event.getTotalProductsAmount() - event.getScannedProductsAmount()) + ")");
 
         // Initialize RecyclerView for products
         recyclerViewProduct = findViewById(R.id.rv_products);
@@ -153,18 +167,15 @@ public class EventActivity extends AppCompatActivity
         unknownProductAdapter = new UnknownProductAdapter(event.getUnknownProducts(), this);
         LinearLayoutManager unknownProductLayoutManager = new LinearLayoutManager(this);
         recyclerViewUnknownProduct.setLayoutManager(unknownProductLayoutManager);
-                    recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
+        recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
 
         setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-
-
-
     }
 
 
     @Override
     public void onProductsSuccess(Event eventWithProducts) {
-        Log.i(TAG, "onProductsSuccess: + " + eventWithProducts.toString());
+        Log.i(TAG, "onProductsSuccess: + ");
         event = eventWithProducts;
 
         initializeRecyclerView(event.getProducts());
@@ -240,40 +251,96 @@ public class EventActivity extends AppCompatActivity
     }
 
     private void handleScanResult(Intent initiatingIntent) {
-        // get code and label type from event
         Log.i(TAG, "handleScanResult");
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
-        String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+        decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
         String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
         if (decodedSource == null) {
-            Log.d(TAG, "handleScanResult: decodedSource == null");
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
-        System.out.println("CCCCCCCCCCCCCCCCCCCC: " + decodedData);
-        handleCode(decodedData);
+        System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: " + decodedData);
 
-    }
-
-    private void handleCode(String code) {
-        boolean found = false;
-        for (Product product : event.getProducts()) {
-            ProductScannedDialog dialog = ProductScannedDialog.newInstance(code);
-            dialog.show(getSupportFragmentManager(), "product_scanned_dialog");
-//            if (product.getBarCode().equalsIgnoreCase(code)) {
-//                product.setInventoryStatus("SCANNED");
-//                found = true;
-//                break;
-//            }
+        boolean isProductAlreadyScanned = false;
+        // send request
+        // check if product already scanned
+        for (UnknownProduct unknownProduct : event.getUnknownProducts()){
+            if (unknownProduct.getCode().equalsIgnoreCase(decodedData) ){
+                Toast.makeText(this, "Product already scanned: ", Toast.LENGTH_SHORT).show();
+                isProductAlreadyScanned = true;
+            }
         }
-        if (!found) event.getUnknownProducts().add(new UnknownProduct(0, code));
-        initializeRecyclerView(event.getProducts());
+        for (Product product : event.getProducts()){
+            if (product.getBarCode().equalsIgnoreCase(decodedData) && product.getInventoryStatus().equalsIgnoreCase("SCANNED")){
+                Toast.makeText(this, "Product already scanned: ", Toast.LENGTH_SHORT).show();
+                isProductAlreadyScanned = true;
+            }
+        }
+        if (!isProductAlreadyScanned){
+            GetProductTask getProductTask = new GetProductTask(this, settingsMng.getAccessToken(), decodedData);
+            getProductTask.execute();
+        }
+
+
     }
+
 
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
         unregisterReceiver(myBroadcastReceiver);
+    }
+
+
+    @Override
+    public void onProductByBarCodeSuccess(ProductDto productDto) {
+        Log.i(TAG, "onProductByBarCodeSuccess");
+        boolean found = event.getProducts().stream().anyMatch(product -> product.getBarCode().equalsIgnoreCase(productDto.getBar_code()));
+        ProductScannedDialog.newInstance(this, productDto, found)
+                .show(getSupportFragmentManager(), "product_scanned_dialog");
+    }
+
+
+    @Override
+    public void onProductByBarCodeFailure(String errorMessage) {
+        Log.e(TAG, "onProductByBarCodeFailure: ");
+        UnknownProductDialog.newInstance(this, decodedData)
+                .show(getSupportFragmentManager(), "product_scanned_dialog");
+    }
+
+
+    // listener for dialog  (if product saved, send this code to server (it is not matter is it existing or unknown product)
+    @Override
+    public void onProductSaved(String code) {
+        Log.i(TAG, "onProductSaved");
+        sendCodeToServer(code);
+        for (Product product : event.getProducts()) {
+            if (product.getBarCode().equalsIgnoreCase(code)) {
+                product.setInventoryStatus("SCANNED");
+                initializeRecyclerView(event.getProducts());
+            }
+        }
+    }
+
+    @Override
+    public void onUnknownProductSaved(String code) {
+        Log.i(TAG, "onUnknownProductSaved");
+        sendCodeToServer(code);
+        // save code to unknown products
+        event.getUnknownProducts().add(new UnknownProduct(0, code));
+
+        initializeRecyclerView(event.getProducts());
+        setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
+        setGrayColorToBtn(btnShowUnknown);
+        setBlackColorToBtn(btnShowScanned, btnShowNotScanned, btnShowAll);
+    }
+
+
+    public void sendCodeToServer(String code) {
+        Log.i(TAG, "saveProduct");
+        // send code to the server
+
+
     }
 }

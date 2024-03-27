@@ -28,7 +28,7 @@ public class SettingsMng {
     public void setAuthInfo(String firstName, String lastName, String accessToken, String refreshToken) {
         pref.edit()
                 .putString(Util.FIRST_NAME, firstName)
-                .putString(Util.LAST_NAME, firstName)
+                .putString(Util.LAST_NAME, lastName)
                 .putString(Util.ACCESS_TOKEN, accessToken)
                 .putString(Util.REFRESH_TOKEN, refreshToken)
                 .apply();
@@ -56,6 +56,13 @@ public class SettingsMng {
 
     public String getPassword(){
         return pref.getString(Util.PASSWORD, "");
+    }
+
+    public String getFirstname(){
+        return pref.getString(Util.FIRST_NAME, "");
+    }
+    public String getLastname(){
+        return pref.getString(Util.LAST_NAME, "");
     }
 
 }

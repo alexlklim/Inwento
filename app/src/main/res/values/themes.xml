@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.Inwento" parent="Theme.Material3.DayNight.NoActionBar">
-         <item name="colorPrimary">@color/gray</item>
+         <item name="colorPrimary">@color/btnColor</item>
     </style>
 
     <style name="btnStyle" parent="Widget.Material3.Button">

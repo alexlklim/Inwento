@@ -30,7 +30,7 @@
             android:name=".activities.EventActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.InventoryActivity"
+            android:name=".activities.EventsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"

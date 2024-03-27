@@ -3,5 +3,29 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FF808080</color>
+    <color name="red">#FF0000</color>
     <color name="green">#FF00FF00</color>
+    <color name="btnColor">#3c4b64</color>
+    <color name="btnColorDark">#303c54</color>
+    <color name="backColor">#eee</color>
+
+
+<!--    [08:10] Łukasz Borys
+#3c4b64
+[08:10] Łukasz Borys
+jasny
+[08:10] Łukasz Borys
+#303c54
+[08:10] Łukasz Borys
+ciemny
+[08:11] Łukasz Borys
+#acb3bd
+[08:11] Łukasz Borys
+szary
+[08:11] Łukasz Borys
+niebieski
+[08:12] Łukasz Borys
+#321fdb
+[08:12] Łukasz Borys
+tło #ebedef-->
 </resources>

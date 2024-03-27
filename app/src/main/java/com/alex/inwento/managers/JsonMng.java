@@ -5,6 +5,8 @@ import android.util.Log;
 import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Inventory;
 import com.alex.inwento.dto.AuthDto;
+import com.alex.inwento.dto.DataModelDto;
+import com.alex.inwento.dto.ProductDto;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -84,6 +86,14 @@ public class JsonMng {
         return gson.fromJson(jsonResponse, Event.class);
     }
 
+    public static ProductDto parseJsonToProductDto(String jsonResponse) {
+        Gson gson = new Gson();
+        return gson.fromJson(jsonResponse, ProductDto.class);
+    }
 
+    public static DataModelDto parseJsonToDataModelDto(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, DataModelDto.class);
+    }
 
 }

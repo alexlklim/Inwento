@@ -5,54 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    app:backgroundTint="@color/white"
+    android:background="@color/backColor"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
+        android:gravity="center_horizontal"
+        android:background="@color/backColor"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textSize="45sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="55dp"
-            android:text="Inwento App" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="45dp"
+            android:padding="20dp"
+            app:srcCompat="@drawable/inwento_high_resolution_logo_transparent" />
+
 
         <Button
             android:id="@+id/btn_inventory"
+            style="@style/btnStyle"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:textSize="25sp"
+            android:layout_marginBottom="25dp"
             android:gravity="center"
-            android:text="Inventaryzacja" />
+            android:padding="10dp"
+            app:backgroundTint="@color/btnColor"
+            android:text="Inventaryzacja"
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/btn_scrap"
+            style="@style/btnStyle"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:textSize="25sp"
+            android:layout_marginBottom="25dp"
             android:gravity="center"
-            android:text="Umożenie" />
+            android:padding="10dp"
+            app:backgroundTint="@color/btnColor"
+            android:text="Umożenie"
+            android:textSize="25sp" />
 
         <Button
             android:id="@+id/btn_moved"
+            style="@style/btnStyle"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:textSize="25sp"
             android:gravity="center"
-            android:text="Przesunięcie" />
+            android:padding="10dp"
+            app:backgroundTint="@color/btnColor"
+            android:text="Przesunięcie"
+            android:textSize="25sp" />
 
 
     </LinearLayout>
@@ -60,44 +68,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:gravity="center">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:background="@color/btnColor"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/btn_settings"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/ic_settings"
-            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
             android:gravity="center"
-            android:padding="15dp"
-            android:contentDescription="TODO" />
+            android:padding="30dp"
+            android:tint="@color/white"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_settings" />
 
 
         <ImageButton
             android:id="@+id/btn_home"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/ic_home_page"
-            android:scaleType="fitCenter"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
             android:gravity="center"
-            android:padding="15dp"
-            android:contentDescription="TODO" />
+            android:padding="30dp"
+            android:tint="@color/white"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_home_page"
+            tools:ignore="UseAppTint" />
 
         <ImageButton
             android:id="@+id/btn_search"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="100dp"
-            app:srcCompat="@drawable/ic_search"
-            android:scaleType="fitCenter"
-            android:padding="15dp"
+            android:layout_weight="1"
+            android:contentDescription="TODO"
             android:gravity="center"
-            android:contentDescription="TODO" />
+            android:background="@android:color/transparent"
+            android:padding="30dp"
+            android:tint="@color/white"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_search" />
     </LinearLayout>
 
 </LinearLayout>

@@ -3,8 +3,9 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Event;
-import com.alex.inwento.database.domain.Product;
+import com.alex.inwento.database.domain.Branch;
+import com.alex.inwento.database.domain.Employee;
+import com.alex.inwento.dto.DataModelDto;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
 
@@ -14,35 +15,30 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-
-public class ProductsTask extends AsyncTask<Void, Void, Event> {
-
-    private static final String TAG = "ProductTask";
 
 
-    private ProductsTask.ProductsListener listener;
+public class GetBranchesAndEmpTask extends AsyncTask<Void, Void, DataModelDto> {
+    private static final String TAG = "GetBranchesAndEmpTask";
 
+    private OnDataReceivedListener listener;
     private String token;
-    private int eventId;
 
-    public interface ProductsListener {
-        void onProductsSuccess(Event event);
+    public interface OnDataReceivedListener {
+        void onDataReceived(Employee[] employees, Branch[] branches);
 
-        void onProductsFailure(String errorMessage);
+        void onError(String errorMessage);
     }
 
-    public ProductsTask(ProductsTask.ProductsListener listener, String token, int eventId) {
-        this.token = token;
+    public GetBranchesAndEmpTask(OnDataReceivedListener listener, String token) {
         this.listener = listener;
-        this.eventId = eventId;
+        this.token = token;
     }
 
     @Override
-    protected Event doInBackground(Void... voids) {
+    protected DataModelDto doInBackground(Void... voids) {
         HttpURLConnection urlConnection = null;
         try {
-            URL url = new URL(Endpoints.GET_EVENT_BY_ID + eventId);
+            URL url = new URL(Endpoints.GET_FIELDS);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Authorization", "Bearer " + token);
@@ -57,11 +53,9 @@ public class ProductsTask extends AsyncTask<Void, Void, Event> {
                     response.append(line);
                 }
 
-                System.out.println("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
-                System.out.println(response);
                 inputStream.close();
 
-                return JsonMng.parseJsonToEventAndProducts(String.valueOf(response));
+                return JsonMng.parseJsonToDataModelDto(response.toString());
             } else {
                 Log.e(TAG, "Error response code: " + responseCode);
             }
@@ -75,15 +69,15 @@ public class ProductsTask extends AsyncTask<Void, Void, Event> {
         return null;
     }
 
-
     @Override
-    protected void onPostExecute(Event products) {
-        Log.i(TAG, "onPostExecute: + " + products.toString());
-        if (products != null) {
-            listener.onProductsSuccess(products);
+    protected void onPostExecute(DataModelDto data) {
+        if (data != null) {
+            // Extract employees and branches
+            Employee[] employees = data.getEmployees();
+            Branch[] branches = data.getBranches();
+            listener.onDataReceived(employees, branches);
         } else {
-
-            listener.onProductsFailure("No products found.");
+            listener.onError("Failed to fetch data");
         }
     }
 }

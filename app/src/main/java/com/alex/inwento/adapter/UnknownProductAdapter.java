@@ -37,11 +37,14 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
     public void onBindViewHolder(@NonNull UnknownProductAdapter.OrderViewHolder holder, int position) {
         UnknownProduct unknownProduct = unknownProductList.get(position);
 
-        holder.id.setText(String.valueOf(unknownProduct.getId()));
+        // Assign ID automatically from 1 to n
+        int id = position + 1;
+        holder.id.setText(String.valueOf(id));
+
         holder.code.setText(unknownProduct.getCode());
         // set date
         holder.date.setText(DateMng.convertDateToString(LocalDate.now()));
-        holder.itemView.setOnClickListener(view -> onItemClickListener.onItemUnknownProductClick(unknownProduct.getId()));
+        holder.itemView.setOnClickListener(view -> onItemClickListener.onItemUnknownProductClick(id));
     }
 
     @Override
