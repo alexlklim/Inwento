@@ -7,8 +7,11 @@ import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepo extends JpaRepository<Event, Long> {
 
@@ -26,8 +29,19 @@ public interface EventRepo extends JpaRepository<Event, Long> {
     List<Event> findAllByInventory(Inventory inventory);
 
 
-    @Query("SELECT e.products FROM Event e WHERE e.branch = ?1")
-    List<Product> findProductsByBranch(Branch branch);
+    @Query("SELECT e.products " +
+            "FROM Event e " +
+            "WHERE e.branch = ?1 AND e.inventory = ?2")
+    List<Product> findProductsByBranch(Branch branch, Inventory inventory);
+
+    @Query("SELECT e " +
+            "FROM Event e " +
+            "JOIN e.products p " +
+            "WHERE p.id = :productId AND e.inventory = :inventory")
+    Optional<Event> findByProductId(
+            @Param("productId") Long productId,
+            @Param("inventory") Inventory inventory
+    );
 
     boolean existsByUserAndBranchAndInventory(User user, Branch branch, Inventory currentInventory);
 }

@@ -49,9 +49,19 @@ VALUES
     (11, TRUE, 'Herbata', 'Compact and powerful drone with intelligent flight features', 1500.00, '5900396029898', 'RFID03r12', 'INV0172',
      'SERIAL0123', 1, 1, 'Liam Martinez', 5, 5, 5, 5,
      5, 5, 5, 'DJI', 'DJI Technology Co. Ltd.', FALSE, NULL, NULL,
+     'Purchase Invoice #303132', '2023-10-15', '2024-10-15', '2025-10-15', 34.0522, -118.2437),
+
+    (12, TRUE, 'Camera - NEW VERSION', 'Compact and powerful drone with intelligent flight features', 1500.00, '5902983620365', 'RFgID0r12', 'INV0ge12',
+     'SERadIAL012', 1, 1, 'Liam Martinez', 5, 5, 5, 5,
+     5, 5, 5, 'DJI', 'DJI Technology Co. Ltd.', FALSE, NULL, NULL,
+     'Purchase Invoice #303132', '2023-10-15', '2024-10-15', '2025-10-15', 34.0522, -118.2437),
+
+    (13, TRUE, 'Drone - New VERSION', 'Compact and powerful drone with intelligent flight features', 1500.00, '5900888013299', 'RFIDaa0r12', 'IaNVa0a12',
+     'SERIALff012', 1, 1, 'Liam Martinez', 5, 5, 5, 5,
+     5, 5, 5, 'DJI', 'DJI Technology Co. Ltd.', FALSE, NULL, NULL,
      'Purchase Invoice #303132', '2023-10-15', '2024-10-15', '2025-10-15', 34.0522, -118.2437);
 
 
 
-select * from products;
+
 
