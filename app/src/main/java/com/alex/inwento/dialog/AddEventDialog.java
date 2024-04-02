@@ -21,7 +21,9 @@ import com.alex.inwento.R;
 import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
 import com.alex.inwento.database.domain.Event;
+import com.alex.inwento.tasks.AddEventTask;
 import com.alex.inwento.tasks.GetBranchesAndEmpTask;
+import com.alex.inwento.tasks.PostProductsTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +31,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AddEventDialog extends AppCompatDialogFragment
-        implements GetBranchesAndEmpTask.OnDataReceivedListener {
+        implements
+        GetBranchesAndEmpTask.OnDataReceivedListener,
+        AddEventTask.AddEventListener {
     private static final String TAG = "AddEventDialog";
     private FragmentActivity fragmentActivity;
 
@@ -41,11 +45,23 @@ public class AddEventDialog extends AppCompatDialogFragment
     TextView liable;
     List<String> branchNames;
 
+    List<Branch> branchList;
 
 
-    public static AddEventDialog newInstance(AddEventDialog.AddEventListener listener, String barCode) {
+    String token, firstname, lastname;
+
+
+    public static AddEventDialog newInstance(
+            AddEventDialog.AddEventListener listener,
+            String token,
+            String firstname,
+            String lastname
+    ) {
         AddEventDialog dialog = new AddEventDialog();
         dialog.addEventListener = listener;
+        dialog.token = token;
+        dialog.firstname = firstname;
+        dialog.lastname = lastname;
         return dialog;
     }
 
@@ -53,11 +69,6 @@ public class AddEventDialog extends AppCompatDialogFragment
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        String token = args != null ? args.getString("token") : null;
-        String firstname = args != null ? args.getString("firstname") : null;
-        String lastname = args != null ? args.getString("lastname") : null;
-
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_add_event, null);
@@ -73,9 +84,9 @@ public class AddEventDialog extends AppCompatDialogFragment
 
         btnSave.setOnClickListener(v -> {
             Log.e(TAG, "setOnClickListener: ");
-            addEventListener.onAddEventSave(new Event());
+            // sent request to save new event
+            new AddEventTask(this, token, Branch.getIdByName(branchList, getSelectedBranch()), text.getText().toString()).execute();
 
-            dismiss();
         });
 
 
@@ -101,16 +112,10 @@ public class AddEventDialog extends AppCompatDialogFragment
     }
 
 
-    public void setTokenAndUser(String token, String firstName, String lastName) {
-        Bundle args = new Bundle();
-        args.putString("token", token);
-        args.putString("firstname", firstName);
-        args.putString("lastname", lastName);
-        setArguments(args);
-    }
-
     @Override
     public void onDataReceived(Employee[] employees, Branch[] branches) {
+        Log.d(TAG, "onDataReceived: ");
+        branchList = Arrays.asList(branches);
         branchNames = Arrays.stream(branches)
                 .map(Branch::getBranch)
                 .collect(Collectors.toList());
@@ -119,12 +124,32 @@ public class AddEventDialog extends AppCompatDialogFragment
 
     @Override
     public void onError(String errorMessage) {
+        Log.d(TAG, "onError: ");
 
+    }
+
+    @Override
+    public void onAddEventSuccess(Boolean answer) {
+        Log.d(TAG, "onAddEventSuccess: ");
+        addEventListener.onAddEventSave(true);
+        dismiss();
+    }
+
+    @Override
+    public void onAddEventFailure(String errorMessage) {
+        Log.d(TAG, "onAddEventFailure: ");
+        addEventListener.onAddEventSave(true);
+
+        dismiss();
+    }
+
+    private String getSelectedBranch() {
+        return branchesSpinner.getSelectedItem().toString();
     }
 
 
     public interface AddEventListener {
-        void onAddEventSave(Event event);
+        void onAddEventSave(Boolean result);
     }
 
 }

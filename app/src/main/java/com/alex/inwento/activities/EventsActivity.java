@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.database.domain.Inventory;
 import com.alex.inwento.dialog.AddEventDialog;
 import com.alex.inwento.managers.SettingsMng;
+import com.alex.inwento.tasks.AddEventTask;
 import com.alex.inwento.tasks.CheckInventoryActiveTask;
 import com.alex.inwento.tasks.GetEventsTask;
 import com.alex.inwento.tasks.GetInventoryTask;
@@ -28,7 +28,9 @@ public class EventsActivity extends AppCompatActivity
         CheckInventoryActiveTask.CheckInventoryActiveListener,
         GetInventoryTask.InventoryListener,
         GetEventsTask.EventsListener,
-        EventAdapter.OnItemClickListener {
+        EventAdapter.OnItemClickListener,
+        AddEventTask.AddEventListener,
+        AddEventDialog.AddEventListener{
     private static final String TAG = "InventoryActivity";
     SettingsMng settingsMng;
     RecyclerView recyclerView;
@@ -51,9 +53,11 @@ public class EventsActivity extends AppCompatActivity
         btnAddEvent.setOnClickListener(view -> {
             Log.i(TAG, "setOnClickListener");
 
-            AddEventDialog dialog = new AddEventDialog();
-            dialog.setTokenAndUser(settingsMng.getAccessToken(), settingsMng.getFirstname(), settingsMng.getLastname());
-            dialog.show(getSupportFragmentManager(), "add_event_dialog");
+            AddEventDialog dialog = AddEventDialog.newInstance(this,
+                    settingsMng.getAccessToken(),
+                    settingsMng.getFirstname(),
+                    settingsMng.getLastname());
+            dialog.show(getSupportFragmentManager(), "AddEventDialog");
         });
 
         // check if inventory is active now
@@ -61,6 +65,14 @@ public class EventsActivity extends AppCompatActivity
         checkInventoryActiveTask.execute();
 
 
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetInventoryTask getInventoryTask = new GetInventoryTask(this, settingsMng.getAccessToken());
+        getInventoryTask.execute();
     }
 
 
@@ -78,6 +90,7 @@ public class EventsActivity extends AppCompatActivity
     @Override
     public void onInventorySuccess(Inventory inventory) {
         Log.i(TAG, "onInventorySuccess: + " + inventory.getId());
+        inventoryId = inventory.getId();
         System.out.println(inventory.toString());
         tvStartData.setText("Data: " + inventory.getStartDate());
         tvProductAmount.setText("Produkty " + inventory.getScannedProductAmount() + " / " + inventory.getTotalProductAmount());
@@ -120,4 +133,25 @@ public class EventsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+
+    @Override
+    public void onAddEventSuccess(Boolean answer) {
+        Log.i(TAG, "onAddEventSuccess: + " + answer);
+
+    }
+
+    @Override
+    public void onAddEventFailure(String errorMessage) {
+        Log.i(TAG, "onAddEventSuccess: + " + errorMessage);
+
+    }
+
+    @Override
+    public void onAddEventSave(Boolean result) {
+        Log.i(TAG, "onAddEventSave: + ");
+
+        CheckInventoryActiveTask checkInventoryActiveTask = new CheckInventoryActiveTask(this, settingsMng.getAccessToken());
+        checkInventoryActiveTask.execute();
+
+    }
 }

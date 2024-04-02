@@ -16,7 +16,7 @@ import java.net.URL;
 
 public class GetProductTask extends AsyncTask<Void, Void, ProductDto> {
 
-    private static final String TAG = "GetProductByBarCodeTask";
+    private static final String TAG = "GetProductTask";
 
 
     private GetProductTask.GetProductByBarCodeListener listener;

@@ -40,6 +40,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
         holder.products.setText(event.getScannedProductsAmount() + " / " + event.getTotalProductsAmount());
         holder.unknown.setText("unknown " + event.getUnknownProductsAmount());
 
+        System.out.println("DDDDDDDDDDDDDDDDDDDDD: " + event.getUnknownProducts());
         if (event.getScannedProductsAmount() == event.getTotalProductsAmount()) {
             holder.event_status.setImageResource(R.drawable.ic_done);
         } else {

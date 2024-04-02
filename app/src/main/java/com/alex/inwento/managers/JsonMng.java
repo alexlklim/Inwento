@@ -71,7 +71,7 @@ public class JsonMng {
             event.setBranch(jsonObject.getString("branch"));
             event.setUsername(jsonObject.getString("username"));
             event.setEmail(jsonObject.getString("email"));
-            event.setUnknownProductsAmount(jsonObject.isNull("unknown_products") ? 0 : jsonObject.getInt("unknown_product_amount"));
+            event.setUnknownProductsAmount(jsonObject.isNull("unknown_product_amount") ? 0 : jsonObject.getInt("unknown_product_amount"));
             event.setTotalProductsAmount(jsonObject.getInt("total_product_amount"));
             event.setScannedProductsAmount(jsonObject.getInt("scanned_product_amount"));
             events.add(event);

@@ -1,5 +1,7 @@
 package com.alex.inwento.database.domain;
 
+import java.util.List;
+
 public class Branch {
 
     private int id;
@@ -37,5 +39,15 @@ public class Branch {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+
+    public static int getIdByName(List<Branch> branches, String branchName) {
+        for (Branch branch : branches) {
+            if (branch.getBranch().equals(branchName)) {
+                return branch.getId();
+            }
+        }
+        return -1;
     }
 }

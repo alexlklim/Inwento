@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,9 +18,14 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
 import com.alex.inwento.dto.ProductDto;
+import com.alex.inwento.tasks.PostProductsTask;
+
+import java.util.Arrays;
+import java.util.List;
 
 
-public class ProductScannedDialog extends AppCompatDialogFragment {
+public class ProductScannedDialog extends AppCompatDialogFragment
+        implements PostProductsTask.ProductUploadListener {
     private static final String TAG = "ProductScannedDialog";
     private ProductScannedListener productScannedListener;
 
@@ -28,6 +34,8 @@ public class ProductScannedDialog extends AppCompatDialogFragment {
 
     TextView title, desc, code, price, liable, receiver, warning;
     Button btnSave;
+    int eventId;
+    String token;
 
     boolean isCurrentBranch;
 
@@ -57,7 +65,7 @@ public class ProductScannedDialog extends AppCompatDialogFragment {
         liable.setText(productDto.getLiable());
         receiver.setText(productDto.getReceiver());
 
-        if (isCurrentBranch){
+        if (isCurrentBranch) {
             ViewGroup parentView = (ViewGroup) warning.getParent();
             parentView.removeView(warning);
         } else {
@@ -66,24 +74,44 @@ public class ProductScannedDialog extends AppCompatDialogFragment {
 
 
         btnSave.setOnClickListener(v -> {
-            if (productScannedListener != null){
+            if (productScannedListener != null) {
                 productScannedListener.onProductSaved(productDto.getBar_code());
+                new PostProductsTask(this, Arrays.asList(productDto.getBar_code()), eventId, token ).execute();
             }
-            dismiss();
         });
 
         return builder.create();
     }
 
 
-    public static ProductScannedDialog newInstance(ProductScannedListener listener, ProductDto productDto, boolean isCurrentBranch) {
+    public static ProductScannedDialog newInstance(
+            ProductScannedListener listener,
+            ProductDto productDto,
+            boolean isCurrentBranch,
+            int eventId,
+            String token) {
         ProductScannedDialog dialog = new ProductScannedDialog();
         dialog.productDto = productDto;
         dialog.productScannedListener = listener;
         dialog.isCurrentBranch = isCurrentBranch;
+        dialog.eventId = eventId;
+        dialog.token = token;
         return dialog;
     }
 
+    @Override
+    public void onUploadSuccess(Boolean answer) {
+        Log.i(TAG, "onUploadSuccess: ");
+        Toast.makeText(requireActivity(), "Product added", Toast.LENGTH_SHORT).show();
+        dismiss();
+    }
+
+    @Override
+    public void onUploadFailure(String errorMessage) {
+        Log.i(TAG, "onUploadFailure: ");
+        Toast.makeText(requireActivity(), "Something wrong", Toast.LENGTH_SHORT).show();
+        dismiss();
+    }
 
 
     public interface ProductScannedListener {

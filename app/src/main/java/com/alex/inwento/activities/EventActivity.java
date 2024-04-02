@@ -31,8 +31,8 @@ import com.alex.inwento.dialog.ProductScannedDialog;
 import com.alex.inwento.dialog.UnknownProductDialog;
 import com.alex.inwento.dto.ProductDto;
 import com.alex.inwento.managers.SettingsMng;
-import com.alex.inwento.tasks.GetProductTask;
 import com.alex.inwento.tasks.GetProductListTask;
+import com.alex.inwento.tasks.GetProductTask;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
@@ -40,8 +40,10 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventActivity extends AppCompatActivity
-        implements GetProductListTask.ProductsListener,
+public class EventActivity
+        extends AppCompatActivity
+        implements
+        GetProductListTask.ProductsListener,
         ProductAdapter.OnItemProductClickListener,
         UnknownProductAdapter.OnItemUnknownProductClickListener,
         GetProductTask.GetProductByBarCodeListener,
@@ -134,7 +136,7 @@ public class EventActivity extends AppCompatActivity
         button.setBackgroundTintList(ColorStateList.valueOf(btnColor));
     }
 
-    private void setBlackColorToBtn( Button... buttons) {
+    private void setBlackColorToBtn(Button... buttons) {
         int btnColor = getResources().getColor(R.color.btnColor);
         for (Button button : buttons) {
             button.setBackgroundTintList(ColorStateList.valueOf(btnColor));
@@ -264,19 +266,19 @@ public class EventActivity extends AppCompatActivity
         boolean isProductAlreadyScanned = false;
         // send request
         // check if product already scanned
-        for (UnknownProduct unknownProduct : event.getUnknownProducts()){
-            if (unknownProduct.getCode().equalsIgnoreCase(decodedData) ){
+        for (UnknownProduct unknownProduct : event.getUnknownProducts()) {
+            if (unknownProduct.getCode().equalsIgnoreCase(decodedData)) {
                 Toast.makeText(this, "Product already scanned: ", Toast.LENGTH_SHORT).show();
                 isProductAlreadyScanned = true;
             }
         }
-        for (Product product : event.getProducts()){
-            if (product.getBarCode().equalsIgnoreCase(decodedData) && product.getInventoryStatus().equalsIgnoreCase("SCANNED")){
+        for (Product product : event.getProducts()) {
+            if (product.getBarCode().equalsIgnoreCase(decodedData) && product.getInventoryStatus().equalsIgnoreCase("SCANNED")) {
                 Toast.makeText(this, "Product already scanned: ", Toast.LENGTH_SHORT).show();
                 isProductAlreadyScanned = true;
             }
         }
-        if (!isProductAlreadyScanned){
+        if (!isProductAlreadyScanned) {
             GetProductTask getProductTask = new GetProductTask(this, settingsMng.getAccessToken(), decodedData);
             getProductTask.execute();
         }
@@ -297,7 +299,7 @@ public class EventActivity extends AppCompatActivity
     public void onProductByBarCodeSuccess(ProductDto productDto) {
         Log.i(TAG, "onProductByBarCodeSuccess");
         boolean found = event.getProducts().stream().anyMatch(product -> product.getBarCode().equalsIgnoreCase(productDto.getBar_code()));
-        ProductScannedDialog.newInstance(this, productDto, found)
+        ProductScannedDialog.newInstance(this, productDto, found, eventId, settingsMng.getAccessToken())
                 .show(getSupportFragmentManager(), "product_scanned_dialog");
     }
 
@@ -305,7 +307,7 @@ public class EventActivity extends AppCompatActivity
     @Override
     public void onProductByBarCodeFailure(String errorMessage) {
         Log.e(TAG, "onProductByBarCodeFailure: ");
-        UnknownProductDialog.newInstance(this, decodedData)
+        UnknownProductDialog.newInstance(this, decodedData, eventId, settingsMng.getAccessToken())
                 .show(getSupportFragmentManager(), "product_scanned_dialog");
     }
 
