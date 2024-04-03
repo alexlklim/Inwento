@@ -23,7 +23,7 @@
             android:background="@color/red"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:text="Product przywiązany do innei lokolizacji!"
+            android:text="Product przywiązany do innei lokalizacji!"
             android:textSize="20sp" />
 
         <TextView

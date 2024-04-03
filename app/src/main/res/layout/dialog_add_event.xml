@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:text="uwagi" />
+            android:hint="uwagi" />
 
         <TextView
             android:layout_width="match_parent"
