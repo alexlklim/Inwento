@@ -14,6 +14,7 @@ public class Endpoints {
     public static final String GET_SHORT_PRODUCT_BY_BAR_CODE = SERVER + "/v1/product/filter/bar-code/";
     public static final String GET_FIELDS = SERVER + "/v1/company/all";
     public static final String ADD_PRODUCTS = SERVER + "/v1/event/";  // event id
+    public static final String UPDATE_PRODUCT = SERVER + "/v1/product";  // event id
 
     public static final String ADD_EVENT = SERVER + "/v1/event";
 
