@@ -8,8 +8,6 @@ import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
-import com.alex.asset.inventory.service.EventService;
-import com.alex.asset.inventory.service.InventoryService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;

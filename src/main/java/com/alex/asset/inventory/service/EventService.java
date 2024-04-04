@@ -3,7 +3,6 @@ package com.alex.asset.inventory.service;
 
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.repo.BranchRepo;
-import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.inventory.domain.event.UnknownProduct;
@@ -227,8 +226,6 @@ public class EventService {
     }
 
 
-
-
     private void handleNewProduct(Event event, Product product) {
         log.info("{} product NOT scanned in this event", product.getBarCode());
         Event eventIfProductAlreadyScanned = eventRepo.findByProductId(product.getId(), event.getInventory()).orElse(null);
@@ -263,7 +260,6 @@ public class EventService {
             }
         }
     }
-
 
 
 }
