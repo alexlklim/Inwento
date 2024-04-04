@@ -3,8 +3,6 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Branch;
-import com.alex.inwento.database.domain.Employee;
 import com.alex.inwento.util.Endpoints;
 
 import org.json.JSONException;
@@ -19,54 +17,51 @@ import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MoveProductTask extends AsyncTask<List<String>, Void, Boolean> {
-    private static final String TAG = "PostProductsTask";
+public class ScrapProductTask extends AsyncTask<List<String>, Void, Boolean> {
+    private static final String TAG = "ScrapProductTask";
 
-    private MoveProductTask.ProductMoveListener listener;
+    private ScrapProductTask.ScrapProductListener listener;
     String token;
+    int productId, month, year, day;
+    String scrapReason;
 
-    Branch branch;
-    Employee liable;
-    String receiver;
-    int productId;
+    public interface ScrapProductListener {
+        void onProductScrapSuccess(Boolean answer);
 
-    public interface ProductMoveListener {
-        void onProductMoveSuccess(Boolean answer);
-
-        void onProductMoveFailure(String errorMessage);
+        void onProductScrapFailure(String errorMessage);
     }
 
-    public MoveProductTask(
-            MoveProductTask.ProductMoveListener listener,
-            String token,
-            int productId,
-            Branch branch,
-            Employee liable,
-            String receiver) {
+    public ScrapProductTask(ScrapProductTask.ScrapProductListener listener, String token, int productId, int day, int month, int year, String scrapReason) {
         this.listener = listener;
         this.token = token;
-        this.branch = branch;
-        this.liable = liable;
-        this.receiver = receiver;
         this.productId = productId;
+        this.day = day;
+        this.month = month + 1;
+        this.year = year;
+        this.scrapReason = scrapReason;
     }
 
     @Override
     protected Boolean doInBackground(List<String>... lists) {
         try {
+            String monthString, dayString;
+            if (day <= 10) {
+                dayString = "0" + day;
+            } else {
+                dayString = String.valueOf(day);
 
-            System.out.println(productId);
-            System.out.println(branch.getBranch());
-            System.out.println(liable.getEmail());
-            System.out.println(receiver);
-            System.out.println(token);
+            }
 
-
+            if (month <= 10) {
+                monthString = "0" + month;
+            } else {
+                monthString = String.valueOf(month);
+            }
             JSONObject jsonArray = new JSONObject()
                     .put("id", productId)
-                    .put("branch_id", branch.getId())
-                    .put("liable_id", liable.getId())
-                    .put("receiver", receiver);
+                    .put("scrapping", true).
+                    put("scrapping_date", year + "-" + monthString + "-" + dayString)
+                    .put("scrapping_reason", scrapReason);
 
             HttpURLConnection connection = (HttpURLConnection) new URL(Endpoints.UPDATE_PRODUCT).openConnection();
             connection.setRequestMethod("PUT");
@@ -78,16 +73,18 @@ public class MoveProductTask extends AsyncTask<List<String>, Void, Boolean> {
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                String response = new BufferedReader(new InputStreamReader(connection.getInputStream()))
-                        .lines().collect(Collectors.joining("\n"));
+                String response = new BufferedReader(
+                        new InputStreamReader(
+                                connection.getInputStream()))
+                        .lines()
+                        .collect(Collectors.joining("\n"));
                 return true;
             } else {
-                String errorMessage = "Error Response Code: " + responseCode;
                 return false;
             }
         } catch (IOException e) {
             String errorMessage = "Error: " + e.getMessage();
-            listener.onProductMoveFailure(errorMessage);
+            listener.onProductScrapFailure(errorMessage);
             return false;
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -98,11 +95,10 @@ public class MoveProductTask extends AsyncTask<List<String>, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         Log.i(TAG, "onPostExecute: + ");
         if (success) {
-            listener.onProductMoveSuccess(true);
+            listener.onProductScrapSuccess(true);
         } else {
-            listener.onProductMoveFailure("No inventory found.");
+            listener.onProductScrapFailure("No inventory found.");
         }
     }
-
 
 }

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alex.inwento.activities.EventsActivity;
 import com.alex.inwento.activities.LoginActivity;
+import com.alex.inwento.activities.ProductUpdateActivity;
 import com.alex.inwento.dto.AuthDto;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.managers.SettingsMng;
@@ -67,10 +68,19 @@ public class MainActivity extends AppCompatActivity implements AuthTask.AuthList
         );
 
         btn_inventory.setOnClickListener(view ->
-                // send request if inventory is activ
-
                 startActivity(new Intent(MainActivity.this, EventsActivity.class))
         );
+
+        btn_moved.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ProductUpdateActivity.class);
+            intent.putExtra("ACTION", 1);
+            startActivity(intent);
+        });
+        btn_scrap.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ProductUpdateActivity.class);
+            intent.putExtra("ACTION", 2);
+            startActivity(intent);
+        });
 
     }
 

@@ -13,7 +13,7 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(int id, String title, String description, String bar_code, Double price, String liable, String receiver) {
+    public ProductDto(int id, String title, String description, String bar_code, Double price, String liable, String receiver, String branch) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -21,6 +21,7 @@ public class ProductDto {
         this.price = price;
         this.liable = liable;
         this.receiver = receiver;
+        this.branch = branch;
     }
 
     public int getId() {
@@ -77,6 +78,14 @@ public class ProductDto {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
     @Override

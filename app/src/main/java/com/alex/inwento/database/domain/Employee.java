@@ -1,5 +1,7 @@
 package com.alex.inwento.database.domain;
 
+import java.util.List;
+
 public class Employee {
 
     private int id;
@@ -47,5 +49,14 @@ public class Employee {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public static Employee getEmployeeByName(String fullName, List<Employee> employeeList) {
+        for (Employee employee : employeeList) {
+            if ((employee.getFirst_name() + " " + employee.getLast_name()).equals(fullName)) {
+                return employee;
+            }
+        }
+        return null;
     }
 }

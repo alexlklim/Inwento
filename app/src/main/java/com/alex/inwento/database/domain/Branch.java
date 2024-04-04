@@ -50,4 +50,14 @@ public class Branch {
         }
         return -1;
     }
+
+
+    public static Branch getBranchByName(String branchName, List<Branch> branchList) {
+        for (Branch branch : branchList) {
+            if (branch.getBranch().equals(branchName)) {
+                return branch;
+            }
+        }
+        return null;
+    }
 }
