@@ -4,14 +4,20 @@ package com.alex.asset.product.service;
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.inventory.domain.Inventory;
+import com.alex.asset.inventory.domain.event.Event;
+import com.alex.asset.inventory.repo.EventRepo;
+import com.alex.asset.inventory.repo.InventoryRepo;
+import com.alex.asset.inventory.service.EventService;
+import com.alex.asset.inventory.service.InventoryService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
-import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductHistoryDto;
+import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductV3Dto;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductHistoryRepo;
@@ -46,6 +52,8 @@ public class ProductService {
     private final ProductRepo productRepo;
     private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
+    private final InventoryRepo inventoryRepo;
+    private final EventRepo eventRepo;
     private final ConfigureService configureService;
     private final TypeService typeService;
 
@@ -101,11 +109,17 @@ public class ProductService {
     }
 
     public ProductV3Dto getShortProductById(Long productId) {
+        return convertProductToProductV3Dto(
+                productRepo.findById(productId)
+                        .orElseThrow(
+                                () -> new ResourceNotFoundException("Product with id " + productId + " not found")
+                        )
+        );
+    }
+
+
+    private ProductV3Dto convertProductToProductV3Dto(Product product) {
         ProductV3Dto dto = new ProductV3Dto();
-        Product product = productRepo.findById(productId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + productId + " not found")
-                );
         dto.setId(product.getId());
         dto.setTitle(product.getTitle());
         dto.setDescription(product.getDescription());
@@ -132,7 +146,13 @@ public class ProductService {
                         () -> new ResourceNotFoundException("Product with bar code " + barCode + " not found")
                 ).getId()
         );
+    }
 
+    public List<ProductV3Dto> getListOfProductV3DTO() {
+        return productRepo.getActive()
+                .stream()
+                .map(this::convertProductToProductV3Dto)
+                .collect(Collectors.toList());
 
     }
 
@@ -235,6 +255,7 @@ public class ProductService {
                     addHistoryToProduct(userId, productId, Activity.UNIT);
                     break;
                 case "branch_id":
+                    resolveIssueWithInventory(product, configureService.getBranchById(((Number) value).longValue()));
                     product.setBranch(configureService.getBranchById(((Number) value).longValue()));
                     addHistoryToProduct(userId, productId, Activity.BRANCH);
                     break;
@@ -303,6 +324,14 @@ public class ProductService {
 
     }
 
+    public void resolveIssueWithInventory(Product product, Branch branchById) {
+        log.info(TAG + "Resolve issue with inventory for branch {}", branchById);
+        Inventory inventory = inventoryRepo.getCurrentInvent(LocalDate.now()).orElse(null);
+        if (inventory == null) return;
+        Event event = eventRepo.findByProductId(product.getId(), inventory).orElse(null);
+        if (event == null) return;
+        event.getProducts().remove(product);
+    }
 
     @SneakyThrows
     private void addHistoryToProduct(Long userId, Long productId, Activity activity) {

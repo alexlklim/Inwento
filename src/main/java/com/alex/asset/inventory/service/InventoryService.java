@@ -1,6 +1,7 @@
 package com.alex.asset.inventory.service;
 
 
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.dto.EventV2Get;
 import com.alex.asset.inventory.dto.InventoryDto;
@@ -11,6 +12,7 @@ import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.utils.exceptions.errors.InventIsAlreadyInProgress;
@@ -121,6 +123,7 @@ public class InventoryService {
                 () -> new ResourceNotFoundException("No active inventory at this moment")).getId()
         );
     }
+
 
 
 }

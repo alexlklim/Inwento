@@ -15,7 +15,8 @@ import java.util.Optional;
 public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("SELECT p " +
             "FROM Product p " +
-            "WHERE p.isActive = true")
+            "WHERE p.isActive = true " +
+            "ORDER BY p.id DESC")
     List<Product> getActive();
 
     @Query("SELECT COUNT(p) " +

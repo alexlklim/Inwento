@@ -3,6 +3,7 @@ package com.alex.asset.inventory.service;
 
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.repo.BranchRepo;
+import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.inventory.domain.event.UnknownProduct;
@@ -29,7 +30,6 @@ import com.alex.asset.utils.exceptions.errors.user_error.UserIsNotOwnerOfEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -203,7 +203,7 @@ public class EventService {
 
 
     @Transactional
-    public void addProductsToEventByBarCode(Long userId, Long eventId, List<String> list) {
+    public void addProductsToEventByBarCode(Long userId, Long eventId, List<String> barcodes) {
         log.info("Adding products to event by bar code by user with id {}", userId);
 
         Event event = eventRepo.findById(eventId)
@@ -213,46 +213,32 @@ public class EventService {
         if (!event.getUser().equals(user))
             throw new UserIsNotOwnerOfEvent("User with id " + userId + " is not owner of event with id " + eventId);
 
-        log.info("-----------------------------------------------------------------");
-
-        for (String barCode : list) {
-            log.info("Checking product with bar code {}", barCode);
-            Product product = productService.getByBarCode(barCode).orElse(null);
-
-            if (product != null) {
-                log.info("Product with bar code {} exists in DB", barCode);
-
-                if (event.getProducts().contains(product)) {
-                    log.info("{} product already scanned in this event", barCode);
-                } else {
-                    handleNewProduct(event, product);
-                }
-            } else {
-                handleUnknownProduct(event, barCode);
+        for (String barcode : barcodes) {
+            Product product = productService.getByBarCode(barcode).orElse(null);
+            if (product != null && !event.getProducts().contains(product)) {
+                handleNewProduct(event, product);
+            } else if (product == null) {
+                handleUnknownProduct(event, barcode);
             }
         }
 
         eventRepo.save(event);
-
         logService.addLog(userId, Action.CREATE, Section.EVENT, "Add products to event ");
     }
+
+
+
 
     private void handleNewProduct(Event event, Product product) {
         log.info("{} product NOT scanned in this event", product.getBarCode());
         Event eventIfProductAlreadyScanned = eventRepo.findByProductId(product.getId(), event.getInventory()).orElse(null);
         if (eventIfProductAlreadyScanned == null) {
-            log.info("{} product was NOT scanned in ANOTHER event", product.getBarCode());
-            if (product.getBranch().equals(event.getBranch())) {
-                log.info("{} product branch and event branch are similar", product.getBarCode());
-            } else {
-                log.info("{} product branch and event branch are NOT similar", product.getBarCode());
+            if (!product.getBranch().equals(event.getBranch())) {
                 productService.productMovedToAnotherBranch(product, event.getBranch());
             }
             event.getProducts().add(product);
         } else {
-            log.info("{} product was scanned in ANOTHER event", product.getBarCode());
             if (!product.getBranch().equals(event.getBranch())) {
-                log.info("{} product branch and event branch are NOT similar", product.getBarCode());
                 productService.productMovedToAnotherBranch(product, event.getBranch());
                 eventIfProductAlreadyScanned.getProducts().remove(product);
                 eventRepo.save(eventIfProductAlreadyScanned);
@@ -261,27 +247,23 @@ public class EventService {
         }
     }
 
+
     private void handleUnknownProduct(Event event, String barCode) {
         log.info("Unknown product with bar code {} doesn't exist in DB", barCode);
         UnknownProduct unknownProduct = unknownProductRepo.findByCode(barCode).orElse(null);
         if (unknownProduct == null) {
-            log.info("Unknown product with bar code {} is NEW", barCode);
-            UnknownProduct unknownProductNew = new UnknownProduct();
-            unknownProductNew.setCode(barCode);
-            unknownProductNew.setEvent(event);
-            unknownProductRepo.save(unknownProductNew);
+            UnknownProduct newUnknownProduct = new UnknownProduct();
+            newUnknownProduct.setCode(barCode);
+            newUnknownProduct.setEvent(event);
+            unknownProductRepo.save(newUnknownProduct);
         } else {
-            // check if product was scanned in this event
-            if (unknownProduct.getEvent().equals(event)){
-                log.info("Unknown product {} was scanned in this branch", barCode);
-            } else {
-                log.info("Unknown product {} was scanned in another event", barCode);
+            if (!unknownProduct.getEvent().equals(event)) {
                 unknownProduct.setEvent(event);
                 unknownProductRepo.save(unknownProduct);
             }
-
         }
     }
+
 
 
 }

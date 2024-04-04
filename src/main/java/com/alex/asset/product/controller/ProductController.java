@@ -84,6 +84,8 @@ public class ProductController {
     public void updateProduct(
             @RequestBody Map<String, Object> updates) {
         log.info(TAG + "Update product");
+
+        System.out.println(updates.toString());
         productService.updateProduct(
                 SecHolder.getUserId(),
                 updates
@@ -134,7 +136,13 @@ public class ProductController {
         return productService.getHistoryOfProductById(productId);
     }
 
-
+    @Operation(summary = "Get list of short products")
+    @GetMapping("/app/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductV3Dto> getListOfShortProductById() {
+        log.info(TAG + "Get list of short products");
+        return productService.getListOfProductV3DTO();
+    }
 
 
 
