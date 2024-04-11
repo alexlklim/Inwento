@@ -1,6 +1,5 @@
 package com.alex.asset.configure.repo;
 
-import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.MPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

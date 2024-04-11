@@ -3,6 +3,8 @@ package com.alex.asset.data.migration.service;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.data.migration.dto.Asset;
+import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,18 +25,20 @@ import java.util.List;
 public class ExcelParser {
 
     private final String TAG = "DATA_MIGRATION_CONTROLLER - ";
-    private final UserRepo userRepo;
     private final ConfigureService configureService;
     private final TypeService typeService;
+    private final ProductRepo productRepo;
+    private final UserRepo userRepo;
 
 
     @SneakyThrows
     public List<Asset> parseExcel(File tempFile, Long userId) {
         log.info(TAG + "Parse excel to asset objects and return list of them");
         List<Asset> assets = new ArrayList<>();
-        try (FileInputStream fis = new FileInputStream(tempFile)) {
+        try {
+            FileInputStream fis = new FileInputStream(tempFile);
             Workbook workbook = WorkbookFactory.create(fis);
-            Sheet sheet = workbook.getSheetAt(0); // Assuming first sheet
+            Sheet sheet = workbook.getSheetAt(0);
 
             for (int i = 2; i < sheet.getPhysicalNumberOfRows() + 1; i++) {
                 Row row = sheet.getRow(i);
@@ -77,7 +81,7 @@ public class ExcelParser {
             }
             workbook.close();
         } catch (IOException e) {
-            throw new IOException("Something Wrong");
+            log.error(TAG + "Converted MultipartFile to File");
         }
         return assets;
     }
@@ -119,5 +123,14 @@ public class ExcelParser {
             os.write(file.getBytes());
         }
         return tempFile;
+    }
+
+    public void saveAssets(List<Asset> assetList, Long userId) {
+        log.info(TAG + "Save assets by user with id");
+        User user = userRepo.getUser(userId);
+        for (Asset asset : assetList) {
+            productRepo.save(AssetMapper.toProduct(asset, user));
+        }
+
     }
 }

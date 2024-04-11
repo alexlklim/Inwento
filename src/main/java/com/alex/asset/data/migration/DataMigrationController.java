@@ -6,7 +6,6 @@ import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -47,4 +46,19 @@ public class DataMigrationController {
                 new File("C:\\Folder\\CSMM\\Inventory_Product_List3.xlsx"),
                 SecHolder.getUserId());
     }
+
+
+    @Operation(summary = "Save received asset in DB")
+    @PostMapping("/save")
+    @ResponseStatus(HttpStatus.OK)
+    public void save(
+            @RequestBody List<Asset> assetList) {
+        log.info(TAG + "Save assets in DB");
+        excelParser.saveAssets(
+                assetList,
+                SecHolder.getUserId()
+        );
+    }
+
+
 }
