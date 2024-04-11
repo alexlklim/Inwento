@@ -7,7 +7,6 @@ import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,13 +30,13 @@ public class ExcelParser {
 
     @SneakyThrows
     public List<Asset> parseExcel(File tempFile, Long userId) {
+        log.info(TAG + "Parse excel to asset objects and return list of them");
         List<Asset> assets = new ArrayList<>();
-        FileInputStream fis = new FileInputStream(tempFile);
-        try {
+        try (FileInputStream fis = new FileInputStream(tempFile)) {
             Workbook workbook = WorkbookFactory.create(fis);
             Sheet sheet = workbook.getSheetAt(0); // Assuming first sheet
 
-            for (int i = 2; i < sheet.getPhysicalNumberOfRows()+1; i++) {
+            for (int i = 2; i < sheet.getPhysicalNumberOfRows() + 1; i++) {
                 Row row = sheet.getRow(i);
                 Asset asset = new Asset();
                 asset.setTitle(getStringValue(row.getCell(1)));
@@ -79,8 +78,6 @@ public class ExcelParser {
             workbook.close();
         } catch (IOException e) {
             throw new IOException("Something Wrong");
-        } finally {
-            fis.close();
         }
         return assets;
     }
@@ -116,6 +113,7 @@ public class ExcelParser {
     }
 
     public File convertMultiPartFileToFile(MultipartFile file) throws IOException {
+        log.info(TAG + "Converted MultipartFile to File");
         File tempFile = File.createTempFile("temp", null);
         try (OutputStream os = new FileOutputStream(tempFile)) {
             os.write(file.getBytes());

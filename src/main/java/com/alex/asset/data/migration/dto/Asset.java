@@ -2,9 +2,6 @@ package com.alex.asset.data.migration.dto;
 
 import com.alex.asset.configure.domain.*;
 import com.alex.asset.security.domain.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

@@ -26,7 +26,7 @@ public class DataMigrationController {
     private final String TAG = "DATA_MIGRATION_CONTROLLER - ";
     private final ExcelParser excelParser;
 
-    @SneakyThrows
+
     @Operation(summary = "Parse excel to products objects")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
