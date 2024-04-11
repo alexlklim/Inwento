@@ -1,5 +1,6 @@
 package com.alex.asset.configure.repo;
 
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.MPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MpkRepo extends JpaRepository<MPK, Long> {
@@ -22,4 +24,7 @@ public interface MpkRepo extends JpaRepository<MPK, Long> {
     MPK get(Long id);
 
     boolean existsByMpk(String name);
+
+    Optional<MPK> findMPKByMpk(String mpk);
+
 }

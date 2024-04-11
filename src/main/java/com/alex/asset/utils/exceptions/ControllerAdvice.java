@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
+
 @Slf4j
 @RestControllerAdvice
 public class ControllerAdvice {
@@ -43,6 +45,7 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler({
+            IOException.class,
             ObjectAlreadyExistException.class,
             UserAlreadyCreateEventForThisBranch.class,
             UserNotRegisterYet.class})

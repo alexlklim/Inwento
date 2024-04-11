@@ -61,28 +61,20 @@ INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
 VALUES
     (1, true, 'Computers', 1),
     (2, true, 'Printers', 1),
-    (3, true, 'Fax machines', 1);
+    (3, true, 'Fax machines', 1),
 
-INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
-VALUES
     (4, true, 'Manufacturing equipment', 2),
     (5, true, 'Construction machinery', 2),
-    (6, true, 'Industrial robots', 2);
+    (6, true, 'Industrial robots', 2),
 
-INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
-VALUES
     (7, true, 'Power tools', 3),
     (8, true, 'Hand tools', 3),
-    (9, true, 'Laboratory equipment', 3);
+    (9, true, 'Laboratory equipment', 3),
 
-INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
-VALUES
     (10, true, 'Televisions', 4),
     (11, true, 'Audiovisual equipment', 4),
-    (12, true, 'Cameras', 4);
+    (12, true, 'Cameras', 4),
 
-INSERT IGNORE INTO subtypes (id, is_active, subtype, type_id)
-VALUES
     (13, true, 'Desks', 5),
     (14, true, 'Chairs', 5),
     (15, true, 'Shelving units', 5);

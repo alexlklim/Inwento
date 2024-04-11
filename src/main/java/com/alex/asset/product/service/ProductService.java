@@ -278,7 +278,7 @@ public class ProductService {
                     addHistoryToProduct(userId, productId, Activity.SUPPLIER);
                     break;
                 case "scrapping":
-                    product.setScrapping((Boolean) value);
+                    product.setScrapping((Boolean) value);  
                     addHistoryToProduct(userId, productId, Activity.SCRAPPING);
                     break;
                 case "scrapping_date":

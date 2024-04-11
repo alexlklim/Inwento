@@ -10,4 +10,11 @@ public class DtoName {
 
     @Schema(description = "Name", example = "Samsung galaxy")
     private String name;
+
+    public DtoName() {
+    }
+
+    public DtoName(String name) {
+        this.name = name;
+    }
 }

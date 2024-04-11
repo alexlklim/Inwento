@@ -169,4 +169,34 @@ public class ConfigureService {
         );
     }
 
+
+    public KST getKSTByNum(String num) {
+        return kstRepo.findKSTByNum(num).orElse(null);
+    }
+
+    public AssetStatus getAssetStatusByAssetStatus(String assetStatus) {
+        return assetStatusRepo.findAssetStatusByAssetStatus(assetStatus).orElse(null);
+    }
+
+    public Unit getUnitByUnit(String unit) {
+        return unitRepo.findUnitByUnit(unit).orElse(null);
+    }
+
+    public Branch getBranchByBranch(String branch, Long userId) {
+        Branch branchFromDB = branchRepo.findBranchByBranch(branch).orElse(null);
+        if (branchFromDB == null){
+           return addBranch(new DtoName(branch), userId);
+        }
+        return branchFromDB;
+    }
+
+    public MPK getMPKByMPK(String mpk, Long userId) {
+        MPK mpkFromDB = mpkRepo.findMPKByMpk(mpk).orElse(null);
+        if (mpkFromDB == null){
+            return addMPK(new DtoName(mpk), userId);
+        }
+        return mpkFromDB;
+    }
+
+
 }

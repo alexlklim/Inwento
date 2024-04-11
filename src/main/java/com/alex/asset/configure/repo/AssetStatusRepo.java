@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AssetStatusRepo extends JpaRepository<AssetStatus, Long> {
 
@@ -20,5 +21,8 @@ public interface AssetStatusRepo extends JpaRepository<AssetStatus, Long> {
 
     @Query("SELECT a FROM AssetStatus a WHERE a.id = ?1")
     AssetStatus get(Long id);
+
+
+    Optional<AssetStatus> findAssetStatusByAssetStatus(String assetStatus);
 
 }

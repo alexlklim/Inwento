@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SubtypeRepo extends JpaRepository<Subtype, Long> {
@@ -21,4 +22,5 @@ public interface SubtypeRepo extends JpaRepository<Subtype, Long> {
     List<Subtype> findByActiveTrueAndType(Type type);
 
 
+    Optional<Subtype> findSubtypeBySubtypeAndType(String subtype, Type type);
 }

@@ -113,6 +113,37 @@ public class TypeService {
             return newSubtype;
         }).forEach(subtype -> {
         });
+    }
+
+
+    @SneakyThrows
+    public Type getTypeByType(String type, Long userId) {
+        Type typeFromDB = typeRepo.findTypeByType(type).orElse(null);
+        if (typeFromDB == null) {
+            addTypes(List.of(type), userId);
+            Type typeNew = typeRepo.findTypeByType(type).orElse(null);
+            if (typeNew != null) {
+                return typeNew;
+            }
+        }
+        return typeFromDB;
+    }
+
+
+    @SneakyThrows
+    public Subtype getSubtypeBySubtypeAndType(String type, String subtype, Long userId) {
+        Subtype subtypeFromDb = subtypeRepo.findSubtypeBySubtypeAndType(
+                        subtype,
+                        getTypeByType(type, userId))
+                .orElse(null);
+        if (subtypeFromDb == null) {
+            addSubtypes(getTypeByType(type, userId).getId(), List.of(subtype), userId);
+            return subtypeRepo.findSubtypeBySubtypeAndType(
+                            subtype,
+                            getTypeByType(type, userId))
+                    .orElse(null);
+        }
+        return subtypeFromDb;
 
     }
 }
