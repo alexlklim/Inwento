@@ -1,62 +1,79 @@
 package com.alex.asset.product.mappers;
 
 import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
-import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductHistoryDto;
+import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.product.dto.ProductV2Dto;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 
 @RequiredArgsConstructor
 @Service
 public class ProductMapper {
-
-
     private final ConfigureService service;
     private final TypeService typeService;
+    private final LocationService locationService;
 
 
+    @SneakyThrows
     public ProductV1Dto toDto(Product product) {
-        ProductV1Dto dto = new ProductV1Dto();
-        dto.setId(product.getId());
-        dto.setActive(product.isActive());
-        dto.setTitle(product.getTitle());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setBarCode(product.getBarCode());
-        dto.setRfidCode(product.getRfidCode());
-        dto.setLiableId(product.getLiable() != null ? product.getLiable().getId() : null);
-        dto.setReceiver(product.getReceiver());
-        dto.setKstId(product.getKst() != null ? product.getKst().getId() : null);
-        dto.setAssetStatusId(product.getAssetStatus() != null ? product.getAssetStatus().getId() : null);
-        dto.setUnitId(product.getUnit() != null ? product.getUnit().getId() : null);
-        dto.setBranchId(product.getBranch() != null ? product.getBranch().getId() : null);
-        dto.setMpkId(product.getMpk() != null ? product.getMpk().getId() : null);
-        dto.setTypeId(product.getType() != null ? product.getType().getId() : null);
-        dto.setSubtypeId(product.getSubtype() != null ? product.getSubtype().getId() : null);
-        dto.setProducer(product.getProducer());
-        dto.setSupplier(product.getSupplier());
-        dto.setScrapping(product.isScrapping());
-        dto.setScrappingDate(product.getScrappingDate());
-        dto.setScrappingReason(product.getScrappingReason());
-        dto.setDocument(product.getDocument());
-        dto.setDocumentDate(product.getDocumentDate());
-        dto.setWarrantyPeriod(product.getWarrantyPeriod());
-        dto.setInspectionDate(product.getInspectionDate());
-        dto.setLongitude(product.getLongitude());
-        dto.setLatitude(product.getLatitude());
-        return dto;
+        return ProductV1Dto.builder()
+                .id(product.getId())
+                .active(product.isActive())
+                .title(product.getTitle())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .barCode(product.getBarCode())
+                .rfidCode(product.getRfidCode())
+                .inventoryNumber(product.getInventoryNumber())
+                .serialNumber(product.getSerialNumber())
+                .liableId(product.getLiable() != null ? product.getLiable().getId() : null)
+                .receiver(product.getReceiver())
+                .kstId(product.getKst() != null ? product.getKst().getId() : null)
+                .assetStatusId(product.getAssetStatus() != null ? product.getAssetStatus().getId() : null)
+                .unitId(product.getUnit() != null ? product.getUnit().getId() : null)
+                .branchId(product.getBranch() != null ? product.getBranch().getId() : null)
+                .mpkId(product.getMpk() != null ? product.getMpk().getId() : null)
+                .typeId(product.getType() != null ? product.getType().getId() : null)
+                .subtypeId(product.getSubtype() != null ? product.getSubtype().getId() : null)
+                .producer(product.getProducer())
+                .supplier(product.getSupplier())
+                .scrapping(product.isScrapping())
+                .scrappingDate(product.getScrappingDate())
+                .scrappingReason(product.getScrappingReason())
+                .document(product.getDocument())
+                .documentDate(product.getDocumentDate())
+                .warrantyPeriod(product.getWarrantyPeriod())
+                .inspectionDate(product.getInspectionDate())
+                .longitude(product.getLongitude())
+                .latitude(product.getLatitude())
+
+                .liableName(product.getLiable() != null ?
+                        product.getLiable().getFirstname() + " " + product.getLiable().getLastname() : null)
+
+
+                .kst(product.getKst() != null ? product.getKst().getNum() : null)
+                .assetStatus(product.getAssetStatus() != null ? product.getAssetStatus().getAssetStatus() : null)
+                .unit(product.getUnit() != null ? product.getUnit().getUnit() : null)
+                .branch(product.getBranch() != null ? product.getBranch().getBranch() : null)
+                .location(product.getLocation() != null ? product.getLocation().getLocation() : null)
+                .mpk(product.getMpk() != null ? product.getMpk().getMpk() : null)
+                .type(product.getType() != null ? product.getType().getType() : null)
+                .subtype(product.getSubtype() != null ? product.getSubtype().getSubtype() : null)
+
+                .build();
     }
 
 
     public Product toEntity(ProductV1Dto dto) {
         Product product = new Product();
-        product.setActive(true);
         product.setTitle(dto.getTitle());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
@@ -69,7 +86,8 @@ public class ProductMapper {
         product.setKst(service.getKSTById(dto.getKstId()));
         product.setAssetStatus(service.getAssetStatusById(dto.getAssetStatusId()));
         product.setUnit(service.getUnitById(dto.getUnitId()));
-        product.setBranch(service.getBranchById(dto.getBranchId()));
+        product.setBranch(locationService.getBranchById(dto.getBranchId()));
+        product.setLocation(locationService.getLocationById(dto.getLocationId()));
         product.setMpk(service.getMPKById(dto.getMpkId()));
         product.setType(typeService.getTypeById(dto.getTypeId()));
         product.setSubtype(typeService.getSubtypeById(dto.getSubtypeId()));
@@ -84,28 +102,23 @@ public class ProductMapper {
 
 
     public ProductV2Dto toProductV2Dto(Product product, InventoryStatus inventoryStatus) {
-        ProductV2Dto dto = new ProductV2Dto();
-        dto.setId(product.getId());
-        dto.setTitle(product.getTitle());
-        dto.setBarCode(product.getBarCode());
-        dto.setInventoryStatus(inventoryStatus);
-        return dto;
+        return new ProductV2Dto().toBuilder()
+                .id(product.getId())
+                .title(product.getTitle())
+                .barCode(product.getBarCode())
+                .inventoryStatus(inventoryStatus)
+                .build();
     }
 
 
     public ProductHistoryDto toProductHistoryDto(ProductHistory productHistory) {
-        ProductHistoryDto dto = new ProductHistoryDto();
-        dto.setCreated(productHistory.getCreated());
-        dto.setUsername(productHistory.getUser().getFirstname() + productHistory.getUser().getLastname());
-        dto.setEmail(productHistory.getUser().getEmail());
-        dto.setActivity(productHistory.getActivity());
-        return dto;
+        return new ProductHistoryDto().toBuilder()
+                .created(productHistory.getCreated())
+                .username(productHistory.getUser().getFirstname() + productHistory.getUser().getLastname())
+                .email(productHistory.getUser().getEmail())
+                .activity(productHistory.getActivity())
+                .build();
     }
-
-
-
-
-
 
 
 }

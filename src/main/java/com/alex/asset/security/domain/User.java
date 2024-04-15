@@ -1,5 +1,6 @@
 package com.alex.asset.security.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +36,7 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     String email;
+    @JsonIgnore
     String password;
 
     @Column(name = "last_activity")

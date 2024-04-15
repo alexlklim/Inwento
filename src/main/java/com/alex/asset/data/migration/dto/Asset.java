@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Asset {
 
+    Integer id;
     String title;
     String description;
     Double price;
@@ -22,14 +23,15 @@ public class Asset {
     String inventoryNumber;
     String serialNumber;
 
-    User liable;
-    User createdBy;
+    String liableEmail;
+    String createdByEmail;
     String receiver;
 
     KST kst;
     AssetStatus assetStatus;
     Unit unit;
     Branch branch;
+    Location location;
     MPK mpk;
     Type type;
     Subtype subtype;
@@ -42,6 +44,7 @@ public class Asset {
     @Override
     public String toString() {
         return "Asset{" +
+                "     ID    " + id +
                 "title='" + (title != null ? title : "null") + '\'' +
                 ", description='" + (description != null ? description : "null") + '\'' +
                 ", price=" + (price != null ? price : "null") +
@@ -49,13 +52,14 @@ public class Asset {
                 ", rfidCode='" + (rfidCode != null ? rfidCode : "null") + '\'' +
                 ", inventoryNumber='" + (inventoryNumber != null ? inventoryNumber : "null") + '\'' +
                 ", serialNumber='" + (serialNumber != null ? serialNumber : "null") + '\'' +
-                ", liable=" + (liable != null ? liable.getEmail() : "null") +
-                ", createdBy=" + (createdBy != null ? createdBy.getEmail() : "null") +
+                ", liable=" + (liableEmail != null ? liableEmail : "null") +
+                ", createdBy=" + createdByEmail +
                 ", receiver='" + (receiver != null ? receiver : "null") + '\'' +
                 ", kst=" + (kst != null ? kst.getKst() : "null") +
                 ", assetStatus=" + (assetStatus != null ? assetStatus.getAssetStatus() : "null") +
                 ", unit=" + (unit != null ? unit.getUnit() : "null") +
                 ", branch=" + (branch != null ? branch.getBranch() : "null") +
+                ", location =" + (location != null ? location.getLocation() : "null") +
                 ", mpk=" + (mpk != null ? mpk.getMpk() : "null") +
                 ", type=" + (type != null ? type.getType() : "null") +
                 ", subtype=" + (subtype != null ? subtype.getSubtype() : "null") +

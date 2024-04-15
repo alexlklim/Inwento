@@ -3,6 +3,7 @@ package com.alex.asset.company.service;
 
 import com.alex.asset.company.domain.*;
 import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.email.EmailService;
 import com.alex.asset.logs.LogService;
@@ -31,6 +32,7 @@ public class CompanyService {
 
     private final TypeService typeService;
     private final ConfigureService configureService;
+    private final LocationService locationService;
     private final LogService logService;
     private final NotificationService notificationService;
 
@@ -64,7 +66,8 @@ public class CompanyService {
         dto.setTypes(typeService.getTypes());
         dto.setUnits(configureService.getUnits());
         dto.setAssetStatuses(configureService.getAssetStatuses());
-        dto.setBranches(configureService.getBranches());
+        dto.setBranches(locationService.getBranches());
+        dto.setLocations(locationService.getLocations());
         dto.setMPKs(configureService.getMPKs());
         return dto;
     }

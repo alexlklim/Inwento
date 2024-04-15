@@ -19,6 +19,7 @@ import java.time.LocalDate;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Schema(description = "Product Dto (to update)")
 public class ProductV1Dto {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "Id", example = "101")
     Long id;
 
@@ -48,27 +49,69 @@ public class ProductV1Dto {
     @Schema(description = "Serial number", example = "123serial")
     String serialNumber;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Liable id", example = "10")
     Long liableId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Liable id", example = "10")
+    String liableName;
 
     @Schema(description = "Receiver", example = "Alex Klim")
     String receiver;
 
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "KST id", example = "10")
     Long kstId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Asset Status id", example = "10")
     Long assetStatusId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Unit id", example = "10")
     Long unitId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Branch id", example = "10")
     Long branchId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Schema(description = "Location id", example = "10")
+    Long locationId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "MPK id", example = "10")
     Long mpkId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Type id", example = "10")
     Long typeId;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Subtype id", example = "10")
     Long subtypeId;
+
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "KST id", example = "10")
+    String kst;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Asset Status id", example = "10")
+    String assetStatus;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Unit id", example = "10")
+    String unit;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Branch id", example = "10")
+    String branch;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Location id", example = "10")
+    String location;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "MPK id", example = "10")
+    String mpk;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Type id", example = "10")
+    String type;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Schema(description = "Subtype id", example = "10")
+    String subtype;
+
+
 
     @Schema(description = "Producer", example = "Zebra")
     String producer;

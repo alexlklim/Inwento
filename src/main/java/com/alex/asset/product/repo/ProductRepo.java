@@ -45,4 +45,9 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
 
     List<Product> findAllByBranch(Branch branch);
+
+    boolean existsByBarCode(String barCode);
+    boolean existsByRfidCode(String rfidCode);
+    boolean existsByInventoryNumber(String inventoryNumber);
+    boolean existsBySerialNumber(String serialNumber);
 }

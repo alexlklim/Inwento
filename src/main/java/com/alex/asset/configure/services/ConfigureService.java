@@ -28,36 +28,28 @@ public class ConfigureService {
 
     private final LogService logService;
 
-    private final BranchRepo branchRepo;
     private final MpkRepo mpkRepo;
     private final AssetStatusRepo assetStatusRepo;
     private final UnitRepo unitRepo;
     private final KstRepo kstRepo;
 
 
-    public List<Branch> getBranches() {
-        return branchRepo.getActive();
-    }
 
     public List<Unit> getUnits() {
         return unitRepo.getActive();
     }
-
-    public List<Unit> getAllUnits() {
-        return unitRepo.findAll();
-    }
-
-
     public List<MPK> getMPKs() {
         return mpkRepo.getActive();
     }
-
     public List<AssetStatus> getAssetStatuses() {
         return assetStatusRepo.getActive();
     }
 
     public List<AssetStatus> getAllAssetStatuses() {
         return assetStatusRepo.findAll();
+    }
+    public List<Unit> getAllUnits() {
+        return unitRepo.findAll();
     }
 
     public List<KST> getAllKSTs() {
@@ -95,22 +87,7 @@ public class ConfigureService {
     }
 
 
-    @SneakyThrows
-    public Branch addBranch(DtoName dto, Long userId) {
-        log.info(TAG + "Add branch {}", dto.getName());
-        if (branchRepo.existsByBranch(dto.getName()))
-            throw new ObjectAlreadyExistException("Branch with name " + dto.getName() + " already exists");
 
-        logService.addLog(userId, Action.CREATE, Section.BRANCH, dto.toString());
-        return branchRepo.save(new Branch(dto.getName()));
-    }
-
-    public void updateBranch(DtoActive dto, Long userId) {
-        log.info(TAG + "Update branch {}", dto.getId());
-        branchRepo.update(dto.isActive(), dto.getId());
-        logService.addLog(userId, Action.UPDATE, Section.BRANCH, dto.toString());
-
-    }
 
 
     @SneakyThrows
@@ -162,12 +139,7 @@ public class ConfigureService {
     }
 
 
-    @SneakyThrows
-    public Branch getBranchById(Long id) {
-        return branchRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Branch with id " + id + " not found")
-        );
-    }
+
 
 
     public KST getKSTByNum(String num) {
@@ -182,13 +154,7 @@ public class ConfigureService {
         return unitRepo.findUnitByUnit(unit).orElse(null);
     }
 
-    public Branch getBranchByBranch(String branch, Long userId) {
-        Branch branchFromDB = branchRepo.findBranchByBranch(branch).orElse(null);
-        if (branchFromDB == null){
-           return addBranch(new DtoName(branch), userId);
-        }
-        return branchFromDB;
-    }
+
 
     public MPK getMPKByMPK(String mpk, Long userId) {
         MPK mpkFromDB = mpkRepo.findMPKByMpk(mpk).orElse(null);

@@ -40,4 +40,7 @@ public class ProductV3Dto {
 
     @Schema(description = "branch", example = "IT Department")
     String branch;
+
+    @Schema(description = "location", example = "pokój prezesa")
+    String location;
 }

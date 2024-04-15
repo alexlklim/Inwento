@@ -3,6 +3,7 @@ package com.alex.asset.product.service;
 
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.services.ConfigureService;
+import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
@@ -54,6 +55,7 @@ public class ProductService {
     private final EventRepo eventRepo;
     private final ConfigureService configureService;
     private final TypeService typeService;
+    private final LocationService locationService;
 
 
     public List<ProductV1Dto> getAll() {
@@ -87,11 +89,12 @@ public class ProductService {
         log.info(TAG + "Create product by user with id {}", userId);
         Product product = productMapper.toEntity(dto);
         product.setCreatedBy(userRepo.getUser(userId));
-        product.setLiable(userRepo.getUser(dto.getLiableId()));
+        product.setLiable(userRepo.findById(dto.getLiableId()).orElse(null));
         product.setBarCode(null);
         product.setRfidCode(null);
+        product.setActive(true);
         Product productFromDB = productRepo.save(product);
-        logService.addLog(userId, Action.CREATE, Section.PRODUCT, dto.toString());
+        logService.addLog(userId, Action.CREATE, Section.PRODUCT, dto.getTitle());
         addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
         return productMapper.toDto(productFromDB);
     }
@@ -101,7 +104,7 @@ public class ProductService {
         log.info(TAG + "get product by id");
         return productMapper.toDto(productRepo.findById(productId)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + productId + " not found"))
+                        () -> new ResourceNotFoundException("Product not found with id " + productId))
         );
 
     }
@@ -201,6 +204,7 @@ public class ProductService {
         Long productId = ((Number) updates.getOrDefault("id", null)).longValue();
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found"));
+        product.setActive(true);
         updates.forEach((key, value) -> {
             switch (key) {
                 case "title":
@@ -253,9 +257,13 @@ public class ProductService {
                     addHistoryToProduct(userId, productId, Activity.UNIT);
                     break;
                 case "branch_id":
-                    resolveIssueWithInventory(product, configureService.getBranchById(((Number) value).longValue()));
-                    product.setBranch(configureService.getBranchById(((Number) value).longValue()));
+                    resolveIssueWithInventory(product, locationService.getBranchById(((Number) value).longValue()));
+                    product.setBranch(locationService.getBranchById(((Number) value).longValue()));
                     addHistoryToProduct(userId, productId, Activity.BRANCH);
+                    break;
+                case "location_id":
+                    product.setLocation(locationService.getLocationById(((Number) value).longValue()));
+                    addHistoryToProduct(userId, productId, Activity.LOCATION);
                     break;
                 case "mpk_id":
                     product.setMpk(configureService.getMPKById(((Number) value).longValue()));

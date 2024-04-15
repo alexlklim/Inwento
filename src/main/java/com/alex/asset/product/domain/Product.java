@@ -1,12 +1,6 @@
 package com.alex.asset.product.domain;
 
-import com.alex.asset.configure.domain.Branch;
-import com.alex.asset.configure.domain.MPK;
-import com.alex.asset.configure.domain.Subtype;
-import com.alex.asset.configure.domain.Type;
-import com.alex.asset.configure.domain.AssetStatus;
-import com.alex.asset.configure.domain.KST;
-import com.alex.asset.configure.domain.Unit;
+import com.alex.asset.configure.domain.*;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -18,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 
 
+@Builder(toBuilder = true)
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity @Table(name = "products")
@@ -56,6 +51,9 @@ public class Product extends BaseEntity {
 
     @ManyToOne @JoinColumn(name = "branch_id")
     Branch branch;
+    @ManyToOne @JsonIgnore @JoinColumn(name = "location_id")
+    Location location;
+
     @ManyToOne @JoinColumn(name = "mpk_id")
     MPK mpk;
 
@@ -95,15 +93,16 @@ public class Product extends BaseEntity {
                 ", rfidCode='" + rfidCode + '\'' +
                 ", inventoryNumber='" + inventoryNumber + '\'' +
                 ", serialNumber='" + serialNumber + '\'' +
-                ", liable=" + liable.getEmail() +
+                ", liable=" + (liable != null ? liable.getEmail() : null) +
                 ", receiver='" + receiver + '\'' +
-                ", kst=" + kst.getKst() +
-                ", assetStatus=" + assetStatus.getAssetStatus() +
-                ", unit=" + unit.getUnit() +
-                ", branch=" + branch.getBranch() +
-                ", mpk=" + mpk.getMpk() +
-                ", type=" + type.getType() +
-                ", subtype=" + subtype.getSubtype() +
+                ", kst=" + (kst != null ? kst.getKst() : null) +
+                ", assetStatus=" + (assetStatus != null ? assetStatus.getAssetStatus() : null) +
+                ", unit=" + (unit != null ? unit.getUnit() : null) +
+                ", branch=" + (branch != null ? branch.getBranch() : null) +
+                ", location=" + (location != null ? location.getLocation() : null) +
+                ", mpk=" + (mpk != null ? mpk.getMpk() : null) +
+                ", type=" + (type != null ? type.getType() : null) +
+                ", subtype=" + (subtype != null ? subtype.getSubtype() : null) +
                 ", producer='" + producer + '\'' +
                 ", supplier='" + supplier + '\'' +
                 ", isScrapping=" + isScrapping +

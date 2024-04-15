@@ -26,24 +26,28 @@ public class DataMigrationController {
     private final ExcelParser excelParser;
 
 
-    @Operation(summary = "Parse excel to products objects")
-    @PostMapping
+    @Operation(summary = "Parse excel to products objects, provide which row should be the last")
+    @PostMapping("/{last_row}")
     @ResponseStatus(HttpStatus.OK)
     public List<Asset> parseExcelToProductObjects(
+            @PathVariable("last_row") int lastRow,
             @RequestBody MultipartFile file) throws IOException {
         log.info(TAG + "Parse excel to product objects");
         return excelParser.parseExcel(
                 excelParser.convertMultiPartFileToFile(file),
+                lastRow,
                 SecHolder.getUserId());
     }
 
     @Operation(summary = "Parse excel to products objects TEST")
-    @PostMapping("/test")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Asset> parseExcelToProductObjectsTest() {
+    @PostMapping("/test/{last_row}")    @ResponseStatus(HttpStatus.OK)
+    public List<Asset> parseExcelToProductObjectsTest(
+            @PathVariable("last_row") int lastRow
+            ) {
         log.info(TAG + "Parse excel to product objects TEST");
         return excelParser.parseExcel(
                 new File("C:\\Folder\\CSMM\\Inventory_Product_List3.xlsx"),
+                lastRow,
                 SecHolder.getUserId());
     }
 

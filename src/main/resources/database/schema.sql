@@ -17,30 +17,30 @@ CREATE TABLE IF NOT EXISTS users
 -- Create companies table with foreign key reference to users table
 CREATE TABLE IF NOT EXISTS company
 (
-    id       BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    created  DATETIME,
-    updated  DATETIME,
-    company  VARCHAR(255) UNIQUE NOT NULL,
-    city     VARCHAR(255),
-    street   VARCHAR(255),
-    zip_code VARCHAR(255),
-    nip      VARCHAR(255),
-    regon    VARCHAR(255),
-    phone    VARCHAR(255),
-    email    VARCHAR(255),
+    id                  BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created             DATETIME,
+    updated             DATETIME,
+    company             VARCHAR(255) UNIQUE NOT NULL,
+    city                VARCHAR(255),
+    street              VARCHAR(255),
+    zip_code            VARCHAR(255),
+    nip                 VARCHAR(255),
+    regon               VARCHAR(255),
+    phone               VARCHAR(255),
+    email               VARCHAR(255),
 
 
-    label_width DECIMAL(5, 2),
-    label_height DECIMAL(5, 2),
-    label_type VARCHAR(255),
+    label_width         DECIMAL(5, 2),
+    label_height        DECIMAL(5, 2),
+    label_type          VARCHAR(255),
 
 
-    is_email_configured BOOLEAN NOT NULL,
-    host VARCHAR(255),
-    port VARCHAR(255),
-    username VARCHAR(255),
-    password VARCHAR(255),
-    protocol VARCHAR(255)
+    is_email_configured BOOLEAN             NOT NULL,
+    host                VARCHAR(255),
+    port                VARCHAR(255),
+    username            VARCHAR(255),
+    password            VARCHAR(255),
+    protocol            VARCHAR(255)
 
 
 );
@@ -90,6 +90,16 @@ CREATE TABLE IF NOT EXISTS branches
     branch    VARCHAR(255) UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS locations
+(
+    id        BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active BOOLEAN NOT NULL,
+    location  VARCHAR(255) UNIQUE,
+    branch_id BIGINT,
+    UNIQUE (location, branch_id),
+    FOREIGN KEY (branch_id) REFERENCES branches (id)
+);
+
 CREATE TABLE IF NOT EXISTS mpks
 (
     id        BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -137,6 +147,7 @@ CREATE TABLE IF NOT EXISTS products
     asset_status_id  BIGINT,
     unit_id          BIGINT,
     branch_id        BIGINT,
+    location_id      BIGINT,
     mpk_id           BIGINT,
     type_id          BIGINT,
     subtype_id       BIGINT,
@@ -157,25 +168,26 @@ CREATE TABLE IF NOT EXISTS products
 
     FOREIGN KEY (created_by_id) REFERENCES users (id),
     FOREIGN KEY (liable_id) REFERENCES users (id),
-    FOREIGN KEY (kst_id) REFERENCES ksts  (id),
+    FOREIGN KEY (kst_id) REFERENCES ksts (id),
     FOREIGN KEY (asset_status_id) REFERENCES asset_statuses (id),
     FOREIGN KEY (unit_id) REFERENCES units (id),
     FOREIGN KEY (type_id) REFERENCES types (id),
     FOREIGN KEY (subtype_id) REFERENCES subtypes (id),
     FOREIGN KEY (branch_id) REFERENCES branches (id),
+    FOREIGN KEY (location_id) REFERENCES locations (id),
     FOREIGN KEY (mpk_id) REFERENCES mpks (id)
 );
 
 
 CREATE TABLE IF NOT EXISTS product_history
 (
-    id      BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    created DATETIME,
-    user_id BIGINT,
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created    DATETIME,
+    user_id    BIGINT,
     product_id BIGINT,
-    activity ENUM('VISIBILITY', 'PRODUCT_WAS_CREATED', 'TITLE', 'PRICE', 'BAR_CODE', 'RFID_CODE', 'INVENTORY_NUMBER',
-        'SERIAL_NUMBER', 'LIABLE',
-        'RECEIVER',  'KST', 'ASSET_STATUS', 'UNIT', 'BRANCH', 'MPK', 'TYPE', 'SUBTYPE', 'PRODUCER',
+    activity   ENUM ('VISIBILITY', 'PRODUCT_WAS_CREATED', 'TITLE', 'PRICE', 'BAR_CODE', 'RFID_CODE', 'INVENTORY_NUMBER',
+        'SERIAL_NUMBER', 'LIABLE', 'LOCATION',
+        'RECEIVER', 'KST', 'ASSET_STATUS', 'UNIT', 'BRANCH', 'MPK', 'TYPE', 'SUBTYPE', 'PRODUCER',
         'SUPPLIER', 'SCRAPPING', 'DOCUMENT', 'DOCUMENT_DATE', 'WARRANTY_PERIOD', 'INSPECTION_DATE', 'GPS'),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
@@ -183,34 +195,35 @@ CREATE TABLE IF NOT EXISTS product_history
 
 CREATE TABLE IF NOT EXISTS logs
 (
-    id      BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id      BIGINT                              NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created DATETIME,
     user_id BIGINT,
-    action  ENUM ('CREATE', 'UPDATE', 'DELETE')                       NOT NULL,
-    section    ENUM ('USERS', 'COMPANY',
+    action  ENUM ('CREATE', 'UPDATE', 'DELETE') NOT NULL,
+    section ENUM ('USERS', 'COMPANY',
         'INVENTORY', 'EVENT',
         'NOTIFICATION', 'PRODUCT',
-        'TYPE', 'SUBTYPE',
+        'TYPE', 'SUBTYPE', 'LOCATION',
         'UNIT', 'ASSET_STATUS', 'KST',
-        'MPK', 'BRANCH') NOT NULL,
+        'MPK', 'BRANCH')                        NOT NULL,
     text    VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 
-CREATE TABLE IF NOT EXISTS notifications (
-    id          BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active   BOOLEAN       NOT NULL,
-    created     DATETIME,
-    updated     DATETIME,
-    is_viewed     BOOLEAN       NOT NULL,
-    reason      ENUM ('COMPANY_WAS_UPDATED', 'PASSWORD_WAS_CHANGED', 'USER_WAS_CREATED', 'NEW_USER',
+CREATE TABLE IF NOT EXISTS notifications
+(
+    id         BIGINT                                                          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active  BOOLEAN                                                         NOT NULL,
+    created    DATETIME,
+    updated    DATETIME,
+    is_viewed  BOOLEAN                                                         NOT NULL,
+    reason     ENUM ('COMPANY_WAS_UPDATED', 'PASSWORD_WAS_CHANGED', 'USER_WAS_CREATED', 'NEW_USER',
         'USER_WAS_DISABLED', 'YOU_WERE_DISABLED', 'USER_WAS_ENABLED', 'YOU_WERE_ENABLED', 'USER_WAS_UPDATED', 'YOU_WERE_UPDATED',
         'INVENTORY_IS_START', 'INVENTORY_IS_FINISHED', 'PLANNED_INVENTORY',
         'PRODUCT_WAS_DISABLED', 'PRODUCT_WAS_ENABLED', 'PRODUCT_WAS_SCRAPPED') NOT NULL,
-    message     VARCHAR(255),
-    to_user_id  BIGINT,
-    created_by  BIGINT,
+    message    VARCHAR(255),
+    to_user_id BIGINT,
+    created_by BIGINT,
     FOREIGN KEY (to_user_id) REFERENCES users (id),
     FOREIGN KEY (created_by) REFERENCES users (id)
 );

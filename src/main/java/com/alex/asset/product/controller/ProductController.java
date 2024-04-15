@@ -71,7 +71,8 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductV1Dto addNewProduct(
             @RequestBody ProductV1Dto productV1Dto) {
-        log.info(TAG + "get all products for company");
+        log.info(TAG + "create product for company");
+        System.out.println(productV1Dto.toString());
         return productService.create(
                 productV1Dto,
                 SecHolder.getUserId()

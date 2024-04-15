@@ -19,11 +19,9 @@ import java.util.List;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/company/type")
-@Tag(name = "Type Controller", description = "Type API")
+@Tag(name = "Config Controller", description = "Config API")
 public class TypeController {
-
     private final String TAG = "TYPE_CONTROLLER - ";
-
     private final TypeService typeService;
 
 

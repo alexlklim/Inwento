@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS units;
 DROP TABLE IF EXISTS asset_statuses;
 DROP TABLE IF EXISTS ksts;
 DROP TABLE IF EXISTS mpks;
+DROP TABLE IF EXISTS locations;
 DROP TABLE IF EXISTS branches;
 DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS company;
@@ -28,3 +29,8 @@ DROP TABLE IF EXISTS tmp;
 
 
 
+
+
+
+select * from locations;
+select * from products;
