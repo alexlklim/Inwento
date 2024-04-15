@@ -3,7 +3,6 @@ package com.alex.asset.configure.controllers;
 
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
-import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;

@@ -1,7 +1,6 @@
 package com.alex.asset.data.migration.dto;
 
 import com.alex.asset.configure.domain.*;
-import com.alex.asset.security.domain.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

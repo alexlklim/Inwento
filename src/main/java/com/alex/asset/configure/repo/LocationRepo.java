@@ -2,7 +2,6 @@ package com.alex.asset.configure.repo;
 
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
-import com.alex.asset.configure.domain.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
