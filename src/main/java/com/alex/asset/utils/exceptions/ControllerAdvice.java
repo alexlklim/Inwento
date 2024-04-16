@@ -45,6 +45,7 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler({
+            IllegalStateException.class,
             IOException.class,
             ObjectAlreadyExistException.class,
             UserAlreadyCreateEventForThisBranch.class,

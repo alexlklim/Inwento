@@ -59,7 +59,6 @@ public class LocationService {
 
     @SneakyThrows
     public Location getLocationByLocationAndBranch(String location, String branchName, Long userId) {
-        log.error("getLocationByLocationAndBranch");
         Branch branch = branchRepo.findBranchByBranch(branchName)
                 .orElse(null);
         if (branch == null) return null;

@@ -1,11 +1,16 @@
 package com.alex.asset.data.migration.service;
 
+import com.alex.asset.configure.domain.*;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
-import com.alex.asset.data.migration.dto.Asset;
+import com.alex.asset.logs.LogService;
+import com.alex.asset.logs.domain.Action;
+import com.alex.asset.logs.domain.Section;
+import com.alex.asset.product.domain.Activity;
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
-import com.alex.asset.security.domain.User;
+import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.exceptions.errors.user_error.ObjectAlreadyExistException;
 import lombok.RequiredArgsConstructor;
@@ -33,12 +38,13 @@ public class ExcelParser {
     private final LocationService locationService;
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
+    private final LogService logService;
 
 
     @SneakyThrows
-    public List<Asset> parseExcel(File tempFile, int lastRow, Long userId) throws ObjectAlreadyExistException {
+    public List<Product> parseExcel(File tempFile, int lastRow, Long userId) throws IllegalStateException {
         log.info(TAG + "Parse excel to asset objects and return list of them");
-        List<Asset> assets = new ArrayList<>();
+        List<Product> assets = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(tempFile);
             Workbook workbook = WorkbookFactory.create(fis);
@@ -47,82 +53,112 @@ public class ExcelParser {
             for (int i = 2; i < lastRow; i++) {
                 System.out.println(i);
                 Row row = sheet.getRow(i);
-                if (row == null) {
-                    break;
-                }
-                Asset asset = new Asset();
-                asset.setId(i);
-                asset.setTitle(getStringValue(row.getCell(1)));
-                asset.setDescription(getStringValue(row.getCell(2)));
-                asset.setPrice(getNumericValue(row.getCell(3)));
+                if (row == null) break;
+                Product asset = new Product();
+//                asset.setId(i);
 
-                if (row.getCell(6) != null){
-                    if (!productRepo.existsByBarCode(getStringValue(row.getCell(6)))){
-                        asset.setBarCode(getStringValue(row.getCell(6)));
-                    }
-                }
+//                asset.setCreatedBy(userRepo.getUser(userId));
+                if (Objects.equals(getStringValue(row.getCell(1)), "0.0") && row.getCell(1) != null) continue;
+                else asset.setTitle(getStringValue(row.getCell(1)));
 
-                if (row.getCell(7) != null){
-                    if (!productRepo.existsByRfidCode(getStringValue(row.getCell(7)))){
-                        asset.setRfidCode(getStringValue(row.getCell(7)));
-                    }
-                }
+                if (!Objects.equals(getStringValue(row.getCell(2)), "0.0") && row.getCell(2) != null)
+                    asset.setDescription(getStringValue(row.getCell(2)));
 
-                if (row.getCell(8) != null){
-                    if (!productRepo.existsByInventoryNumber(getStringValue(row.getCell(8)))){
-                        asset.setInventoryNumber(getStringValue(row.getCell(8)));
-                    }
-                }
+                if (!Objects.equals(getStringValue(row.getCell(3)), "0.0") && row.getCell(3) != null)
+                    asset.setPrice(getNumericValue(row.getCell(3)));
 
-                if (row.getCell(9) != null){
-                    if (!productRepo.existsBySerialNumber(getStringValue(row.getCell(9)))){
-                        asset.setSerialNumber(getStringValue(row.getCell(9)));
-                    }
-                }
-
-                asset.setCreatedByEmail(userRepo.getUser(userId).getEmail());
-                if (row.getCell(10) != null){
-                    asset.setLiableEmail(Objects.requireNonNull(userRepo.getUserByEmail(getStringValue(row.getCell(10))).orElse(null)).getEmail());
-                }
-                if (row.getCell(11) != null){
-                    asset.setReceiver(getStringValue(row.getCell(11)));
-                }
-                asset.setReceiver(getStringValue(row.getCell(11)));
-
-                if (row.getCell(12) != null){
-                    asset.setKst(configureService.getKSTByNum(getStringValue(row.getCell(12))));
-                }
-                if (row.getCell(13) != null){
-                    asset.setAssetStatus(configureService.getAssetStatusByAssetStatus(getStringValue(row.getCell(13))));
-                }
-                if (row.getCell(14) != null){
-                    asset.setUnit(configureService.getUnitByUnit(getStringValue(row.getCell(14))));
-                }
-
-                if (row.getCell(4) != null){
+                if (!Objects.equals(getStringValue(row.getCell(4)), "0.0") && row.getCell(4) != null) {
                     asset.setBranch(locationService.getBranchByBranch(getStringValue(row.getCell(4)), userId));
-                    if (row.getCell(5) != null){
+                    if (!Objects.equals(getStringValue(row.getCell(5)), "0.0") && row.getCell(5) != null) {
                         asset.setLocation(locationService.getLocationByLocationAndBranch(
                                 getStringValue(row.getCell(5)),
                                 getStringValue(row.getCell(4)),
                                 userId));
                     }
                 }
-                if (row.getCell(15) != null){
-                    asset.setMpk(configureService.getMPKByMPK(getStringValue(row.getCell(15)), userId));
+
+                if (!Objects.equals(getStringValue(row.getCell(6)), "0.0") && row.getCell(6) != null) {
+                    String barcode = getStringValue(row.getCell(6));
+                    if (!productRepo.existsByBarCode(barcode) && !Product.containsProductWithBarcode(assets, barcode)) {
+                        asset.setBarCode(getStringValue(row.getCell(6)));
+                    }
                 }
-                if (row.getCell(18) != null){
+
+
+                if (!Objects.equals(getStringValue(row.getCell(7)), "0.0") && row.getCell(7) != null) {
+                    String rfidCode = getStringValue(row.getCell(7));
+                    if (!productRepo.existsByRfidCode(rfidCode) && !Product.containsProductWithRfidCode(assets, rfidCode)) {
+                        asset.setRfidCode(rfidCode);
+                    }
+                }
+
+                if (!Objects.equals(getStringValue(row.getCell(8)), "0.0") && row.getCell(8) != null) {
+                    String inventoryNumber = getStringValue(row.getCell(8));
+                    if (!productRepo.existsByInventoryNumber(inventoryNumber)
+                            && !Product.containsProductWithInventoryNumber(assets, inventoryNumber)) {
+                        asset.setInventoryNumber(inventoryNumber);
+                    }
+                }
+                if (!Objects.equals(getStringValue(row.getCell(9)), "0.0") && row.getCell(9) != null) {
+                    String serialNumber = getStringValue(row.getCell(9));
+                    if (!productRepo.existsBySerialNumber(serialNumber) && !Product.containsProductWithSerialNumber(assets, serialNumber)) {
+                        asset.setSerialNumber(serialNumber);
+                    }
+                }
+
+
+                if (!Objects.equals(getStringValue(row.getCell(10)), "0.0") && row.getCell(10) != null) {
+                    userRepo.findByEmail(getStringValue(row.getCell(10)))
+                            .ifPresent(asset::setLiable);
+                }
+
+                if (!Objects.equals(getStringValue(row.getCell(11)), "0.0") && row.getCell(11) != null)
+                    asset.setReceiver(getStringValue(row.getCell(11)));
+
+                if (!Objects.equals(getStringValue(row.getCell(12)), "0.0") && row.getCell(12) != null) {
+                    KST kst = configureService.getKSTByNum(getStringValue(row.getCell(12)));
+                    if (kst != null) asset.setKst(kst);
+                }
+                if (!Objects.equals(getStringValue(row.getCell(13)), "0.0") && row.getCell(13) != null) {
+                    AssetStatus assetStatus = configureService.getAssetStatusByAssetStatus(getStringValue(row.getCell(13)));
+                    if (assetStatus != null) asset.setAssetStatus(assetStatus);
+                }
+                if (!Objects.equals(getStringValue(row.getCell(14)), "0.0") && row.getCell(14) != null) {
+                    Unit unit = configureService.getUnitByUnit(getStringValue(row.getCell(14)));
+                    if (unit != null) asset.setUnit(unit);
+                }
+
+                if (!Objects.equals(getStringValue(row.getCell(15)), "0.0") && row.getCell(15) != null) {
+                    MPK mpk = configureService.getMPKByMPK(getStringValue(row.getCell(15)), userId);
+                    if (mpk != null) asset.setMpk(mpk);
+                }
+                if (!Objects.equals(getStringValue(row.getCell(16)), "0.0")  && row.getCell(16) != null) {
+                    Type type = typeService.getTypeByType(getStringValue(row.getCell(16)), userId);
+                    asset.setType(type);
+                    if (!Objects.equals(getStringValue(row.getCell(17)), "0.0") && row.getCell(17) != null) {
+                        Subtype subtype = typeService.getSubtypeBySubtypeAndType(type, getStringValue(row.getCell(17)), userId);
+                        if (subtype != null) asset.setSubtype(subtype);
+                    }
+                }
+
+                if (!Objects.equals(getStringValue(row.getCell(18)), "0.0") && row.getCell(18) != null)
                     asset.setProducer(getStringValue(row.getCell(18)));
-                }
-                if (row.getCell(19) != null){
+
+                if (!Objects.equals(getStringValue(row.getCell(19)), "0.0")  && row.getCell(19) != null)
                     asset.setSupplier(getStringValue(row.getCell(19)));
-                }
 
+                if (!Objects.equals(getStringValue(row.getCell(20)), "0.0") && row.getCell(20) != null)
+                    asset.setDocument(getStringValue(row.getCell(20)));
 
-                asset.setDocument(getStringValue(row.getCell(20)));
-                asset.setDocumentDate(getLocalDateValue(row.getCell(21)));
-                asset.setWarrantyPeriod(getLocalDateValue(row.getCell(22)));
-                asset.setInspectionDate(getLocalDateValue(row.getCell(23)));
+                if (!Objects.equals(getStringValue(row.getCell(21)), "0.0") && row.getCell(21) != null)
+                    asset.setDocumentDate(getLocalDateValue(row.getCell(21)));
+
+                if (!Objects.equals(getStringValue(row.getCell(22)), "0.0") && row.getCell(22) != null)
+                    asset.setWarrantyPeriod(getLocalDateValue(row.getCell(22)));
+
+                if (!Objects.equals(getStringValue(row.getCell(23)), "0.0") && row.getCell(23) != null)
+                    asset.setInspectionDate(getLocalDateValue(row.getCell(23)));
+
                 assets.add(asset);
                 System.out.println(asset);
             }
@@ -172,14 +208,17 @@ public class ExcelParser {
         return tempFile;
     }
 
-    public void saveAssets(List<Asset> assetList, Long userId) {
+    private final ProductService productService;
+
+    public void saveAssets(List<Product> assetList, Long userId) {
         log.info(TAG + "Save assets by user with id");
-        User user = userRepo.getUser(userId);
-        for (Asset asset : assetList) {
-            productRepo.save(AssetMapper.toProduct(
-                    asset,
-                    user,
-                    userRepo.findByEmail(asset.getLiableEmail()).orElse(null)));
+        for (Product product : assetList) {
+            product.setCreatedBy(userRepo.getUser(userId));
+            product.setActive(true);
+            Product productFromDB = productRepo.save(product);
+            logService.addLog(userId, Action.CREATE, Section.PRODUCT, product.getTitle());
+            productService.addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
+            productRepo.save(product);
         }
     }
 }

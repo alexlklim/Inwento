@@ -1,6 +1,7 @@
 package com.alex.asset.configure.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,7 +24,7 @@ public class Subtype extends BaseEntityActive {
     String subtype;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference @JsonIgnore
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @Schema(description = "Type", example = "Office Equipment")
     private Type type;

@@ -1,5 +1,6 @@
 package com.alex.asset.configure.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ public class Type extends BaseEntityActive {
     @Schema(description = "Type", example = "Office Equipment")
     String type;
 
-    @JsonManagedReference
+    @JsonManagedReference @JsonIgnore
     @OneToMany(mappedBy = "type")
     private List<Subtype> subtypes = new ArrayList<>();
 

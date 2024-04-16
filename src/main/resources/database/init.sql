@@ -54,10 +54,10 @@ VALUES
 
 INSERT IGNORE INTO locations (id, is_active, location, branch_id)
 VALUES
-    (1, true, 'pokój Anety', 1),
-    (2, true, 'pokój Prezesa', 1),
-    (3, true, 'pokój Łukasza', 1),
-    (4, true, 'Marketing', 1),
+    (1, true, 'eneta', 1),
+    (2, true, 'prezes', 1),
+    (3, true, 'director', 1),
+    (4, true, 'marketing', 1),
     (4, true, 'Sekretariat', 1),
     (4, true, 'Sekretariat 2', 1),
     (4, true, 'sala konferencyjna', 1),

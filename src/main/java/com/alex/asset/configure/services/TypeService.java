@@ -108,37 +108,29 @@ public class TypeService {
             subtypeRepo.save(newSubtype);
             logService.addLog(userId, Action.CREATE, Section.SUBTYPE, "Add subtype " + newSubtype.getSubtype());
             return newSubtype;
-        }).forEach(subtype -> {
         });
     }
 
 
     @SneakyThrows
     public Type getTypeByType(String type, Long userId) {
+        log.info(TAG + "Get type by type {}", type);
         Type typeFromDB = typeRepo.findTypeByType(type).orElse(null);
         if (typeFromDB == null) {
             addTypes(List.of(type), userId);
-            Type typeNew = typeRepo.findTypeByType(type).orElse(null);
-            if (typeNew != null) {
-                return typeNew;
-            }
+            return typeRepo.findTypeByType(type).orElse(null);
         }
         return typeFromDB;
     }
 
 
     @SneakyThrows
-    public Subtype getSubtypeBySubtypeAndType(String type, String subtype, Long userId) {
-        Subtype subtypeFromDb = subtypeRepo.findSubtypeBySubtypeAndType(
-                        subtype,
-                        getTypeByType(type, userId))
-                .orElse(null);
+    public Subtype getSubtypeBySubtypeAndType(Type type, String subtype, Long userId) {
+        log.info(TAG + "Get subtype by subtype {} and type {}", subtype, type.getType());
+        Subtype subtypeFromDb = subtypeRepo.findSubtypeBySubtypeAndType(subtype, type).orElse(null);
         if (subtypeFromDb == null) {
-            addSubtypes(getTypeByType(type, userId).getId(), List.of(subtype), userId);
-            return subtypeRepo.findSubtypeBySubtypeAndType(
-                            subtype,
-                            getTypeByType(type, userId))
-                    .orElse(null);
+            addSubtypes(type.getId(), List.of(subtype), userId);
+            return subtypeRepo.findSubtypeBySubtypeAndType(subtype, type).orElse(null);
         }
         return subtypeFromDb;
 

@@ -340,7 +340,7 @@ public class ProductService {
     }
 
     @SneakyThrows
-    private void addHistoryToProduct(Long userId, Long productId, Activity activity) {
+    public void addHistoryToProduct(Long userId, Long productId, Activity activity) {
         ProductHistory productHistory = new ProductHistory();
         productHistory.setActivity(activity);
         productHistory.setCreated(LocalDateTime.now());

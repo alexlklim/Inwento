@@ -1,6 +1,7 @@
 package com.alex.asset.configure.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,7 +20,7 @@ public class Location extends BaseEntityActive {
     String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference @JsonIgnore
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @Schema(description = "Type", example = "Office Equipment")
     private Branch branch;

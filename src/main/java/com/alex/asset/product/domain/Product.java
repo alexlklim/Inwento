@@ -1,6 +1,7 @@
 package com.alex.asset.product.domain;
 
 import com.alex.asset.configure.domain.*;
+import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -10,6 +11,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Builder(toBuilder = true)
@@ -51,13 +53,13 @@ public class Product extends BaseEntity {
 
     @ManyToOne @JoinColumn(name = "branch_id")
     Branch branch;
-    @ManyToOne @JsonIgnore @JoinColumn(name = "location_id")
+    @ManyToOne @JoinColumn(name = "location_id")
     Location location;
 
     @ManyToOne @JoinColumn(name = "mpk_id")
     MPK mpk;
 
-    @ManyToOne @JsonIgnore @JoinColumn(name = "type_id")
+    @ManyToOne @JoinColumn(name = "type_id")
     Type type;
     @ManyToOne @JoinColumn(name = "subtype_id")
     Subtype subtype;
@@ -115,5 +117,28 @@ public class Product extends BaseEntity {
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 '}';
+    }
+
+
+
+
+    public static boolean containsProductWithBarcode(List<Product> productList, String barcode) {
+        return productList.stream()
+                .anyMatch(product -> barcode.equals(product.getBarCode()));
+    }
+
+    public static boolean containsProductWithRfidCode(List<Product> productList, String rfidCode) {
+        return productList.stream()
+                .anyMatch(product -> rfidCode.equals(product.getRfidCode()));
+    }
+
+    public static boolean containsProductWithInventoryNumber(List<Product> productList, String inventoryNumber) {
+        return productList.stream()
+                .anyMatch(product -> inventoryNumber.equals(product.getInventoryNumber()));
+    }
+
+    public static boolean containsProductWithSerialNumber(List<Product> productList, String serialNumber) {
+        return productList.stream()
+                .anyMatch(product -> serialNumber.equals(product.getSerialNumber()));
     }
 }

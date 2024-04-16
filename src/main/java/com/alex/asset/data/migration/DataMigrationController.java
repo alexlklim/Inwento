@@ -1,7 +1,7 @@
 package com.alex.asset.data.migration;
 
-import com.alex.asset.data.migration.dto.Asset;
 import com.alex.asset.data.migration.service.ExcelParser;
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +29,7 @@ public class DataMigrationController {
     @Operation(summary = "Parse excel to products objects, provide which row should be the last")
     @PostMapping("/{last_row}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Asset> parseExcelToProductObjects(
+    public List<Product> parseExcelToProductObjects(
             @PathVariable("last_row") int lastRow,
             @RequestBody MultipartFile file) throws IOException {
         log.info(TAG + "Parse excel to product objects");
@@ -40,10 +40,11 @@ public class DataMigrationController {
     }
 
     @Operation(summary = "Parse excel to products objects TEST")
-    @PostMapping("/test/{last_row}")    @ResponseStatus(HttpStatus.OK)
-    public List<Asset> parseExcelToProductObjectsTest(
+    @PostMapping("/test/{last_row}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Product> parseExcelToProductObjectsTest(
             @PathVariable("last_row") int lastRow
-            ) {
+    ) {
         log.info(TAG + "Parse excel to product objects TEST");
         return excelParser.parseExcel(
                 new File("C:\\Folder\\CSMM\\Inventory_Product_List3.xlsx"),
@@ -56,7 +57,7 @@ public class DataMigrationController {
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.OK)
     public void save(
-            @RequestBody List<Asset> assetList) {
+            @RequestBody List<Product> assetList) {
         log.info(TAG + "Save assets in DB");
         excelParser.saveAssets(
                 assetList,
