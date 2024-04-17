@@ -16,33 +16,34 @@ import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductHistoryDto;
-import com.alex.asset.product.dto.ProductV1Dto;
-import com.alex.asset.product.dto.ProductV3Dto;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductHistoryRepo;
 import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.dto.DtoActive;
+import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
+import com.alex.asset.utils.exceptions.errors.ValueIsNotUnique;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProductService {
+public class ProductService implements IProductService {
 
     private final String TAG = "PRODUCT_SERVICE - ";
     private final LogService logService;
@@ -57,156 +58,108 @@ public class ProductService {
     private final TypeService typeService;
     private final LocationService locationService;
 
-
-    public List<ProductV1Dto> getAll() {
-        log.info(TAG + "get all products");
-        return productRepo.findAll()
-                .stream()
-                .map(productMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-
-    public List<ProductV1Dto> getActive() {
-        log.info(TAG + "get all active products");
-        return getActiveProducts()
-                .stream()
-                .map(productMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<Product> getActiveProducts() {
-        return productRepo.getActive();
-    }
-
-
-    public List<Product> getActiveProductsByBranch(Branch branch) {
-        return productRepo.findAllByBranch(branch);
-    }
-
-
-    public ProductV1Dto create(ProductV1Dto dto, Long userId) {
-        log.info(TAG + "Create product by user with id {}", userId);
-        Product product = productMapper.toEntity(dto);
-        product.setCreatedBy(userRepo.getUser(userId));
-        product.setLiable(userRepo.findById(dto.getLiableId()).orElse(null));
-        product.setBarCode(null);
-        product.setRfidCode(null);
-        product.setActive(true);
-        Product productFromDB = productRepo.save(product);
-        logService.addLog(userId, Action.CREATE, Section.PRODUCT, dto.getTitle());
-        addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
-        return productMapper.toDto(productFromDB);
-    }
-
+    @Override
     @SneakyThrows
-    public ProductV1Dto getById(Long productId) {
+    public Map<String, Object> getById(List<String> productFields, Long productId, Long userId) {
         log.info(TAG + "get product by id");
-        return productMapper.toDto(productRepo.findById(productId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Product not found with id " + productId))
-        );
-
+        Product product = productRepo.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException("Product not found with id " + userId));
+        if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
+            throw new ResourceNotFoundException("Product was deleted with id " + userId);
+        }
+        if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+        return productMapper.toDTOWithCustomFields(product, productFields);
     }
 
-    public ProductV3Dto getShortProductById(Long productId) {
-        return convertProductToProductV3Dto(
-                productRepo.findById(productId)
-                        .orElseThrow(
-                                () -> new ResourceNotFoundException("Product with id " + productId + " not found")
-                        )
-        );
+    @Override
+    @SneakyThrows
+    public List<Map<String, Object>> getAllProducts(
+            String mode, Boolean isScrap, List<String> productFields, Long userId) {
+        List<Product> products = null;
+        if (Role.ADMIN == Role.fromString(mode)) {
+            if (Role.ADMIN == userRepo.getUser(userId).getRoles()) products = productRepo.getAllProducts();
+        } else products = isScrap ? productRepo.getActive() : productRepo.getActiveWithoutScrapped();
+        if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+        if (products == null) return Collections.emptyList();
+        List<String> finalProductFields = productFields;
+        return products.stream().map(product -> productMapper.toDTOWithCustomFields(product, finalProductFields)).toList();
+    }
+
+    @Override
+    @SneakyThrows
+    public Map<String, Object> getByUniqueValues(
+            String barCode, String rfidCode, String inventoryNumber, String serialNumber,
+            List<String> productFields, Long userId) {
+        barCode = "null".equals(barCode) ? null : barCode;
+        rfidCode = "null".equals(rfidCode) ? null : rfidCode;
+        inventoryNumber = "null".equals(inventoryNumber) ? null : inventoryNumber;
+        serialNumber = "null".equals(serialNumber) ? null : serialNumber;
+        Product product = productRepo.findByUniqueValues(barCode, rfidCode, inventoryNumber, serialNumber).orElse(null);
+        if (product != null) {
+            if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
+                throw new ResourceNotFoundException("Product was deleted with id " + userId);
+            }
+            if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+            return productMapper.toDTOWithCustomFields(product, productFields);
+        } else return Collections.emptyMap();
     }
 
 
-    private ProductV3Dto convertProductToProductV3Dto(Product product) {
-        ProductV3Dto dto = new ProductV3Dto();
-        dto.setId(product.getId());
-        dto.setTitle(product.getTitle());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setBarCode(product.getBarCode());
-        dto.setReceiver(product.getReceiver());
-        dto.setBranch(product.getBranch().getBranch());
-        dto.setLiable(product.getLiable().getFirstname() + " " + product.getLiable().getLastname());
-        return dto;
-    }
-
-
-    public Map<Long, String> getByTitleOrBarCode(String title) {
+    @Override
+    @SneakyThrows
+    public List<Map<String, Object>> getByValue(String keyWord, List<String> productFields) {
         log.info(TAG + "get product by title");
-        return productRepo.getByTitleOrBarCode(title)
+        List<String> finalProductFields =
+                (productFields == null || productFields.isEmpty()) ? Utils.PRODUCT_FIELDS_V1 : productFields;
+        return productRepo.getByKeyWord(keyWord)
                 .stream()
-                .collect(Collectors.toMap(Product::getId, Product::getTitle));
-
+                .map(product -> productMapper.toDTOWithCustomFields(product, finalProductFields))
+                .toList();
     }
 
-    public ProductV3Dto getProductByBarCode(String barCode) {
-        return getShortProductById(
-                productRepo.getProductByBarCode(barCode).orElseThrow(
-                        () -> new ResourceNotFoundException("Product with bar code " + barCode + " not found")
-                ).getId()
-        );
-    }
-
-    public List<ProductV3Dto> getListOfProductV3DTO() {
-        return productRepo.getActive()
-                .stream()
-                .map(this::convertProductToProductV3Dto)
-                .collect(Collectors.toList());
-
+    @Override
+    @Modifying
+    @SneakyThrows
+    public void update(Map<String, Object> updates, Long userId) {
+        log.info(TAG + "Update or create product");
+        if (updates.containsKey("id")) {
+            Long productId = ((Number) updates.get("id")).longValue();
+            Product product = productRepo.findById(productId).orElseThrow(
+                    () -> new ResourceNotFoundException("Product not found"));
+            updates.remove("id");
+            updateProduct(updates, product, userId);
+        } else {
+            createProduct(updates, userId);
+        }
     }
 
     @SneakyThrows
-    public void updateVisibility(DtoActive dto, Long userId) {
-        log.info(TAG + "Update product visibility by user with id {}", userId);
-        Product product = productRepo.findById(dto.getId())
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + dto.getId() + " not found")
-                );
-        product.setActive(dto.isActive());
-        productRepo.save(product);
-        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, dto.toString());
-        addHistoryToProduct(userId, product.getId(), Activity.VISIBILITY);
-
+    private void createProduct(Map<String, Object> updates, Long userId) {
+        log.info(TAG + "Create product");
+        Product entity = new Product();
+        entity.setActive(true);
+        entity.setCreatedBy(userRepo.getUser(userId));
+        productRepo.save(entity);
+        logService.addLog(userId, Action.CREATE, Section.PRODUCT, "Product was saved");
+        updateProduct(updates, entity, userId);
     }
-
 
     @SneakyThrows
-    public List<ProductHistoryDto> getHistoryOfProductById(Long productId) {
-        log.info(TAG + "Get history of product with id {}", productId);
-        Product product = productRepo.findById(productId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + productId + " was not found")
-                );
-        return productHistoryRepo.findAllByProductOrderByCreatedDesc(product)
-                .stream()
-                .map(productMapper::toProductHistoryDto)
-                .collect(Collectors.toList());
-    }
-
-
-    public void productMovedToAnotherBranch(Product product, Branch branch) {
-        log.info(TAG + "product with id {} moved to another branch", product.getId());
-        product.setBranch(branch);
-        productRepo.save(product);
-    }
-
-    public Optional<Product> getByBarCode(String barCode) {
-        log.info(TAG + "Get product by bar code {}", barCode);
-        return productRepo.getByBarCode(barCode);
-    }
-
-
-    @SneakyThrows
-    public void updateProduct(Long userId, Map<String, Object> updates) {
+    private void updateProduct(Map<String, Object> updates, Product product, Long userId) throws ValueIsNotUnique {
         log.info(TAG + "Update product by user with id {}", userId);
-        Long productId = ((Number) updates.getOrDefault("id", null)).longValue();
-        Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found"));
-        product.setActive(true);
+        Long productId = (product.getId() != null) ? product.getId() : 0;
         updates.forEach((key, value) -> {
             switch (key) {
+                case "active":
+                    if (userRepo.getUser(userId).getRoles() == Role.ADMIN) {
+                        product.setActive((Boolean) value);
+                        product.setBarCode(null);
+                        product.setRfidCode(null);
+                        product.setInventoryNumber(null);
+                        product.setSerialNumber(null);
+                        addHistoryToProduct(userId, productId, Activity.VISIBILITY);
+                    }
+                    break;
                 case "title":
                     product.setTitle((String) value);
                     addHistoryToProduct(userId, productId, Activity.TITLE);
@@ -219,20 +172,36 @@ public class ProductService {
                     addHistoryToProduct(userId, productId, Activity.PRICE);
                     break;
                 case "bar_code":
-                    product.setBarCode((String) value);
-                    addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                    if (!productRepo.checkUniqueValues((String) value, null, null, null)) {
+                        product.setBarCode((String) value);
+                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                    } else {
+                        throw new ValueIsNotUnique("Bar code " + value + " is taken");
+                    }
                     break;
                 case "rfid_code":
-                    product.setRfidCode((String) value);
-                    addHistoryToProduct(userId, productId, Activity.RFID_CODE);
+                    if (!productRepo.checkUniqueValues(null, (String) value, null, null)) {
+                        product.setBarCode((String) value);
+                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                    } else {
+                        throw new ValueIsNotUnique("Rfid code " + value + "is taken");
+                    }
                     break;
                 case "inventory_number":
-                    product.setInventoryNumber((String) value);
-                    addHistoryToProduct(userId, productId, Activity.INVENTORY_NUMBER);
+                    if (!productRepo.checkUniqueValues(null, null, (String) value, null)) {
+                        product.setBarCode((String) value);
+                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                    } else {
+                        throw new ValueIsNotUnique("Inventory number " + value + "is taken");
+                    }
                     break;
                 case "serial_number":
-                    product.setSerialNumber((String) value);
-                    addHistoryToProduct(userId, productId, Activity.SERIAL_NUMBER);
+                    if (!productRepo.checkUniqueValues(null, null, null, (String) value)) {
+                        product.setBarCode((String) value);
+                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                    } else {
+                        throw new ValueIsNotUnique("Serial number " + value + "is taken");
+                    }
                     break;
                 case "liable_id":
                     product.setLiable(userRepo.findById(((Number) value).longValue()).orElseThrow(
@@ -286,7 +255,7 @@ public class ProductService {
                     addHistoryToProduct(userId, productId, Activity.SUPPLIER);
                     break;
                 case "scrapping":
-                    product.setScrapping((Boolean) value);  
+                    product.setScrapping((Boolean) value);
                     addHistoryToProduct(userId, productId, Activity.SCRAPPING);
                     break;
                 case "scrapping_date":
@@ -321,14 +290,37 @@ public class ProductService {
                     product.setLatitude((Double) value);
                     addHistoryToProduct(userId, productId, Activity.GPS);
                     break;
+                default:
+                    break;
             }
         });
-
-        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, "Product was changed");
-        product.setActive(true);
         productRepo.save(product);
-
+        logService.addLog(userId, Action.UPDATE, Section.PRODUCT, "Product was saved");
     }
+
+    @Override
+    @Modifying
+    @SneakyThrows
+    public List<ProductHistoryDto> getHistoryOfProductById(Long productId) {
+        log.info(TAG + "Get history of product with id {}", productId);
+        Product product = productRepo.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " was not found"));
+        return productHistoryRepo.findAllByProductOrderByCreatedDesc(product)
+                .stream()
+                .map(productMapper::toProductHistoryDto)
+                .toList();
+    }
+
+    @SneakyThrows
+    private void addHistoryToProduct(Long userId, Long productId, Activity activity) {
+        ProductHistory productHistory = new ProductHistory();
+        productHistory.setActivity(activity);
+        productHistory.setCreated(LocalDateTime.now());
+        productHistory.setProduct(productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found")));
+        productHistory.setUser(userRepo.getUser(userId));
+        productHistoryRepo.save(productHistory);
+    }
+
 
     public void resolveIssueWithInventory(Product product, Branch branchById) {
         log.info(TAG + "Resolve issue with inventory for branch {}", branchById);
@@ -339,22 +331,21 @@ public class ProductService {
         event.getProducts().remove(product);
     }
 
-    @SneakyThrows
-    public void addHistoryToProduct(Long userId, Long productId, Activity activity) {
-        ProductHistory productHistory = new ProductHistory();
-        productHistory.setActivity(activity);
-        productHistory.setCreated(LocalDateTime.now());
-        productHistory.setProduct(productRepo.findById(productId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + productId + " not found"))
-        );
-        productHistory.setUser(userRepo.findById(userId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("User with id " + productId + " not found"))
-        );
 
-        productHistoryRepo.save(productHistory);
-
+    public List<Product> getActiveProductsByBranch(Branch branch) {
+        return productRepo.findAllByBranch(branch);
     }
+
+    public void productMovedToAnotherBranch(Product product, Branch branch) {
+        log.info(TAG + "product with id {} moved to another branch", product.getId());
+        product.setBranch(branch);
+        productRepo.save(product);
+    }
+
+    public Optional<Product> getByBarCode(String barCode) {
+        log.info(TAG + "Get product by bar code {}", barCode);
+        return productRepo.getByBarCode(barCode);
+    }
+
 
 }

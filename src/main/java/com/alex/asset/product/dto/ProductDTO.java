@@ -9,7 +9,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Data
@@ -18,8 +17,8 @@ import java.util.List;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Product Dto (to update)")
-public class ProductV1Dto {
+@Schema(description = "Product DTO")
+public class ProductDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "Id", example = "101")
     Long id;

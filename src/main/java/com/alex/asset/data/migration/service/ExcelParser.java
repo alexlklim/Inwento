@@ -49,15 +49,10 @@ public class ExcelParser {
             FileInputStream fis = new FileInputStream(tempFile);
             Workbook workbook = WorkbookFactory.create(fis);
             Sheet sheet = workbook.getSheetAt(0);
-
             for (int i = 2; i < lastRow; i++) {
-                System.out.println(i);
                 Row row = sheet.getRow(i);
                 if (row == null) break;
                 Product asset = new Product();
-//                asset.setId(i);
-
-//                asset.setCreatedBy(userRepo.getUser(userId));
                 if (Objects.equals(getStringValue(row.getCell(1)), "0.0") && row.getCell(1) != null) continue;
                 else asset.setTitle(getStringValue(row.getCell(1)));
 
@@ -160,7 +155,6 @@ public class ExcelParser {
                     asset.setInspectionDate(getLocalDateValue(row.getCell(23)));
 
                 assets.add(asset);
-                System.out.println(asset);
             }
             workbook.close();
         } catch (IOException | ObjectAlreadyExistException | IllegalStateException e) {
@@ -217,7 +211,7 @@ public class ExcelParser {
             product.setActive(true);
             Product productFromDB = productRepo.save(product);
             logService.addLog(userId, Action.CREATE, Section.PRODUCT, product.getTitle());
-            productService.addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
+//            productService.addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
             productRepo.save(product);
         }
     }

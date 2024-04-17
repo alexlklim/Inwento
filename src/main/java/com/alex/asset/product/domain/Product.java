@@ -1,7 +1,6 @@
 package com.alex.asset.product.domain;
 
 import com.alex.asset.configure.domain.*;
-import com.alex.asset.product.dto.ProductV1Dto;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
