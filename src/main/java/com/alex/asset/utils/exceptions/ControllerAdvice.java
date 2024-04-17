@@ -31,33 +31,40 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBody handleResourceNotFound(ResourceNotFoundException ex) {
         log.error(TAG + ex.getMessage());
-        return new ExceptionBody(404, ex.getMessage());
+        return new ExceptionBody(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
     @ExceptionHandler({
             IllegalArgumentException.class,
             UserIsNotOwnerOfEvent.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handleIllegalArgument(IllegalArgumentException ex) {
+    public ExceptionBody handleIllegalArgument(Exception ex) {
         log.error(TAG + ex.getMessage());
-        return new ExceptionBody(400, ex.getMessage());
+        return new ExceptionBody(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
 
     @ExceptionHandler({
+            ValueIsNotUnique.class,
             IllegalStateException.class,
             IOException.class,
             ObjectAlreadyExistException.class,
             UserAlreadyCreateEventForThisBranch.class,
             UserNotRegisterYet.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionBody handleUserAlreadyExistException(ObjectAlreadyExistException ex) {
+    public ExceptionBody handleUserAlreadyExistException(Exception ex) {
         log.error(TAG + ex.getMessage());
-        return new ExceptionBody(HttpStatus.CONFLICT.value(), ex.getMessage());
+        return new ExceptionBody(HttpStatus.CONTINUE.value(), ex.getMessage());
     }
 
 
-
+    @ExceptionHandler({
+            AccessNotAllowed.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionBody handleForbiddenException(Exception ex) {
+        log.error(TAG + ex.getMessage());
+        return new ExceptionBody(HttpStatus.FORBIDDEN.value(), ex.getMessage());
+    }
 
     @ExceptionHandler({
             EmailIsNotConfigured.class,
@@ -69,9 +76,6 @@ public class ControllerAdvice {
         log.error(TAG + ex.getMessage());
         return new ExceptionBody(HttpStatus.CONFLICT.value(), ex.getMessage());
     }
-
-
-
 
     @ExceptionHandler({
             UserFailedAuthentication.class,
