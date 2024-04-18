@@ -57,13 +57,17 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%')")
     List<Product> getByKeyWord(@Param("prefix") String prefix);
 
-    Optional<Product> getProductByBarCode(String barCode);
+
 
     @Query("SELECT p " +
             "FROM Product p " +
             "WHERE p.barCode = ?1 AND p.isActive = true ")
     Optional<Product> getByBarCode(String barCode);
 
+    @Query("SELECT p " +
+            "FROM Product p " +
+            "WHERE p.rfidCode = ?1 AND p.isActive = true ")
+    Optional<Product> getByRfidCode(String rfidCode);
 
     List<Product> findAllByBranch(Branch branch);
 
@@ -79,22 +83,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "AND (:serialNumber IS NULL OR p.serialNumber = :serialNumber)")
     Optional<Product> findByUniqueValues(String barCode, String rfidCode, String inventoryNumber, String serialNumber);
 
-//
-//    @Query(value = "SELECT COUNT(*) = 0 " +
-//            "FROM (SELECT 1 " +
-//            "FROM products p " +
-//            "WHERE (:barCode IS NULL OR p.bar_code = :barCode) " +
-//            "   OR (:rfidCode IS NULL OR p.rfid_code = :rfidCode) " +
-//            "   OR (:inventoryNumber IS NULL OR p.inventory_number = :inventoryNumber) " +
-//            "   OR (:serialNumber IS NULL OR p.serial_number = :serialNumber) " +
-//            "GROUP BY p.id " +
-//            "HAVING COUNT(*) > 1) AS duplicates", nativeQuery = true)
-//    boolean checkUniqueValues(String barCode, String rfidCode, String inventoryNumber, String serialNumber);
-    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END FROM Product e WHERE " +
-            "(:barCode IS NOT NULL AND e.barCode = :barCode) OR " +
-            "(:rfidCode IS NOT NULL AND e.rfidCode = :rfidCode) OR " +
-            "(:inventoryNumber IS NOT NULL AND e.inventoryNumber = :inventoryNumber) OR " +
-            "(:serialNumber IS NOT NULL AND e.serialNumber = :serialNumber)")
-    boolean checkUniqueValues(String barCode, String rfidCode, String inventoryNumber, String serialNumber);
 
+
+    @Query(value = "SELECT COUNT(*) FROM Product sp WHERE sp.branch.id = :branchId")
+    int countProductsByBranchId(@Param("branchId") Long branchId);
 }

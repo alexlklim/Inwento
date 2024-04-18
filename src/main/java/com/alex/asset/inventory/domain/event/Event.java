@@ -26,6 +26,13 @@ public class Event extends BaseEntity {
     boolean isActive;
 
     @ManyToOne
+    @JoinColumn(name = "branch_id")
+    @JsonBackReference
+    Branch branch;
+
+    String info;
+
+    @ManyToOne
     @JoinColumn(name = "inventory_id")
     @JsonBackReference
     Inventory inventory;
@@ -35,17 +42,4 @@ public class Event extends BaseEntity {
     @JsonBackReference
     User user;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id")
-    @JsonBackReference
-    Branch branch;
-
-    String info;
-
-    @ManyToMany
-    @JoinTable(
-            name = "event_products",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
-    List<Product> products;
 }

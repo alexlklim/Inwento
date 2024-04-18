@@ -256,25 +256,33 @@ CREATE TABLE IF NOT EXISTS events
     FOREIGN KEY (inventory_id) REFERENCES inventories (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (branch_id) REFERENCES branches (id),
-    CONSTRAINT uc_user_branch_inventory UNIQUE (user_id, branch_id, inventory_id)
+    CONSTRAINT unique_branch_inventory UNIQUE (branch_id, inventory_id)
 );
 
-CREATE TABLE IF NOT EXISTS event_products
+CREATE TABLE IF NOT EXISTS scanned_products
 (
-    event_id   BIGINT NOT NULL,
+    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created    DATETIME,
     product_id BIGINT NOT NULL,
+    event_id   BIGINT NOT NULL,
+    user_id    BIGINT,
+    FOREIGN KEY (product_id) REFERENCES products (id),
     FOREIGN KEY (event_id) REFERENCES events (id),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 
 
 CREATE TABLE IF NOT EXISTS unknown_products
 (
-    id       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    code     VARCHAR(255) NOT NULL,
-    event_id BIGINT       NOT NULL,
-    FOREIGN KEY (event_id) REFERENCES events (id)
+    id       BIGINT                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created  DATETIME,
+    code     VARCHAR(255)                   NOT NULL,
+    type_code   ENUM ('RFID_CODE', 'BAR_CODE') NOT NULL,
+    event_id BIGINT                         NOT NULL,
+    user_id  BIGINT,
+    FOREIGN KEY (event_id) REFERENCES events (id),
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 

@@ -1,5 +1,15 @@
 package com.alex.asset.utils;
 
+import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.inventory.domain.Inventory;
+import com.alex.asset.inventory.domain.event.UnknownProduct;
+import com.alex.asset.product.dto.ProductV2Dto;
+import com.alex.asset.security.domain.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,4 +53,15 @@ public class Utils {
 
     public static final List<String> PRODUCT_FIELDS_V1 = Arrays.asList("bar_code", "rfid_code");
 
+
+
+    public static final List<String> EVENT_FIELDS = Arrays.asList(
+            "info", "inventory_id",
+            "user_id", "user_email", "user_name",
+            "unknown_products", "scanned_products", "not_scanned_products",
+            "unknown_product_amount", "total_product_amount", "scanned_product_amount"
+    );
+    public static final List<String> EVENT_FIELDS_AMOUNT = Arrays.asList(
+            "unknown_product_amount", "total_product_amount", "scanned_product_amount"
+    );
 }

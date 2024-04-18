@@ -1,50 +1,45 @@
 package com.alex.asset.inventory.domain.event;
 
-import com.alex.asset.configure.domain.Location;
+
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.expression.spel.ast.TypeCode;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-@Entity
-@Table(name = "unknown_products")
-public class UnknownProduct {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Entity @Table(name = "scanned_products")
+public class ScannedProduct {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JsonIgnore
-    @CreatedDate
-    @Column(name = "created")
+    @JsonIgnore @CreatedDate @Column(name = "created")
     LocalDateTime created;
 
 
-    @Column(name = "code")
-    String code;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonBackReference
+    Product product;
 
-    @Column(name = "type_code")
-    @Enumerated(EnumType.STRING)
-    CodeType typeCode;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonBackReference
     Event event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     User user;
 }

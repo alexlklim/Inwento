@@ -1,7 +1,7 @@
 package com.alex.asset.inventory.dto;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.alex.asset.inventory.domain.event.UnknownProduct;
+import com.alex.asset.product.dto.ProductV2Dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,19 +11,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Schema(description = "Event DTO CREATE")
-public class EventV1Create {
+@Schema(description = "Event DTO GET")
+public class EventDTO {
 
-    @Schema(description = "Branch id", example = "1")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Schema(description = "Branch", example = "Main office")
     Long branchId;
 
-    @Schema(description = "Info", example = "start inventarization")
+    @Schema(description = "Info", example = "Info about event")
     String info;
 
 }

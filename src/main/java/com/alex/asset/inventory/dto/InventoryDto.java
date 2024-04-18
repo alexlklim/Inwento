@@ -39,12 +39,12 @@ public class InventoryDto {
     String info;
 
     @Schema(description = "Amount of unknown products", example = "3")
-    Long unknownProductAmount;
+    int unknownProductAmount;
 
     @Schema(description = "Total amount of products (without unknown)", example = "2000")
-    Long totalProductAmount;
+    int totalProductAmount;
 
     @Schema(description = "Amount of scanned product (without unknown)", example = "1500")
-    Long scannedProductAmount;
+    int scannedProductAmount;
 
 }

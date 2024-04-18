@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS event_products;
 DROP TABLE IF EXISTS unknown_products;
+DROP TABLE IF EXISTS scanned_products;
 
 
 DROP TABLE IF EXISTS events;
@@ -29,8 +29,4 @@ DROP TABLE IF EXISTS tmp;
 
 
 
-
-
-
-select * from locations;
-select * from products;
+select * from unknown_products;

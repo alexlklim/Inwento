@@ -2,11 +2,10 @@ package com.alex.asset.product.service;
 
 
 import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
-import com.alex.asset.inventory.domain.Inventory;
-import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.logs.LogService;
@@ -48,7 +47,6 @@ public class ProductService implements IProductService {
     private final String TAG = "PRODUCT_SERVICE - ";
     private final LogService logService;
 
-    private final ProductMapper productMapper;
     private final ProductRepo productRepo;
     private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
@@ -68,7 +66,7 @@ public class ProductService implements IProductService {
             throw new ResourceNotFoundException("Product was deleted with id " + userId);
         }
         if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
-        return productMapper.toDTOWithCustomFields(product, productFields);
+        return ProductMapper.toDTOWithCustomFields(product, productFields);
     }
 
     @Override
@@ -81,8 +79,11 @@ public class ProductService implements IProductService {
         } else products = isScrap ? productRepo.getActive() : productRepo.getActiveWithoutScrapped();
         if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
         if (products == null) return Collections.emptyList();
-        List<String> finalProductFields = productFields;
-        return products.stream().map(product -> productMapper.toDTOWithCustomFields(product, finalProductFields)).toList();
+        return getProductDTOs(products, productFields);
+    }
+
+    private List<Map<String, Object>> getProductDTOs(List<Product> products, List<String> productFields) {
+        return products.stream().map(product -> ProductMapper.toDTOWithCustomFields(product, productFields)).toList();
     }
 
     @Override
@@ -100,7 +101,7 @@ public class ProductService implements IProductService {
                 throw new ResourceNotFoundException("Product was deleted with id " + userId);
             }
             if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
-            return productMapper.toDTOWithCustomFields(product, productFields);
+            return ProductMapper.toDTOWithCustomFields(product, productFields);
         } else return Collections.emptyMap();
     }
 
@@ -109,12 +110,8 @@ public class ProductService implements IProductService {
     @SneakyThrows
     public List<Map<String, Object>> getByValue(String keyWord, List<String> productFields) {
         log.info(TAG + "get product by title");
-        List<String> finalProductFields =
-                (productFields == null || productFields.isEmpty()) ? Utils.PRODUCT_FIELDS_V1 : productFields;
-        return productRepo.getByKeyWord(keyWord)
-                .stream()
-                .map(product -> productMapper.toDTOWithCustomFields(product, finalProductFields))
-                .toList();
+        if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+        return getProductDTOs(productRepo.getByKeyWord(keyWord), productFields);
     }
 
     @Override
@@ -172,7 +169,7 @@ public class ProductService implements IProductService {
                     addHistoryToProduct(userId, productId, Activity.PRICE);
                     break;
                 case "bar_code":
-                    if (!productRepo.checkUniqueValues((String) value, null, null, null)) {
+                    if (!productRepo.existsByBarCode((String) value)) {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     } else {
@@ -180,7 +177,7 @@ public class ProductService implements IProductService {
                     }
                     break;
                 case "rfid_code":
-                    if (!productRepo.checkUniqueValues(null, (String) value, null, null)) {
+                    if (!productRepo.existsByRfidCode((String) value)) {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     } else {
@@ -188,7 +185,7 @@ public class ProductService implements IProductService {
                     }
                     break;
                 case "inventory_number":
-                    if (!productRepo.checkUniqueValues(null, null, (String) value, null)) {
+                    if (!productRepo.existsByInventoryNumber((String) value)) {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     } else {
@@ -196,7 +193,7 @@ public class ProductService implements IProductService {
                     }
                     break;
                 case "serial_number":
-                    if (!productRepo.checkUniqueValues(null, null, null, (String) value)) {
+                    if (!productRepo.existsBySerialNumber((String) value)) {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     } else {
@@ -226,7 +223,7 @@ public class ProductService implements IProductService {
                     addHistoryToProduct(userId, productId, Activity.UNIT);
                     break;
                 case "branch_id":
-                    resolveIssueWithInventory(product, locationService.getBranchById(((Number) value).longValue()));
+//                    resolveIssueWithInventory(product, locationService.getBranchById(((Number) value).longValue()));
                     product.setBranch(locationService.getBranchById(((Number) value).longValue()));
                     addHistoryToProduct(userId, productId, Activity.BRANCH);
                     break;
@@ -298,6 +295,7 @@ public class ProductService implements IProductService {
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, "Product was saved");
     }
 
+
     @Override
     @Modifying
     @SneakyThrows
@@ -307,7 +305,7 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " was not found"));
         return productHistoryRepo.findAllByProductOrderByCreatedDesc(product)
                 .stream()
-                .map(productMapper::toProductHistoryDto)
+                .map(ProductMapper::toProductHistoryDto)
                 .toList();
     }
 
@@ -322,30 +320,21 @@ public class ProductService implements IProductService {
     }
 
 
-    public void resolveIssueWithInventory(Product product, Branch branchById) {
-        log.info(TAG + "Resolve issue with inventory for branch {}", branchById);
-        Inventory inventory = inventoryRepo.getCurrentInvent(LocalDate.now()).orElse(null);
-        if (inventory == null) return;
-        Event event = eventRepo.findByProductId(product.getId(), inventory).orElse(null);
-        if (event == null) return;
-        event.getProducts().remove(product);
-    }
-
-
     public List<Product> getActiveProductsByBranch(Branch branch) {
         return productRepo.findAllByBranch(branch);
     }
 
-    public void productMovedToAnotherBranch(Product product, Branch branch) {
-        log.info(TAG + "product with id {} moved to another branch", product.getId());
+
+    @SneakyThrows
+    public void moveProduct(Product product, Branch branch, Location location, Long userId) {
         product.setBranch(branch);
+        product.setLocation(location);
+        productRepo.save(product);
+        addHistoryToProduct(userId, product.getId(), Activity.LOCATION);
+    }
+
+    @SneakyThrows
+    public void save(Product product) {
         productRepo.save(product);
     }
-
-    public Optional<Product> getByBarCode(String barCode) {
-        log.info(TAG + "Get product by bar code {}", barCode);
-        return productRepo.getByBarCode(barCode);
-    }
-
-
 }

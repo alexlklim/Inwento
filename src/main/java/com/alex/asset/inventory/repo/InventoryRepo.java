@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface InventoryRepo extends JpaRepository<Inventory, Long> {
@@ -19,6 +20,8 @@ public interface InventoryRepo extends JpaRepository<Inventory, Long> {
 
 
 
+    @Query("SELECT i FROM Inventory i WHERE i.isActive = true")
+    List<Inventory> getActiveInventories();
 
     @Query("SELECT i FROM Inventory i WHERE i.isActive = true " +
             "AND i.startDate <= :currentDate " +

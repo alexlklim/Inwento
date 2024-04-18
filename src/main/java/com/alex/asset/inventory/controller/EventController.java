@@ -1,8 +1,7 @@
 package com.alex.asset.inventory.controller;
 
 
-import com.alex.asset.inventory.dto.EventV1Create;
-import com.alex.asset.inventory.dto.EventV2Get;
+import com.alex.asset.inventory.dto.EventDTO;
 import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
@@ -15,53 +14,49 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/event")
+@RequestMapping("/api/v1/inventory/events")
 @Tag(name = "Event Controller", description = "Event API")
 public class EventController {
     private final String TAG = "EVENT_CONTROLLER - ";
     private final EventService eventService;
 
 
-    @Operation(summary = "Get events for specific user for specific invent")
-    @GetMapping("/invent/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<EventV2Get> getEventsForSpecificUser(
-            @PathVariable("id") Long inventId) {
-        log.info(TAG + "Get all events for specific user for specific invent");
-        return eventService.getEventsForSpecificUserAndInvent(SecHolder.getUserId(), inventId);
-    }
-
-    @Operation(summary = "Get all events for specific invent")
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/invent/{id}/all")
-    @ResponseStatus(HttpStatus.OK)
-    public List<EventV2Get> getAllEventsForSpecificInvent(
-            @PathVariable("id") Long inventId) {
-        log.info(TAG + "Get all events for specific user for specific invent");
-        return eventService.getAllEventsForSpecificInvent(inventId);
-    }
-
     @Operation(summary = "Get event by id")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EventV2Get getEventById(
-            @PathVariable("id") Long eventId) {
+    public Map<String, Object> getEventById(
+            @PathVariable("id") Long eventId,
+            @RequestBody(required = false) List<String> eventFields) {
         log.info(TAG + "Get event by id");
-        return eventService.getEvent(eventId);
+        return eventService.getEvent(eventId, eventFields);
     }
 
 
-    @Operation(summary = "Create event for current invent")
+    @Operation(summary = "Get events for inventory by id")
+    @GetMapping("/inv/{inventory_id}/mode/{mode}/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Map<String, Object>> getEventsForInventory(
+            @PathVariable("inventory_id") Long inventoryId,
+            @PathVariable("mode") String mode,
+            @RequestBody(required = false) List<String> eventFields) {
+        log.info(TAG + "Get events for specific inventory");
+
+        return eventService.getEventsForInventory(inventoryId, mode, eventFields, SecHolder.getUserId());
+    }
+
+
+    @Operation(summary = "Create event for current inventory")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventV2Get create(
-            @RequestBody EventV1Create eventV1CreateDto) {
-        log.info(TAG + "Create new event for current invent");
+    public Map<String, Object> create(
+            @RequestBody EventDTO eventV1CreateDto) {
+        log.info(TAG + "Create new event for current inventory");
         return eventService.createEvent(
                 SecHolder.getUserId(),
                 eventV1CreateDto
@@ -81,17 +76,16 @@ public class EventController {
                 dtoActive);
     }
 
-    @Operation(summary = "Add products to event")
-    @PutMapping("/{id}/products/bar-code")
+    @Operation(summary = "Add products to event by bar code. In the map you can add longitude/latitude/bar_code/rfid_code")
+    @PutMapping("/{event_id}/products/{loc_id}/{type_code}")
     @ResponseStatus(HttpStatus.OK)
     public void addProductsToEvent(
-            @PathVariable("id") Long eventId,
-            @RequestBody List<String> listOfBarCodes) {
+            @PathVariable("event_id") Long eventId,
+            @PathVariable("loc_id") Long locationId,
+            @PathVariable("type_code") String typeCode,
+            @RequestBody List<Map<String, Object>> listOfCodes) {
         log.info(TAG + "Add product which exists in fact");
-        eventService.addProductsToEventByBarCode(
-                SecHolder.getUserId(),
-                eventId,
-                listOfBarCodes);
+        eventService.addProductsToEventByBarCode(listOfCodes, eventId, locationId, typeCode, SecHolder.getUserId());
     }
 
 

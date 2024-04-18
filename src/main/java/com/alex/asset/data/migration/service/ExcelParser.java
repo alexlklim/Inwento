@@ -127,7 +127,7 @@ public class ExcelParser {
                     MPK mpk = configureService.getMPKByMPK(getStringValue(row.getCell(15)), userId);
                     if (mpk != null) asset.setMpk(mpk);
                 }
-                if (!Objects.equals(getStringValue(row.getCell(16)), "0.0")  && row.getCell(16) != null) {
+                if (!Objects.equals(getStringValue(row.getCell(16)), "0.0") && row.getCell(16) != null) {
                     Type type = typeService.getTypeByType(getStringValue(row.getCell(16)), userId);
                     asset.setType(type);
                     if (!Objects.equals(getStringValue(row.getCell(17)), "0.0") && row.getCell(17) != null) {
@@ -139,7 +139,7 @@ public class ExcelParser {
                 if (!Objects.equals(getStringValue(row.getCell(18)), "0.0") && row.getCell(18) != null)
                     asset.setProducer(getStringValue(row.getCell(18)));
 
-                if (!Objects.equals(getStringValue(row.getCell(19)), "0.0")  && row.getCell(19) != null)
+                if (!Objects.equals(getStringValue(row.getCell(19)), "0.0") && row.getCell(19) != null)
                     asset.setSupplier(getStringValue(row.getCell(19)));
 
                 if (!Objects.equals(getStringValue(row.getCell(20)), "0.0") && row.getCell(20) != null)
@@ -202,17 +202,17 @@ public class ExcelParser {
         return tempFile;
     }
 
-    private final ProductService productService;
 
     public void saveAssets(List<Product> assetList, Long userId) {
         log.info(TAG + "Save assets by user with id");
         for (Product product : assetList) {
             product.setCreatedBy(userRepo.getUser(userId));
             product.setActive(true);
-            Product productFromDB = productRepo.save(product);
+            productRepo.save(product);
             logService.addLog(userId, Action.CREATE, Section.PRODUCT, product.getTitle());
 //            productService.addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
-            productRepo.save(product);
+
+            System.out.println(product);
         }
     }
 }

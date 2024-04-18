@@ -17,31 +17,16 @@ public interface EventRepo extends JpaRepository<Event, Long> {
 
     @Query("SELECT e " +
             "FROM Event e " +
-            "WHERE e.isActive = true AND e.user = ?1 AND e.inventory = ?2 " +
-            "ORDER BY e.created DESC")
-    List<Event> findAllByUserAndInventory(User user, Inventory inventory);
-
-
-    @Query("SELECT e " +
-            "FROM Event e " +
             "WHERE e.isActive = true AND e.inventory = ?1 " +
             "ORDER BY e.created DESC")
-    List<Event> findAllByInventory(Inventory inventory);
-
-
-    @Query("SELECT e.products " +
-            "FROM Event e " +
-            "WHERE e.branch = ?1 AND e.inventory = ?2")
-    List<Product> findProductsByBranch(Branch branch, Inventory inventory);
+    List<Event> getActiveEventsByInventory(Inventory inventory);
 
     @Query("SELECT e " +
             "FROM Event e " +
-            "JOIN e.products p " +
-            "WHERE p.id = :productId AND e.inventory = :inventory")
-    Optional<Event> findByProductId(
-            @Param("productId") Long productId,
-            @Param("inventory") Inventory inventory
-    );
+            "WHERE e.inventory = ?1 " +
+            "ORDER BY e.created DESC")
+    List<Event> getAllEventsByInventory(Inventory inventory);
 
-    boolean existsByUserAndBranchAndInventory(User user, Branch branch, Inventory currentInventory);
+
+    boolean existsByBranchAndInventory(Branch branch, Inventory inventory);
 }
