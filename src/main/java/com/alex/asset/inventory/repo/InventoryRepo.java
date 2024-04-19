@@ -10,13 +10,6 @@ import java.util.Optional;
 
 public interface InventoryRepo extends JpaRepository<Inventory, Long> {
 
-    @Query("SELECT CASE WHEN COUNT(i) > 0 THEN true ELSE false END " +
-            "FROM Inventory i " +
-            "WHERE i.startDate <= :now " +
-            "AND i.isActive = true " +
-            "AND i.isFinished = false")
-    boolean isInventoryNow(@Param("now") LocalDate now);
-
 
     @Query("SELECT i FROM Inventory i WHERE i.isActive = true " +
             "AND i.startDate <= :currentDate " +

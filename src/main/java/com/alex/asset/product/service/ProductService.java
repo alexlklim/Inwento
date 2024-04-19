@@ -163,35 +163,35 @@ public class ProductService implements IProductService {
                     addHistoryToProduct(userId, productId, Activity.PRICE);
                     break;
                 case "bar_code":
-                    if (!productRepo.existsByBarCode((String) value)) {
+                    if (productRepo.existsByBarCode((String) value)) {
+                        throw new ValueIsNotUnique("Bar code " + value + " is taken");
+                    } else {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
-                    } else {
-                        throw new ValueIsNotUnique("Bar code " + value + " is taken");
                     }
                     break;
                 case "rfid_code":
-                    if (!productRepo.existsByRfidCode((String) value)) {
+                    if (productRepo.existsByRfidCode((String) value)) {
+                        throw new ValueIsNotUnique("Rfid code " + value + "is taken");
+                    } else {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
-                    } else {
-                        throw new ValueIsNotUnique("Rfid code " + value + "is taken");
                     }
                     break;
                 case "inventory_number":
-                    if (!productRepo.existsByInventoryNumber((String) value)) {
+                    if (productRepo.existsByInventoryNumber((String) value)) {
+                        throw new ValueIsNotUnique("Inventory number " + value + "is taken");
+                    } else {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
-                    } else {
-                        throw new ValueIsNotUnique("Inventory number " + value + "is taken");
                     }
                     break;
                 case "serial_number":
-                    if (!productRepo.existsBySerialNumber((String) value)) {
+                    if (productRepo.existsBySerialNumber((String) value)) {
+                        throw new ValueIsNotUnique("Serial number " + value + "is taken");
+                    } else {
                         product.setBarCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
-                    } else {
-                        throw new ValueIsNotUnique("Serial number " + value + "is taken");
                     }
                     break;
                 case "liable_id":
