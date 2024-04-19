@@ -24,11 +24,10 @@ import java.util.List;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/company")
-@Tag(name = "Config Controller", description = "Config API")
+@Tag(name = "Configurator Controller", description = "Configurator API")
 public class ConfigController {
     private final String TAG = "CONFIG_CONTROLLER - ";
     private final ConfigureService configureService;
-
 
     @Operation(summary = "get asset statuses (active or not)")
     @GetMapping("/asset-status")

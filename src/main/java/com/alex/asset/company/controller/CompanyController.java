@@ -1,9 +1,5 @@
 package com.alex.asset.company.controller;
 
-import com.alex.asset.company.domain.CompanyDto;
-import com.alex.asset.company.domain.DataDto;
-import com.alex.asset.company.domain.EmailDto;
-import com.alex.asset.company.domain.LabelDto;
 import com.alex.asset.company.service.CompanyService;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +46,6 @@ public class CompanyController {
         log.info(TAG + "Update company info");
         return companyService.updateCompany(updates, getUserId());
     }
-
 
 
 }
