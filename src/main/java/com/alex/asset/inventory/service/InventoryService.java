@@ -35,16 +35,10 @@ public class InventoryService {
     private final ProductRepo productRepo;
     private final LogService logService;
     private final NotificationService notificationService;
-    private final EventService eventService;
     private final InventoryMapper inventoryMapper;
     private final EventRepo eventRepo;
     private final UnknownProductRepo unknownProductRepo;
     private final ScannedProductRepo scannedProductRepo;
-
-    public boolean isInventoryNow() {
-        log.info(TAG + "Check is any inventory active now or not");
-        return inventoryRepo.isInventoryNow(LocalDate.now());
-    }
 
 
     @SneakyThrows
