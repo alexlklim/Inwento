@@ -1,10 +1,8 @@
 package com.alex.asset.product.mappers;
 
-import com.alex.asset.inventory.domain.event.InventoryStatus;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductHistoryDto;
-import com.alex.asset.product.dto.ProductV2Dto;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

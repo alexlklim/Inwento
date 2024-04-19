@@ -2,8 +2,6 @@ package com.alex.asset.inventory.mapper;
 
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.ScannedProduct;
-import com.alex.asset.inventory.domain.event.UnknownProduct;
-import com.alex.asset.inventory.dto.EventDTO;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
 import com.alex.asset.product.domain.Product;
@@ -11,11 +9,9 @@ import com.alex.asset.product.repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Service

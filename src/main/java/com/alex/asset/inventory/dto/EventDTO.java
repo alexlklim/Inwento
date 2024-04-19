@@ -1,7 +1,5 @@
 package com.alex.asset.inventory.dto;
 
-import com.alex.asset.inventory.domain.event.UnknownProduct;
-import com.alex.asset.product.dto.ProductV2Dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,9 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

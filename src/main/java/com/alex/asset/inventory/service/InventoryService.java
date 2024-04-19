@@ -3,7 +3,6 @@ package com.alex.asset.inventory.service;
 
 import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
-import com.alex.asset.inventory.dto.EventDTO;
 import com.alex.asset.inventory.dto.InventoryDto;
 import com.alex.asset.inventory.mapper.InventoryMapper;
 import com.alex.asset.inventory.repo.EventRepo;
@@ -16,7 +15,6 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.product.repo.ProductRepo;
-import com.alex.asset.utils.exceptions.errors.InventIsAlreadyInProgress;
 import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

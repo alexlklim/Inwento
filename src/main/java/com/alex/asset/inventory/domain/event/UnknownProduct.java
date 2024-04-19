@@ -1,6 +1,5 @@
 package com.alex.asset.inventory.domain.event;
 
-import com.alex.asset.configure.domain.Location;
 import com.alex.asset.security.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -8,7 +7,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.expression.spel.ast.TypeCode;
 
 import java.time.LocalDateTime;
 

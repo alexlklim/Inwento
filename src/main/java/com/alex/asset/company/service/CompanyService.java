@@ -6,7 +6,6 @@ import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
-import com.alex.asset.email.EmailService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;

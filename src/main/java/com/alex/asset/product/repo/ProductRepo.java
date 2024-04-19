@@ -39,10 +39,6 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
 
 
-    @Query("SELECT COUNT(p) " +
-            "FROM Product p " +
-            "WHERE p.isActive = true")
-    long getActiveProductCount();
 
     @Query("SELECT p " +
             "FROM Product p " +
