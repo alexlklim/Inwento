@@ -19,7 +19,7 @@ import java.util.List;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/company/type")
-@Tag(name = "Config Controller", description = "Config API")
+@Tag(name = "Type Controller", description = "Type API")
 public class TypeController {
     private final String TAG = "TYPE_CONTROLLER - ";
     private final TypeService typeService;
@@ -58,10 +58,10 @@ public class TypeController {
 
 
     @Operation(summary = "Add new Subtype to special type")
-    @PostMapping("/{id}/subtype")
+    @PostMapping("/{type_id}/subtype")
     @ResponseStatus(HttpStatus.CREATED)
     public void addSubtypes(
-            @PathVariable("id") Long typeId,
+            @PathVariable("type_id") Long typeId,
             @RequestBody List<String> listSubtype) {
         log.info(TAG + "Try to add subtypes");
         typeService.addSubtypes(

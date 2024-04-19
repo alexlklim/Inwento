@@ -41,7 +41,13 @@ public class EventMapper {
                 case "inventory_id":
                     dtoMap.put("inventory_id", event.getInventory().getId());
                     break;
-                case "user_id":
+                case "branch_id":
+                    dtoMap.put("branch_id", event.getBranch().getId());
+                    break;
+                case "branch":
+                    dtoMap.put("branch", event.getBranch().getBranch());
+                    break;
+                    case "user_id":
                     dtoMap.put("user_id", event.getUser().getId());
                     break;
                 case "user_email":

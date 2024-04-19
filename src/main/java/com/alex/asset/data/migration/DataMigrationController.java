@@ -59,10 +59,7 @@ public class DataMigrationController {
     public void save(
             @RequestBody List<Product> assetList) {
         log.info(TAG + "Save assets in DB");
-        excelParser.saveAssets(
-                assetList,
-                SecHolder.getUserId()
-        );
+        excelParser.saveAssets(assetList, SecHolder.getUserId());
     }
 
 

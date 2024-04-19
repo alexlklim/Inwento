@@ -25,14 +25,18 @@ public class InventoryController {
 
 
     @Operation(summary = "Get inventory by id")
-    @Secured("ROLE_ADMIN") @GetMapping("/{id}") @ResponseStatus(HttpStatus.OK)
-    public InventoryDto getInventoryById(@PathVariable("id") Long inventoryId) {
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/{inventory_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public InventoryDto getInventoryById(
+            @PathVariable("inventory_id") Long inventoryId) {
         log.info(TAG + "Get inventory with id {}", inventoryId);
         return inventoryService.getInventoryById(inventoryId);
     }
 
     @Operation(summary = "get current active inventory (it returns 404 if no active inventory now")
-    @GetMapping("/current") @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/current")
+    @ResponseStatus(HttpStatus.OK)
     public InventoryDto getCurrentInventory() {
         log.info(TAG + "get current inventory");
         return inventoryService.getCurrentInventory();
@@ -40,15 +44,23 @@ public class InventoryController {
 
 
     @Operation(summary = "Create / update new inventarization")
-    @Secured("ROLE_ADMIN") @PostMapping @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody InventoryDto inventoryDto) {
+    @Secured("ROLE_ADMIN")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(
+            @RequestBody InventoryDto inventoryDto) {
         log.info(TAG + "Create inventory");
         inventoryService.createInventory(SecHolder.getUserId(), inventoryDto);
     }
 
+
+
     @Operation(summary = "Update inventarization")
-    @Secured("ROLE_ADMIN") @PutMapping("/{id}") @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable("id") Long inventoryId, @RequestBody InventoryDto inventoryDto) {
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/{inventory_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(
+            @PathVariable("inventory_id") Long inventoryId, @RequestBody InventoryDto inventoryDto) {
         log.info(TAG + "Update inventory");
         inventoryService.updateInventory(SecHolder.getUserId(), inventoryId, inventoryDto);
     }

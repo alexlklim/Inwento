@@ -38,10 +38,10 @@ public class LogController {
 
     @Operation(summary = "Get all logs")
     @Secured("ROLE_ADMIN")
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/{user_id}")
     @ResponseStatus(HttpStatus.OK)
     public List<LogDto> getLogsForSpecificUser(
-            @PathVariable("id") Long userId) {
+            @PathVariable("user_id") Long userId) {
         log.info(TAG + "Get logs for user with id {}", userId);
         return logService.getLogsForSpecificUser(userId);
     }

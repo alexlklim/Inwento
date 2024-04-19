@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS locations
 (
     id        BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
     is_active BOOLEAN NOT NULL,
-    location  VARCHAR(255) UNIQUE,
+    location  VARCHAR(255),
     branch_id BIGINT,
     UNIQUE (location, branch_id),
     FOREIGN KEY (branch_id) REFERENCES branches (id)

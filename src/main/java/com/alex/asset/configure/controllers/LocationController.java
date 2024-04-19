@@ -63,10 +63,10 @@ public class LocationController {
     }
 
     @Operation(summary = "Add new location")
-    @PostMapping("/{id}/location")
+    @PostMapping("/{branch_id}/location")
     @ResponseStatus(HttpStatus.OK)
     public Location addLocation(
-            @PathVariable("id") Long branchId,
+            @PathVariable("branch_id") Long branchId,
             @RequestBody DtoName dtoName) {
         log.info(TAG + "Try to add location");
         return locationService.addLocation(dtoName, branchId, SecHolder.getUserId());

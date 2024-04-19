@@ -80,9 +80,9 @@ public class ConfigController {
     }
 
     @Operation(summary = "Get all active KST by KST num")
-    @GetMapping("/kst/{num}")
+    @GetMapping("/kst/{kst_num}")
     public ResponseEntity<List<KST>> getKSTByNum(
-            @PathVariable("num") String num) {
+            @PathVariable("kst_num") String num) {
         log.info(TAG + "Try to get KST by num");
         if (num.length() < 2)
             return new ResponseEntity<>(HttpStatus.CONFLICT);

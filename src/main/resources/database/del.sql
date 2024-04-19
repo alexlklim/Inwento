@@ -19,6 +19,8 @@ DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS company;
 DROP TABLE IF EXISTS logs;
 DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS event_products;
 
 
 DROP TABLE IF EXISTS token;
@@ -30,3 +32,4 @@ DROP TABLE IF EXISTS tmp;
 
 
 select * from unknown_products;
+select * from products;

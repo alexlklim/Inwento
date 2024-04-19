@@ -28,10 +28,10 @@ public class EventController {
 
 
     @Operation(summary = "Get event by id")
-    @GetMapping("/{id}")
+    @GetMapping("/{event_id}")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getEventById(
-            @PathVariable("id") Long eventId,
+            @PathVariable("event_id") Long eventId,
             @RequestBody(required = false) List<String> eventFields) {
         log.info(TAG + "Get event by id");
         return eventService.getEvent(eventId, eventFields);
@@ -76,7 +76,7 @@ public class EventController {
                 dtoActive);
     }
 
-    @Operation(summary = "Add products to event by bar code. In the map you can add longitude/latitude/bar_code/rfid_code")
+    @Operation(summary = "Add products to event by code. In the map you can add longitude/latitude/bar_code/rfid_code")
     @PutMapping("/{event_id}/products/{loc_id}/{type_code}")
     @ResponseStatus(HttpStatus.OK)
     public void addProductsToEvent(

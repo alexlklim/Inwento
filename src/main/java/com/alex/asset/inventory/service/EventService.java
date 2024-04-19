@@ -61,13 +61,15 @@ public class EventService {
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
         log.info(TAG + "Get event with id {}", eventId);
         if (eventFields == null || eventFields.isEmpty()) eventFields = Utils.EVENT_FIELDS;
-        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event not found with id " + eventId));
+        Event event = eventRepo.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("Event not found with id " + eventId));
         return eventMapper.toDTOWithCustomFields(event, eventFields);
     }
 
 
     @SneakyThrows
-    public List<Map<String, Object>> getEventsForInventory(Long inventoryId, String mode, List<String> eventFields, Long userId) {
+    public List<Map<String, Object>> getEventsForInventory(
+            Long inventoryId, String mode, List<String> eventFields, Long userId) {
         Inventory inventory = inventoryRepo.findById(inventoryId).orElseThrow(
                 () -> new ResourceNotFoundException("Inventory not found with id " + inventoryId));
         List<Event> events = null;
@@ -88,8 +90,8 @@ public class EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("No active inventory now"));
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found"));
-        if (eventRepo.existsByBranchAndInventory(branch, inventory)) throw new ObjectAlreadyExistException("Event for this branch already exists");
-
+        if (eventRepo.existsByBranchAndInventory(branch, inventory))
+            throw new ObjectAlreadyExistException("Event for this branch already exists");
 
         Event event = new Event();
         event.setActive(true);
@@ -115,45 +117,49 @@ public class EventService {
 
     }
 
-    @SneakyThrows
-    private List<UnknownProduct> getUnknownProductsForEvent(Long eventId) {
-        log.info(TAG + "Get unknown products of event with id {}", eventId);
-        Event event = eventRepo.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " was not found"));
-        return unknownProductRepo.findByEvent(event);
-    }
 
 
     @SneakyThrows
     @Transactional
     public void addProductsToEventByBarCode(
             List<Map<String, Object>> inventoryData, Long eventId, Long locationId, String typeCode, Long userId) {
-        log.info("Adding products to event by bar code by user with id {}", userId);
-        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
-        Location location = locationRepo.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
+        log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
+        Event event = eventRepo.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
+        Location location = locationRepo.findById(locationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
         for (Map<String, Object> map : inventoryData) {
             Product product = null;
             if (map.containsKey("code")) {
                 String code = (String) map.get("code");
                 CodeType codeType = CodeType.fromString(typeCode);
-                if (codeType == CodeType.BAR_CODE)
+                if (codeType == CodeType.BAR_CODE) {
                     product = productRepo.getByBarCode(code).orElse(null);
+                }
                 else if (codeType == CodeType.RFID_CODE) {
                     product = productRepo.getByRfidCode(code).orElse(null);
-                } else handleUnknownProduct(code, codeType, event, userId);
+                }
                 if (product != null) handleScannedProduct(product, map, event, location, userId);
+                else handleUnknownProduct(code, codeType, event, userId);
             }
         }
 
     }
 
-    private void handleScannedProduct(Product product, Map<String, Object> map, Event event, Location location, Long userId) {
-        if (product.getLocation() != location)
+    private void handleScannedProduct(
+            Product product, Map<String, Object> map, Event event, Location location, Long userId) {
+        log.info("Add product to scanned product");
+        if (product.getLocation() != location) {
             productService.moveProduct(product, product.getBranch(), location, userId);
-        ScannedProduct scannedProduct = new ScannedProduct();
-        scannedProduct.setUser(userRepo.getUser(userId));
-        scannedProduct.setProduct(product);
-        scannedProduct.setEvent(event);
+        }
+        if (product.getBranch() != event.getBranch()){
+            log.error(TAG + "Product with id {} belong to another branch", product.getId());
+            return;
+        }
+        if (scannedProductRepo.findByProductAndEvent(product, event)){
+            log.error(TAG + "Product with id {} already scanned in this event", product.getId());
+            return;
+        }
         map.forEach((key, value) -> {
             switch (key) {
                 case "longitude":
@@ -166,13 +172,18 @@ public class EventService {
                     break;
             }
             productService.save(product);
-            scannedProductRepo.save(scannedProduct);
+            log.info(TAG + "Data about location was updated for product with id {} ", product.getId());
         });
+        ScannedProduct scannedProduct = new ScannedProduct();
+        scannedProduct.setUser(userRepo.getUser(userId));
+        scannedProduct.setProduct(product);
+        scannedProduct.setEvent(event);
+        scannedProductRepo.save(scannedProduct);
     }
 
     @SneakyThrows
     private void handleUnknownProduct(String code, CodeType codeType, Event event, Long userId) {
-        log.info("Unknown product with code {} doesn't exist in DB", code);
+        log.info("Add unknown product");
         UnknownProduct unknownProduct = unknownProductRepo.findByCode(code).orElse(null);
         if (unknownProduct == null) {
             unknownProduct = new UnknownProduct();
@@ -181,8 +192,12 @@ public class EventService {
             unknownProduct.setCode(code);
             unknownProduct.setTypeCode(codeType);
         } else {
+            log.error(TAG + "Unknown product {} is already exist", unknownProduct.getCode());
             if (unknownProduct.getEvent() != event) {
+                log.error(TAG + "Move unknown product to current branch {}", event.getBranch());
                 unknownProduct.setEvent(event);
+                unknownProduct.setTypeCode(codeType);
+                unknownProduct.setUser(userRepo.getUser(userId));
             }
         }
         unknownProductRepo.save(unknownProduct);

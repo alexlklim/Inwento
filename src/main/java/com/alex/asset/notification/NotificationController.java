@@ -46,10 +46,10 @@ public class NotificationController {
 
 
     @Operation(summary = "Read notification by id")
-    @PutMapping("/read/{id}")
+    @PutMapping("/read/{notification_id}")
     @ResponseStatus(HttpStatus.OK)
     public void readNotificationById(
-            @PathVariable("id") Long notificationId) {
+            @PathVariable("notification_id") Long notificationId) {
         log.info(TAG + "Read notification with id {}", notificationId);
         notificationService.readNotification(
                 SecHolder.getUserId(),
@@ -59,10 +59,10 @@ public class NotificationController {
 
     @Operation(summary = "Send notification to specific user")
     @Secured("ROLE_ADMIN")
-    @PostMapping("/notify/{id}")
+    @PostMapping("/notify/{user_to_id}")
     @ResponseStatus(HttpStatus.OK)
     public void sendNotificationToSpecificUser(
-            @PathVariable("id") Long userToId,
+            @PathVariable("user_to_id") Long userToId,
             @RequestBody NotificationDto notificationDto) {
         log.info(TAG + "Send notification to user with id {}", userToId);
         notificationService.saveNotificationToSpecificUser(

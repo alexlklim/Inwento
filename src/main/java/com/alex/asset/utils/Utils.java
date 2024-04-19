@@ -51,12 +51,9 @@ public class Utils {
             "longitude", "latitude"
     );
 
-    public static final List<String> PRODUCT_FIELDS_V1 = Arrays.asList("bar_code", "rfid_code");
-
-
 
     public static final List<String> EVENT_FIELDS = Arrays.asList(
-            "info", "inventory_id",
+            "info", "inventory_id", "branch_id", "branch",
             "user_id", "user_email", "user_name",
             "unknown_products", "scanned_products", "not_scanned_products",
             "unknown_product_amount", "total_product_amount", "scanned_product_amount"
