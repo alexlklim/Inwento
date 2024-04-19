@@ -23,7 +23,6 @@ public class ProductMapper {
                 .build();
     }
 
-
     public static Map<String, Object> toDTOWithCustomFields(Product product, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
         dtoMap.put("id", product.getId());
@@ -150,14 +149,4 @@ public class ProductMapper {
         }
         return dtoMap;
     }
-
-    public static ProductV2Dto toProductV2Dto(Product product, InventoryStatus inventoryStatus) {
-        return new ProductV2Dto().toBuilder()
-                .id(product.getId())
-                .title(product.getTitle())
-                .barCode(product.getBarCode())
-                .inventoryStatus(inventoryStatus)
-                .build();
-    }
-
 }

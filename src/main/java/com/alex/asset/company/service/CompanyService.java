@@ -1,7 +1,8 @@
 package com.alex.asset.company.service;
 
 
-import com.alex.asset.company.domain.*;
+import com.alex.asset.company.domain.Company;
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
@@ -14,12 +15,18 @@ import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
+import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.exceptions.errors.LabelSizeIsIncorrectException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,28 +43,67 @@ public class CompanyService {
     private final LogService logService;
     private final NotificationService notificationService;
 
-    private final EmailService emailService;
-
-
-    public CompanyDto getInfoAboutCompany() {
+    @SneakyThrows
+    public Map<String, Object> getInfoAboutCompany(List<String> companyFields, Long userId) {
         log.info(TAG + "Get information about company");
-        Company company = companyRepo.findAll().get(0);
-        return CompanyMapper.toDto(company);
+        if (companyFields == null || companyFields.isEmpty()) companyFields = Utils.COMPANY_FIELDS;
+        Map<String, Object> map = new HashMap<>();
+        if (companyFields.contains("all_configuration")) {
+            map.put("all_configuration", getAllFields());
+        }
+        return CompanyMapper.toDTOWithCustomFields(map, companyRepo.findAll().get(0), companyFields, userId);
     }
 
 
+    @SneakyThrows
     @Modifying
     @Transactional
-    public CompanyDto updateCompany(CompanyDto companyDto, Long userId) {
+    public Map<String, Object> updateCompany(Map<String, Object> updates, Long userId) throws LabelSizeIsIncorrectException{
         log.info(TAG + "Update company by user with id {}", userId);
-        Company updatedCompany = CompanyMapper.updateCompany(companyRepo.findAll().get(0), companyDto);
-        logService.addLog(userId, Action.UPDATE, Section.COMPANY, companyDto.toString());
+        Company company = companyRepo.findAll().get(0);
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "company": company.setCompany((String) value);break;
+                case "city": company.setCity((String) value);break;
+                case "street": company.setStreet((String) value);break;
+                case "zip_code": company.setZipCode((String) value);break;
+                case "nip": company.setNip((String) value);break;
+                case "regon": company.setRegon((String) value);break;
+                case "phone": company.setPhone((String) value);break;
+                case "email": company.setEmail((String) value);break;
+                case "label_height": {
+                    Double labelHeight = (Double) value;
+                    if (labelHeight > Double.MIN_VALUE && labelHeight < Double.MAX_VALUE)
+                        company.setLabelHeight(labelHeight);
+                    else throw new LabelSizeIsIncorrectException("Label height is incorrect: " + labelHeight);
+                    break;
+                }
+                case "label_width": {
+                    Double labelWidth = (Double) value;
+                    if (labelWidth > Double.MIN_VALUE && labelWidth < Double.MAX_VALUE)
+                        company.setLabelWidth(labelWidth);
+                    else throw new LabelSizeIsIncorrectException("Label width is incorrect: " + labelWidth);
+                    break;
+                }
+                case "label_type":
+                    company.setLabelType((String) value);break;
+                case "email_host": company.setHost((String) value);break;
+                case "email_port": company.setPort((String) value);break;
+                case "email_username": company.setUsername((String) value);break;
+                case "email_password": company.setPassword((String) value);break;
+                case "email_protocol": company.setProtocol((String) value);break;
+                case "email_configured": company.setIsEmailConfigured((boolean) value);break;
+                default: break;
+            }
+        });
+        companyRepo.save(company);
+        logService.addLog(userId, Action.UPDATE, Section.COMPANY, company.getCompany());
         notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
-        return CompanyMapper.toDto(companyRepo.save(updatedCompany));
+        return getInfoAboutCompany(Utils.COMPANY_FIELDS_SIMPLE, userId);
     }
 
-
-    public DataDto getAllFields() {
+    @SneakyThrows
+    private DataDto getAllFields() {
         log.info(TAG + "Get all fields");
         DataDto dto = new DataDto();
         dto.setEmployees(userRepo.getActiveUsers()
@@ -71,57 +117,5 @@ public class CompanyService {
         dto.setMPKs(configureService.getMPKs());
         return dto;
     }
-
-
-    public LabelDto getLabelConfig() {
-        log.info(TAG + "Get label info");
-        Company company = companyRepo.findAll().get(0);
-        LabelDto labelDto = new LabelDto();
-        labelDto.setLabelHeight(company.getLabelHeight());
-        labelDto.setLabelWidth(company.getLabelWidth());
-        labelDto.setLabelType(company.getLabelType());
-        return labelDto;
-    }
-
-    public void updateLabelConfig(Long userId, LabelDto labelDto) {
-        log.info(TAG + "Update label info by user wid id {}", userId);
-        Company company = companyRepo.findAll().get(0);
-        company.setLabelHeight(labelDto.getLabelHeight());
-        company.setLabelWidth(labelDto.getLabelWidth());
-        company.setLabelType(labelDto.getLabelType());
-        companyRepo.save(company);
-        logService.addLog(userId, Action.UPDATE, Section.COMPANY, labelDto.toString());
-    }
-
-
-    public EmailDto getEmailConfig() {
-        log.info(TAG + "Get email info");
-        Company company = companyRepo.findAll().get(0);
-        return new EmailDto().toBuilder()
-                .host(company.getHost())
-                .port(company.getPort())
-                .protocol(company.getProtocol())
-                .username(company.getUsername())
-                .password(company.getPassword())
-                .isEmailConfigured(company.getIsEmailConfigured())
-                .build();
-    }
-
-    public void updateEmailConfig(Long userId, EmailDto emailDto) {
-        log.info(TAG + "Update email info by user wid id {}", userId);
-        Company company = companyRepo.findAll().get(0);
-        company.setHost(emailDto.getHost());
-        company.setPort(emailDto.getPort());
-        company.setUsername(emailDto.getUsername());
-        company.setPassword(emailDto.getPassword());
-        company.setProtocol(emailDto.getProtocol());
-        company.setIsEmailConfigured(true);
-        companyRepo.save(company);
-
-        emailService.applyNewConfiguration();
-        logService.addLog(userId, Action.UPDATE, Section.COMPANY, emailDto.toString());
-
-    }
-
 
 }

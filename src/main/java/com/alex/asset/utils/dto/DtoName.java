@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Name Dto")
 public class DtoName {
 
-    @Schema(description = "Name", example = "Samsung galaxy")
+    @Schema(description = "Name", example = "Something")
     private String name;
 
     public DtoName(String name) {

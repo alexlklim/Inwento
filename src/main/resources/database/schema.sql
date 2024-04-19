@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS company
     email               VARCHAR(255),
 
 
-    label_width         DECIMAL(5, 2),
-    label_height        DECIMAL(5, 2),
+    label_width         DECIMAL(8, 2),
+    label_height        DECIMAL(8, 2),
     label_type          VARCHAR(255),
 
 
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS company
 
 );
 
-
+ALTER TABLE company MODIFY COLUMN label_width DECIMAL(8, 2);
 
 CREATE TABLE IF NOT EXISTS token
 (

@@ -6,8 +6,6 @@ import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
-import com.alex.asset.inventory.repo.EventRepo;
-import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -35,7 +33,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @Slf4j
@@ -46,12 +43,9 @@ public class ProductService implements IProductService {
 
     private final String TAG = "PRODUCT_SERVICE - ";
     private final LogService logService;
-
     private final ProductRepo productRepo;
     private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
-    private final InventoryRepo inventoryRepo;
-    private final EventRepo eventRepo;
     private final ConfigureService configureService;
     private final TypeService typeService;
     private final LocationService locationService;
@@ -310,18 +304,13 @@ public class ProductService implements IProductService {
     }
 
     @SneakyThrows
-    private void addHistoryToProduct(Long userId, Long productId, Activity activity) {
+    public void addHistoryToProduct(Long userId, Long productId, Activity activity) {
         ProductHistory productHistory = new ProductHistory();
         productHistory.setActivity(activity);
         productHistory.setCreated(LocalDateTime.now());
         productHistory.setProduct(productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found")));
         productHistory.setUser(userRepo.getUser(userId));
         productHistoryRepo.save(productHistory);
-    }
-
-
-    public List<Product> getActiveProductsByBranch(Branch branch) {
-        return productRepo.findAllByBranch(branch);
     }
 
 

@@ -45,6 +45,7 @@ public class ControllerAdvice {
 
 
     @ExceptionHandler({
+            LabelSizeIsIncorrectException.class,
             ValueIsNotUnique.class,
             IllegalStateException.class,
             IOException.class,

@@ -203,16 +203,20 @@ public class ExcelParser {
     }
 
 
-    public void saveAssets(List<Product> assetList, Long userId) {
+    private final ProductService productService;
+
+    public int saveAssets(List<Product> assetList, Long userId) {
         log.info(TAG + "Save assets by user with id");
+        int amountOfSavedProduct = 0;
+
         for (Product product : assetList) {
             product.setCreatedBy(userRepo.getUser(userId));
             product.setActive(true);
-            productRepo.save(product);
+            Product productFromDb = productRepo.save(product);
             logService.addLog(userId, Action.CREATE, Section.PRODUCT, product.getTitle());
-//            productService.addHistoryToProduct(userId, productFromDB.getId(), Activity.PRODUCT_WAS_CREATED);
-
-            System.out.println(product);
+            productService.addHistoryToProduct(userId, productFromDb.getId(), Activity.PRODUCT_WAS_CREATED);
+            amountOfSavedProduct++;
         }
+        return amountOfSavedProduct;
     }
 }

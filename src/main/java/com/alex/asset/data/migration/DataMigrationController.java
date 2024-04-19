@@ -56,10 +56,10 @@ public class DataMigrationController {
     @Operation(summary = "Save received asset in DB")
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.OK)
-    public void save(
+    public int save(
             @RequestBody List<Product> assetList) {
         log.info(TAG + "Save assets in DB");
-        excelParser.saveAssets(assetList, SecHolder.getUserId());
+        return excelParser.saveAssets(assetList, SecHolder.getUserId());
     }
 
 
