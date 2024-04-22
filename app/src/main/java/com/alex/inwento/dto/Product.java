@@ -1,4 +1,4 @@
-package com.alex.inwento.database.domain;
+package com.alex.inwento.dto;
 
 public class Product {
 

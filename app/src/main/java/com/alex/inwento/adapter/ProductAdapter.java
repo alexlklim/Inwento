@@ -3,23 +3,30 @@ package com.alex.inwento.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
-import com.alex.inwento.database.domain.Product;
+import com.alex.inwento.http.inventory.ProductShortDTO;
 
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderViewHolder> {
 
     private final ProductAdapter.OnItemProductClickListener onItemClickListener;
-    private List<Product> productList;
+    private List<ProductShortDTO> productList;
+    private Boolean isInventory, isScanned;
 
-    public ProductAdapter(List<Product> products, ProductAdapter.OnItemProductClickListener onItemClickListener) {
-        this.productList = products;
+    public ProductAdapter(
+            Boolean isInventory, Boolean isScanned,
+            List<ProductShortDTO> productList,
+            ProductAdapter.OnItemProductClickListener onItemClickListener) {
+        this.productList = productList;
+        this.isScanned = isScanned;
+        this.isInventory = isInventory;
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -32,16 +39,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
 
     @Override
     public void onBindViewHolder(@NonNull ProductAdapter.OrderViewHolder holder, int position) {
-        Product product = productList.get(position);
+        ProductShortDTO product = productList.get(position);
 
-        holder.title.setText(product.getTitle());
-        holder.code.setText("code: " + product.getBarCode());
-        if (product.getInventoryStatus().equalsIgnoreCase("SCANNED")) holder.status.setText("OK");
-         else holder.status.setText("W TOKU");
-
-
-
-
+        holder.rpTitle.setText(product.getTitle());
+        holder.rpBarCode.setText("code: " + product.getBarCode());
+        holder.rpRfidCode.setText("rfid: " + product.getRfidCode());
+        holder.rpBranch.setText(product.getBranch());
+        holder.rpLocation.setText(product.getLocation());
+        if (isInventory) {
+            if (isScanned) holder.rpIsScanned.setImageResource(R.drawable.ic_done);
+            else holder.rpIsScanned.setImageResource(R.drawable.ic_in_process);
+            holder.rpIsScanned.setVisibility(View.VISIBLE);
+        } else holder.rpIsScanned.setVisibility(View.INVISIBLE);
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemProductClick(product.getId()));
     }
 
@@ -50,15 +59,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
         return productList.size();
     }
 
-    // ViewHolder class
+
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView title, code, status;
+        TextView rpTitle, rpBarCode, rpRfidCode, rpBranch, rpLocation;
+        ImageButton rpIsScanned;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.rvp_title);
-            code = itemView.findViewById(R.id.rvp_code);
-            status = itemView.findViewById(R.id.rvp_status);
+            rpTitle = itemView.findViewById(R.id.rpTitle);
+            rpBarCode = itemView.findViewById(R.id.rpBarCode);
+            rpRfidCode = itemView.findViewById(R.id.rpRfidCode);
+            rpBranch = itemView.findViewById(R.id.rpBranch);
+            rpLocation = itemView.findViewById(R.id.rpLocation);
+            rpIsScanned = itemView.findViewById(R.id.rpIsScanned);
         }
     }
 

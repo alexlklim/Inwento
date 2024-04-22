@@ -3,7 +3,7 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Event;
+import com.alex.inwento.dto.ProductDto;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
 
@@ -13,34 +13,31 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
-public class GetProductListTask extends AsyncTask<Void, Void, Event> {
-
-    private static final String TAG = "ProductTask";
-
-
-    private GetProductListTask.ProductsListener listener;
-
+public class GetProductListTask extends AsyncTask<Void, Void, List<ProductDto>> {
+    private static final String TAG = "GetProductListTask";
+    private GetProductListTask.GetProductListListener listener;
     private String token;
-    private int eventId;
 
-    public interface ProductsListener {
-        void onProductsSuccess(Event event);
+    public interface GetProductListListener {
+        void onGetProductListSuccess(List<ProductDto> productDtoList);
 
-        void onProductsFailure(String errorMessage);
+        void onGetProductListFailure(String errorMessage);
     }
 
-    public GetProductListTask(GetProductListTask.ProductsListener listener, String token, int eventId) {
+    public GetProductListTask(
+            GetProductListTask.GetProductListListener listener,
+            String token) {
         this.token = token;
         this.listener = listener;
-        this.eventId = eventId;
     }
 
     @Override
-    protected Event doInBackground(Void... voids) {
+    protected List<ProductDto> doInBackground(Void... voids) {
         HttpURLConnection urlConnection = null;
         try {
-            URL url = new URL(Endpoints.GET_EVENT_BY_ID + eventId);
+            URL url = new URL(Endpoints.GET_LIST_SHORT_PRODUCTS);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Authorization", "Bearer " + token);
@@ -54,10 +51,9 @@ public class GetProductListTask extends AsyncTask<Void, Void, Event> {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-
                 inputStream.close();
 
-                return JsonMng.parseJsonToEventAndProducts(String.valueOf(response));
+                return JsonMng.parseJsonToProductDtoList(response.toString());
             } else {
                 Log.e(TAG, "Error response code: " + responseCode);
             }
@@ -73,13 +69,12 @@ public class GetProductListTask extends AsyncTask<Void, Void, Event> {
 
 
     @Override
-    protected void onPostExecute(Event products) {
-        Log.i(TAG, "onPostExecute: + " + products.toString());
-        if (products != null) {
-            listener.onProductsSuccess(products);
+    protected void onPostExecute(List<ProductDto> productDtoList) {
+        Log.i(TAG, "onPostExecute: + ");
+        if (productDtoList != null) {
+            listener.onGetProductListSuccess(productDtoList);
         } else {
-
-            listener.onProductsFailure("No products found.");
+            listener.onGetProductListFailure("No Product found.");
         }
     }
 }

@@ -1,54 +1,62 @@
-package com.alex.inwento.database.domain;
+package com.alex.inwento.http.inventory;
 
-public class Inventory {
-    private int id;
-    private String startDate;
-    private String finishDate;
+import com.google.gson.annotations.SerializedName;
+
+import java.time.LocalDate;
+
+public class InventoryDTO {
+    @SerializedName("id")
+    private Long id;
+    @SerializedName("start_date")
+    private LocalDate startDate;
+    @SerializedName("finish_date")
+    private LocalDate finishDate;
+    @SerializedName("info")
     private String info;
-    private boolean isFinished;
+    @SerializedName("unknown_product_amount")
     private int unknownProductAmount;
+    @SerializedName("total_product_amount")
     private int totalProductAmount;
+    @SerializedName("scanned_product_amount")
     private int scannedProductAmount;
+    @SerializedName("finished")
+    private Boolean isFinished;
 
-
-    public Inventory() {
+    public InventoryDTO() {
     }
 
-    public Inventory(int id, String startDate, String finishDate, String info,
-                     boolean isFinished, int unknownProductAmount,
-                     int totalProductAmount, int scannedProductAmount) {
+    public InventoryDTO(Long id, LocalDate startDate, LocalDate finishDate, String info, int unknownProductAmount, int totalProductAmount, int scannedProductAmount, Boolean isFinished) {
         this.id = id;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.info = info;
-        this.isFinished = isFinished;
         this.unknownProductAmount = unknownProductAmount;
         this.totalProductAmount = totalProductAmount;
         this.scannedProductAmount = scannedProductAmount;
+        this.isFinished = isFinished;
     }
 
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public String getFinishDate() {
+    public LocalDate getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(String finishDate) {
+    public void setFinishDate(LocalDate finishDate) {
         this.finishDate = finishDate;
     }
 
@@ -58,14 +66,6 @@ public class Inventory {
 
     public void setInfo(String info) {
         this.info = info;
-    }
-
-    public boolean isFinished() {
-        return isFinished;
-    }
-
-    public void setFinished(boolean finished) {
-        isFinished = finished;
     }
 
     public int getUnknownProductAmount() {
@@ -92,18 +92,25 @@ public class Inventory {
         this.scannedProductAmount = scannedProductAmount;
     }
 
+    public Boolean getFinished() {
+        return isFinished;
+    }
+
+    public void setFinished(Boolean finished) {
+        isFinished = finished;
+    }
 
     @Override
     public String toString() {
-        return "Inventory{" +
+        return "InventoryDTO{" +
                 "id=" + id +
-                ", startDate='" + startDate + '\'' +
-                ", finishDate='" + finishDate + '\'' +
+                ", startDate=" + startDate +
+                ", finishDate=" + finishDate +
                 ", info='" + info + '\'' +
-                ", isFinished=" + isFinished +
                 ", unknownProductAmount=" + unknownProductAmount +
                 ", totalProductAmount=" + totalProductAmount +
                 ", scannedProductAmount=" + scannedProductAmount +
+                ", isFinished=" + isFinished +
                 '}';
     }
 }

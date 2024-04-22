@@ -2,7 +2,7 @@ package com.alex.inwento.util;
 
 public class Endpoints {
     private static final String SERVER_CSMM = "http://10.30.0.66:9091/api";
-    private static final String SERVER = "http://10.1.2.66:9091/api";
+    private static final String SERVER = "http://192.168.0.104:9091/api";
 
     public static final String LOGIN = SERVER + "/v1/auth/login";
     public static final String REFRESH_TOKEN = SERVER + "/v1/auth/refresh";
@@ -15,9 +15,9 @@ public class Endpoints {
     public static final String GET_FIELDS = SERVER + "/v1/company/all";
     public static final String ADD_PRODUCTS = SERVER + "/v1/event/";  // event id
     public static final String UPDATE_PRODUCT = SERVER + "/v1/product";  // event id
+    public static final String GET_LIST_SHORT_PRODUCTS = SERVER + "/v1/product/app/all";
 
     public static final String ADD_EVENT = SERVER + "/v1/event";
-
 
 
 }

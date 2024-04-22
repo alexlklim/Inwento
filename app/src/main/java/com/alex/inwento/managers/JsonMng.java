@@ -2,18 +2,20 @@ package com.alex.inwento.managers;
 
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Event;
-import com.alex.inwento.database.domain.Inventory;
-import com.alex.inwento.dto.AuthDto;
+import com.alex.inwento.dto.Event;
+import com.alex.inwento.dto.Inventory;
+import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.dto.DataModelDto;
 import com.alex.inwento.dto.ProductDto;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JsonMng {
@@ -21,14 +23,14 @@ public class JsonMng {
     private static final String TAG = "JsonMng";
 
 
-    public static AuthDto getAuthDtoFromResponse(String response) {
+    public static AuthDTO getAuthDtoFromResponse(String response) {
         try {
             JSONObject jsonResponse = new JSONObject(response);
-            return new AuthDto(
+            return new AuthDTO(
                     jsonResponse.getString("first_name"),
                     jsonResponse.getString("last_name"),
                     jsonResponse.getString("expires_at"),
-                    jsonResponse.getString("role"),
+                    Arrays.asList(jsonResponse.getString("role")),
                     jsonResponse.getString("access_token"),
                     jsonResponse.getString("refresh_token")
             );
@@ -89,6 +91,11 @@ public class JsonMng {
     public static ProductDto parseJsonToProductDto(String jsonResponse) {
         Gson gson = new Gson();
         return gson.fromJson(jsonResponse, ProductDto.class);
+    }
+
+    public static List<ProductDto> parseJsonToProductDtoList(String response){
+        Gson gson = new Gson();
+        return gson.fromJson(response, new TypeToken<List<ProductDto>>(){}.getType());
     }
 
     public static DataModelDto parseJsonToDataModelDto(String json) {

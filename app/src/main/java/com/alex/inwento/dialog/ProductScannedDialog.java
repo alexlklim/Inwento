@@ -21,7 +21,6 @@ import com.alex.inwento.dto.ProductDto;
 import com.alex.inwento.tasks.PostProductsTask;
 
 import java.util.Arrays;
-import java.util.List;
 
 
 public class ProductScannedDialog extends AppCompatDialogFragment
@@ -36,6 +35,8 @@ public class ProductScannedDialog extends AppCompatDialogFragment
     Button btnSave;
     int eventId;
     String token;
+
+    Boolean isShow;
 
     boolean isCurrentBranch;
 
@@ -61,9 +62,12 @@ public class ProductScannedDialog extends AppCompatDialogFragment
         title.setText(productDto.getTitle());
         desc.setText(productDto.getDescription());
         code.setText(productDto.getBar_code());
-        price.setText("Price: " + productDto.getPrice());
+        price.setText(productDto.getPrice() + " PLN");
         liable.setText(productDto.getLiable());
         receiver.setText(productDto.getReceiver());
+
+        if (isShow) btnSave.setText("Zamknij");
+
 
         if (isCurrentBranch) {
             ViewGroup parentView = (ViewGroup) warning.getParent();
@@ -74,9 +78,15 @@ public class ProductScannedDialog extends AppCompatDialogFragment
 
 
         btnSave.setOnClickListener(v -> {
-            if (productScannedListener != null) {
-                productScannedListener.onProductSaved(productDto.getBar_code());
-                new PostProductsTask(this, Arrays.asList(productDto.getBar_code()), eventId, token ).execute();
+            if (isShow) {
+                dismiss();
+            }
+           else {
+                if (productScannedListener != null) {
+                    System.out.println("FFFFFF: " + productDto);
+                    productScannedListener.onProductSaved(productDto);
+                    new PostProductsTask(this, Arrays.asList(productDto.getBar_code()), eventId, token ).execute();
+                }
             }
         });
 
@@ -90,12 +100,23 @@ public class ProductScannedDialog extends AppCompatDialogFragment
             boolean isCurrentBranch,
             int eventId,
             String token) {
+        return newInstance(listener, productDto, isCurrentBranch, eventId, token, false);
+    }
+
+    public static ProductScannedDialog newInstance(
+            ProductScannedListener listener,
+            ProductDto productDto,
+            boolean isCurrentBranch,
+            int eventId,
+            String token,
+            boolean isShow) {
         ProductScannedDialog dialog = new ProductScannedDialog();
         dialog.productDto = productDto;
         dialog.productScannedListener = listener;
         dialog.isCurrentBranch = isCurrentBranch;
         dialog.eventId = eventId;
         dialog.token = token;
+        dialog.isShow = isShow;
         return dialog;
     }
 
@@ -115,6 +136,6 @@ public class ProductScannedDialog extends AppCompatDialogFragment
 
 
     public interface ProductScannedListener {
-        void onProductSaved(String barCode);
+        void onProductSaved(ProductDto productDto);
     }
 }

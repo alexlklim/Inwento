@@ -1,5 +1,7 @@
 package com.alex.inwento.dto;
 
+import java.util.List;
+
 public class ProductDto {
     private int id;
     private String title;
@@ -99,5 +101,15 @@ public class ProductDto {
                 ", liable='" + liable + '\'' +
                 ", receiver='" + receiver + '\'' +
                 '}';
+    }
+
+
+    public static ProductDto hasProductWithBarcode(List<ProductDto> productDtoList, String barcode) {
+        for (ProductDto productDto : productDtoList) {
+            if (productDto.getBar_code() != null && productDto.getBar_code().equals(barcode)) {
+                return productDto;
+            }
+        }
+        return null;
     }
 }

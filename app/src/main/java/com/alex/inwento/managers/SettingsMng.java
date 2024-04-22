@@ -3,6 +3,7 @@ package com.alex.inwento.managers;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.util.Util;
 
 
@@ -33,7 +34,14 @@ public class SettingsMng {
                 .putString(Util.REFRESH_TOKEN, refreshToken)
                 .apply();
     }
-
+    public void setAuthInfo(AuthDTO dto) {
+        pref.edit()
+                .putString(Util.FIRST_NAME, dto.getFirstName())
+                .putString(Util.LAST_NAME, dto.getLastName())
+                .putString(Util.ACCESS_TOKEN, dto.getAccessToken())
+                .putString(Util.REFRESH_TOKEN, dto.getRefreshToken())
+                .apply();
+    }
     public void setLoginDetails(String email, String password){
         pref.edit()
                 .putString(Util.EMAIL, email)
@@ -64,5 +72,8 @@ public class SettingsMng {
     public String getLastname(){
         return pref.getString(Util.LAST_NAME, "");
     }
+
+
+
 
 }

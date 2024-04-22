@@ -3,7 +3,7 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.database.domain.Event;
+import com.alex.inwento.dto.Event;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
 

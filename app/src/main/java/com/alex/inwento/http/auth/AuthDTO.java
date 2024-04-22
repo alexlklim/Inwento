@@ -1,23 +1,35 @@
-package com.alex.inwento.dto;
+package com.alex.inwento.http.auth;
 
 
-public class AuthDto {
+import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+public class AuthDTO {
+    @SerializedName("first_name")
     private String firstName;
+    @SerializedName("last_name")
     private String lastName;
+    @SerializedName("expires_at")
     private String expiresAt;
-    private String role;
+    @SerializedName("role")
+    private List<String> roles; // Change type to List<String>
+    @SerializedName("access_token")
     private String accessToken;
+    @SerializedName("refresh_token")
     private String refreshToken;
 
 
-    public AuthDto(String firstName, String lastName, String expiresAt, String role, String accessToken, String refreshToken) {
+    public AuthDTO(String firstName, String lastName, String expiresAt, List<String> roles, String accessToken, String refreshToken) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.expiresAt = expiresAt;
-        this.role = role;
+        this.roles = roles;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+    }
+
+    public AuthDTO() {
     }
 
     public String getFirstName() {
@@ -44,12 +56,12 @@ public class AuthDto {
         this.expiresAt = expiresAt;
     }
 
-    public String getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public String getAccessToken() {
@@ -66,5 +78,18 @@ public class AuthDto {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+
+    @Override
+    public String toString() {
+        return "AuthDTO{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", expiresAt='" + expiresAt + '\'' +
+                ", roles=" + roles +
+                ", accessToken='" + accessToken + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                '}';
     }
 }

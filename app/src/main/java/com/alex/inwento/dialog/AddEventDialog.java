@@ -20,12 +20,9 @@ import androidx.fragment.app.FragmentActivity;
 import com.alex.inwento.R;
 import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
-import com.alex.inwento.database.domain.Event;
 import com.alex.inwento.tasks.AddEventTask;
 import com.alex.inwento.tasks.GetBranchesAndEmpTask;
-import com.alex.inwento.tasks.PostProductsTask;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

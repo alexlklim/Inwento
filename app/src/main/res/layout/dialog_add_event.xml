@@ -40,7 +40,7 @@
         <Spinner
             android:id="@+id/dae_branch"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:contentDescription="description" />
 

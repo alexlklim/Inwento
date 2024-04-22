@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
-import com.alex.inwento.database.domain.UnknownProduct;
+import com.alex.inwento.dto.UnknownProduct;
 import com.alex.inwento.managers.DateMng;
 
 import java.time.LocalDate;
@@ -29,7 +29,7 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
     @NonNull
     @Override
     public UnknownProductAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recucler_unknown_products, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_unknown_products, parent, false);
         return new UnknownProductAdapter.OrderViewHolder(view);
     }
 

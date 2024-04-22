@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.EventAdapter;
-import com.alex.inwento.database.domain.Event;
-import com.alex.inwento.database.domain.Inventory;
+import com.alex.inwento.dto.Event;
+import com.alex.inwento.dto.Inventory;
 import com.alex.inwento.dialog.AddEventDialog;
 import com.alex.inwento.managers.SettingsMng;
 import com.alex.inwento.tasks.AddEventTask;
@@ -23,7 +23,7 @@ import com.alex.inwento.tasks.GetInventoryTask;
 
 import java.util.List;
 
-public class EventsActivity extends AppCompatActivity
+public class InventoryActivity extends AppCompatActivity
         implements
         CheckInventoryActiveTask.CheckInventoryActiveListener,
         GetInventoryTask.InventoryListener,
@@ -63,8 +63,6 @@ public class EventsActivity extends AppCompatActivity
         // check if inventory is active now
         CheckInventoryActiveTask checkInventoryActiveTask = new CheckInventoryActiveTask(this, settingsMng.getAccessToken());
         checkInventoryActiveTask.execute();
-
-
     }
 
 

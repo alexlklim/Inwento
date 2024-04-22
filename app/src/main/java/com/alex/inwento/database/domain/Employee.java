@@ -1,12 +1,27 @@
 package com.alex.inwento.database.domain;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import com.alex.inwento.util.Util;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
-
+@Entity(tableName = Util.TABLE_NAME_EMPLOYEE)
 public class Employee {
-
+    @SerializedName("id")
+    @ColumnInfo(name = "id")
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @SerializedName("email")
+    @ColumnInfo(name = "email")
     private String email;
+    @SerializedName("first_name")
+    @ColumnInfo(name = "first_name")
     private String first_name;
+    @SerializedName("last_name")
+    @ColumnInfo(name = "last_name")
     private String last_name;
 
     public Employee() {
@@ -51,12 +66,13 @@ public class Employee {
         this.last_name = last_name;
     }
 
-    public static Employee getEmployeeByName(String fullName, List<Employee> employeeList) {
-        for (Employee employee : employeeList) {
-            if ((employee.getFirst_name() + " " + employee.getLast_name()).equals(fullName)) {
-                return employee;
-            }
-        }
-        return null;
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                '}';
     }
 }

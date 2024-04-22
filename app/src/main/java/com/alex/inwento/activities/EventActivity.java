@@ -24,14 +24,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
-import com.alex.inwento.database.domain.Event;
-import com.alex.inwento.database.domain.Product;
-import com.alex.inwento.database.domain.UnknownProduct;
+import com.alex.inwento.dto.Event;
+import com.alex.inwento.dto.Product;
+import com.alex.inwento.dto.UnknownProduct;
 import com.alex.inwento.dialog.ProductScannedDialog;
 import com.alex.inwento.dialog.UnknownProductDialog;
 import com.alex.inwento.dto.ProductDto;
 import com.alex.inwento.managers.SettingsMng;
-import com.alex.inwento.tasks.GetProductListTask;
+import com.alex.inwento.tasks.GetEventWithProductsTask;
 import com.alex.inwento.tasks.GetProductTask;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,10 +40,9 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventActivity
-        extends AppCompatActivity
+public class EventActivity  extends AppCompatActivity
         implements
-        GetProductListTask.ProductsListener,
+        GetEventWithProductsTask.ProductsListener,
         ProductAdapter.OnItemProductClickListener,
         UnknownProductAdapter.OnItemUnknownProductClickListener,
         GetProductTask.GetProductByBarCodeListener,
@@ -82,14 +81,24 @@ public class EventActivity
         registerReceiver(myBroadcastReceiver, filter);
 
 
-        initializeButtons();
+
+        btnShowAll = findViewById(R.id.ev_show_all);
+        btnShowScanned = findViewById(R.id.ev_show_scanned);
+        btnShowNotScanned = findViewById(R.id.ev_show_not_scanned);
+        btnShowUnknown = findViewById(R.id.ev_show_unknown);
+        btnSynch = findViewById(R.id.ev_synch);
+        ev_branch_name = findViewById(R.id.ev_branch_name);
+
+
+
+
         setOnClickListenersToBtn();
 
         Intent intent = getIntent();
         eventId = intent.getIntExtra("EVENT_ID", 0);
 
-        GetProductListTask getProductListTask = new GetProductListTask(this, settingsMng.getAccessToken(), eventId);
-        getProductListTask.execute();
+        GetEventWithProductsTask getEventWithProductsTask = new GetEventWithProductsTask(this, settingsMng.getAccessToken(), eventId);
+        getEventWithProductsTask.execute();
     }
 
     private void setOnClickListenersToBtn() {
@@ -121,15 +130,6 @@ public class EventActivity
         });
     }
 
-    private void initializeButtons() {
-        Log.i(TAG, "initializeButtons: ");
-        btnShowAll = findViewById(R.id.ev_show_all);
-        btnShowScanned = findViewById(R.id.ev_show_scanned);
-        btnShowNotScanned = findViewById(R.id.ev_show_not_scanned);
-        btnShowUnknown = findViewById(R.id.ev_show_unknown);
-        btnSynch = findViewById(R.id.ev_synch);
-        ev_branch_name = findViewById(R.id.ev_branch_name);
-    }
 
     private void setGrayColorToBtn(Button button) {
         int btnColor = getResources().getColor(R.color.btnColorDark);
@@ -192,9 +192,8 @@ public class EventActivity
     @Override
     public void onItemProductClick(int orderId) {
         Log.e(TAG, "onItemProductClick: + " + orderId);
-        Intent intent = new Intent(this, ProductActivity.class);
-        intent.putExtra("PRODUCT_ID", orderId);
-        startActivity(intent);
+
+
 
     }
 
@@ -294,6 +293,7 @@ public class EventActivity
         unregisterReceiver(myBroadcastReceiver);
     }
 
+    private ProductDto productDtoNew;
 
     @Override
     public void onProductByBarCodeSuccess(ProductDto productDto) {
@@ -301,6 +301,8 @@ public class EventActivity
         boolean found = event.getProducts().stream().anyMatch(product -> product.getBarCode().equalsIgnoreCase(productDto.getBar_code()));
         ProductScannedDialog.newInstance(this, productDto, found, eventId, settingsMng.getAccessToken())
                 .show(getSupportFragmentManager(), "product_scanned_dialog");
+
+        productDtoNew = productDto;
     }
 
 
@@ -314,24 +316,28 @@ public class EventActivity
 
     // listener for dialog  (if product saved, send this code to server (it is not matter is it existing or unknown product)
     @Override
-    public void onProductSaved(String code) {
+    public void onProductSaved(ProductDto productDto) {
         Log.i(TAG, "onProductSaved");
-        sendCodeToServer(code);
-        for (Product product : event.getProducts()) {
-            if (product.getBarCode().equalsIgnoreCase(code)) {
-                product.setInventoryStatus("SCANNED");
-                initializeRecyclerView(event.getProducts());
-            }
+        Product product = new Product();
+        product.setId(productDto.getId());
+        product.setTitle(productDto.getTitle());
+        product.setBarCode(productDto.getBar_code());
+        product.setInventoryStatus("SCANNED");
+        if (event.getProducts().contains(product)){
+            product.setInventoryStatus("SCANNED");
+            initializeRecyclerView(event.getProducts());
+        }
+
+        if (!event.getProducts().contains(product)){
+            event.getProducts().add(product);
+            initializeRecyclerView(event.getProducts());
         }
     }
 
     @Override
     public void onUnknownProductSaved(String code) {
         Log.i(TAG, "onUnknownProductSaved");
-        sendCodeToServer(code);
-        // save code to unknown products
         event.getUnknownProducts().add(new UnknownProduct(0, code));
-
         initializeRecyclerView(event.getProducts());
         setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
         setGrayColorToBtn(btnShowUnknown);
@@ -339,10 +345,5 @@ public class EventActivity
     }
 
 
-    public void sendCodeToServer(String code) {
-        Log.i(TAG, "saveProduct");
-        // send code to the server
 
-
-    }
 }

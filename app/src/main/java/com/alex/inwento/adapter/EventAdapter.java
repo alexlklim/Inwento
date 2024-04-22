@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
-import com.alex.inwento.database.domain.Event;
+import com.alex.inwento.dto.Event;
 
 import java.util.List;
 

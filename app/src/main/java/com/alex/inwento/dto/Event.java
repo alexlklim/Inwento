@@ -1,4 +1,7 @@
-package com.alex.inwento.database.domain;
+package com.alex.inwento.dto;
+
+import com.alex.inwento.dto.Product;
+import com.alex.inwento.dto.UnknownProduct;
 
 import java.util.List;
 

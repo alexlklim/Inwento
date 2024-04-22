@@ -1,4 +1,4 @@
-package com.alex.inwento.activities;
+package com.alex.inwento.action;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,11 +6,17 @@ import android.os.Bundle;
 
 import com.alex.inwento.R;
 
-public class ProductActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product);
+        setContentView(R.layout.activity_settings);
+
+
+
+
+
+
     }
 }

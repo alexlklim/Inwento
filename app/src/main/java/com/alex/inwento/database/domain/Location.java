@@ -7,29 +7,29 @@ import androidx.room.PrimaryKey;
 import com.alex.inwento.util.Util;
 import com.google.gson.annotations.SerializedName;
 
-
-@Entity(tableName = Util.TABLE_NAME_BRANCH)
-public class Branch {
+@Entity(tableName = Util.TABLE_NAME_LOCATION)
+public class Location {
 
     @SerializedName("id")
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @SerializedName("branch")
-    @ColumnInfo(name = "branch")
-    private String branch;
+    @SerializedName("location")
+    @ColumnInfo(name = "location")
+    private String location;
 
     @SerializedName("active")
     @ColumnInfo(name = "active")
     private boolean active;
 
-    public Branch() {
+
+    public Location() {
     }
 
-    public Branch(int id, String branch, boolean active) {
+    public Location(int id, String location, boolean active) {
         this.id = id;
-        this.branch = branch;
+        this.location = location;
         this.active = active;
     }
 
@@ -41,12 +41,12 @@ public class Branch {
         this.id = id;
     }
 
-    public String getBranch() {
-        return branch;
+    public String getLocation() {
+        return location;
     }
 
-    public void setBranch(String branch) {
-        this.branch = branch;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public boolean isActive() {
@@ -57,12 +57,11 @@ public class Branch {
         this.active = active;
     }
 
-
     @Override
     public String toString() {
-        return "Branch{" +
+        return "Location{" +
                 "id=" + id +
-                ", branch='" + branch + '\'' +
+                ", location='" + location + '\'' +
                 ", active=" + active +
                 '}';
     }

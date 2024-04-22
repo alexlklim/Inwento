@@ -3,24 +3,27 @@ package com.alex.inwento;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alex.inwento.activities.EventsActivity;
-import com.alex.inwento.activities.LoginActivity;
-import com.alex.inwento.activities.ProductUpdateActivity;
-import com.alex.inwento.dto.AuthDto;
-import com.alex.inwento.managers.JsonMng;
+import com.alex.inwento.action.LoginActivity;
+import com.alex.inwento.action.SettingsActivity;
+import com.alex.inwento.activities.InventoryActivity;
+import com.alex.inwento.activities.SearchActivity;
+import com.alex.inwento.http.APIClient;
+import com.alex.inwento.http.RetrofitClient;
+import com.alex.inwento.http.auth.AuthDTO;
+import com.alex.inwento.http.auth.RefreshTokenDTO;
 import com.alex.inwento.managers.SettingsMng;
-import com.alex.inwento.tasks.AuthTask;
 
-public class MainActivity extends AppCompatActivity implements AuthTask.AuthListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    ImageButton btn_settings, btn_home, btn_search;
-    Button btn_inventory, btn_scrap, btn_moved;
+    ImageButton btnSearch, btnInventory, btnMove, btnScrap, btnSettings;
     SettingsMng settingsMng;
 
     @Override
@@ -30,70 +33,53 @@ public class MainActivity extends AppCompatActivity implements AuthTask.AuthList
         setContentView(R.layout.activity_main);
         settingsMng = new SettingsMng(this);
 
-        initializeButtons();
+        sendRefreshTokenRequest();
 
-        AuthTask authTask = new AuthTask(this, settingsMng.getEmail(), settingsMng.getRefreshToken());
-        authTask.execute();
 
+        btnSearch = findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, SearchActivity.class)));
+
+        btnInventory = findViewById(R.id.btnInventory);
+        btnInventory.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, InventoryActivity.class)));
+
+        btnMove = findViewById(R.id.btnMove);
+        btnMove.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, InventoryActivity.class)));
+
+        btnScrap = findViewById(R.id.btnScrap);
+        btnScrap.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, InventoryActivity.class)));
+
+        btnSettings = findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
 
     }
 
 
-    @Override
-    public void onAuthSuccess(String response) {
-        Log.i(TAG, "onAuthSuccess");
-        AuthDto authDto = JsonMng.getAuthDtoFromResponse(response);
-        Toast.makeText(this, "Auth successfully", Toast.LENGTH_SHORT).show();
-        assert authDto != null;
-        settingsMng.setAuthInfo(
-                authDto.getFirstName(), authDto.getLastName(),
-                authDto.getAccessToken(), authDto.getRefreshToken());
+    private void sendRefreshTokenRequest() {
+        Log.e(TAG, "sendRefreshTokenRequest");
+        APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
+        RefreshTokenDTO dto = new RefreshTokenDTO(settingsMng.getEmail(), settingsMng.getRefreshToken());
+        Call<AuthDTO> call = apiClient.getAuthDTORefresh(dto);
+        call.enqueue(new Callback<AuthDTO>() {
+            @Override
+            public void onResponse(Call<AuthDTO> call, Response<AuthDTO> response) {
+                if (response.isSuccessful()) settingsMng.setAuthInfo(response.body());
+                else handleError(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<AuthDTO> call, Throwable t) {
+                Log.e(TAG, "sendLoginRequestRetrofit onFailure", t);
+            }
+        });
     }
 
-    @Override
-    public void onAuthFailure(String errorMessage) {
-        Log.i(TAG, "onAuthSuccess: " + errorMessage);
-        Toast.makeText(this, "Login required" + errorMessage, Toast.LENGTH_SHORT).show();
+    private void handleError(int errorCode) {
+        Log.e(TAG, "sendLoginRequestRetrofit onResponse: Error - " + errorCode);
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
-
-
-    private void addBtnListeners() {
-
-
-        btn_home.setOnClickListener(view -> {
-                    startActivity(new Intent(MainActivity.this, MainActivity.class));
-                    finish();
-                }
-        );
-
-        btn_inventory.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, EventsActivity.class))
-        );
-
-        btn_moved.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, ProductUpdateActivity.class);
-            intent.putExtra("ACTION", 1);
-            startActivity(intent);
-        });
-        btn_scrap.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, ProductUpdateActivity.class);
-            intent.putExtra("ACTION", 2);
-            startActivity(intent);
-        });
-
-    }
-
-    private void initializeButtons() {
-        btn_settings = findViewById(R.id.btn_settings);
-        btn_home = findViewById(R.id.btn_home);
-        btn_search = findViewById(R.id.btn_search);
-        btn_inventory = findViewById(R.id.btn_inventory);
-        btn_scrap = findViewById(R.id.btn_scrap);
-        btn_moved = findViewById(R.id.btn_moved);
-
-        addBtnListeners();
-    }
-
-
 }

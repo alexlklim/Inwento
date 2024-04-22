@@ -3,7 +3,7 @@ package com.alex.inwento.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.alex.inwento.dto.Inventory;
+import com.alex.inwento.dto.Event;
 import com.alex.inwento.managers.JsonMng;
 import com.alex.inwento.util.Endpoints;
 
@@ -14,31 +14,33 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class GetInventoryTask extends AsyncTask<Void, Void, Inventory> {
+public class GetEventWithProductsTask extends AsyncTask<Void, Void, Event> {
 
-    private static final String TAG = "InventoryTask";
+    private static final String TAG = "ProductTask";
 
 
-    private InventoryListener listener;
+    private GetEventWithProductsTask.ProductsListener listener;
 
     private String token;
+    private int eventId;
 
-    public interface InventoryListener {
-        void onInventorySuccess(Inventory inventory);
+    public interface ProductsListener {
+        void onProductsSuccess(Event event);
 
-        void onInventoryFailure(String errorMessage);
+        void onProductsFailure(String errorMessage);
     }
 
-    public GetInventoryTask(InventoryListener listener, String token) {
+    public GetEventWithProductsTask(GetEventWithProductsTask.ProductsListener listener, String token, int eventId) {
         this.token = token;
         this.listener = listener;
+        this.eventId = eventId;
     }
 
     @Override
-    protected Inventory doInBackground(Void... voids) {
+    protected Event doInBackground(Void... voids) {
         HttpURLConnection urlConnection = null;
         try {
-            URL url = new URL(Endpoints.GET_CURRENT_INVENTORY);
+            URL url = new URL(Endpoints.GET_EVENT_BY_ID + eventId);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Authorization", "Bearer " + token);
@@ -52,8 +54,10 @@ public class GetInventoryTask extends AsyncTask<Void, Void, Inventory> {
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
+
                 inputStream.close();
-                return JsonMng.getInventoryFromJson(String.valueOf(response));
+
+                return JsonMng.parseJsonToEventAndProducts(String.valueOf(response));
             } else {
                 Log.e(TAG, "Error response code: " + responseCode);
             }
@@ -69,11 +73,13 @@ public class GetInventoryTask extends AsyncTask<Void, Void, Inventory> {
 
 
     @Override
-    protected void onPostExecute(Inventory inventory) {
-        if (inventory != null) {
-            listener.onInventorySuccess(inventory);
+    protected void onPostExecute(Event products) {
+        Log.i(TAG, "onPostExecute: + " + products.toString());
+        if (products != null) {
+            listener.onProductsSuccess(products);
         } else {
-            listener.onInventoryFailure("No inventory found.");
+
+            listener.onProductsFailure("No products found.");
         }
     }
 }
