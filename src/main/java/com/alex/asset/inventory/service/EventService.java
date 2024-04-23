@@ -61,7 +61,9 @@ public class EventService {
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
         log.info(TAG + "Get event with id {}", eventId);
         if (eventFields == null || eventFields.isEmpty()) eventFields = Utils.EVENT_FIELDS;
-        Event event = eventRepo.findById(eventId).get();
+        Event event = eventRepo.findById(eventId).orElseThrow(
+                () -> new ResourceNotFoundException("Event not found with id "+ eventId)
+        );
         return eventMapper.toDTOWithCustomFields(event, eventFields);
     }
 

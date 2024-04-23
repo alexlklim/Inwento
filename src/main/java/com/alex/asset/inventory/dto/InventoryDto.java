@@ -1,7 +1,7 @@
 package com.alex.asset.inventory.dto;
 
 
-import com.alex.asset.inventory.domain.event.Event;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

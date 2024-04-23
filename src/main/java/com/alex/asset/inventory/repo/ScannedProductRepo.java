@@ -15,7 +15,6 @@ public interface ScannedProductRepo extends JpaRepository<ScannedProduct, Long> 
     @Query(value = "SELECT COUNT(*) FROM ScannedProduct sp WHERE sp.event.id = :eventId")
     int countScannedProductsByEventId(@Param("eventId") Long eventId);
 
-    ScannedProduct findByProductAndEvent(Product product, Event event);
 
     boolean existsByProductAndEvent(Product product, Event event);
 

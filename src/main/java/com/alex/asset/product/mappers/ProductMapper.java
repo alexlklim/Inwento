@@ -136,7 +136,7 @@ public class ProductMapper {
                     dtoMap.put("inspection_date", product.getInspectionDate()!= null ? product.getInspectionDate() : "");
                     break;
                 case "longitude":
-                    dtoMap.put("longitude", product.getLongitude()!= null ? product.getLongitude() : "");;
+                    dtoMap.put("longitude", product.getLongitude()!= null ? product.getLongitude() : "");
                     break;
                 case "latitude":
                     dtoMap.put("latitude", product.getLatitude()!= null ? product.getLatitude() : "");
