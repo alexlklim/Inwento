@@ -29,22 +29,22 @@ public class ProductMapper {
         for (String field : fields) {
             switch (field) {
                 case "description":
-                    dtoMap.put("description", product.getDescription());
+                    dtoMap.put("description", product.getDescription()!= null ? product.getDescription() : "");
                     break;
                 case "price":
-                    dtoMap.put("price", product.getPrice());
+                    dtoMap.put("price", product.getPrice()!= null ? product.getPrice() : "");
                     break;
                 case "bar_code":
-                    dtoMap.put("bar_code", product.getBarCode());
+                    dtoMap.put("bar_code", product.getBarCode()!= null ? product.getBarCode() : "");
                     break;
                 case "rfid_code":
-                    dtoMap.put("rfid_code", product.getRfidCode());
+                    dtoMap.put("rfid_code", product.getRfidCode()!= null ? product.getRfidCode() : "");
                     break;
                 case "inventory_number":
-                    dtoMap.put("inventory_number", product.getInventoryNumber());
+                    dtoMap.put("inventory_number", product.getInventoryNumber()!= null ? product.getInventoryNumber() : "");
                     break;
                 case "serial_number":
-                    dtoMap.put("serial_number", product.getSerialNumber());
+                    dtoMap.put("serial_number", product.getSerialNumber()!= null ? product.getSerialNumber() : "");
                     break;
                 case "liable_id":
                     dtoMap.put("liable_id", product.getLiable() != null ? product.getLiable().getId() : "");
@@ -57,7 +57,7 @@ public class ProductMapper {
 
 
                 case "receiver":
-                    dtoMap.put("receiver", product.getReceiver());
+                    dtoMap.put("receiver", product.getReceiver()!= null ? product.getReceiver() : "");
                     break;
                 case "kst_id":
                     dtoMap.put("kst_id", product.getKst() != null ? product.getKst().getId() : "");
@@ -109,37 +109,37 @@ public class ProductMapper {
                     dtoMap.put("subtype", product.getSubtype() != null ? product.getSubtype().getSubtype() : "");
                     break;
                 case "producer":
-                    dtoMap.put("producer", product.getProducer());
+                    dtoMap.put("producer", product.getProducer()!= null ? product.getProducer() : "");
                     break;
                 case "supplier":
-                    dtoMap.put("supplier", product.getSupplier());
+                    dtoMap.put("supplier", product.getSupplier() != null ? product.getSupplier() : "");
                     break;
                 case "scrapping":
                     dtoMap.put("scrapping", product.isScrapping());
                     break;
                 case "scrapping_date":
-                    dtoMap.put("scrapping_date", product.getScrappingDate());
+                    dtoMap.put("scrapping_date", product.getScrappingDate()!= null ? product.getScrappingDate() : "");
                     break;
                 case "scrapping_reason":
-                    dtoMap.put("scrapping_reason", product.getScrappingReason());
+                    dtoMap.put("scrapping_reason", product.getScrappingReason()!= null ? product.getScrappingReason() : "");
                     break;
                 case "document":
-                    dtoMap.put("document", product.getDocument());
+                    dtoMap.put("document", product.getDocument()!= null ? product.getDocument() : "");
                     break;
                 case "document_date":
-                    dtoMap.put("document_date", product.getDocumentDate());
+                    dtoMap.put("document_date", product.getDocumentDate()!= null ? product.getDocumentDate() : "");
                     break;
                 case "warranty_period":
-                    dtoMap.put("warranty_period", product.getWarrantyPeriod());
+                    dtoMap.put("warranty_period", product.getWarrantyPeriod()!= null ? product.getWarrantyPeriod() : "");
                     break;
                 case "inspection_date":
-                    dtoMap.put("inspection_date", product.getInspectionDate());
+                    dtoMap.put("inspection_date", product.getInspectionDate()!= null ? product.getInspectionDate() : "");
                     break;
                 case "longitude":
-                    dtoMap.put("longitude", product.getLongitude());
+                    dtoMap.put("longitude", product.getLongitude()!= null ? product.getLongitude() : "");;
                     break;
                 case "latitude":
-                    dtoMap.put("latitude", product.getLatitude());
+                    dtoMap.put("latitude", product.getLatitude()!= null ? product.getLatitude() : "");
                     break;
                 default:
                     break;

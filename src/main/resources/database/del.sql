@@ -31,5 +31,5 @@ DROP TABLE IF EXISTS tmp;
 
 
 
-select * from unknown_products;
+select * from events;
 select * from products;

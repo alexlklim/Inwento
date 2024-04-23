@@ -1,6 +1,7 @@
 package com.alex.asset.inventory.dto;
 
 
+import com.alex.asset.inventory.domain.event.Event;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,6 +10,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 
 @Data
@@ -46,5 +49,7 @@ public class InventoryDto {
 
     @Schema(description = "Amount of scanned product (without unknown)", example = "1500")
     int scannedProductAmount;
+
+    List<Map<String, Object>> events;
 
 }

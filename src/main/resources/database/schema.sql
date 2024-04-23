@@ -45,8 +45,6 @@ CREATE TABLE IF NOT EXISTS company
 
 );
 
-ALTER TABLE company MODIFY COLUMN label_width DECIMAL(8, 2);
-
 CREATE TABLE IF NOT EXISTS token
 (
     id      BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -286,3 +284,4 @@ CREATE TABLE IF NOT EXISTS unknown_products
 );
 
 
+select * from   inventories;

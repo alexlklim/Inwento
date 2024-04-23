@@ -174,7 +174,7 @@ public class ProductService implements IProductService {
                     if (productRepo.existsByRfidCode((String) value)) {
                         throw new ValueIsNotUnique("Rfid code " + value + "is taken");
                     } else {
-                        product.setBarCode((String) value);
+                        product.setRfidCode((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     }
                     break;
@@ -182,7 +182,7 @@ public class ProductService implements IProductService {
                     if (productRepo.existsByInventoryNumber((String) value)) {
                         throw new ValueIsNotUnique("Inventory number " + value + "is taken");
                     } else {
-                        product.setBarCode((String) value);
+                        product.setInventoryNumber((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     }
                     break;
@@ -190,7 +190,7 @@ public class ProductService implements IProductService {
                     if (productRepo.existsBySerialNumber((String) value)) {
                         throw new ValueIsNotUnique("Serial number " + value + "is taken");
                     } else {
-                        product.setBarCode((String) value);
+                        product.setSerialNumber((String) value);
                         addHistoryToProduct(userId, productId, Activity.BAR_CODE);
                     }
                     break;

@@ -37,6 +37,7 @@ public class UnknownProduct {
     @Enumerated(EnumType.STRING)
     CodeType typeCode;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     Event event;

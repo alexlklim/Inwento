@@ -13,5 +13,5 @@ public interface InventoryRepo extends JpaRepository<Inventory, Long> {
     @Query("SELECT i FROM Inventory i WHERE i.isActive = true " +
             "AND i.startDate <= :currentDate " +
             "AND i.isFinished = false ")
-    Optional<Inventory> getCurrentInvent(LocalDate currentDate);
+    Optional<Inventory> getCurrentInventory(LocalDate currentDate);
 }

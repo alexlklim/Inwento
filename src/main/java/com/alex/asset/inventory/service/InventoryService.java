@@ -15,6 +15,8 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.exceptions.errors.InventIsAlreadyInProgress;
 import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -44,6 +46,9 @@ public class InventoryService {
     @SneakyThrows
     public void createInventory(Long userId, InventoryDto dto) {
         log.info(TAG + "User {} create new inventory", userId);
+        if (getCurrentInventory(userId) != null){
+            throw new InventIsAlreadyInProgress("Inventory is active at this moment");
+        }
         Inventory inventory = new Inventory();
         inventory.setActive(true);
         inventory.setStartDate(dto.getStartDate());
@@ -74,7 +79,7 @@ public class InventoryService {
 
 
     @SneakyThrows
-    public InventoryDto getInventoryById(Long inventoryId) {
+    public InventoryDto getInventoryById(Long inventoryId, Long userId) {
         log.info(TAG + "Get inventory by id {}", inventoryId);
         Inventory inventory = inventoryRepo.findById(inventoryId).orElseThrow(
                 () -> new ResourceNotFoundException("Inventory with id " + inventoryId + " not found"));
@@ -94,16 +99,22 @@ public class InventoryService {
         inventoryDto.setScannedProductAmount(scannedProductAmount);
         inventoryDto.setUnknownProductAmount(unknownProductAmount);
         inventoryDto.setTotalProductAmount(totalProductAmount);
+        inventoryDto.setEvents(
+                eventService.getEventsForInventory(inventoryId, "emp", Utils.EVENT_SHORT_FIELDS, userId)
+        );
 
         return inventoryDto;
     }
-
+private final EventService eventService;
 
     @SneakyThrows
-    public InventoryDto getCurrentInventory() {
+    public InventoryDto getCurrentInventory(Long userId) {
         log.info(TAG + "Get current inventory");
-        return getInventoryById(inventoryRepo.getCurrentInvent(LocalDate.now()).orElseThrow(
-                () -> new ResourceNotFoundException("No active inventory at this moment")).getId()
+        return getInventoryById(
+                inventoryRepo.getCurrentInventory(LocalDate.now())
+                        .orElseThrow(() -> new ResourceNotFoundException("No active inventory at this moment"))
+                        .getId(),
+                userId
         );
     }
 

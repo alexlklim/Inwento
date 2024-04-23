@@ -61,8 +61,7 @@ public class EventService {
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
         log.info(TAG + "Get event with id {}", eventId);
         if (eventFields == null || eventFields.isEmpty()) eventFields = Utils.EVENT_FIELDS;
-        Event event = eventRepo.findById(eventId).orElseThrow(
-                () -> new ResourceNotFoundException("Event not found with id " + eventId));
+        Event event = eventRepo.findById(eventId).get();
         return eventMapper.toDTOWithCustomFields(event, eventFields);
     }
 
@@ -86,7 +85,7 @@ public class EventService {
     @SneakyThrows
     public Map<String, Object> createEvent(Long userId, EventDTO dto) {
         log.info(TAG + "Create event by user with id {}", userId);
-        Inventory inventory = inventoryRepo.getCurrentInvent(LocalDate.now())
+        Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now())
                 .orElseThrow(() -> new ResourceNotFoundException("No active inventory now"));
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found"));
@@ -124,10 +123,8 @@ public class EventService {
     public void addProductsToEventByBarCode(
             List<Map<String, Object>> inventoryData, Long eventId, Long locationId, String typeCode, Long userId) {
         log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
-        Event event = eventRepo.findById(eventId)
-                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
-        Location location = locationRepo.findById(locationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
+        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
+        Location location = locationRepo.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
         for (Map<String, Object> map : inventoryData) {
             Product product = null;
             if (map.containsKey("code")) {
@@ -156,7 +153,7 @@ public class EventService {
             log.error(TAG + "Product with id {} belong to another branch", product.getId());
             return;
         }
-        if (scannedProductRepo.findByProductAndEvent(product, event)){
+        if (scannedProductRepo.existsByProductAndEvent(product, event)){
             log.error(TAG + "Product with id {} already scanned in this event", product.getId());
             return;
         }

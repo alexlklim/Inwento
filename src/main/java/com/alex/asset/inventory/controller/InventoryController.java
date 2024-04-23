@@ -30,7 +30,7 @@ public class InventoryController {
     public InventoryDto getInventoryById(
             @PathVariable("inventory_id") Long inventoryId) {
         log.info(TAG + "Get inventory with id {}", inventoryId);
-        return inventoryService.getInventoryById(inventoryId);
+        return inventoryService.getInventoryById(inventoryId, SecHolder.getUserId());
     }
 
     @Operation(summary = "get current active inventory (it returns 404 if no active inventory now")
@@ -38,11 +38,11 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public InventoryDto getCurrentInventory() {
         log.info(TAG + "get current inventory");
-        return inventoryService.getCurrentInventory();
+        return inventoryService.getCurrentInventory(SecHolder.getUserId());
     }
 
 
-    @Operation(summary = "Create / update new inventarization")
+    @Operation(summary = "Create new inventarization")
     @Secured("ROLE_ADMIN")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

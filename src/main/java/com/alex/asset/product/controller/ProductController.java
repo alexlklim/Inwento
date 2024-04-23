@@ -36,6 +36,16 @@ public class ProductController {
         log.info(TAG + "Try to get all products with custom or all fields");
         return productService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
     }
+    @Operation(summary = "Get list of products with fields, mode:admin/emp  scrap:true/false")
+    @PostMapping("/all/{mode}/{scrap}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Map<String, Object>> getAllProductsWithCustomFieldsApp(
+            @PathVariable("mode") String mode,
+            @PathVariable("scrap") Boolean isScrap,
+            @RequestBody(required = false) List<String> productFields) {
+        log.info(TAG + "Try to get all products with custom or all fields");
+        return productService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
+    }
 
 
     @Operation(summary = "Get product by id")

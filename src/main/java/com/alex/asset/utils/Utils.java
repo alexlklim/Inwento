@@ -26,11 +26,11 @@ public class Utils {
 
     public static final List<String> PRODUCT_FIELDS = Arrays.asList(
             "description", "price",
-            "bar_code", "rfid_code", "inventory_number", "serial_number",
+            "bar_code", "rfid_code", " ", "serial_number",
             "liable_id", "liable_name", "receiver",
             "branch_id", "location_id",
             "kst_id", "asset_status_id", "unit_id", "mpk_id", "type_id", "subtype_id",
-            "kst", "asset_status", "unit", "branch", "location", "mpk", "type", "subtype",
+                "kst", "asset_status", "unit", "branch", "location", "mpk", "type", "subtype",
             "producer", "supplier",
             "scrapping", "scrapping_date", "scrapping_reason", "document",
             "document_date", "warranty_period", "inspection_date",
@@ -41,6 +41,10 @@ public class Utils {
             "info", "inventory_id", "branch_id", "branch",
             "user_id", "user_email", "user_name",
             "unknown_products", "scanned_products", "not_scanned_products",
+            "unknown_product_amount", "total_product_amount", "scanned_product_amount"
+    );
+    public static final List<String> EVENT_SHORT_FIELDS = Arrays.asList(
+            "info", "branch", "user_name",
             "unknown_product_amount", "total_product_amount", "scanned_product_amount"
     );
 

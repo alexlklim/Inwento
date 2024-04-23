@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/inventory/events")
+    @RequestMapping("/api/v1/inventory/events")
 @Tag(name = "Event Controller", description = "Event API")
 public class EventController {
     private final String TAG = "EVENT_CONTROLLER - ";

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -56,18 +57,39 @@ public class EventMapper {
                     dtoMap.put("unknown_products", unknownProductRepo.findAllByEvent(event));
                     break;
                 case "scanned_products":
-                    dtoMap.put("scanned_products", scannedProductRepo.findAllByEvent(event));
+                    List<ScannedProduct> scannedProductsList = scannedProductRepo.findAllByEvent(event);
+                    List<Map<String, Object>> scannedProductsDTOs = scannedProductsList.stream()
+                            .map(scannedProduct -> {
+                                Map<String, Object> productDTO = new HashMap<>();
+                                productDTO.put("id", scannedProduct.getProduct().getId());
+                                productDTO.put("title", scannedProduct.getProduct().getTitle());
+                                productDTO.put("bar_code", scannedProduct.getProduct().getBarCode());
+                                productDTO.put("rfid_code", scannedProduct.getProduct().getRfidCode());
+                                return productDTO;
+                            })
+                            .collect(Collectors.toList());
+                    dtoMap.put("scanned_products", scannedProductsDTOs);
                     break;
                 case "not_scanned_products":
-                    List<Product> allProducts = productRepo.findAllByBranch(event.getBranch());
                     List<Product> scannedProducts = scannedProductRepo.findAllByEvent(event)
                             .stream()
                             .map(ScannedProduct::getProduct)
                             .toList();
-                    List<Product> productsNotScanned = allProducts.stream()
+                    List<Product> productsNotScanned = productRepo.findAllByBranch(event.getBranch()).stream()
                             .filter(product -> !scannedProducts.contains(product))
                             .toList();
-                    dtoMap.put("not_scanned_products", productsNotScanned);
+                    List<Map<String, Object>> productsNotScannedDTOs = productsNotScanned.stream()
+                            .map(product -> {
+                                Map<String, Object> productDTO = new HashMap<>();
+                                productDTO.put("id", product.getId());
+                                productDTO.put("title", product.getTitle());
+                                productDTO.put("bar_code", product.getBarCode());
+                                productDTO.put("rfid_code", product.getRfidCode());
+                                return productDTO;
+                            })
+                            .collect(Collectors.toList());
+
+                    dtoMap.put("not_scanned_products", productsNotScannedDTOs);
                     break;
                 case "unknown_product_amount":
                     dtoMap.put("unknown_product_amount", unknownProductRepo.countProductsByEventId(event.getId()));
@@ -77,6 +99,8 @@ public class EventMapper {
                     break;
                 case "scanned_product_amount":
                     dtoMap.put("scanned_product_amount", scannedProductRepo.countScannedProductsByEventId(event.getId()));
+                    break;
+                default:
                     break;
             }
 
