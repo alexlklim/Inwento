@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.dialog.ProductDialog;
+import com.alex.inwento.dto.Product;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.ProductDTO;
@@ -32,7 +33,8 @@ public class SearchActivity
         extends
         AppCompatActivity
         implements
-        ProductAdapter.OnItemProductClickListener {
+        ProductAdapter.OnItemProductClickListener,
+        ProductDialog.ProductDialogListener {
     private static final String TAG = "SearchActivity";
     SettingsMng settingsMng;
     RecyclerView recyclerView;
@@ -125,7 +127,7 @@ public class SearchActivity
 
     public void openProductDialog(ProductDTO productDTO) {
         Log.i(TAG, "initializeRecyclerView: ");
-        ProductDialog.newInstance(productDTO).show(getSupportFragmentManager(), "product_dialog");
+        ProductDialog.newInstance(this, "null", false, productDTO).show(getSupportFragmentManager(), "product_dialog");
     }
 
 
@@ -157,4 +159,7 @@ public class SearchActivity
     }
 
 
+    @Override
+    public void onSentScannedProduct(String barCode) {
+    }
 }

@@ -16,19 +16,17 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
-import com.alex.inwento.tasks.PostProductsTask;
+
 
 import java.util.Arrays;
 
 public class UnknownProductDialog extends AppCompatDialogFragment
-        implements PostProductsTask.ProductUploadListener {
+ {
     private static final String TAG = "UnknownProductDialog";
     private UnknownProductDialog.UnknownProductScannedListener unknownProductScannedListener;
     private FragmentActivity fragmentActivity;
     TextView code;
     String barCode;
-    int eventId;
-    String token;
     Button btnSave;
 
     @NonNull
@@ -46,9 +44,7 @@ public class UnknownProductDialog extends AppCompatDialogFragment
 
 
         btnSave.setOnClickListener(v -> {
-            if (unknownProductScannedListener != null)
-                unknownProductScannedListener.onUnknownProductSaved(barCode);
-            new PostProductsTask(this, Arrays.asList(barCode), eventId, token).execute();
+            unknownProductScannedListener.onSentScannedUnknownProduct(barCode);
         });
         return builder.create();
     }
@@ -56,33 +52,15 @@ public class UnknownProductDialog extends AppCompatDialogFragment
 
     public static UnknownProductDialog newInstance(
             UnknownProductDialog.UnknownProductScannedListener listener,
-            String barCode,
-            int eventId,
-            String token) {
+            String barCode) {
         UnknownProductDialog dialog = new UnknownProductDialog();
         dialog.barCode = barCode;
         dialog.unknownProductScannedListener = listener;
-        dialog.eventId = eventId;
-        dialog.token = token;
         return dialog;
-    }
-
-    @Override
-    public void onUploadSuccess(Boolean answer) {
-        Log.i(TAG, "onUploadSuccess: ");
-        Toast.makeText(requireActivity(), "Product added", Toast.LENGTH_SHORT).show();
-        dismiss();
-    }
-
-    @Override
-    public void onUploadFailure(String errorMessage) {
-        Log.i(TAG, "onUploadFailure: ");
-        Toast.makeText(requireActivity(), "Something wrong", Toast.LENGTH_SHORT).show();
-        dismiss();
     }
 
 
     public interface UnknownProductScannedListener {
-        void onUnknownProductSaved(String barCode);
+        void onSentScannedUnknownProduct(String barCode);
     }
 }

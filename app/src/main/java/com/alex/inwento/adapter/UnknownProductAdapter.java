@@ -10,20 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
 import com.alex.inwento.dto.UnknownProduct;
+import com.alex.inwento.http.inventory.UnknownProductDTO;
 import com.alex.inwento.managers.DateMng;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAdapter.OrderViewHolder> {
-    private final UnknownProductAdapter.OnItemUnknownProductClickListener onItemClickListener;
-    private List<UnknownProduct> unknownProductList;
+    private List<UnknownProductDTO> unknownProductList;
 
     public UnknownProductAdapter(
-            List<UnknownProduct> unknownProducts,
-            UnknownProductAdapter.OnItemUnknownProductClickListener onItemClickListener) {
+            List<UnknownProductDTO> unknownProducts) {
         this.unknownProductList = unknownProducts;
-        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -35,16 +33,15 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
 
     @Override
     public void onBindViewHolder(@NonNull UnknownProductAdapter.OrderViewHolder holder, int position) {
-        UnknownProduct unknownProduct = unknownProductList.get(position);
+        UnknownProductDTO unknownProduct = unknownProductList.get(position);
 
-        // Assign ID automatically from 1 to n
+
         int id = position + 1;
         holder.id.setText(String.valueOf(id));
 
         holder.code.setText(unknownProduct.getCode());
-        // set date
+
         holder.date.setText(DateMng.convertDateToString(LocalDate.now()));
-        holder.itemView.setOnClickListener(view -> onItemClickListener.onItemUnknownProductClick(id));
     }
 
     @Override
@@ -63,8 +60,5 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
         }
     }
 
-    public interface OnItemUnknownProductClickListener {
-        void onItemUnknownProductClick(int orderId);
-    }
 
 }

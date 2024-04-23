@@ -20,8 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
 import com.alex.inwento.dto.ProductDto;
-import com.alex.inwento.tasks.GetProductTask;
-import com.alex.inwento.tasks.ScrapProductTask;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,9 +30,7 @@ import java.util.stream.IntStream;
 public class ScrapProductDialog
         extends
         AppCompatDialogFragment
-        implements
-        GetProductTask.GetProductByBarCodeListener,
-        ScrapProductTask.ScrapProductListener {
+        {
 
 
     private static final String TAG = "ScrapProductDialog";
@@ -84,66 +81,66 @@ public class ScrapProductDialog
         btnScrap = view.findViewById(R.id.asp_scrap);
 
 
-        new GetProductTask(this, token, barCode).execute();
-
-        btnScrap.setOnClickListener(v -> {
-            new ScrapProductTask(this, token, productDto.getId(),
-                    Integer.parseInt(daySpinner.getSelectedItem().toString()),
-                    monthList.indexOf(monthSpinner.getSelectedItem().toString()),
-                    Integer.parseInt(yearSpinner.getSelectedItem().toString()),
-                    reasonEditText.getText().toString()
-            ).execute();
-
-        });
+//        new GetProductTask(this, token, barCode).execute();
+//
+//        btnScrap.setOnClickListener(v -> {
+//            new ScrapProductTask(this, token, productDto.getId(),
+//                    Integer.parseInt(daySpinner.getSelectedItem().toString()),
+//                    monthList.indexOf(monthSpinner.getSelectedItem().toString()),
+//                    Integer.parseInt(yearSpinner.getSelectedItem().toString()),
+//                    reasonEditText.getText().toString()
+//            ).execute();
+//
+//        });
         return builder.create();
     }
 
 
-    @Override
-    public void onProductByBarCodeSuccess(ProductDto productDto) {
-        this.productDto = productDto;
-        titleTextView.setText(productDto.getTitle());
-        descTextView.setText(productDto.getDescription());
-        codeTextView.setText(productDto.getBar_code());
-        priceTextView.setText(String.valueOf(productDto.getPrice()));
-        liableTextView.setText(productDto.getLiable());
-        receiverTextView.setText(productDto.getReceiver());
-
-        yearsList = IntStream.rangeClosed(2020, 2024).boxed().collect(Collectors.toList());
-        monthList = Arrays.asList("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień");
-        daysList = IntStream.rangeClosed(1, 30).boxed().collect(Collectors.toList());
-
-        ArrayAdapter<Integer> adapterYears = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, yearsList);
-        adapterYears.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        yearSpinner.setAdapter(adapterYears);
-
-        ArrayAdapter<String> adapterMonths = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, monthList);
-        adapterMonths.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        monthSpinner.setAdapter(adapterMonths);
-
-        ArrayAdapter<Integer> adapterDays = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, daysList);
-        adapterDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        daySpinner.setAdapter(adapterDays);
-
-        yearSpinner.setSelection(0);
-        monthSpinner.setSelection(0);
-        daySpinner.setSelection(0);
-    }
-
-    @Override
-    public void onProductByBarCodeFailure(String errorMessage) {
-        dismiss();
-    }
-
-    @Override
-    public void onProductScrapSuccess(Boolean answer) {
-        Toast.makeText(requireContext(), "Umożenie producktu zrealizowane", Toast.LENGTH_SHORT).show();
-        dismiss();
-    }
-
-    @Override
-    public void onProductScrapFailure(String errorMessage) {
-        Toast.makeText(requireContext(), "Umożenie producktu nie powiodło się", Toast.LENGTH_SHORT).show();
-        dismiss();
-    }
+//    @Override
+//    public void onProductByBarCodeSuccess(ProductDto productDto) {
+//        this.productDto = productDto;
+//        titleTextView.setText(productDto.getTitle());
+//        descTextView.setText(productDto.getDescription());
+//        codeTextView.setText(productDto.getBar_code());
+//        priceTextView.setText(String.valueOf(productDto.getPrice()));
+//        liableTextView.setText(productDto.getLiable());
+//        receiverTextView.setText(productDto.getReceiver());
+//
+//        yearsList = IntStream.rangeClosed(2020, 2024).boxed().collect(Collectors.toList());
+//        monthList = Arrays.asList("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień");
+//        daysList = IntStream.rangeClosed(1, 30).boxed().collect(Collectors.toList());
+//
+//        ArrayAdapter<Integer> adapterYears = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, yearsList);
+//        adapterYears.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        yearSpinner.setAdapter(adapterYears);
+//
+//        ArrayAdapter<String> adapterMonths = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, monthList);
+//        adapterMonths.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        monthSpinner.setAdapter(adapterMonths);
+//
+//        ArrayAdapter<Integer> adapterDays = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, daysList);
+//        adapterDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        daySpinner.setAdapter(adapterDays);
+//
+//        yearSpinner.setSelection(0);
+//        monthSpinner.setSelection(0);
+//        daySpinner.setSelection(0);
+//    }
+//
+//    @Override
+//    public void onProductByBarCodeFailure(String errorMessage) {
+//        dismiss();
+//    }
+//
+//    @Override
+//    public void onProductScrapSuccess(Boolean answer) {
+//        Toast.makeText(requireContext(), "Umożenie producktu zrealizowane", Toast.LENGTH_SHORT).show();
+//        dismiss();
+//    }
+//
+//    @Override
+//    public void onProductScrapFailure(String errorMessage) {
+//        Toast.makeText(requireContext(), "Umożenie producktu nie powiodło się", Toast.LENGTH_SHORT).show();
+//        dismiss();
+//    }
 }

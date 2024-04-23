@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,13 +20,23 @@ import com.alex.inwento.http.inventory.ProductDTO;
 public class ProductDialog extends AppCompatDialogFragment {
 
     private static final String TAG = "ProductDialog";
-
+    private ProductDialog.ProductDialogListener productDialogListener;
     private ProductDTO productDTO;
-    TextView dpTitle, dpDesc, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpBtnOk;
+    private Boolean isInventory;
+    private String currentBranch;
+    Button dpBtnOk;
+    TextView dpTitle, dpDesc, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpWarning;
 
-    public static ProductDialog newInstance(ProductDTO productDTO) {
+    public static ProductDialog newInstance(
+            ProductDialog.ProductDialogListener listener,
+            String currentBranch,
+            Boolean isInventory,
+            ProductDTO productDTO) {
         ProductDialog dialog = new ProductDialog();
+        dialog.productDialogListener = listener;
         dialog.productDTO = productDTO;
+        dialog.currentBranch = currentBranch;
+        dialog.isInventory = isInventory;
         return dialog;
     }
 
@@ -45,6 +57,7 @@ public class ProductDialog extends AppCompatDialogFragment {
         dpLiable = view.findViewById(R.id.dpLiable);
         dpReceiver = view.findViewById(R.id.dpReceiver);
         dpBtnOk = view.findViewById(R.id.dpBtnOk);
+        dpWarning = view.findViewById(R.id.dpWarning);
 
 
         dpTitle.setText(productDTO.getTitle());
@@ -56,11 +69,38 @@ public class ProductDialog extends AppCompatDialogFragment {
         dpLiable.setText(productDTO.getLiableName());
         dpReceiver.setText(productDTO.getReceiver());
 
-        dpBtnOk.setOnClickListener(v -> dismiss());
-
+        if (!isInventory) {
+            ViewGroup parentView = (ViewGroup) dpWarning.getParent();
+            parentView.removeView(dpWarning);
+            dpBtnOk.setOnClickListener(v -> dismiss());
+        }
+        else {
+            // CHANGE THE BUTTON TO ZESKANOWANE IF INVENTORY TRUE
+            dpBtnOk.setText("ZESKANOWANE");
+            dpBtnOk.setOnClickListener(v -> {
+                productDialogListener.onSentScannedProduct(productDTO.getBarCode());
+                // ADD LISTENER
+                dismiss();
+            });
+            if (currentBranch.equals(productDTO.getBranch())){
+                // DELETE WARNING IF BRANCHES ARE THE SAME
+                ViewGroup parentView = (ViewGroup) dpWarning.getParent();
+                parentView.removeView(dpWarning);
+            } else {
+                // SET BUTTON TO MOVE IF BRANCHES ARE NOT THE SAME
+                dpBtnOk.setText("PRZESUNIĘCIE");
+            }
+        }
 
         return builder.create();
     }
 
+
+
+
+
+    public interface ProductDialogListener {
+        void onSentScannedProduct(String barCode);
+    }
 
 }

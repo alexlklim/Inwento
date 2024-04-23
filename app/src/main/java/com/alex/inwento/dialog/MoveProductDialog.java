@@ -22,9 +22,7 @@ import com.alex.inwento.R;
 import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
 import com.alex.inwento.dto.ProductDto;
-import com.alex.inwento.tasks.GetBranchesAndEmpTask;
-import com.alex.inwento.tasks.GetProductTask;
-import com.alex.inwento.tasks.MoveProductTask;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,10 +31,7 @@ import java.util.stream.Collectors;
 public class MoveProductDialog
         extends
         AppCompatDialogFragment
-        implements
-        GetProductTask.GetProductByBarCodeListener,
-        GetBranchesAndEmpTask.OnDataReceivedListener,
-        MoveProductTask.ProductMoveListener {
+ {
     private static final String TAG = "AddEventDialog";
 
     private FragmentActivity fragmentActivity;
@@ -84,8 +79,7 @@ public class MoveProductDialog
         btnMove = view.findViewById(R.id.dmp_move);
 
 
-        new GetBranchesAndEmpTask(this, token).execute();
-        new GetProductTask(this, token, barCode).execute();
+
 
 
 //        btnMove.setOnClickListener(v -> {
@@ -103,22 +97,22 @@ public class MoveProductDialog
         return builder.create();
     }
 
-    @Override
-    public void onDataReceived(Employee[] employees, Branch[] branches) {
-        Log.i(TAG, "onDataReceived: ");
-        branchObjects = Arrays.asList(branches);
-        employeeObjects = Arrays.asList(employees);
-
-        branchList = Arrays.stream(branches)
-                .map(Branch::getBranch)
-                .collect(Collectors.toList());
-
-        employeeList = Arrays.stream(employees)
-                .map(emp -> emp.getFirst_name() + " " + emp.getLast_name())
-                .collect(Collectors.toList());
-
-        initializeSpinner();
-    }
+//    @Override
+//    public void onDataReceived(Employee[] employees, Branch[] branches) {
+//        Log.i(TAG, "onDataReceived: ");
+//        branchObjects = Arrays.asList(branches);
+//        employeeObjects = Arrays.asList(employees);
+//
+//        branchList = Arrays.stream(branches)
+//                .map(Branch::getBranch)
+//                .collect(Collectors.toList());
+//
+//        employeeList = Arrays.stream(employees)
+//                .map(emp -> emp.getFirst_name() + " " + emp.getLast_name())
+//                .collect(Collectors.toList());
+//
+//        initializeSpinner();
+//    }
 
     private void initializeSpinner() {
         Log.i(TAG, "initializeSpinner: ");
@@ -141,45 +135,45 @@ public class MoveProductDialog
     }
 
 
-    @Override
-    public void onError(String errorMessage) {
-        Log.i(TAG, "onError: ");
-        dismiss();
-    }
-
-    @Override
-    public void onProductByBarCodeSuccess(ProductDto productDto) {
-        Log.i(TAG, "onProductByBarCodeSuccess: ");
-        this.productDto = productDto;
-        titleTextView.setText(productDto.getTitle());
-        codeTextView.setText(productDto.getBar_code());
-        receiverEditText.setText(productDto.getReceiver());
-
-        int branchIndex = branchList.indexOf(productDto.getBranch());
-        if (branchIndex != -1) branchSpinner.setSelection(branchIndex);
-
-        int liableIndex = employeeList.indexOf(productDto.getLiable());
-        if (liableIndex != -1) liableSpinner.setSelection(liableIndex);
-    }
-
-    @Override
-    public void onProductByBarCodeFailure(String errorMessage) {
-        Log.i(TAG, "onProductByBarCodeFailure: ");
-        dismiss();
-    }
-
-
-    @Override
-    public void onProductMoveSuccess(Boolean answer) {
-        Toast.makeText(requireContext(), "Przesunięcie producktu zrealizowane", Toast.LENGTH_SHORT).show();
-        Log.i(TAG, "onProductMoveSuccess: ");
-        dismiss();
-    }
-
-    @Override
-    public void onProductMoveFailure(String errorMessage) {
-        Toast.makeText(requireContext(), "Przesunięcie producktu nie powiodło się", Toast.LENGTH_SHORT).show();
-        Log.i(TAG, "onProductMoveFailure: ");
-        dismiss();
-    }
+//    @Override
+//    public void onError(String errorMessage) {
+//        Log.i(TAG, "onError: ");
+//        dismiss();
+//    }
+//
+//    @Override
+//    public void onProductByBarCodeSuccess(ProductDto productDto) {
+//        Log.i(TAG, "onProductByBarCodeSuccess: ");
+//        this.productDto = productDto;
+//        titleTextView.setText(productDto.getTitle());
+//        codeTextView.setText(productDto.getBar_code());
+//        receiverEditText.setText(productDto.getReceiver());
+//
+//        int branchIndex = branchList.indexOf(productDto.getBranch());
+//        if (branchIndex != -1) branchSpinner.setSelection(branchIndex);
+//
+//        int liableIndex = employeeList.indexOf(productDto.getLiable());
+//        if (liableIndex != -1) liableSpinner.setSelection(liableIndex);
+//    }
+//
+//    @Override
+//    public void onProductByBarCodeFailure(String errorMessage) {
+//        Log.i(TAG, "onProductByBarCodeFailure: ");
+//        dismiss();
+//    }
+//
+//
+//    @Override
+//    public void onProductMoveSuccess(Boolean answer) {
+//        Toast.makeText(requireContext(), "Przesunięcie producktu zrealizowane", Toast.LENGTH_SHORT).show();
+//        Log.i(TAG, "onProductMoveSuccess: ");
+//        dismiss();
+//    }
+//
+//    @Override
+//    public void onProductMoveFailure(String errorMessage) {
+//        Toast.makeText(requireContext(), "Przesunięcie producktu nie powiodło się", Toast.LENGTH_SHORT).show();
+//        Log.i(TAG, "onProductMoveFailure: ");
+//        dismiss();
+//    }
 }

@@ -40,11 +40,11 @@ public class EventDTO {
 
 
     @SerializedName("scanned_products")
-    private List<Object> scannedProducts;
+    private List<ProductShortDTO> scannedProducts;
     @SerializedName("not_scanned_products")
-    private List<Object> notScannedProducts;
+    private List<ProductShortDTO> notScannedProducts;
     @SerializedName("unknown_products")
-    private List<Object> unknownProducts;
+    private List<UnknownProductDTO> unknownProducts;
 
 
     public EventDTO() {
@@ -53,7 +53,8 @@ public class EventDTO {
     public EventDTO(int id, int inventoryId, String info, String branch, LocalDate startDate,
                     LocalDate finishDate, int userId, String userName, String userEmail,
                     int scannedProductAmount, int unknownProductAmount, int totalProductAmount,
-                    List<Object> scannedProducts, List<Object> notScannedProducts, List<Object> unknownProducts) {
+                    List<ProductShortDTO> scannedProducts, List<ProductShortDTO> notScannedProducts,
+                    List<UnknownProductDTO> unknownProducts) {
         this.id = id;
         this.inventoryId = inventoryId;
         this.info = info;
@@ -159,27 +160,27 @@ public class EventDTO {
         this.totalProductAmount = totalProductAmount;
     }
 
-    public List<Object> getScannedProducts() {
+    public List<ProductShortDTO> getScannedProducts() {
         return scannedProducts;
     }
 
-    public void setScannedProducts(List<Object> scannedProducts) {
+    public void setScannedProducts(List<ProductShortDTO> scannedProducts) {
         this.scannedProducts = scannedProducts;
     }
 
-    public List<Object> getNotScannedProducts() {
+    public List<ProductShortDTO> getNotScannedProducts() {
         return notScannedProducts;
     }
 
-    public void setNotScannedProducts(List<Object> notScannedProducts) {
+    public void setNotScannedProducts(List<ProductShortDTO> notScannedProducts) {
         this.notScannedProducts = notScannedProducts;
     }
 
-    public List<Object> getUnknownProducts() {
+    public List<UnknownProductDTO> getUnknownProducts() {
         return unknownProducts;
     }
 
-    public void setUnknownProducts(List<Object> unknownProducts) {
+    public void setUnknownProducts(List<UnknownProductDTO> unknownProducts) {
         this.unknownProducts = unknownProducts;
     }
 

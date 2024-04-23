@@ -2,6 +2,8 @@ package com.alex.inwento.http.inventory;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class ProductShortDTO {
     @SerializedName("id")
     private int id;
@@ -21,6 +23,15 @@ public class ProductShortDTO {
     private String barCode;
     @SerializedName("rfid_code")
     private String rfidCode;
+
+    public static boolean doesProductExist(List<ProductShortDTO> productList, String barcodeToFind) {
+        for (ProductShortDTO product : productList) {
+            if (product.getBarCode() != null && product.getBarCode().equalsIgnoreCase(barcodeToFind)) {
+                return true; // Found the product with the barcode
+            }
+        }
+        return false; // Product with the barcode not found
+    }
 
     public ProductShortDTO() {
     }
