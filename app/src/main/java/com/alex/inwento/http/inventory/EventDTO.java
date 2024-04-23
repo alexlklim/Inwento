@@ -7,13 +7,15 @@ import java.util.List;
 
 public class EventDTO {
     @SerializedName("id")
-    private Long id;
+    private int id;
 
     @SerializedName("inventory_id")
     private int inventoryId;
     @SerializedName("info")
     private String info;
 
+    @SerializedName("branch")
+    private String branch;
     @SerializedName("start_date")
     private LocalDate startDate;
     @SerializedName("finish_date")
@@ -48,10 +50,14 @@ public class EventDTO {
     public EventDTO() {
     }
 
-    public EventDTO(Long id, int inventoryId, String info, LocalDate startDate, LocalDate finishDate, int userId, String userName, String userEmail, int scannedProductAmount, int unknownProductAmount, int totalProductAmount, List<Object> scannedProducts, List<Object> notScannedProducts, List<Object> unknownProducts) {
+    public EventDTO(int id, int inventoryId, String info, String branch, LocalDate startDate,
+                    LocalDate finishDate, int userId, String userName, String userEmail,
+                    int scannedProductAmount, int unknownProductAmount, int totalProductAmount,
+                    List<Object> scannedProducts, List<Object> notScannedProducts, List<Object> unknownProducts) {
         this.id = id;
         this.inventoryId = inventoryId;
         this.info = info;
+        this.branch = branch;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.userId = userId;
@@ -65,11 +71,11 @@ public class EventDTO {
         this.unknownProducts = unknownProducts;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -175,6 +181,14 @@ public class EventDTO {
 
     public void setUnknownProducts(List<Object> unknownProducts) {
         this.unknownProducts = unknownProducts;
+    }
+
+    public String getBranch() {
+        return branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
 
     @Override

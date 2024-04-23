@@ -36,7 +36,7 @@
             android:name=".activities.EventActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.InventoryActivity"
+            android:name=".action.InventoryActivity"
             android:exported="false" />
         <activity
             android:name=".action.LoginActivity"

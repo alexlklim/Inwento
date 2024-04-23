@@ -3,14 +3,13 @@ package com.alex.inwento.http.inventory;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class InventoryDTO {
     @SerializedName("id")
     private Long id;
     @SerializedName("start_date")
-    private LocalDate startDate;
-    @SerializedName("finish_date")
-    private LocalDate finishDate;
+    private String startDate;
     @SerializedName("info")
     private String info;
     @SerializedName("unknown_product_amount")
@@ -22,18 +21,24 @@ public class InventoryDTO {
     @SerializedName("finished")
     private Boolean isFinished;
 
+    @SerializedName("events")
+    private List<EventDTO> events;
+
     public InventoryDTO() {
     }
 
-    public InventoryDTO(Long id, LocalDate startDate, LocalDate finishDate, String info, int unknownProductAmount, int totalProductAmount, int scannedProductAmount, Boolean isFinished) {
+    public InventoryDTO(Long id, String startDate, String info,
+                        int unknownProductAmount, int totalProductAmount, int scannedProductAmount,
+                        Boolean isFinished, List<EventDTO> events) {
         this.id = id;
         this.startDate = startDate;
-        this.finishDate = finishDate;
+
         this.info = info;
         this.unknownProductAmount = unknownProductAmount;
         this.totalProductAmount = totalProductAmount;
         this.scannedProductAmount = scannedProductAmount;
         this.isFinished = isFinished;
+        this.events = events;
     }
 
     public Long getId() {
@@ -44,21 +49,15 @@ public class InventoryDTO {
         this.id = id;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getFinishDate() {
-        return finishDate;
-    }
 
-    public void setFinishDate(LocalDate finishDate) {
-        this.finishDate = finishDate;
-    }
 
     public String getInfo() {
         return info;
@@ -100,17 +99,25 @@ public class InventoryDTO {
         isFinished = finished;
     }
 
+    public List<EventDTO> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<EventDTO> events) {
+        this.events = events;
+    }
+
     @Override
     public String toString() {
         return "InventoryDTO{" +
                 "id=" + id +
                 ", startDate=" + startDate +
-                ", finishDate=" + finishDate +
                 ", info='" + info + '\'' +
                 ", unknownProductAmount=" + unknownProductAmount +
                 ", totalProductAmount=" + totalProductAmount +
                 ", scannedProductAmount=" + scannedProductAmount +
                 ", isFinished=" + isFinished +
+                ", events=" + events +
                 '}';
     }
 }

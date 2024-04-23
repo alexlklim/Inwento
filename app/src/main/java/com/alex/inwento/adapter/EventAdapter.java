@@ -10,16 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
-import com.alex.inwento.dto.Event;
+import com.alex.inwento.http.inventory.EventDTO;
 
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHolder> {
 
     private final OnItemClickListener onItemClickListener;
-    private List<Event> eventList;
+    private List<EventDTO> eventList;
 
-    public EventAdapter(List<Event> events, OnItemClickListener onItemClickListener) {
+    public EventAdapter(List<EventDTO> events, OnItemClickListener onItemClickListener) {
         this.eventList = events;
         this.onItemClickListener = onItemClickListener;
     }
@@ -33,19 +33,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
-        Event event = eventList.get(position);
+        EventDTO event = eventList.get(position);
 
-        holder.branch.setText(event.getBranch());
-        holder.username.setText("by " + event.getUsername());
-        holder.products.setText(event.getScannedProductsAmount() + " / " + event.getTotalProductsAmount());
-        holder.unknown.setText("unknown " + event.getUnknownProductsAmount());
+        holder.reTitle.setText(event.getBranch());
+        holder.reUser.setText("by " + event.getUserName());
+        holder.reAmount.setText(event.getScannedProductAmount() + " / " + event.getTotalProductAmount());
+        holder.reUnknown.setText("unknown " + event.getUnknownProductAmount());
 
-        System.out.println("DDDDDDDDDDDDDDDDDDDDD: " + event.getUnknownProducts());
-        if (event.getScannedProductsAmount() == event.getTotalProductsAmount()) {
-            holder.event_status.setImageResource(R.drawable.ic_done);
-        } else {
-            holder.event_status.setImageResource(R.drawable.ic_in_process);
-        }
+        if (event.getScannedProductAmount() == event.getTotalProductAmount()) holder.reStatus.setImageResource(R.drawable.ic_done);
+        else holder.reStatus.setImageResource(R.drawable.ic_in_process);
+
 
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemClick(event.getId()));
     }
@@ -55,18 +52,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
         return eventList.size();
     }
 
-    // ViewHolder class
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView branch, username, products, unknown;
-        ImageView event_status;
+        TextView reTitle, reUser, reAmount, reUnknown;
+        ImageView reStatus;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            branch = itemView.findViewById(R.id.rve_branch);
-            username = itemView.findViewById(R.id.rve_username);
-            products = itemView.findViewById(R.id.rve_products);
-            unknown = itemView.findViewById(R.id.rve_unknown);
-            event_status = itemView.findViewById(R.id.rve_event_status);
+            reTitle = itemView.findViewById(R.id.reTitle);
+            reUser = itemView.findViewById(R.id.reUser);
+            reAmount = itemView.findViewById(R.id.reAmount);
+            reUnknown = itemView.findViewById(R.id.reUnknown);
+            reStatus = itemView.findViewById(R.id.reStatus);
         }
     }
 

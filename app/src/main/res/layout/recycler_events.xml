@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/rve_branch"
+            android:id="@+id/reTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -21,7 +21,7 @@
             android:text="IT Department" />
 
         <TextView
-            android:id="@+id/rve_username"
+            android:id="@+id/reUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
@@ -37,7 +37,7 @@
         android:paddingRight="20dp"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/rve_products"
+            android:id="@+id/reAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
@@ -45,7 +45,7 @@
             android:text="45 / 70" />
 
         <TextView
-            android:id="@+id/rve_unknown"
+            android:id="@+id/reUnknown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
@@ -63,7 +63,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/rve_event_status"
+            android:id="@+id/reStatus"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_in_process"
             android:layout_height="wrap_content">
