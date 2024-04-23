@@ -14,20 +14,7 @@
         android:orientation="vertical"
         android:padding="5dp">
         <TextView
-            android:id="@+id/dp_warning"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginBottom="15dp"
-            android:background="@color/red"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:text="Product przywiązany do innei lokalizacji!"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/dp_title"
+            android:id="@+id/dpTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
@@ -35,10 +22,10 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/dp_desc"
+            android:id="@+id/dpDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="description"
+            android:text="description description description description description"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -46,71 +33,150 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="15dp">
-
             <TextView
-                android:id="@+id/dp_code"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="code:"
+                android:text="code: "
                 android:textSize="15sp"
                 android:textStyle="bold" />
-
             <TextView
-                android:id="@+id/dp_price"
+                android:id="@+id/dpCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text="1234567890"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="15dp">
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Price:"
-                android:textSize="20sp"
+                android:text="rfid: "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/dpRfid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:text="23475869oi7turyhey4w5gf"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="Osoba odpowiedzialna:"
-            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/dp_liable"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:text="Name Surname"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:text="Oddział:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-
-        <TextView
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/dpBranch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="CSMM"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="Użytkownik:"
-            android:textSize="20sp" />
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:text="Lokalizacja:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/dp_receiver"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/dpLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="seretariat"
+                android:textSize="20sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:text="Name Surname"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:text="Odpowiedzialny:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/dpLiable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Name Surname"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:textStyle="bold"
+                android:text="Użytkownik:"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/dpReceiver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="Name Surname"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
 
     </LinearLayout>
 
 
     <Button
-        android:id="@+id/dp_save"
+        android:id="@+id/dpBtnOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:background="@drawable/btn_rounded"
-        android:text="zeskanowane"
+        android:text="zamknij"
         android:textColor="@color/white"
         android:textSize="20sp" />
 </LinearLayout>

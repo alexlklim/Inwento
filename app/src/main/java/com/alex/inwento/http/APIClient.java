@@ -16,6 +16,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface APIClient {
 
@@ -33,17 +34,25 @@ public interface APIClient {
 
     @GET("v1/products/all/emp/true")
     Call<List<ProductShortDTO>> getShortProducts(
-            @Header("Authorization") String authorization,
-            @Body List<String> fields);
-
-    @GET("v1/products/{id}")
-    Call<List<ProductDTO>> getFullProduct(
-            @Header("Authorization") String authorization,
-            @Path("id") long productId,
-            @Body List<String> fields
+            @Header("Authorization") String authorization
     );
 
+    @GET("v1/company")
+    Call<String> get(@Header("Authorization") String authorization);
 
+
+    @GET("v1/products/{id}")
+    Call<ProductDTO> getFullProductById(
+            @Header("Authorization") String authorization,
+            @Path("id") long productId
+    );
+
+    @GET("v1/products/filter/unique/{bar_code}/{rfid_code}/null/null")
+    Call<ProductDTO> getFullProductByCode(
+            @Header("Authorization") String authorization,
+            @Path("bar_code") String barCode,
+            @Path("rfid_code") String rfid_code
+    );
 
     @GET("v1/company/loc/branch")
     Call<List<Branch>> getBranches(@Header("Authorization") String authorization);

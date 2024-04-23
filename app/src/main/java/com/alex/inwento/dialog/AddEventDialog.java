@@ -82,7 +82,7 @@ public class AddEventDialog extends AppCompatDialogFragment
         btnSave.setOnClickListener(v -> {
             Log.e(TAG, "setOnClickListener: ");
             // sent request to save new event
-            new AddEventTask(this, token, Branch.getIdByName(branchList, getSelectedBranch()), text.getText().toString()).execute();
+//            new AddEventTask(this, token, Branch.getIdByName(branchList, getSelectedBranch()), text.getText().toString()).execute();
 
         });
 

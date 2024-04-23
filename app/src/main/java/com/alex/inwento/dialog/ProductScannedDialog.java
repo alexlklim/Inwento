@@ -48,48 +48,48 @@ public class ProductScannedDialog extends AppCompatDialogFragment
         View view = inflater.inflate(R.layout.dialog_product, null);
         builder.setView(view).setTitle("Product");
 
-        title = view.findViewById(R.id.dp_title);
-        desc = view.findViewById(R.id.dp_desc);
-        code = view.findViewById(R.id.dp_code);
-        price = view.findViewById(R.id.dp_price);
-        liable = view.findViewById(R.id.dp_liable);
-        receiver = view.findViewById(R.id.dp_receiver);
-        btnSave = view.findViewById(R.id.dp_save);
-        warning = view.findViewById(R.id.dp_warning);
-
-        fragmentActivity = requireActivity();
-
-        title.setText(productDto.getTitle());
-        desc.setText(productDto.getDescription());
-        code.setText(productDto.getBar_code());
-        price.setText(productDto.getPrice() + " PLN");
-        liable.setText(productDto.getLiable());
-        receiver.setText(productDto.getReceiver());
-
-        if (isShow) btnSave.setText("Zamknij");
-
-
-        if (isCurrentBranch) {
-            ViewGroup parentView = (ViewGroup) warning.getParent();
-            parentView.removeView(warning);
-        } else {
-            btnSave.setText("przesunięcie");
-        }
-
-
-        btnSave.setOnClickListener(v -> {
-            if (isShow) {
-                dismiss();
-            }
-           else {
-                if (productScannedListener != null) {
-                    System.out.println("FFFFFF: " + productDto);
-                    productScannedListener.onProductSaved(productDto);
-                    new PostProductsTask(this, Arrays.asList(productDto.getBar_code()), eventId, token ).execute();
-                }
-            }
-        });
-
+//        title = view.findViewById(R.id.dp_title);
+//        desc = view.findViewById(R.id.dp_desc);
+//        code = view.findViewById(R.id.dp_code);
+//        price = view.findViewById(R.id.dp_price);
+//        liable = view.findViewById(R.id.dp_liable);
+//        receiver = view.findViewById(R.id.dp_receiver);
+//        btnSave = view.findViewById(R.id.dp_save);
+//        warning = view.findViewById(R.id.dp_warning);
+//
+//        fragmentActivity = requireActivity();
+//
+//        title.setText(productDto.getTitle());
+//        desc.setText(productDto.getDescription());
+//        code.setText(productDto.getBar_code());
+//        price.setText(productDto.getPrice() + " PLN");
+//        liable.setText(productDto.getLiable());
+//        receiver.setText(productDto.getReceiver());
+//
+//        if (isShow) btnSave.setText("Zamknij");
+//
+//
+//        if (isCurrentBranch) {
+//            ViewGroup parentView = (ViewGroup) warning.getParent();
+//            parentView.removeView(warning);
+//        } else {
+//            btnSave.setText("przesunięcie");
+//        }
+//
+//
+//        btnSave.setOnClickListener(v -> {
+//            if (isShow) {
+//                dismiss();
+//            }
+//           else {
+//                if (productScannedListener != null) {
+//                    System.out.println("FFFFFF: " + productDto);
+//                    productScannedListener.onProductSaved(productDto);
+//                    new PostProductsTask(this, Arrays.asList(productDto.getBar_code()), eventId, token ).execute();
+//                }
+//            }
+//        });
+//
         return builder.create();
     }
 

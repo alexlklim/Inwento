@@ -88,18 +88,18 @@ public class MoveProductDialog
         new GetProductTask(this, token, barCode).execute();
 
 
-        btnMove.setOnClickListener(v -> {
-            new MoveProductTask(
-                    this,
-                    token,
-                    productDto.getId(),
-                    Branch.getBranchByName(branchSpinner.getSelectedItem().toString(), branchObjects),
-                    Employee.getEmployeeByName(liableSpinner.getSelectedItem().toString(), employeeObjects),
-                    receiverEditText.getText().toString())
-                    .execute();
-
-
-        });
+//        btnMove.setOnClickListener(v -> {
+//            new MoveProductTask(
+//                    this,
+//                    token,
+//                    productDto.getId(),
+//                    Branch.getBranchByName(branchSpinner.getSelectedItem().toString(), branchObjects),
+//                    Employee.getEmployeeByName(liableSpinner.getSelectedItem().toString(), employeeObjects),
+//                    receiverEditText.getText().toString())
+//                    .execute();
+//
+//
+//        });
         return builder.create();
     }
 

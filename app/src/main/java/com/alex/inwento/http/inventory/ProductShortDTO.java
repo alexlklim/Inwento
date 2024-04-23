@@ -8,6 +8,9 @@ public class ProductShortDTO {
     @SerializedName("title")
     private String title;
 
+    @SerializedName("active")
+    private Boolean active;
+
     @SerializedName("branch")
     private String branch;
 
@@ -22,12 +25,13 @@ public class ProductShortDTO {
     public ProductShortDTO() {
     }
 
-    public ProductShortDTO(int id, String title, String branch, String location, String barCode) {
+    public ProductShortDTO(int id, String title, String branch, String location, String barCode, String rfidCode) {
         this.id = id;
         this.title = title;
         this.branch = branch;
         this.location = location;
         this.barCode = barCode;
+        this.rfidCode = rfidCode;
     }
 
     public int getId() {
@@ -87,4 +91,7 @@ public class ProductShortDTO {
                 ", barCode='" + barCode + '\'' +
                 '}';
     }
+
+
+
 }

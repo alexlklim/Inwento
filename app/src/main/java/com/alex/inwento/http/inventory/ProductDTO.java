@@ -6,10 +6,12 @@ public class ProductDTO {
 
     @SerializedName("id")
     private Long id;
+
+    @SerializedName("description")
+    private String description;
+
     @SerializedName("title")
     private String title;
-    @SerializedName("price")
-    private double price;
     @SerializedName("active")
     private boolean active;
 
@@ -18,6 +20,12 @@ public class ProductDTO {
     private int branchId;
     @SerializedName("branch")
     private String branch;
+
+
+    @SerializedName("location_id")
+    private Long locationId;
+    @SerializedName("location")
+    private String location;
 
     @SerializedName("rfid_code")
     private String rfidCode;
@@ -33,10 +41,9 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String title, double price, boolean active, int branchId, String branch, String rfidCode, String barCode, String liableName, String receiver) {
+    public ProductDTO(Long id, String title, boolean active, int branchId, String branch, String rfidCode, String barCode, String liableName, String receiver) {
         this.id = id;
         this.title = title;
-        this.price = price;
         this.active = active;
         this.branchId = branchId;
         this.branch = branch;
@@ -62,13 +69,6 @@ public class ProductDTO {
         this.title = title;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 
     public boolean isActive() {
         return active;
@@ -126,12 +126,35 @@ public class ProductDTO {
         this.receiver = receiver;
     }
 
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "ProductDTO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", price=" + price +
                 ", active=" + active +
                 ", branchId=" + branchId +
                 ", branch='" + branch + '\'' +
