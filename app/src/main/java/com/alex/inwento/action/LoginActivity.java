@@ -1,5 +1,6 @@
 package com.alex.inwento.action;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -72,15 +73,16 @@ public class LoginActivity extends AppCompatActivity {
         Call<AuthDTO> call = apiClient.getAuthDTOLogin(dto);
         call.enqueue(new Callback<AuthDTO>() {
             @Override
-            public void onResponse(Call<AuthDTO> call, Response<AuthDTO> response) {
+            public void onResponse(@NonNull Call<AuthDTO> call, @NonNull Response<AuthDTO> response) {
                 if (response.isSuccessful()) {
+                    assert response.body() != null;
                     settingsMng.setAuthInfo(response.body());
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
                 else Log.e(TAG, "Login failed:");
             }
             @Override
-            public void onFailure(Call<AuthDTO> call, Throwable t) {
+            public void onFailure(@NonNull Call<AuthDTO> call, @NonNull Throwable t) {
                 Log.e(TAG, "sendLoginRequestRetrofit onFailure", t);
             }
         });

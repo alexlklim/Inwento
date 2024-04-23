@@ -8,7 +8,7 @@
     app:backgroundTint="@color/white"
     android:background="@color/backColor"
     android:padding="2dp"
-    tools:context=".activities.SearchActivity">
+    tools:context=".action.SearchActivity">
 
     <TextView
         android:layout_width="match_parent"

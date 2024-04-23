@@ -1,4 +1,4 @@
-package com.alex.inwento.activities;
+package com.alex.inwento.action;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

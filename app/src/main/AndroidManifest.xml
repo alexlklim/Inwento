@@ -27,7 +27,7 @@
             android:name=".action.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SearchActivity"
+            android:name=".action.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".activities.ProductUpdateActivity"

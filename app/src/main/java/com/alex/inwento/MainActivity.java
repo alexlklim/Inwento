@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.alex.inwento.action.LoginActivity;
 import com.alex.inwento.action.SettingsActivity;
 import com.alex.inwento.activities.InventoryActivity;
-import com.alex.inwento.activities.SearchActivity;
+import com.alex.inwento.action.SearchActivity;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;
