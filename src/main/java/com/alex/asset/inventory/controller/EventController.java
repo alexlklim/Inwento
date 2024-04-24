@@ -76,17 +76,25 @@ public class EventController {
                 dtoActive);
     }
 
-    @Operation(summary = "Add products to event by code. In the map you can add longitude/latitude/bar_code/rfid_code")
-    @PutMapping("/{event_id}/products/{loc_id}/{type_code}")
+    @Operation(summary = "Add products to event by bar code. In the map you can add longitude/latitude")
+    @PutMapping("/{event_id}/products/barcode/{loc_id}")
     @ResponseStatus(HttpStatus.OK)
     public void addProductsToEvent(
             @PathVariable("event_id") Long eventId,
             @PathVariable("loc_id") Long locationId,
-            @PathVariable("type_code") String typeCode,
             @RequestBody List<Map<String, Object>> listOfCodes) {
-        log.info(TAG + "Add product which exists in fact");
-        eventService.addProductsToEventByBarCode(listOfCodes, eventId, locationId, typeCode, SecHolder.getUserId());
+        log.info(TAG + "Add product which exists in fact by BAR CODE");
+        eventService.addProductsToEventByBarCode(listOfCodes, eventId, locationId, SecHolder.getUserId());
     }
 
+    @Operation(summary = "Add products to event by rfid code")
+    @PutMapping("/{event_id}/products/rfid")
+    @ResponseStatus(HttpStatus.OK)
+    public void addProductsToEventByRFID(
+            @PathVariable("event_id") Long eventId,
+            @RequestBody List<String> listOfCodes) {
+        log.info(TAG + "Add product which exists in fact by RFID code");
+        eventService.addProductsToEventByRfidCode(listOfCodes, eventId, SecHolder.getUserId());
+    }
 
 }

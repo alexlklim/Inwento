@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventRepo extends JpaRepository<Event, Long> {
 
@@ -22,6 +23,7 @@ public interface EventRepo extends JpaRepository<Event, Long> {
             "ORDER BY e.created DESC")
     List<Event> getAllEventsByInventory(Inventory inventory);
 
+    Optional<Event> findByInventoryAndBranch(Inventory inventory, Branch branch);
 
     boolean existsByBranchAndInventory(Branch branch, Inventory inventory);
 }

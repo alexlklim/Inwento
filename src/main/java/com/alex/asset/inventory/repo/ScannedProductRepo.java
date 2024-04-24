@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScannedProductRepo extends JpaRepository<ScannedProduct, Long> {
     List<ScannedProduct> findAllByEvent(Event event);
@@ -18,4 +19,6 @@ public interface ScannedProductRepo extends JpaRepository<ScannedProduct, Long> 
 
     boolean existsByProductAndEvent(Product product, Event event);
 
+
+    Optional<ScannedProduct> findByProductAndEvent(Product product, Event event);
 }

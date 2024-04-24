@@ -119,28 +119,49 @@ public class EventService {
     }
 
 
+    public void addProductsToEventByRfidCode(List<String> listOfCodes, Long eventId, Long userId) {
+        log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
+        Event event = eventRepo.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found with id " + eventId));
+        for (String rfid: listOfCodes){
+            Product product = productRepo.getByBarCode(rfid).orElse(null);
+            if (product == null) return;
+            if (scannedProductRepo.existsByProductAndEvent(product, event)) return;
 
+            ScannedProduct scannedProduct = new ScannedProduct().toBuilder()
+                    .user(userRepo.getUser(userId)).product(product).event(event).build();
+            scannedProductRepo.save(scannedProduct);
+        }
+    }
     @SneakyThrows
     @Transactional
     public void addProductsToEventByBarCode(
-            List<Map<String, Object>> inventoryData, Long eventId, Long locationId, String typeCode, Long userId) {
+            List<Map<String, Object>> inventoryData, Long eventId, Long locationId, Long userId) {
         log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
         Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
-        Location location = locationRepo.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
+        Location location = locationRepo.findById(locationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
+
         for (Map<String, Object> map : inventoryData) {
-            Product product = null;
+            Product product;
             if (map.containsKey("code")) {
                 String code = (String) map.get("code");
-                CodeType codeType = CodeType.fromString(typeCode);
-                if (codeType == CodeType.BAR_CODE) {
-                    product = productRepo.getByBarCode(code).orElse(null);
-                }
-                else if (codeType == CodeType.RFID_CODE) {
-                    product = productRepo.getByRfidCode(code).orElse(null);
-                }
+                product = productRepo.getByBarCode(code).orElse(null);
+
                 if (product != null) handleScannedProduct(product, map, event, location, userId);
-                else handleUnknownProduct(code, codeType, event, userId);
+                else handleUnknownProduct(code, event, userId);
             }
+
+            if (map.containsKey("id")) {
+                Object idObject = map.get("id");
+                if (idObject instanceof Number) {
+                    Long productId = ((Number) idObject).longValue();
+                    product = productRepo.findById(productId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + productId));
+                    handleScannedProduct(product, map, event, location, userId);
+                }
+            }
+
         }
 
     }
@@ -149,10 +170,10 @@ public class EventService {
             Product product, Map<String, Object> map, Event event, Location location, Long userId) {
         log.info("Add product to scanned product");
         if (product.getLocation() != location) {
-            productService.moveProduct(product, product.getBranch(), location, userId);
+            productService.moveProductByLocation(product, location, userId);
         }
         if (product.getBranch() != event.getBranch()){
-            log.error(TAG + "Product with id {} belong to another branch", product.getId());
+            productService.moveProductByBranch(product, event);
             return;
         }
         if (scannedProductRepo.existsByProductAndEvent(product, event)){
@@ -173,34 +194,33 @@ public class EventService {
             productService.save(product);
             log.info(TAG + "Data about location was updated for product with id {} ", product.getId());
         });
-        ScannedProduct scannedProduct = new ScannedProduct();
-        scannedProduct.setUser(userRepo.getUser(userId));
-        scannedProduct.setProduct(product);
-        scannedProduct.setEvent(event);
+        ScannedProduct scannedProduct = new ScannedProduct().toBuilder()
+                .user(userRepo.getUser(userId)).product(product).event(event).build();
         scannedProductRepo.save(scannedProduct);
     }
 
+
+
     @SneakyThrows
-    private void handleUnknownProduct(String code, CodeType codeType, Event event, Long userId) {
+    private void handleUnknownProduct(String code, Event event, Long userId) {
         log.info("Add unknown product");
         UnknownProduct unknownProduct = unknownProductRepo.findByCode(code).orElse(null);
         if (unknownProduct == null) {
-            unknownProduct = new UnknownProduct();
-            unknownProduct.setEvent(event);
-            unknownProduct.setUser(userRepo.getUser(userId));
-            unknownProduct.setCode(code);
-            unknownProduct.setTypeCode(codeType);
+            unknownProduct = new UnknownProduct().toBuilder()
+                    .event(event).user(userRepo.getUser(userId)).code(code).typeCode(CodeType.BAR_CODE)
+                    .build();
         } else {
             log.error(TAG + "Unknown product {} is already exist", unknownProduct.getCode());
             if (unknownProduct.getEvent() != event) {
                 log.error(TAG + "Move unknown product to current branch {}", event.getBranch());
                 unknownProduct.setEvent(event);
-                unknownProduct.setTypeCode(codeType);
+                unknownProduct.setTypeCode(CodeType.BAR_CODE);
                 unknownProduct.setUser(userRepo.getUser(userId));
             }
         }
         unknownProductRepo.save(unknownProduct);
     }
+
 
 
 }

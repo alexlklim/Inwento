@@ -6,6 +6,13 @@ import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.inventory.domain.event.Event;
+import com.alex.asset.inventory.domain.event.ScannedProduct;
+import com.alex.asset.inventory.repo.EventRepo;
+import com.alex.asset.inventory.repo.InventoryRepo;
+import com.alex.asset.inventory.repo.ScannedProductRepo;
+import com.alex.asset.inventory.repo.UnknownProductRepo;
+import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -96,7 +103,7 @@ public class ProductService implements IProductService {
             }
             if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
             return ProductMapper.toDTOWithCustomFields(product, productFields);
-        } else return Collections.emptyMap();
+        } else throw new ResourceNotFoundException("Product not found with this code ");
     }
 
 
@@ -315,8 +322,7 @@ public class ProductService implements IProductService {
 
 
     @SneakyThrows
-    public void moveProduct(Product product, Branch branch, Location location, Long userId) {
-        product.setBranch(branch);
+    public void moveProductByLocation(Product product, Location location, Long userId) {
         product.setLocation(location);
         productRepo.save(product);
         addHistoryToProduct(userId, product.getId(), Activity.LOCATION);
@@ -325,5 +331,25 @@ public class ProductService implements IProductService {
     @SneakyThrows
     public void save(Product product) {
         productRepo.save(product);
+    }
+
+    private final EventRepo eventRepo;
+    private final InventoryRepo inventoryRepo;
+    private final ScannedProductRepo scannedProductRepo;
+
+    public void moveProductByBranch(Product product, Event event) {
+        Event oldEvent = eventRepo.findByInventoryAndBranch(
+                inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null),
+                product.getBranch()
+                ).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
+        ScannedProduct scannedProduct = scannedProductRepo.findByProductAndEvent(product, oldEvent)
+                .orElseThrow(() -> new ResourceNotFoundException("Scanned product not found"));
+        scannedProduct.setEvent(event);
+        scannedProductRepo.save(scannedProduct);
+
+        product.setBranch(event.getBranch());
+        productRepo.save(product);
+
     }
 }
