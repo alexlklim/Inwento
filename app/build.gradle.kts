@@ -60,6 +60,7 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     // Lombok dependency
+    implementation("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
 
 }
