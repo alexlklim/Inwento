@@ -23,7 +23,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alex.inwento.MainActivity;
 import com.alex.inwento.R;
+import com.alex.inwento.activities.ProductUpdateActivity;
 import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.dialog.ProductDialog;
@@ -56,8 +58,9 @@ public class EventActivity extends AppCompatActivity
         UnknownProductDialog.UnknownProductScannedListener {
     private static final String TAG = "EventActivity";
 
-    ImageButton btnSynch;
+    ImageButton btnSwitch;
     Button btnScanned, btnNotScanned, btnNew;
+
     RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
     SettingsMng settingsMng;
     private Location currentLocation;
@@ -90,7 +93,7 @@ public class EventActivity extends AppCompatActivity
         btnScanned = findViewById(R.id.btnScanned);
         btnNotScanned = findViewById(R.id.btnNotScanned);
         btnNew = findViewById(R.id.btnNew);
-        btnSynch = findViewById(R.id.btnSynch);
+        btnSwitch = findViewById(R.id.btnSwitch);
         aeBranch = findViewById(R.id.aeBranch);
         branchesSpinner = findViewById(R.id.aeLocations);
         recyclerViewProduct = findViewById(R.id.rv_products);
@@ -109,6 +112,14 @@ public class EventActivity extends AppCompatActivity
         btnNew.setOnClickListener(view -> {
             initializeNewProductRecycler(event.getUnknownProducts());
             setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
+        });
+
+        btnSwitch.setOnClickListener(view -> {
+            Intent intent = new Intent(EventActivity.this, RfidScanActivity.class);
+            intent.putExtra("BRANCH_NAME", event.getBranch());
+            intent.putExtra("EVENT_ID", event.getId());
+            unregisterReceiver(myBroadcastReceiver);
+            startActivity(intent);
         });
 
         sendGetEventById(getIntent().getIntExtra("EVENT_ID", 0));
@@ -343,4 +354,8 @@ public class EventActivity extends AppCompatActivity
             }
         });
     }
+
+
+
+
 }

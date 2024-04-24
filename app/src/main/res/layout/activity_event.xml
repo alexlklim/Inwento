@@ -33,7 +33,7 @@
             android:contentDescription="description" />
 
         <ImageButton
-            android:id="@+id/btnSynch"
+            android:id="@+id/btnSwitch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -59,19 +59,21 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 style="@style/btnStyle"
+                android:textSize="10sp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 app:backgroundTint="@color/btnColor"
-                android:text="ZESKANOWANE" />
+                android:text="@string/scanned" />
 
             <Button
                 android:id="@+id/btnNotScanned"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:textSize="10sp"
                 style="@style/btnStyle"
                 app:backgroundTint="@color/btnColor"
-                android:text="DO ZESKANOWANIA" />
+                android:text="@string/to_scan" />
         </LinearLayout>
 
         <LinearLayout
@@ -86,8 +88,9 @@
                 android:layout_height="match_parent"
                 style="@style/btnStyle"
                 android:layout_margin="10dp"
+                android:textSize="10sp"
                 app:backgroundTint="@color/btnColor"
-                android:text="NOWE" />
+                android:text="@string/new_unknown" />
         </LinearLayout>
     </LinearLayout>
 

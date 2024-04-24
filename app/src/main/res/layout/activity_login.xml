@@ -17,14 +17,13 @@
         android:background="@color/main_background"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_margin="35dp">
+        android:layout_margin="15dp">
 
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginBottom="45dp"
             android:background="@android:color/transparent"
             android:tint="@color/icon_color"
             app:srcCompat="@drawable/inwento_high_resolution_logo_transparent" />

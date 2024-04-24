@@ -8,9 +8,11 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alex.inwento.action.LoginActivity;
+import com.alex.inwento.action.RfidScanActivity;
 import com.alex.inwento.action.SettingsActivity;
 import com.alex.inwento.action.InventoryActivity;
 import com.alex.inwento.action.SearchActivity;
+import com.alex.inwento.activities.ProductUpdateActivity;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;
@@ -46,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
         btnMove = findViewById(R.id.btnMove);
         btnMove.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, InventoryActivity.class)));
+                startActivity(new Intent(MainActivity.this, ProductUpdateActivity.class)));
 
         btnScrap = findViewById(R.id.btnScrap);
         btnScrap.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, InventoryActivity.class)));
+                startActivity(new Intent(MainActivity.this, ProductUpdateActivity.class)));
 
         btnSettings = findViewById(R.id.btnSettings);
         btnSettings.setOnClickListener(view ->
