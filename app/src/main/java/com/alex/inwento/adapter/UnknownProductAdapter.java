@@ -16,10 +16,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAdapter.OrderViewHolder> {
-    private final List<UnknownProductDTO> unknownProductList;
+    private List<UnknownProductDTO> unknownProductList;
 
-    public UnknownProductAdapter(
-            List<UnknownProductDTO> unknownProducts) {
+
+
+    // Method to update the data set
+    public void updateData(List<UnknownProductDTO> newData) {
+        this.unknownProductList = newData;
+        notifyDataSetChanged();
+    }
+
+    public UnknownProductAdapter(List<UnknownProductDTO> unknownProducts) {
         this.unknownProductList = unknownProducts;
     }
 
