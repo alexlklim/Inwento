@@ -9,6 +9,9 @@
     <string name="datawedge_intent_key_source_legacy" translatable="false">com.motorolasolutions.emdk.datawedge.source</string>
     <string name="datawedge_intent_key_label_type_legacy" translatable="false">com.motorolasolutions.emdk.datawedge.label_type</string>
     <string name="datawedge_intent_key_data_legacy" translatable="false">com.motorolasolutions.emdk.datawedge.data_string</string>
+    <string name="scanned">ZESKANOWANE</string>
+    <string name="to_scan">DO ZESKANOWANIA \n</string>
+    <string name="new_unknown">NOWE\n</string>
 
 </resources>
 

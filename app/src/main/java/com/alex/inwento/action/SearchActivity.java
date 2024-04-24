@@ -160,6 +160,6 @@ public class SearchActivity
 
 
     @Override
-    public void onSentScannedProduct(String barCode) {
+    public void onSentScannedProduct(ProductDTO productDTO) {
     }
 }

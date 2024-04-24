@@ -1,4 +1,4 @@
-package com.alex.inwento.activities;
+package com.alex.inwento.action;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -28,8 +28,6 @@ import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.dialog.ProductDialog;
 import com.alex.inwento.dialog.UnknownProductDialog;
-import com.alex.inwento.dto.Product;
-import com.alex.inwento.dto.UnknownProduct;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.EventDTO;
@@ -46,7 +44,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -117,7 +114,6 @@ public class EventActivity extends AppCompatActivity
         sendGetEventById(getIntent().getIntExtra("EVENT_ID", 0));
 
 
-
     }
 
 
@@ -145,9 +141,11 @@ public class EventActivity extends AppCompatActivity
     private void initialize() {
         Log.i(TAG, "initialize");
         aeBranch.setText(event.getBranch());
-        btnScanned.setText("ZESKANOWANE\n" + event.getScannedProductAmount());
-        btnNotScanned.setText("DO ZESKANOWANIA \n" + (event.getTotalProductAmount() - event.getScannedProductAmount()));
-        btnNew.setText("NOWE\n" + event.getUnknownProductAmount());
+        btnScanned.setText(R.string.scanned);
+        String notScanned = getString(R.string.to_scan) + (event.getTotalProductAmount() - event.getScannedProductAmount());
+        String scanned = getString(R.string.new_unknown) + event.getUnknownProductAmount();
+        btnNotScanned.setText(notScanned);
+        btnNew.setText(scanned);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 Arrays.asList("Loc 1", "Loc 2"));
@@ -213,14 +211,12 @@ public class EventActivity extends AppCompatActivity
         Log.i(TAG, "handleScanResult");
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-        if (decodedSource == null) decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
-
-
+        if (decodedSource == null)
+            decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
         if (ProductShortDTO.doesProductExist(event.getScannedProducts(), decodedData) || UnknownProductDTO.doesProductExist(event.getUnknownProducts(), decodedData)) {
-            showToast("Product is already scanned");
-        } else {
-            sendGetFullProductRequest(decodedData, null);
-        }
+            showToast();
+        } else sendGetFullProductRequest(decodedData, null);
+
     }
 
 
@@ -235,17 +231,13 @@ public class EventActivity extends AppCompatActivity
 
         call.enqueue(new Callback<ProductDTO>() {
             @Override
-            public void onResponse(Call<ProductDTO> call, Response<ProductDTO> response) {
-                if (response.isSuccessful()) {
-                    System.out.println(response.body());
-                    openProductDialog(response.body());
-                } else {
-                    openUnknownProductDialog(barCode);
-                }
+            public void onResponse(@NonNull Call<ProductDTO> call, @NonNull Response<ProductDTO> response) {
+                if (response.isSuccessful()) openProductDialog(response.body());
+                else openUnknownProductDialog(barCode);
             }
 
             @Override
-            public void onFailure(Call<ProductDTO> call, Throwable t) {
+            public void onFailure(@NonNull Call<ProductDTO> call, @NonNull Throwable t) {
                 Log.e(TAG, "sendGetFullProductRequest onFailure", t);
             }
         });
@@ -262,8 +254,8 @@ public class EventActivity extends AppCompatActivity
 
     }
 
-    private void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    private void showToast() {
+        Toast.makeText(this, "Product is already scanned", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -281,25 +273,59 @@ public class EventActivity extends AppCompatActivity
 
 
     @Override
-    public void onSentScannedProduct(String barCode) {
+    public void onSentScannedProduct(ProductDTO productDTO) {
         Log.i(TAG, "onSentScannedProduct");
-        sendPutScannedProductProductRequest(barCode);
+        sendPutScannedProductProductRequest(productDTO, null);
+        System.out.println("Product DTTTTTTTO: " + productDTO.toString());
+        ProductShortDTO dto = ProductShortDTO.getIndexByIdInList(
+                event.getNotScannedProducts(),
+                productDTO.getId());
+
+        System.out.println(dto);
+
+        if (dto != null) {
+            System.out.println("Product SHort DTO is not NULL");
+            event.getNotScannedProducts().remove(dto);
+            event.getScannedProducts().add(dto);
+
+            event.setScannedProductAmount(event.getScannedProductAmount() + 1);
+            String notScanned = "DO ZESKANOWANIA \n" + (event.getTotalProductAmount() - event.getScannedProductAmount());
+            btnNotScanned.setText(notScanned);
+
+            initializeProductRecycler(event.getNotScannedProducts(), false);
+            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+        }
+
+
     }
 
     @Override
     public void onSentScannedUnknownProduct(String barCode) {
         Log.i(TAG, "onSentScannedUnknownProduct");
-        sendPutScannedProductProductRequest(barCode);
+        sendPutScannedProductProductRequest(null, barCode);
+        if (!UnknownProductDTO.doesProductExist(event.getUnknownProducts(), barCode)) {
+            event.getUnknownProducts().add(new UnknownProductDTO(barCode, "EAN"));
+        }
+        initializeNewProductRecycler(event.getUnknownProducts());
+        setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
+        event.setUnknownProductAmount(event.getUnknownProductAmount() + 1);
+        String unknown = "NOWE\n" + event.getUnknownProductAmount();
+        btnNew.setText(unknown);
     }
 
-    private void sendPutScannedProductProductRequest(String barCode) {
-        Log.i(TAG, "sendPutScannedProductProductRequest");
 
+    private void sendPutScannedProductProductRequest(ProductDTO dto, String barCode) {
+        Log.i(TAG, "sendPutScannedProductProductRequest");
         List<Map<String, Object>> list = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
-        map.put("code", barCode);
-        map.put("longitude", 23.33);
-        map.put("latitude", 23.44);
+        if (dto == null) {
+            map.put("code", barCode);
+        } else {
+            map.put("id", dto.getId());
+            if (dto.getBarCode() != null) map.put("code", dto.getBarCode());
+        }
+        map.put("longitude", currentLocation.getLongitude());
+        map.put("latitude", currentLocation.getLatitude());
         list.add(map);
 
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
@@ -308,16 +334,11 @@ public class EventActivity extends AppCompatActivity
 
         call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Log.i(TAG, "isSuccessful");
-                } else {
-                    Log.e(TAG, "isSuccessful NOT");
-                }
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 Log.e(TAG, "senPutScannedProductProductRequest onFailure", t);
             }
         });

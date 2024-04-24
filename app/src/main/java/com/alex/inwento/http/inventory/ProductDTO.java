@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public class ProductDTO {
 
     @SerializedName("id")
-    private Long id;
+    private int id;
 
     @SerializedName("description")
     private String description;
@@ -41,7 +41,7 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String title, boolean active, int branchId, String branch, String rfidCode, String barCode, String liableName, String receiver) {
+    public ProductDTO(int id, String title, boolean active, int branchId, String branch, String rfidCode, String barCode, String liableName, String receiver) {
         this.id = id;
         this.title = title;
         this.active = active;
@@ -53,11 +53,11 @@ public class ProductDTO {
         this.receiver = receiver;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -163,5 +163,11 @@ public class ProductDTO {
                 ", liableName='" + liableName + '\'' +
                 ", receiver='" + receiver + '\'' +
                 '}';
+    }
+
+    public ProductShortDTO convertToShortDTO(ProductDTO dto) {
+        return new ProductShortDTO(
+                dto.getId(), dto.getTitle(), dto.getBranch(), dto.getLocation(), dto.getBarCode(), dto.getRfidCode()
+        );
     }
 }

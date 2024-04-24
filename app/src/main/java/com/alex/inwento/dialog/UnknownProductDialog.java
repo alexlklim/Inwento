@@ -35,7 +35,7 @@ public class UnknownProductDialog extends AppCompatDialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_unknown_product, null);
-        builder.setView(view).setTitle("Unknown Product");
+        builder.setView(view).setTitle("Nowy środek trwały");
         fragmentActivity = requireActivity();
 
         code = view.findViewById(R.id.dup_code);
@@ -45,6 +45,7 @@ public class UnknownProductDialog extends AppCompatDialogFragment
 
         btnSave.setOnClickListener(v -> {
             unknownProductScannedListener.onSentScannedUnknownProduct(barCode);
+            dismiss();
         });
         return builder.create();
     }

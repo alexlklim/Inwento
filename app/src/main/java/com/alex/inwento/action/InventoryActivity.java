@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
-import com.alex.inwento.activities.EventActivity;
 import com.alex.inwento.adapter.EventAdapter;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
@@ -50,6 +49,7 @@ public class InventoryActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        sendGetCurrentInventory();
         // get data from DB about event
     }
 
@@ -97,6 +97,5 @@ public class InventoryActivity extends AppCompatActivity
         intent.putExtra("EVENT_ID", eventId);
         startActivity(intent);
     }
-
 
 }

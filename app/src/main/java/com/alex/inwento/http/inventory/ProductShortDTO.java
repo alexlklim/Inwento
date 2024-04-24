@@ -33,6 +33,19 @@ public class ProductShortDTO {
         return false; // Product with the barcode not found
     }
 
+
+    public static ProductShortDTO getIndexByIdInList(List<ProductShortDTO> productList, int idToFind) {
+        System.out.println("AAAAAAAAAA: " + "getIndexByIdInList");
+
+        for (ProductShortDTO dto: productList){
+            if (dto.getId() == idToFind){
+                System.out.println("AAAAAAAAAA: " + productList.indexOf(dto));
+                return dto;
+            }
+        }
+        return null;
+    }
+
     public ProductShortDTO() {
     }
 

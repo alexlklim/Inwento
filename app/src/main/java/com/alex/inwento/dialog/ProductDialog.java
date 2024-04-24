@@ -78,7 +78,7 @@ public class ProductDialog extends AppCompatDialogFragment {
             // CHANGE THE BUTTON TO ZESKANOWANE IF INVENTORY TRUE
             dpBtnOk.setText("ZESKANOWANE");
             dpBtnOk.setOnClickListener(v -> {
-                productDialogListener.onSentScannedProduct(productDTO.getBarCode());
+                productDialogListener.onSentScannedProduct(productDTO);
                 // ADD LISTENER
                 dismiss();
             });
@@ -100,7 +100,7 @@ public class ProductDialog extends AppCompatDialogFragment {
 
 
     public interface ProductDialogListener {
-        void onSentScannedProduct(String barCode);
+        void onSentScannedProduct(ProductDTO productDTO);
     }
 
 }
