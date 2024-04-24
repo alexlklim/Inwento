@@ -4,6 +4,17 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ProductShortDTO {
     @SerializedName("id")
     private int id;
@@ -30,7 +41,7 @@ public class ProductShortDTO {
                 return true; // Found the product with the barcode
             }
         }
-        return false; // Product with the barcode not found
+        return false;
     }
 
 
@@ -45,77 +56,4 @@ public class ProductShortDTO {
         }
         return null;
     }
-
-    public ProductShortDTO() {
-    }
-
-    public ProductShortDTO(int id, String title, String branch, String location, String barCode, String rfidCode) {
-        this.id = id;
-        this.title = title;
-        this.branch = branch;
-        this.location = location;
-        this.barCode = barCode;
-        this.rfidCode = rfidCode;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getBranch() {
-        return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getBarCode() {
-        return barCode;
-    }
-
-    public void setBarCode(String barCode) {
-        this.barCode = barCode;
-    }
-
-    public String getRfidCode() {
-        return rfidCode;
-    }
-
-    public void setRfidCode(String rfidCode) {
-        this.rfidCode = rfidCode;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductShortDTO{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", branch='" + branch + '\'' +
-                ", barCode='" + barCode + '\'' +
-                '}';
-    }
-
-
-
 }

@@ -1,7 +1,16 @@
 package com.alex.inwento.dto;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class ProductDto {
     private int id;
     private String title;
@@ -12,104 +21,5 @@ public class ProductDto {
     private String receiver;
     private String branch;
 
-    public ProductDto() {
-    }
 
-    public ProductDto(int id, String title, String description, String bar_code, Double price, String liable, String receiver, String branch) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.bar_code = bar_code;
-        this.price = price;
-        this.liable = liable;
-        this.receiver = receiver;
-        this.branch = branch;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getBar_code() {
-        return bar_code;
-    }
-
-    public void setBar_code(String bar_code) {
-        this.bar_code = bar_code;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public String getLiable() {
-        return liable;
-    }
-
-    public void setLiable(String liable) {
-        this.liable = liable;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getBranch() {
-        return branch;
-    }
-
-    public void setBranch(String branch) {
-        this.branch = branch;
-    }
-
-    @Override
-    public String toString() {
-        return "ProductDto{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", bar_code='" + bar_code + '\'' +
-                ", price=" + price +
-                ", liable='" + liable + '\'' +
-                ", receiver='" + receiver + '\'' +
-                '}';
-    }
-
-
-    public static ProductDto hasProductWithBarcode(List<ProductDto> productDtoList, String barcode) {
-        for (ProductDto productDto : productDtoList) {
-            if (productDto.getBar_code() != null && productDto.getBar_code().equals(barcode)) {
-                return productDto;
-            }
-        }
-        return null;
-    }
 }

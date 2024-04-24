@@ -5,6 +5,17 @@ import com.google.gson.annotations.SerializedName;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class UnknownProductDTO {
     @SerializedName("code")
     String code;
@@ -20,37 +31,5 @@ public class UnknownProductDTO {
             }
         }
         return false; // Product with the code not found
-    }
-    public UnknownProductDTO() {
-    }
-
-    public UnknownProductDTO(String code, String typeCode) {
-        this.code = code;
-        this.typeCode = typeCode;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getTypeCode() {
-        return typeCode;
-    }
-
-    public void setTypeCode(String typeCode) {
-        this.typeCode = typeCode;
-    }
-
-
-    @Override
-    public String toString() {
-        return "UnknownProductDTO{" +
-                "code='" + code + '\'' +
-                ", typeCode='" + typeCode + '\'' +
-                '}';
     }
 }
