@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.dialog.ProductDialog;
-import com.alex.inwento.dto.Product;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.ProductDTO;

@@ -12,14 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
 import com.alex.inwento.http.inventory.ProductDTO;
 
 public class ProductDialog extends AppCompatDialogFragment {
 
-    private static final String TAG = "ProductDialog";
     private ProductDialog.ProductDialogListener productDialogListener;
     private ProductDTO productDTO;
     private Boolean isInventory;
@@ -76,7 +74,7 @@ public class ProductDialog extends AppCompatDialogFragment {
         }
         else {
             // CHANGE THE BUTTON TO ZESKANOWANE IF INVENTORY TRUE
-            dpBtnOk.setText("ZESKANOWANE");
+            dpBtnOk.setText(R.string.scanned);
             dpBtnOk.setOnClickListener(v -> {
                 productDialogListener.onSentScannedProduct(productDTO);
                 // ADD LISTENER
@@ -88,7 +86,7 @@ public class ProductDialog extends AppCompatDialogFragment {
                 parentView.removeView(dpWarning);
             } else {
                 // SET BUTTON TO MOVE IF BRANCHES ARE NOT THE SAME
-                dpBtnOk.setText("PRZESUNIĘCIE");
+                dpBtnOk.setText(R.string.move);
             }
         }
 

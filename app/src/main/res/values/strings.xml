@@ -12,6 +12,7 @@
     <string name="scanned">ZESKANOWANE</string>
     <string name="to_scan">DO ZESKANOWANIA \n</string>
     <string name="new_unknown">NOWE\n</string>
+    <string name="move">PRZESUNIĘCIE</string>
 
 </resources>
 
