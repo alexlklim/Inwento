@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
-import com.alex.inwento.dto.ProductDto;
+
 
 
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class ScrapProductDialog
 
     List<Integer> yearsList, daysList;
     List<String> monthList;
-    private ProductDto productDto;
+
 
     String token, barCode;
     TextView titleTextView, descTextView, codeTextView, priceTextView, liableTextView, receiverTextView;

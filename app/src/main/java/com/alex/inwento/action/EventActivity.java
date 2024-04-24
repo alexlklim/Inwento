@@ -285,15 +285,10 @@ public class EventActivity extends AppCompatActivity
     public void onSentScannedProduct(ProductDTO productDTO) {
         Log.i(TAG, "onSentScannedProduct");
         sendPutScannedProductProductRequest(productDTO, null);
-        System.out.println("Product DTTTTTTTO: " + productDTO.toString());
         ProductShortDTO dto = ProductShortDTO.getIndexByIdInList(
                 event.getNotScannedProducts(),
                 productDTO.getId());
-
-        System.out.println(dto);
-
         if (dto != null) {
-            System.out.println("Product SHort DTO is not NULL");
             event.getNotScannedProducts().remove(dto);
             event.getScannedProducts().add(dto);
 

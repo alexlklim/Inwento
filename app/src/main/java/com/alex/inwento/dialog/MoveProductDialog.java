@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.alex.inwento.R;
 import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
-import com.alex.inwento.dto.ProductDto;
+
 
 
 import java.util.Arrays;
@@ -37,7 +37,6 @@ public class MoveProductDialog
     private FragmentActivity fragmentActivity;
 
 
-    private ProductDto productDto;
     private List<String> branchList;
     private List<Branch> branchObjects;
     private List<String> employeeList;
