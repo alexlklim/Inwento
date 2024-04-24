@@ -339,7 +339,7 @@ public class EventActivity extends AppCompatActivity
 
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<Void> call = apiClient.putScannedCode("Bearer " + settingsMng.getAccessToken(),
-                event.getId(), 1, "bar_code", list);
+                event.getId(), 1, list);
 
         call.enqueue(new Callback<Void>() {
             @Override

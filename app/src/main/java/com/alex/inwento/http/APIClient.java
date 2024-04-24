@@ -8,6 +8,7 @@ import com.alex.inwento.http.inventory.EventDTO;
 import com.alex.inwento.http.inventory.InventoryDTO;
 import com.alex.inwento.http.inventory.ProductDTO;
 import com.alex.inwento.http.inventory.ProductShortDTO;
+import com.alex.inwento.util.Endpoints;
 
 import java.util.List;
 import java.util.Map;
@@ -24,49 +25,48 @@ import retrofit2.http.Query;
 public interface APIClient {
 
 
-    @POST("v1/auth/login")
+    @POST(Endpoints.LOGIN)
     Call<AuthDTO> getAuthDTOLogin(@Body LoginDTO credentials);
 
 
-    @POST("v1/auth/refresh")
+    @POST(Endpoints.REFRESH_TOKEN)
     Call<AuthDTO> getAuthDTORefresh(@Body RefreshTokenDTO credentials);
 
-    @GET("v1/inventory/current")
+    @GET(Endpoints.GET_CURRENT_INVENTORY)
     Call<InventoryDTO> getCurrentInventory(@Header("Authorization") String authorization);
 
-    @GET("v1/inventory/events/{event_id}")
+    @GET(Endpoints.GET_EVENT_BY_ID)
     Call<EventDTO> getEventById(
             @Header("Authorization") String authorization,
             @Path("event_id") long eventId);
 
 
-    @GET("v1/products/all/emp/true")
+    @GET(Endpoints.GET_SHORT_PRODUCTS)
     Call<List<ProductShortDTO>> getShortProducts(@Header("Authorization") String authorization);
 
 
-    @GET("v1/products/{product_id}")
+    @GET(Endpoints.GET_FULL_PRODUCT_BY_ID)
     Call<ProductDTO> getFullProductById(
             @Header("Authorization") String authorization,
             @Path("product_id") long productId
     );
 
-    @GET("v1/products/filter/unique/{bar_code}/{rfid_code}/null/null")
+    @GET(Endpoints.GET_FULL_PRODUCT_BY_CODE)
     Call<ProductDTO> getFullProductByCode(
             @Header("Authorization") String authorization,
             @Path("bar_code") String barCode,
             @Path("rfid_code") String rfid_code
     );
 
-    @GET("v1/company/loc/branch")
+    @GET(Endpoints.GET_BRANCHES)
     Call<List<Branch>> getBranches(@Header("Authorization") String authorization);
 
 
-    @PUT("v1/inventory/events/{event_id}/products/{loc_id}/{type_code}")
+    @PUT(Endpoints.PUT_SCANNED_BAR_CODE)
     Call<Void> putScannedCode(
             @Header("Authorization") String authorization,
             @Path("event_id") int eventId,
             @Path("loc_id") int locationId,
-            @Path("type_code") String typeCode,
             @Body List<Map<String, Object>> listOfCodes
     );
 }

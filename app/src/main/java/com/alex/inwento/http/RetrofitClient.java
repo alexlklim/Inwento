@@ -1,5 +1,7 @@
 package com.alex.inwento.http;
 
+import com.alex.inwento.util.Endpoints;
+
 import java.io.IOException;
 
 
@@ -21,7 +23,6 @@ public class RetrofitClient {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request original = chain.request();
-                    // You can modify the request here, for example, add a body to a GET request
                     Request.Builder requestBuilder = original.newBuilder()
                             .method(original.method(), original.body());
                     Request request = requestBuilder.build();
@@ -30,7 +31,7 @@ public class RetrofitClient {
             });
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.1.2.66:9091/api/")
+                    .baseUrl(Endpoints.SERVER)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient.build())
                     .build();
