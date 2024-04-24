@@ -2,7 +2,6 @@ package com.alex.inwento.http.inventory;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import lombok.AllArgsConstructor;

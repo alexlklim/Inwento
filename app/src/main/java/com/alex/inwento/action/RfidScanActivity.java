@@ -7,25 +7,17 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
-import com.alex.inwento.adapter.ProductAdapter;
-import com.alex.inwento.http.inventory.ProductShortDTO;
 import com.alex.inwento.managers.SettingsMng;
-
-import java.util.List;
 
 public class RfidScanActivity extends AppCompatActivity {
     private static final String TAG = "RfidScanActivity";
     SettingsMng settingsMng;
     String branch;
     int eventId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,11 +30,8 @@ public class RfidScanActivity extends AppCompatActivity {
         filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
         registerReceiver(myBroadcastReceiver, filter);
 
-         branch = (String) getIntent().getSerializableExtra("BRANCH_NAME");
-         eventId = getIntent().getIntExtra("EVENT_ID", 0);
-
-
-
+        branch = (String) getIntent().getSerializableExtra("BRANCH_NAME");
+        eventId = getIntent().getIntExtra("EVENT_ID", 0);
 
 
     }
@@ -75,7 +64,6 @@ public class RfidScanActivity extends AppCompatActivity {
             // Process the source and data as needed
         }
     }
-
 
 
     @Override

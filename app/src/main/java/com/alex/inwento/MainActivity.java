@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alex.inwento.action.LoginActivity;
-import com.alex.inwento.action.RfidScanActivity;
-import com.alex.inwento.action.SettingsActivity;
 import com.alex.inwento.action.InventoryActivity;
+import com.alex.inwento.action.LoginActivity;
 import com.alex.inwento.action.SearchActivity;
+import com.alex.inwento.action.SettingsActivity;
 import com.alex.inwento.activities.ProductUpdateActivity;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
@@ -68,13 +68,16 @@ public class MainActivity extends AppCompatActivity {
         Call<AuthDTO> call = apiClient.getAuthDTORefresh(dto);
         call.enqueue(new Callback<AuthDTO>() {
             @Override
-            public void onResponse(Call<AuthDTO> call, Response<AuthDTO> response) {
-                if (response.isSuccessful()) settingsMng.setAuthInfo(response.body());
+            public void onResponse(@NonNull Call<AuthDTO> call, @NonNull Response<AuthDTO> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    settingsMng.setAuthInfo(response.body());
+                }
                 else handleError(response.code());
             }
 
             @Override
-            public void onFailure(Call<AuthDTO> call, Throwable t) {
+            public void onFailure(@NonNull Call<AuthDTO> call, @NonNull Throwable t) {
                 Log.e(TAG, "sendLoginRequestRetrofit onFailure", t);
             }
         });

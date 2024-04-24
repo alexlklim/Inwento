@@ -23,9 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alex.inwento.MainActivity;
 import com.alex.inwento.R;
-import com.alex.inwento.activities.ProductUpdateActivity;
 import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.dialog.ProductDialog;
