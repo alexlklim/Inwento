@@ -20,7 +20,6 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface APIClient {
 
@@ -68,5 +67,12 @@ public interface APIClient {
             @Path("event_id") int eventId,
             @Path("loc_id") int locationId,
             @Body List<Map<String, Object>> listOfCodes
+    );
+
+    @PUT(Endpoints.PUT_SCANNED_RFID_CODE)
+    Call<Void> putScannedRfidCode(
+            @Header("Authorization") String authorization,
+            @Path("event_id") int eventId,
+            @Body List<String> listOfCodes
     );
 }

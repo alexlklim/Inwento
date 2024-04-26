@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +24,9 @@ import com.alex.inwento.http.inventory.ProductDTO;
 import com.alex.inwento.http.inventory.ProductShortDTO;
 import com.alex.inwento.managers.SettingsMng;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,19 +49,22 @@ public class SearchActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_search);
         settingsMng = new SettingsMng(this);
 
         // for getting and filtering codes
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
+        filter.addAction(getResources().getString(R.string.activity_intent_filter_action_bar_code));
         registerReceiver(myBroadcastReceiver, filter);
 
         // replace it with taking data from DB
         sendGetProductsRequest();
 
-
+        // Clear focus from RecyclerView
+        View rootLayout = findViewById(android.R.id.content);
+        rootLayout.requestFocus();
     }
 
     private void sendGetProductsRequest() {
@@ -136,7 +143,7 @@ public class SearchActivity
             Log.i(TAG, "BroadcastReceiver");
             String action = intent.getAction();
             assert action != null;
-            if (action.equals(getResources().getString(R.string.activity_intent_filter_action))) {
+            if (action.equals(getResources().getString(R.string.activity_intent_filter_action_bar_code))) {
                 try {
                     handleScanResult(intent);
                 } catch (Exception e) {
@@ -147,16 +154,39 @@ public class SearchActivity
     };
 
 
+    private Set<String> scannedCodesSet = new HashSet<>();
+
     private void handleScanResult(Intent initiatingIntent) {
         Log.i(TAG, "handleScanResult");
+        productAdapter.setHandlingScanEvent(true);
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+        String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+
         if (decodedSource == null) {
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
+            decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
-        sendGetFullProductRequest(decodedData, null);
+
+        if (decodedLabelType.startsWith("LABEL-TYPE-")){
+            System.out.println("Label: " + decodedLabelType);
+
+            if (!scannedCodesSet.contains(decodedData)) {
+                scannedCodesSet.add(decodedData);
+                sendGetFullProductRequest(decodedData, null);
+                recyclerView.clearFocus();
+            } else {
+                Log.i(TAG, "Duplicate scan event for code: " + decodedData);
+            }
+        }
+
+        productAdapter.setHandlingScanEvent(false);
     }
 
+    // Method to clear the scanned codes set (if needed)
+    private void clearScannedCodesSet() {
+        scannedCodesSet.clear();
+    }
 
     @Override
     public void onSentScannedProduct(ProductDTO productDTO) {

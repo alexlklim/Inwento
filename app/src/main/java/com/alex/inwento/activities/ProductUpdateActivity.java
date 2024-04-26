@@ -39,7 +39,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
         // for getting and filtering codes
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
+        filter.addAction(getResources().getString(R.string.activity_intent_filter_action_bar_code));
         registerReceiver(myBroadcastReceiver, filter);
 
 
@@ -56,7 +56,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
             Log.i(TAG, "BroadcastReceiver");
             String action = intent.getAction();
             assert action != null;
-            if (action.equals(getResources().getString(R.string.activity_intent_filter_action))) {
+            if (action.equals(getResources().getString(R.string.activity_intent_filter_action_bar_code))) {
                 try {
                     handleScanResult(intent);
                 } catch (Exception e) {

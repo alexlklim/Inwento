@@ -30,6 +30,7 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
         this.unknownProductList = unknownProducts;
     }
 
+
     @NonNull
     @Override
     public UnknownProductAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,8 +47,6 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
         holder.id.setText(String.valueOf(id));
 
         holder.code.setText(unknownProduct.getCode());
-
-        holder.date.setText(DateMng.convertDateToString(LocalDate.now()));
     }
 
     @Override
@@ -56,13 +55,12 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView id, code, date;
+        TextView id, code;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             id = itemView.findViewById(R.id.rvup_id);
             code = itemView.findViewById(R.id.rvup_code);
-            date = itemView.findViewById(R.id.rvup_date);
         }
     }
 

@@ -19,6 +19,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
     private final ProductAdapter.OnItemProductClickListener onItemClickListener;
     private List<ProductShortDTO> productList;
     private Boolean isInventory, isScanned;
+    private boolean isHandlingScanEvent = false;
 
     public ProductAdapter(
             Boolean isInventory, Boolean isScanned,
@@ -51,9 +52,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
             else holder.rpIsScanned.setImageResource(R.drawable.ic_in_process);
             holder.rpIsScanned.setVisibility(View.VISIBLE);
         } else holder.rpIsScanned.setVisibility(View.INVISIBLE);
-        holder.itemView.setOnClickListener(view -> onItemClickListener.onItemProductClick(product.getId()));
+
+        // Disable click listener while handling scan event
+        holder.itemView.setEnabled(!isHandlingScanEvent);
+
+        holder.itemView.setOnClickListener(view -> {
+            if (!isHandlingScanEvent) {
+                onItemClickListener.onItemProductClick(product.getId());
+            }
+        });
     }
 
+    public void setHandlingScanEvent(boolean handlingScanEvent) {
+        isHandlingScanEvent = handlingScanEvent;
+    }
     @Override
     public int getItemCount() {
         return productList.size();

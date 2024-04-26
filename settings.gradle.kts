@@ -17,6 +17,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EcoScan"
+rootProject.name = "Inwento-Scan-App"
 include(":app")
  

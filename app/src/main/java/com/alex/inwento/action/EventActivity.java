@@ -10,6 +10,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -56,7 +57,7 @@ public class EventActivity extends AppCompatActivity
         UnknownProductDialog.UnknownProductScannedListener {
     private static final String TAG = "EventActivity";
 
-    ImageButton btnSwitch;
+
     Button btnScanned, btnNotScanned, btnNew;
 
     RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
@@ -73,6 +74,7 @@ public class EventActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_event);
         settingsMng = new SettingsMng(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -84,14 +86,13 @@ public class EventActivity extends AppCompatActivity
         // for getting and filtering codes
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
+        filter.addAction(getResources().getString(R.string.activity_intent_filter_action_bar_code));
         registerReceiver(myBroadcastReceiver, filter);
 
 
         btnScanned = findViewById(R.id.btnScanned);
         btnNotScanned = findViewById(R.id.btnNotScanned);
         btnNew = findViewById(R.id.btnNew);
-        btnSwitch = findViewById(R.id.btnSwitch);
         aeBranch = findViewById(R.id.aeBranch);
         branchesSpinner = findViewById(R.id.aeLocations);
         recyclerViewProduct = findViewById(R.id.rv_products);
@@ -112,13 +113,7 @@ public class EventActivity extends AppCompatActivity
             setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
         });
 
-        btnSwitch.setOnClickListener(view -> {
-            Intent intent = new Intent(EventActivity.this, RfidScanActivity.class);
-            intent.putExtra("BRANCH_NAME", event.getBranch());
-            intent.putExtra("EVENT_ID", event.getId());
-            unregisterReceiver(myBroadcastReceiver);
-            startActivity(intent);
-        });
+
 
         sendGetEventById(getIntent().getIntExtra("EVENT_ID", 0));
 
@@ -191,7 +186,7 @@ public class EventActivity extends AppCompatActivity
             Log.i(TAG, "BroadcastReceiver");
             String action = intent.getAction();
             assert action != null;
-            if (action.equals(getResources().getString(R.string.activity_intent_filter_action))) {
+            if (action.equals(getResources().getString(R.string.activity_intent_filter_action_bar_code))) {
                 try {
                     handleScanResult(intent);
                 } catch (Exception e) {
@@ -220,8 +215,15 @@ public class EventActivity extends AppCompatActivity
         Log.i(TAG, "handleScanResult");
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-        if (decodedSource == null)
+        String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+        if (decodedSource == null) {
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
+            decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
+        }
+
+        System.out.println("Label: " + decodedLabelType);
+
+
         if (ProductShortDTO.doesProductExist(event.getScannedProducts(), decodedData) || UnknownProductDTO.doesProductExist(event.getUnknownProducts(), decodedData)) {
             showToast();
         } else sendGetFullProductRequest(decodedData, null);
@@ -267,12 +269,6 @@ public class EventActivity extends AppCompatActivity
         Toast.makeText(this, "Product is already scanned", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.i(TAG, "onDestroy");
-        super.onDestroy();
-        unregisterReceiver(myBroadcastReceiver);
-    }
 
     @Override
     public void onItemProductClick(int orderId) {
@@ -349,6 +345,22 @@ public class EventActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(myBroadcastReceiver);
+    }
 
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy");
+        super.onDestroy();
+        unregisterReceiver(myBroadcastReceiver);
+    }
 }

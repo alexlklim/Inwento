@@ -2,7 +2,8 @@
     <string name="app_name">Inwento</string>
 
 
-    <string name="activity_intent_filter_action" translatable="false">com.inwento.ACTION</string>
+    <string name="activity_intent_filter_action_bar_code" translatable="false">com.inwento.ACTION</string>
+    <string name="activity_intent_filter_action_rfid" translatable="false">com.inwento.ACTION</string>
     <string name="datawedge_intent_key_source" translatable="false">com.symbol.datawedge.source</string>
     <string name="datawedge_intent_key_label_type" translatable="false">com.symbol.datawedge.label_type</string>
     <string name="datawedge_intent_key_data" translatable="false">com.symbol.datawedge.data_string</string>
