@@ -26,7 +26,7 @@
             android:paddingLeft="40dp"
             android:paddingTop="10dp"
             android:paddingRight="40dp"
-            android:tint="@color/icon_color"
+            app:tint="@color/icon_color"
             app:srcCompat="@drawable/inwento_high_resolution_logo_transparent" />
 
         <TextView
@@ -34,8 +34,8 @@
             android:layout_height="20dp"
             android:layout_marginBottom="10dp"
             android:gravity="end"
-            android:paddingRight="40dp"
-            android:text="Scan Edition"
+            android:paddingEnd="40dp"
+            android:text="@string/scan_edition"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
-                android:text="Użytkownik: "
+                android:text="@string/user"
                 android:textSize="18sp" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="4"
                 android:gravity="center"
-                android:text="Alex Klim"
+                android:text="@string/fake_name"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -82,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Email: "
+                android:text="@string/email"
                 android:textSize="18sp" />
 
             <TextView
@@ -91,7 +91,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:text="alex.klim@gmail.com"
+                android:text="@string/fake_email"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -113,7 +113,7 @@
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="Adres servera: "
+                android:text="@string/server_address"
                 android:textSize="18sp" />
 
             <EditText
@@ -122,7 +122,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="3"
-                android:hint="http://10.10.10.10:9090/api..." />
+                android:inputType="text"
+                android:hint="@string/fake_address" />
         </LinearLayout>
 
         <LinearLayout
@@ -143,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:gravity="center"
-                android:text="Filter kodów kreskowych"
+                android:text="@string/filter_barcodes"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -157,15 +158,15 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
-                android:text="Prefix "
+                android:text="@string/prefix"
                 android:textSize="18sp" />
 
             <EditText
@@ -174,6 +175,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:inputType="text"
                 android:hint="1234..." />
         </LinearLayout>
 
@@ -199,7 +201,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:hint="...1234..." />
+                android:inputType="text"
+                android:hint="@string/fake_suffix" />
         </LinearLayout>
 
 
@@ -208,8 +211,8 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -225,7 +228,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:hint="...1234" />
+                android:inputType="text"
+                android:hint="@string/fake_postfix" />
         </LinearLayout>
 
         <LinearLayout
@@ -247,7 +251,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="Długość kodu "
+                android:text="@string/code_lenght"
                 android:textSize="18sp" />
 
             <EditText
@@ -257,7 +261,7 @@
                 android:layout_weight="3"
                 android:inputType="number"
                 android:gravity="center"
-                android:hint="0" />
+                android:hint="@string/zero" />
         </LinearLayout>
 
         <LinearLayout
@@ -273,7 +277,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="Maksymalna długość kodu "
+                android:text="@string/max_code_lenght"
                 android:textSize="18sp" />
 
             <EditText
@@ -283,7 +287,7 @@
                 android:layout_weight="3"
                 android:inputType="number"
                 android:gravity="center"
-                android:hint="0" />
+                android:hint="@string/zero" />
         </LinearLayout>
 
         <LinearLayout
@@ -299,7 +303,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="Minimalna długość kodu "
+                android:text="@string/min_code_lenght"
                 android:textSize="18sp" />
 
             <EditText
@@ -309,7 +313,7 @@
                 android:layout_weight="3"
                 android:inputType="number"
                 android:gravity="center"
-                android:hint="0" />
+                android:hint="@string/zero" />
         </LinearLayout>
 
         <LinearLayout
@@ -324,7 +328,7 @@
             android:background="@drawable/btn_rounded"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:text="Zahowaj nowe ustawienia"
+            android:text="@string/save_new_settings"
             app:backgroundTint="@color/btnColorDark"
             android:layout_gravity="center"
             android:paddingRight="20dp"

@@ -18,6 +18,22 @@
     <string name="to_scan">DO ZESKANOWANIA</string>
     <string name="new_unknown">NOWE</string>
     <string name="move">PRZESUNIĘCIE</string>
+    <string name="scan_edition">Scan Edition</string>
+    <string name="user">Użytkownik:</string>
+    <string name="fake_name">Alex Klim</string>
+    <string name="email">Email:</string>
+    <string name="fake_email">alex.klim@gmail.com</string>
+    <string name="server_address">Adres servera:</string>
+    <string name="fake_address">http://10.10.10.10:9090/api...</string>
+    <string name="filter_barcodes">Filter kodów kreskowych</string>
+    <string name="prefix">Prefix</string>
+    <string name="fake_suffix">...1234...</string>
+    <string name="fake_postfix">...1234</string>
+    <string name="code_lenght">Długość kodu</string>
+    <string name="zero">0</string>
+    <string name="min_code_lenght">Minimalna długość kodu</string>
+    <string name="max_code_lenght">Maksymalna długość kodu</string>
+    <string name="save_new_settings">Zahowaj nowe ustawienia</string>
 
 </resources>
 
