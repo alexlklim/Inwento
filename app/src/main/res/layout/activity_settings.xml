@@ -23,10 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:background="@android:color/transparent"
-            android:paddingLeft="40dp"
+            android:paddingStart="40dp"
             android:paddingTop="10dp"
-            android:paddingRight="40dp"
+            android:paddingEnd="40dp"
             app:tint="@color/icon_color"
+            android:contentDescription="@string/logo"
             app:srcCompat="@drawable/inwento_high_resolution_logo_transparent" />
 
         <TextView
@@ -50,7 +51,7 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -75,7 +76,7 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -106,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -138,7 +139,7 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -176,7 +177,7 @@
                 android:layout_weight="3"
                 android:gravity="center"
                 android:inputType="text"
-                android:hint="1234..." />
+                android:hint="@string/fake_prefix" />
         </LinearLayout>
 
         <LinearLayout
@@ -184,8 +185,8 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -243,8 +244,8 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -269,8 +270,8 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -295,8 +296,8 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -331,8 +332,8 @@
             android:text="@string/save_new_settings"
             app:backgroundTint="@color/btnColorDark"
             android:layout_gravity="center"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
             android:textColor="@color/white"
             android:textSize="20sp" />
 

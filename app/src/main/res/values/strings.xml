@@ -34,6 +34,8 @@
     <string name="min_code_lenght">Minimalna długość kodu</string>
     <string name="max_code_lenght">Maksymalna długość kodu</string>
     <string name="save_new_settings">Zahowaj nowe ustawienia</string>
+    <string name="fake_prefix">1234...</string>
+    <string name="logo">logo</string>
 
 </resources>
 
