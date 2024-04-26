@@ -23,7 +23,7 @@
     <string name="fake_name">Alex Klim</string>
     <string name="email">Email:</string>
     <string name="fake_email">alex.klim@gmail.com</string>
-    <string name="server_address">Adres servera:</string>
+    <string name="server_address">Addres servera:</string>
     <string name="fake_address">http://10.10.10.10:9090/api...</string>
     <string name="filter_barcodes">Filter kodów kreskowych</string>
     <string name="prefix">Prefix</string>
