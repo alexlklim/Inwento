@@ -26,14 +26,6 @@ public class SettingsMng {
     }
 
 
-    public void setAuthInfo(String firstName, String lastName, String accessToken, String refreshToken) {
-        pref.edit()
-                .putString(Util.FIRST_NAME, firstName)
-                .putString(Util.LAST_NAME, lastName)
-                .putString(Util.ACCESS_TOKEN, accessToken)
-                .putString(Util.REFRESH_TOKEN, refreshToken)
-                .apply();
-    }
     public void setAuthInfo(AuthDTO dto) {
         pref.edit()
                 .putString(Util.FIRST_NAME, dto.getFirstName())
@@ -73,7 +65,56 @@ public class SettingsMng {
         return pref.getString(Util.LAST_NAME, "");
     }
 
+    public void setIsFilter(boolean bool) {
+        pref.edit().putBoolean(Util.IS_FILTER, bool).apply();
+    }
+
+    public boolean isFilter(){
+        return pref.getBoolean(Util.IS_FILTER, false);
+    }
+    public void setCodeSettings(String prefix, String suffix, String postfix, Integer length, Integer maxLength, Integer minLength) {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(Util.CODE_PREFIX, prefix != null ? prefix : "");
+        editor.putString(Util.CODE_SUFFIX, suffix != null ? suffix : "");
+        editor.putString(Util.CODE_POSTFIX, postfix != null ? postfix : "");
+        editor.putInt(Util.CODE_LENGTH, length != null ? length : 0);
+        editor.putInt(Util.CODE_MAX_LENGTH, maxLength != null ? maxLength : 0);
+        editor.putInt(Util.CODE_MIN_LENGTH, minLength != null ? minLength : 0);
+        editor.apply();
+    }
 
 
+
+    public String getCodePrefix(){
+        return pref.getString(Util.CODE_PREFIX, "");
+    }
+    public String getCodeSuffix(){
+        return pref.getString(Util.CODE_SUFFIX, "");
+    }
+    public String getCodePostfix(){
+        return pref.getString(Util.CODE_POSTFIX, "");
+    }
+
+    public int getCodeLength(){
+        return pref.getInt(Util.CODE_LENGTH, 0);
+    }
+
+    public int getCodeMaxLength(){
+        return pref.getInt(Util.CODE_MAX_LENGTH, 0);
+    }
+
+    public int getCodeMinLength(){
+        return pref.getInt(Util.CODE_MIN_LENGTH, 0);
+    }
+
+
+
+    public void setServerAddress(String serverAddress) {
+        pref.edit().putString(Util.SERVER_ADDRESS, serverAddress).apply();
+    }
+
+    public String getServerAddress(){
+        return pref.getString(Util.SERVER_ADDRESS, "");
+    }
 
 }

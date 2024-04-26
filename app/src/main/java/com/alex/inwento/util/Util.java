@@ -9,10 +9,11 @@ public class Util {
     public static final List<String> FIELDS_SHORT_PRODUCT =
             Arrays.asList("bar_code", "rfid_code", "branch", "location");
     public static final List<String> FIELDS_PRODUCT =
-            Arrays.asList( "price", "bar_code", "rfid_code", "liable_name", "receiver", "branch_id", "branch");
+            Arrays.asList("price", "bar_code", "rfid_code", "liable_name", "receiver", "branch_id", "branch");
 
 
     public static final String
+            IS_FILTER = "is_filter",
             IS_REMEMBER_ME = "remember_me",
             FIRST_NAME = "first_name",
             LAST_NAME = "last_name",
@@ -21,6 +22,14 @@ public class Util {
             ACCESS_TOKEN = "access_token",
             REFRESH_TOKEN = "refresh_token";
 
+    public static final String
+            SERVER_ADDRESS = "remember_me",
+            CODE_PREFIX = "code_prefix",
+            CODE_SUFFIX = "code_suffix",
+            CODE_POSTFIX = "code_postfix",
+            CODE_LENGTH = "code_length",
+            CODE_MAX_LENGTH = "code_max_length",
+            CODE_MIN_LENGTH = "code_min_length";
 
 
 

@@ -142,11 +142,20 @@
             android:paddingStart="10dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="35dp"
+                android:layout_weight="10"
                 android:gravity="center"
                 android:text="@string/filter_barcodes"
                 android:textSize="18sp" />
+
+            <CheckBox
+                android:id="@+id/sFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="" />
+
         </LinearLayout>
 
         <LinearLayout
