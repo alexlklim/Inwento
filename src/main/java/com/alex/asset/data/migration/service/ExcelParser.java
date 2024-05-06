@@ -11,6 +11,7 @@ import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.product.service.ProductService;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.exceptions.errors.user_error.ObjectAlreadyExistException;
 import lombok.RequiredArgsConstructor;
@@ -113,7 +114,11 @@ public class ExcelParser {
 
                 if (!Objects.equals(getStringValue(row.getCell(10)), "0.0") && row.getCell(10) != null) {
                     userRepo.findByEmail(getStringValue(row.getCell(10)))
-                            .ifPresent(asset::setLiable);
+                            .ifPresent(liable -> {
+                                asset.setLiable(liable);
+                                asset.setUserLiableId(liable.getId());
+                                asset.setUserLiableName(liable.getFirstname() + " " + liable.getLastname());
+                            });
                 }
 
                 if (!Objects.equals(getStringValue(row.getCell(11)), "0.0") && row.getCell(11) != null)
@@ -223,6 +228,7 @@ public class ExcelParser {
         for (Product product : assetList) {
             product.setCreatedBy(userRepo.getUser(userId));
             product.setActive(true);
+            product.setLiable(userRepo.findById(product.getUserLiableId()).orElse(null));
             Product productFromDb = productRepo.save(product);
             logService.addLog(userId, Action.CREATE, Section.PRODUCT, product.getTitle());
             productService.addHistoryToProduct(userId, productFromDb.getId(), Activity.PRODUCT_WAS_CREATED);

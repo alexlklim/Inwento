@@ -43,7 +43,6 @@ public class CompanyService {
     private final NotificationService notificationService;
 
 
-
     @SneakyThrows
     public Map<String, Object> getInfoAboutCompany(List<String> companyFields, Long userId) {
         log.info(TAG + "Get information about company");
@@ -59,19 +58,35 @@ public class CompanyService {
     @SneakyThrows
     @Modifying
     @Transactional
-    public Map<String, Object> updateCompany(Map<String, Object> updates, Long userId) throws LabelSizeIsIncorrectException{
+    public Map<String, Object> updateCompany(Map<String, Object> updates, Long userId) throws LabelSizeIsIncorrectException {
         log.info(TAG + "Update company by user with id {}", userId);
         Company company = companyRepo.findAll().get(0);
         updates.forEach((key, value) -> {
             switch (key) {
-                case "company": company.setCompany((String) value);break;
-                case "city": company.setCity((String) value);break;
-                case "street": company.setStreet((String) value);break;
-                case "zip_code": company.setZipCode((String) value);break;
-                case "nip": company.setNip((String) value);break;
-                case "regon": company.setRegon((String) value);break;
-                case "phone": company.setPhone((String) value);break;
-                case "email": company.setEmail((String) value);break;
+                case "company":
+                    company.setCompany((String) value);
+                    break;
+                case "city":
+                    company.setCity((String) value);
+                    break;
+                case "street":
+                    company.setStreet((String) value);
+                    break;
+                case "zip_code":
+                    company.setZipCode((String) value);
+                    break;
+                case "nip":
+                    company.setNip((String) value);
+                    break;
+                case "regon":
+                    company.setRegon((String) value);
+                    break;
+                case "phone":
+                    company.setPhone((String) value);
+                    break;
+                case "email":
+                    company.setEmail((String) value);
+                    break;
                 case "label_height": {
                     Double labelHeight = (Double) value;
                     if (labelHeight > Double.MIN_VALUE && labelHeight < Double.MAX_VALUE)
@@ -87,14 +102,28 @@ public class CompanyService {
                     break;
                 }
                 case "label_type":
-                    company.setLabelType((String) value);break;
-                case "email_host": company.setHost((String) value);break;
-                case "email_port": company.setPort((String) value);break;
-                case "email_username": company.setUsername((String) value);break;
-                case "email_password": company.setPassword((String) value);break;
-                case "email_protocol": company.setProtocol((String) value);break;
-                case "email_configured": company.setIsEmailConfigured((boolean) value);break;
-                default: break;
+                    company.setLabelType((String) value);
+                    break;
+                case "email_host":
+                    company.setHost((String) value);
+                    break;
+                case "email_port":
+                    company.setPort((String) value);
+                    break;
+                case "email_username":
+                    company.setUsername((String) value);
+                    break;
+                case "email_password":
+                    company.setPassword((String) value);
+                    break;
+                case "email_protocol":
+                    company.setProtocol((String) value);
+                    break;
+                case "email_configured":
+                    company.setIsEmailConfigured((boolean) value);
+                    break;
+                default:
+                    break;
             }
         });
         companyRepo.save(company);
@@ -119,4 +148,15 @@ public class CompanyService {
         return dto;
     }
 
+    public DataDto getData() {
+        DataDto dto = new DataDto();
+
+        dto.setBranches(locationService.getBranches());
+        dto.setLocations(locationService.getLocations());
+        dto.setEmployees(userRepo.getActiveUsers()
+                .stream().map(UserMapper::toEmployee)
+                .collect(Collectors.toList()));
+
+        return dto;
+    }
 }

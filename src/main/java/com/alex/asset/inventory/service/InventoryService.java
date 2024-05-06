@@ -46,9 +46,13 @@ public class InventoryService {
     @SneakyThrows
     public void createInventory(Long userId, InventoryDto dto) {
         log.info(TAG + "User {} create new inventory", userId);
-        if (getCurrentInventory(userId) != null){
+
+
+        if (inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null) != null) {
             throw new InventIsAlreadyInProgress("Inventory is active at this moment");
         }
+
+
         Inventory inventory = new Inventory();
         inventory.setActive(true);
         inventory.setStartDate(dto.getStartDate());
@@ -90,7 +94,7 @@ public class InventoryService {
         int totalProductAmount = 0;
         int scannedProductAmount = 0;
 
-        for (Event event : events){
+        for (Event event : events) {
             unknownProductAmount += unknownProductRepo.countProductsByEventId(event.getId());
             totalProductAmount += productRepo.countProductsByBranchId(event.getBranch().getId());
             scannedProductAmount += scannedProductRepo.countScannedProductsByEventId(event.getId());
@@ -105,7 +109,8 @@ public class InventoryService {
 
         return inventoryDto;
     }
-private final EventService eventService;
+
+    private final EventService eventService;
 
     @SneakyThrows
     public InventoryDto getCurrentInventory(Long userId) {

@@ -1,5 +1,6 @@
 package com.alex.asset.company.controller;
 
+import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.company.service.CompanyService;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,7 +45,16 @@ public class CompanyController {
     public Map<String, Object> updateCompany(
             @RequestBody Map<String, Object> updates) {
         log.info(TAG + "Update company info");
-        return companyService.updateCompany(updates, getUserId());
+        return companyService.updateCompany(updates, SecHolder.getUserId());
+    }
+
+
+    @Operation(summary = "Get branches/locations/employees (for android app)")
+    @GetMapping("/data")
+    @ResponseStatus(HttpStatus.OK)
+    public DataDto getDataForAndroidApp() {
+        log.info(TAG + "Get data (branches/locations/employees)");
+        return companyService.getData();
     }
 
 

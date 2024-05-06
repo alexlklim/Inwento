@@ -94,4 +94,3 @@ VALUES
     (15, true, 'Sprzęt kuchenny', 3);
 
 
-select * from users;

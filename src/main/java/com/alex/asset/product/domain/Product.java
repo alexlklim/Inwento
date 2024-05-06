@@ -5,6 +5,7 @@ import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -39,8 +40,18 @@ public class Product extends BaseEntity {
 
     @ManyToOne @JoinColumn(name = "created_by_id") @JsonIgnore
     User createdBy;
+
     @ManyToOne @JoinColumn(name = "liable_id") @JsonBackReference
     User liable;
+
+    @Transient
+    @JsonProperty("user_liable_id")
+    private Long userLiableId;
+
+    @Transient
+    @JsonProperty("user_liable_name")
+    private String userLiableName;
+
     String receiver;
 
     @ManyToOne @JoinColumn(name = "kst_id")

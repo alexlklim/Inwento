@@ -283,5 +283,3 @@ CREATE TABLE IF NOT EXISTS unknown_products
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-
-select * from   inventories;
