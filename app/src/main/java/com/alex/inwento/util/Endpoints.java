@@ -2,7 +2,7 @@ package com.alex.inwento.util;
 
 public class Endpoints {
 
-    public static final String SERVER = "http://10.1.2.66:9091/api/";
+    public static final String SERVER = "http://10.1.2.65:9091/api/";
 
 
     // Authentication Endpoints

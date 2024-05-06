@@ -23,7 +23,7 @@ public class Util {
             REFRESH_TOKEN = "refresh_token";
 
     public static final String
-            SERVER_ADDRESS = "remember_me",
+            SERVER_ADDRESS = "server_address",
             CODE_PREFIX = "code_prefix",
             CODE_SUFFIX = "code_suffix",
             CODE_POSTFIX = "code_postfix",

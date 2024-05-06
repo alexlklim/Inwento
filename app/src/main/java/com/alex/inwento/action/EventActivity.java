@@ -221,7 +221,11 @@ public class EventActivity extends AppCompatActivity
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
 
-        System.out.println("Label: " + decodedLabelType);
+        if (settingsMng.isFilter()){
+            if (filteringData(decodedData) == null){
+                Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
+            }
+        }
 
 
         if (ProductShortDTO.doesProductExist(event.getScannedProducts(), decodedData) || UnknownProductDTO.doesProductExist(event.getUnknownProducts(), decodedData)) {
@@ -274,6 +278,22 @@ public class EventActivity extends AppCompatActivity
     public void onItemProductClick(int orderId) {
         Log.i(TAG, "onItemProductClick");
         sendGetFullProductRequest(null, orderId);
+    }
+
+    public String filteringData(String code) {
+        Log.i(TAG, "filteringData: " + code);
+        int length = code.length();
+        if ((settingsMng.getCodeLength() != 0 && length != settingsMng.getCodeLength()) ||
+                (settingsMng.getCodeMinLength() != 0 && length < settingsMng.getCodeMinLength()) ||
+                (settingsMng.getCodeMaxLength() != 0 && length > settingsMng.getCodeMaxLength())) {
+            return null;
+        }
+
+        if (!settingsMng.getCodePrefix().equals("") && code.startsWith(settingsMng.getCodePrefix())) return null;
+        if (!settingsMng.getCodeSuffix().equals("") && code.startsWith(settingsMng.getCodeSuffix())) return null;
+        if (!settingsMng.getCodePostfix().equals("") && code.startsWith(settingsMng.getCodePostfix())) return null;
+
+        return code;
     }
 
 

@@ -17,6 +17,15 @@ public class SettingsMng {
     }
 
 
+    public void setServerAddress(String serverAddress) {
+        pref.edit().putString(Util.SERVER_ADDRESS, serverAddress).apply();
+    }
+
+    public String getServerAddress(){
+        return pref.getString(Util.SERVER_ADDRESS, "");
+    }
+
+
     public void  setIsRememberMe(Boolean isRememberMe){
         pref.edit().putBoolean(Util.IS_REMEMBER_ME, isRememberMe).apply();
     }
@@ -109,12 +118,6 @@ public class SettingsMng {
 
 
 
-    public void setServerAddress(String serverAddress) {
-        pref.edit().putString(Util.SERVER_ADDRESS, serverAddress).apply();
-    }
 
-    public String getServerAddress(){
-        return pref.getString(Util.SERVER_ADDRESS, "");
-    }
 
 }

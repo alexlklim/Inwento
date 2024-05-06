@@ -23,9 +23,6 @@
         android:theme="@style/Theme.Inwento"
         tools:targetApi="31">
         <activity
-            android:name=".action.RfidScanActivity"
-            android:exported="false" />
-        <activity
             android:name=".action.SettingsActivity"
             android:exported="false" />
         <activity
