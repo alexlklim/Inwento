@@ -47,7 +47,7 @@ public class DataMigrationController {
     ) {
         log.info(TAG + "Parse excel to product objects TEST");
         return excelParser.parseExcel(
-                new File("C:\\Folder\\CSMM\\Inventory_Product_List3.xlsx"),
+                new File("C:\\Folder\\server\\assets.xlsx"),
                 lastRow,
                 SecHolder.getUserId());
     }

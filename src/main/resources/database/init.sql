@@ -48,21 +48,21 @@ VALUES
 
 INSERT IGNORE INTO branches (id, is_active, branch)
 VALUES
-    (1, true, 'Stalowa Wola'),
-    (2, true, 'Katowice');
+    (1, true, 'CSMM'),
+    (2, true, 'Stalowa Wola'),
+    (3, true, 'Katowice');
 
 
 INSERT IGNORE INTO locations (id, is_active, location, branch_id)
 VALUES
-    (1, true, 'eneta', 1),
-    (2, true, 'prezes', 1),
-    (3, true, 'director', 1),
-    (4, true, 'marketing', 1),
-    (4, true, 'Sekretariat', 1),
-    (4, true, 'Sekretariat 2', 1),
-    (4, true, 'sala konferencyjna', 1),
-    (4, true, 'socjalny', 1),
-    (4, true, 'księgołość', 1);
+    (1, true, 'marketing', 1),
+    (2, true, 'ksiegolosc', 1),
+    (3, true, 'social', 1),
+    (4, true, 'conference', 1),
+    (5, true, 'lukasz', 1),
+    (6, true, 'sekretariat', 1),
+    (7, true, 'prezes', 1),
+    (8, true, 'sekretariat 2', 1);
 
 INSERT IGNORE INTO mpks (id, is_active, mpk)
 VALUES

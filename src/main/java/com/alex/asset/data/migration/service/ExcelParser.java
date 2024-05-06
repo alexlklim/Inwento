@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Slf4j
@@ -72,12 +73,20 @@ public class ExcelParser {
                     }
                 }
 
-                if (!Objects.equals(getStringValue(row.getCell(6)), "0.0") && row.getCell(6) != null) {
-                    String barcode = getStringValue(row.getCell(6));
-                    if (!productRepo.existsByBarCode(barcode) && !Product.containsProductWithBarcode(assets, barcode)) {
-                        asset.setBarCode(getStringValue(row.getCell(6)));
+                if (row.getCell(6) != null) {
+                    String barcode;
+                    Cell cell = row.getCell(6);
+                    if (cell.getCellType() == CellType.STRING) {
+                        barcode = cell.getStringCellValue().trim();
+                    } else if (cell.getCellType() == CellType.NUMERIC) {
+                        double numericValue = cell.getNumericCellValue();
+                        barcode = String.valueOf((long) numericValue);
+                    } else barcode = "";
+                    if (!barcode.equals("0.0") && !productRepo.existsByBarCode(barcode) && !Product.containsProductWithBarcode(assets, barcode)) {
+                        asset.setBarCode(barcode);
                     }
                 }
+
 
 
                 if (!Objects.equals(getStringValue(row.getCell(7)), "0.0") && row.getCell(7) != null) {
@@ -189,7 +198,9 @@ public class ExcelParser {
         }
         DataFormatter dataFormatter = new DataFormatter();
         String dateString = dataFormatter.formatCellValue(cell);
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
+
         return LocalDate.parse(dateString, dateFormatter);
     }
 

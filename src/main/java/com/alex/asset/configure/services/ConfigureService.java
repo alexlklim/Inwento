@@ -113,28 +113,28 @@ public class ConfigureService {
     @SneakyThrows
     public AssetStatus getAssetStatusById(Long id) {
         return assetStatusRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Asset status with id " + id + " not found")
+                () -> new ResourceNotFoundException("Asset status not found id " + id )
         );
     }
 
     @SneakyThrows
     public Unit getUnitById(Long id) {
         return unitRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Unit with id " + id + " not found")
+                () -> new ResourceNotFoundException("Unit not found id " + id )
         );
     }
 
     @SneakyThrows
     public KST getKSTById(Long id) {
         return kstRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("KST with id " + id + " not found")
+                () -> new ResourceNotFoundException("KST not found id " + id )
         );
     }
 
     @SneakyThrows
     public MPK getMPKById(Long id) {
         return mpkRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("MPK with id " + id + " not found")
+                () -> new ResourceNotFoundException("MPK not found id " + id )
         );
     }
 
