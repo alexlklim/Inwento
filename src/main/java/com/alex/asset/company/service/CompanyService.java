@@ -42,6 +42,8 @@ public class CompanyService {
     private final LogService logService;
     private final NotificationService notificationService;
 
+
+
     @SneakyThrows
     public Map<String, Object> getInfoAboutCompany(List<String> companyFields, Long userId) {
         log.info(TAG + "Get information about company");

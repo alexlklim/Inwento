@@ -1,7 +1,6 @@
 package com.alex.asset.product.service;
 
 
-import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
@@ -11,8 +10,6 @@ import com.alex.asset.inventory.domain.event.ScannedProduct;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
-import com.alex.asset.inventory.repo.UnknownProductRepo;
-import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -53,6 +50,9 @@ public class ProductService implements IProductService {
     private final ProductRepo productRepo;
     private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
+    private final EventRepo eventRepo;
+    private final InventoryRepo inventoryRepo;
+    private final ScannedProductRepo scannedProductRepo;
     private final ConfigureService configureService;
     private final TypeService typeService;
     private final LocationService locationService;
@@ -333,9 +333,6 @@ public class ProductService implements IProductService {
         productRepo.save(product);
     }
 
-    private final EventRepo eventRepo;
-    private final InventoryRepo inventoryRepo;
-    private final ScannedProductRepo scannedProductRepo;
 
     public void moveProductByBranch(Product product, Event event) {
         Event oldEvent = eventRepo.findByInventoryAndBranch(
