@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.alex.asset.utils.SecHolder.getUserId;
-
 @Slf4j
 @RestController
 @CrossOrigin

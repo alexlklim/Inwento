@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class NotificationDto {
 
+    @Schema(description = "Id", example = "1")
+    Long id;
+
     @Schema(description = "Is read", example = "true")
     boolean isRead;
 
