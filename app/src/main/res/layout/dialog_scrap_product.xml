@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/asp_title"
+                android:id="@+id/dspTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Title"
@@ -24,7 +24,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/asp_desc"
+                android:id="@+id/dspDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="description"
@@ -37,7 +37,7 @@
                 android:paddingTop="5dp">
 
                 <TextView
-                    android:id="@+id/asp_code"
+                    android:id="@+id/dspCode"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -45,14 +45,6 @@
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/asp_price"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Price:"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -71,7 +63,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/asp_liable"
+                    android:id="@+id/dspLiable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -97,7 +89,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/asp_receiver"
+                    android:id="@+id/dspReceiver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -123,7 +115,7 @@
                 android:orientation="horizontal">
 
                 <Spinner
-                    android:id="@+id/asp_data_day"
+                    android:id="@+id/dspDataDay"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -132,7 +124,7 @@
                     android:textSize="14sp" />
 
                 <Spinner
-                    android:id="@+id/asp_data_month"
+                    android:id="@+id/dspDataMonth"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -141,7 +133,7 @@
                     android:textSize="14sp" />
 
                 <Spinner
-                    android:id="@+id/asp_data_year"
+                    android:id="@+id/dspDataYear"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -153,7 +145,7 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/asp_reason"
+                android:id="@+id/dspReason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -163,7 +155,7 @@
 
 
             <Button
-                android:id="@+id/asp_scrap"
+                android:id="@+id/dscBtnScrap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"

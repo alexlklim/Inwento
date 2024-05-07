@@ -1,9 +1,9 @@
 package com.alex.inwento.http;
 
-import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.http.auth.LoginDTO;
 import com.alex.inwento.http.auth.RefreshTokenDTO;
+import com.alex.inwento.http.inventory.DataDTO;
 import com.alex.inwento.http.inventory.EventDTO;
 import com.alex.inwento.http.inventory.InventoryDTO;
 import com.alex.inwento.http.inventory.ProductDTO;
@@ -57,9 +57,6 @@ public interface APIClient {
             @Path("rfid_code") String rfid_code
     );
 
-    @GET(Endpoints.GET_BRANCHES)
-    Call<List<Branch>> getBranches(@Header("Authorization") String authorization);
-
 
     @PUT(Endpoints.PUT_SCANNED_BAR_CODE)
     Call<Void> putScannedCode(
@@ -69,10 +66,20 @@ public interface APIClient {
             @Body List<Map<String, Object>> listOfCodes
     );
 
-    @PUT(Endpoints.PUT_SCANNED_RFID_CODE)
-    Call<Void> putScannedRfidCode(
+
+
+
+
+    @GET(Endpoints.GET_FIELDS)
+    Call<DataDTO> getFields(@Header("Authorization") String authorization);
+
+
+
+
+    @PUT(Endpoints.PUT_PRODUCT_UPDATE)
+    Call<Void> putUpdatedProduct(
             @Header("Authorization") String authorization,
-            @Path("event_id") int eventId,
-            @Body List<String> listOfCodes
-    );
+            @Body Map<String, Object> product);
+
+
 }

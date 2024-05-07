@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey;
 import com.alex.inwento.util.Util;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,21 +19,23 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(tableName = Util.TABLE_NAME_EMPLOYEE)
-public class Employee {
+@Entity(tableName = Util.TABLE_NAME_LOCATION)
+public class ProductLocation {
+
     @SerializedName("id")
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     private int id;
-    @SerializedName("email")
-    @ColumnInfo(name = "email")
-    private String email;
 
-    @SerializedName("first_name")
-    @ColumnInfo(name = "first_name")
-    private String firstName;
-    @SerializedName("last_name")
-    @ColumnInfo(name = "last_name")
-    private String lastName;
+    @SerializedName("location")
+    @ColumnInfo(name = "location")
+    private String location;
 
+    @SerializedName("active")
+    @ColumnInfo(name = "active")
+    private boolean active;
+
+    @SerializedName("branch_id")
+    @ColumnInfo(name = "branch_id")
+    private int branchId;
 }

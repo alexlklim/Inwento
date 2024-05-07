@@ -10,52 +10,60 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.alex.inwento.R;
+import com.alex.inwento.database.RoomDB;
 import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
+import com.alex.inwento.database.domain.ProductLocation;
+import com.alex.inwento.http.APIClient;
+import com.alex.inwento.http.RetrofitClient;
+import com.alex.inwento.http.inventory.ProductDTO;
 
-
-
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MoveProductDialog
         extends
         AppCompatDialogFragment
- {
+implements
+ResultDialog.ResultDialogListener{
     private static final String TAG = "AddEventDialog";
 
-    private FragmentActivity fragmentActivity;
 
+    private List<Branch> branchList;
+    private List<ProductLocation> productLocationList;
+    private List<Employee> employeeList;
+    List<String> branches, locations, employees;
 
-    private List<String> branchList;
-    private List<Branch> branchObjects;
-    private List<String> employeeList;
-    private List<Employee> employeeObjects;
+    String token;
 
-    String token, barCode;
+    ProductDTO productDTO;
 
-
-    private TextView titleTextView, codeTextView;
-    private Spinner branchSpinner, liableSpinner;
+    private Spinner branchSpinner, liableSpinner, locationSpinner;
     private EditText receiverEditText;
-    private Button btnMove;
+    private RoomDB roomDB;
 
 
     public static MoveProductDialog newInstance(
-            String token, String barCode) {
+            String token,
+            ProductDTO productDTO,
+            RoomDB roomDB) {
         MoveProductDialog dialog = new MoveProductDialog();
         dialog.token = token;
-        dialog.barCode = barCode;
+        dialog.productDTO = productDTO;
+        dialog.roomDB = roomDB;
         return dialog;
     }
 
@@ -67,112 +75,96 @@ public class MoveProductDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_move_product, null);
-        builder.setView(view).setTitle("Pezesunięcie");
-        fragmentActivity = requireActivity();
+        builder.setView(view).setTitle("Przesunięcie");
 
-        titleTextView = view.findViewById(R.id.dmp_title);
-        codeTextView = view.findViewById(R.id.dmp_code);
+        TextView titleTextView = view.findViewById(R.id.dmp_title);
+        TextView codeTextView = view.findViewById(R.id.dmp_code);
+        Button btnMove = view.findViewById(R.id.dmp_move);
+
         branchSpinner = view.findViewById(R.id.dmp_branch);
+        locationSpinner = view.findViewById(R.id.dmp_location);
         liableSpinner = view.findViewById(R.id.dmp_liable);
         receiverEditText = view.findViewById(R.id.dmp_receiver);
-        btnMove = view.findViewById(R.id.dmp_move);
 
+        branchList = roomDB.branchDAO().getAll();
+        productLocationList = roomDB.locationDAO().getAll();
+        employeeList = roomDB.employeeDAO().getAll();
 
+        initializeSpinners();
 
+        titleTextView.setText(productDTO.getTitle());
+        codeTextView.setText(productDTO.getBarCode());
+        receiverEditText.setText(productDTO.getReceiver());
 
+        int branchIndex = branches.indexOf(productDTO.getBranch());
+        if (branchIndex != -1) branchSpinner.setSelection(branchIndex);
 
-//        btnMove.setOnClickListener(v -> {
-//            new MoveProductTask(
-//                    this,
-//                    token,
-//                    productDto.getId(),
-//                    Branch.getBranchByName(branchSpinner.getSelectedItem().toString(), branchObjects),
-//                    Employee.getEmployeeByName(liableSpinner.getSelectedItem().toString(), employeeObjects),
-//                    receiverEditText.getText().toString())
-//                    .execute();
-//
-//
-//        });
+        int locationIndex = locations.indexOf(productDTO.getLocation());
+        if (locationIndex != -1) locationSpinner.setSelection(locationIndex);
+
+        int liableIndex = employees.indexOf(productDTO.getLiableName());
+        if (liableIndex != -1) liableSpinner.setSelection(liableIndex);
+
+        btnMove.setOnClickListener(v -> sendProductUpdateRequest());
         return builder.create();
     }
 
-//    @Override
-//    public void onDataReceived(Employee[] employees, Branch[] branches) {
-//        Log.i(TAG, "onDataReceived: ");
-//        branchObjects = Arrays.asList(branches);
-//        employeeObjects = Arrays.asList(employees);
-//
-//        branchList = Arrays.stream(branches)
-//                .map(Branch::getBranch)
-//                .collect(Collectors.toList());
-//
-//        employeeList = Arrays.stream(employees)
-//                .map(emp -> emp.getFirst_name() + " " + emp.getLast_name())
-//                .collect(Collectors.toList());
-//
-//        initializeSpinner();
-//    }
+    private void sendProductUpdateRequest() {
+        Log.i(TAG, "sendProductUpdateRequest ");
+        APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("id", productDTO.getId());
+        updates.put("branch_id", roomDB.branchDAO().getBranchByName(branchSpinner.getSelectedItem().toString()).getId());
+        updates.put("location_id", roomDB.locationDAO().getLocationByName(locationSpinner.getSelectedItem().toString()).getId());
+        updates.put("liable_id", roomDB.employeeDAO().getEmployeeIdByFullName(liableSpinner.getSelectedItem().toString()));
+        updates.put("receiver", receiverEditText.getText().toString());
 
-    private void initializeSpinner() {
+        Call<Void> call = apiClient.putUpdatedProduct("Bearer " + token, updates);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.i(TAG, "sendProductUpdateRequest is successful:");
+                    requireActivity().runOnUiThread(() -> {
+                        ResultDialog dialog = ResultDialog.newInstance(
+                                "Product " + productDTO.getTitle() + " zastał przesunięty",
+                                true,
+                                MoveProductDialog.this);
+                        dialog.show(getChildFragmentManager(), "MoveProductDialog");
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e(TAG, "sendProductUpdateRequest onFailure", t);
+            }
+        });
+    }
+
+
+    private void initializeSpinners() {
         Log.i(TAG, "initializeSpinner: ");
-        ArrayAdapter<String> adapterBranch = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                branchList
-        );
+        branches = branchList.stream().map(Branch::getBranch).collect(Collectors.toList());
+        locations = productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList());
+        employees = employeeList.stream().map(emp -> emp.getFirstName() + " " + emp.getLastName()).collect(Collectors.toList());
+
+        ArrayAdapter<String> adapterBranch = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, branches);
         adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         branchSpinner.setAdapter(adapterBranch);
 
+        ArrayAdapter<String> adapterLocation = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, locations);
+        adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationSpinner.setAdapter(adapterLocation);
 
-        ArrayAdapter<String> adapterEmp = new ArrayAdapter<>(
-                requireContext(),
-                android.R.layout.simple_spinner_item,
-                employeeList
-        );
+        ArrayAdapter<String> adapterEmp = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, employees);
         adapterEmp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         liableSpinner.setAdapter(adapterEmp);
     }
 
 
-//    @Override
-//    public void onError(String errorMessage) {
-//        Log.i(TAG, "onError: ");
-//        dismiss();
-//    }
-//
-//    @Override
-//    public void onProductByBarCodeSuccess(ProductDto productDto) {
-//        Log.i(TAG, "onProductByBarCodeSuccess: ");
-//        this.productDto = productDto;
-//        titleTextView.setText(productDto.getTitle());
-//        codeTextView.setText(productDto.getBar_code());
-//        receiverEditText.setText(productDto.getReceiver());
-//
-//        int branchIndex = branchList.indexOf(productDto.getBranch());
-//        if (branchIndex != -1) branchSpinner.setSelection(branchIndex);
-//
-//        int liableIndex = employeeList.indexOf(productDto.getLiable());
-//        if (liableIndex != -1) liableSpinner.setSelection(liableIndex);
-//    }
-//
-//    @Override
-//    public void onProductByBarCodeFailure(String errorMessage) {
-//        Log.i(TAG, "onProductByBarCodeFailure: ");
-//        dismiss();
-//    }
-//
-//
-//    @Override
-//    public void onProductMoveSuccess(Boolean answer) {
-//        Toast.makeText(requireContext(), "Przesunięcie producktu zrealizowane", Toast.LENGTH_SHORT).show();
-//        Log.i(TAG, "onProductMoveSuccess: ");
-//        dismiss();
-//    }
-//
-//    @Override
-//    public void onProductMoveFailure(String errorMessage) {
-//        Toast.makeText(requireContext(), "Przesunięcie producktu nie powiodło się", Toast.LENGTH_SHORT).show();
-//        Log.i(TAG, "onProductMoveFailure: ");
-//        dismiss();
-//    }
+    @Override
+    public void onOkClicked() {
+        dismiss();
+    }
 }

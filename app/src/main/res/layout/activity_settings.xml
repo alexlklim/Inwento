@@ -124,6 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="3"
                 android:inputType="text"
+                android:text="http://10.1.2.65:9091/api/"
                 android:hint="@string/fake_address" />
         </LinearLayout>
 

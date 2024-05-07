@@ -1,39 +1,42 @@
-package com.alex.inwento.activities;
+package com.alex.inwento.action;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.alex.inwento.R;
+import com.alex.inwento.database.RoomDB;
 import com.alex.inwento.dialog.MoveProductDialog;
 import com.alex.inwento.dialog.ScrapProductDialog;
+import com.alex.inwento.http.APIClient;
+import com.alex.inwento.http.RetrofitClient;
+import com.alex.inwento.http.inventory.ProductDTO;
+import com.alex.inwento.managers.FilterMng;
 import com.alex.inwento.managers.SettingsMng;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.Task;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProductUpdateActivity extends AppCompatActivity {
     private static final String TAG = "ProductMoveActivity";
     SettingsMng settingsMng;
     int action;
-    private Location currentLocation;
-    private FusedLocationProviderClient fusedLocationProviderClient;
+    RoomDB roomDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_update);
+        roomDB = RoomDB.getInstance(this);
         settingsMng = new SettingsMng(this);
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
         action = getIntent().getIntExtra("ACTION", 1);
 
         // for getting and filtering codes
@@ -43,11 +46,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
         registerReceiver(myBroadcastReceiver, filter);
 
 
-
-
-
     }
-
 
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
@@ -69,23 +68,6 @@ public class ProductUpdateActivity extends AppCompatActivity {
 
 
 
-    private void getLastLocation() {
-        Log.i(TAG, "getLastLocation");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            int FINE_PERMISSION_CODE = 1;
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
-            return;
-        }
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(location -> {
-            if (location != null) {
-                currentLocation = location;
-            }
-        });
-    }
-
     private void handleScanResult(Intent initiatingIntent) {
         Log.i(TAG, "handleScanResult");
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
@@ -95,19 +77,35 @@ public class ProductUpdateActivity extends AppCompatActivity {
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
-        System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: " + decodedData);
 
-        if (action == 1){
-            MoveProductDialog dialog = MoveProductDialog.newInstance(
-                    settingsMng.getAccessToken(), decodedData);
-            dialog.show(getSupportFragmentManager(), "MoveProductDialog");
+        if (settingsMng.isFilter()) {
+            if (FilterMng.filteringData(decodedData, settingsMng) == null) {
+                Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
-        if (action == 2){
-            ScrapProductDialog dialog = ScrapProductDialog.newInstance(
-                    settingsMng.getAccessToken(), decodedData);
-            dialog.show(getSupportFragmentManager(), "ScrapProductDialog");        }
+
+
+        sendGetFullProductRequest(decodedData);
+
     }
 
+
+    private void openMoveProductDialog(ProductDTO productDTO) {
+        MoveProductDialog dialog = MoveProductDialog.newInstance(
+                settingsMng.getAccessToken(),
+                productDTO,
+                roomDB);
+        dialog.show(getSupportFragmentManager(), "MoveProductDialog");
+    }
+
+    private void openScrapProductDialog(ProductDTO productDTO) {
+        ScrapProductDialog dialog = ScrapProductDialog.newInstance(
+                settingsMng.getAccessToken(),
+                productDTO,
+                roomDB);
+        dialog.show(getSupportFragmentManager(), "ScrapProductDialog");
+    }
 
     @Override
     protected void onDestroy() {
@@ -116,9 +114,25 @@ public class ProductUpdateActivity extends AppCompatActivity {
         unregisterReceiver(myBroadcastReceiver);
     }
 
+    private void sendGetFullProductRequest(String barCode) {
+        Log.i(TAG, "sendGetFullProductRequest bar code " + barCode);
+        APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
+        Call<ProductDTO> call;
+        call = apiClient.getFullProductByCode("Bearer " + settingsMng.getAccessToken(), barCode, "null");
+        call.enqueue(new Callback<ProductDTO>() {
+            @Override
+            public void onResponse(@NonNull Call<ProductDTO> call, @NonNull Response<ProductDTO> response) {
+                if (response.isSuccessful()) {
+                    if (action == 1) openMoveProductDialog(response.body());
+                    else if (action == 2) openScrapProductDialog(response.body());
 
+                }
+            }
 
-
-
-
+            @Override
+            public void onFailure(@NonNull Call<ProductDTO> call, @NonNull Throwable t) {
+                Log.e(TAG, "sendGetFullProductRequest onFailure", t);
+            }
+        });
+    }
 }

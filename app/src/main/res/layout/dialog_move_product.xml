@@ -49,6 +49,24 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:paddingTop="10dp"
+            android:text="Lokalizacjia:"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/dmp_location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:contentDescription="description" />
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingTop="10dp"
             android:textStyle="bold"
             android:text="Osoba odpowiedzialna:"

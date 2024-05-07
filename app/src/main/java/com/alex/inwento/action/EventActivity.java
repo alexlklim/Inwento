@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
+import com.alex.inwento.database.RoomDB;
+import com.alex.inwento.database.domain.ProductLocation;
 import com.alex.inwento.dialog.ProductDialog;
 import com.alex.inwento.dialog.UnknownProductDialog;
 import com.alex.inwento.http.APIClient;
@@ -35,16 +36,17 @@ import com.alex.inwento.http.inventory.EventDTO;
 import com.alex.inwento.http.inventory.ProductDTO;
 import com.alex.inwento.http.inventory.ProductShortDTO;
 import com.alex.inwento.http.inventory.UnknownProductDTO;
+import com.alex.inwento.managers.FilterMng;
 import com.alex.inwento.managers.SettingsMng;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,8 +69,10 @@ public class EventActivity extends AppCompatActivity
     UnknownProductAdapter unknownProductAdapter;
     ProductAdapter productAdapter;
     EventDTO event;
-    Spinner branchesSpinner;
+    Spinner locationSpinner;
     TextView aeBranch;
+
+    RoomDB roomDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class EventActivity extends AppCompatActivity
         setContentView(R.layout.activity_event);
         settingsMng = new SettingsMng(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        roomDB = RoomDB.getInstance(this);
 
         // check if user want to send data about gps to server during inventory
         getLastLocation();
@@ -94,7 +99,7 @@ public class EventActivity extends AppCompatActivity
         btnNotScanned = findViewById(R.id.btnNotScanned);
         btnNew = findViewById(R.id.btnNew);
         aeBranch = findViewById(R.id.aeBranch);
-        branchesSpinner = findViewById(R.id.aeLocations);
+        locationSpinner = findViewById(R.id.aeLocations);
         recyclerViewProduct = findViewById(R.id.rv_products);
         recyclerViewUnknownProduct = findViewById(R.id.rv_unknown_products);
 
@@ -114,7 +119,6 @@ public class EventActivity extends AppCompatActivity
         });
 
 
-
         sendGetEventById(getIntent().getIntExtra("EVENT_ID", 0));
 
 
@@ -122,7 +126,7 @@ public class EventActivity extends AppCompatActivity
 
 
     private void sendGetEventById(int eventId) {
-        Log.e(TAG, "sendGetEventById " + eventId);
+        Log.i(TAG, "sendGetEventById " + eventId);
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<EventDTO> call = apiClient.getEventById("Bearer " + settingsMng.getAccessToken(), eventId);
         call.enqueue(new Callback<EventDTO>() {
@@ -142,6 +146,9 @@ public class EventActivity extends AppCompatActivity
         });
     }
 
+    private List<ProductLocation> productLocationList;
+    List<String> locationsList;
+
     private void initialize() {
         Log.i(TAG, "initialize");
         aeBranch.setText(event.getBranch());
@@ -151,10 +158,13 @@ public class EventActivity extends AppCompatActivity
         btnNotScanned.setText(notScanned);
         btnNew.setText(scanned);
 
+        productLocationList = roomDB.locationDAO().getAll();
+        locationsList = productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList());
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
-                Arrays.asList("Loc 1", "Loc 2"));
+                locationsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        branchesSpinner.setAdapter(adapter);
+        locationSpinner.setAdapter(adapter);
 
         initializeProductRecycler(event.getNotScannedProducts(), false);
         setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
@@ -221,9 +231,10 @@ public class EventActivity extends AppCompatActivity
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
 
-        if (settingsMng.isFilter()){
-            if (filteringData(decodedData) == null){
+        if (settingsMng.isFilter()) {
+            if (FilterMng.filteringData(decodedData, settingsMng) == null) {
                 Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
 
@@ -280,22 +291,6 @@ public class EventActivity extends AppCompatActivity
         sendGetFullProductRequest(null, orderId);
     }
 
-    public String filteringData(String code) {
-        Log.i(TAG, "filteringData: " + code);
-        int length = code.length();
-        if ((settingsMng.getCodeLength() != 0 && length != settingsMng.getCodeLength()) ||
-                (settingsMng.getCodeMinLength() != 0 && length < settingsMng.getCodeMinLength()) ||
-                (settingsMng.getCodeMaxLength() != 0 && length > settingsMng.getCodeMaxLength())) {
-            return null;
-        }
-
-        if (!settingsMng.getCodePrefix().equals("") && code.startsWith(settingsMng.getCodePrefix())) return null;
-        if (!settingsMng.getCodeSuffix().equals("") && code.startsWith(settingsMng.getCodeSuffix())) return null;
-        if (!settingsMng.getCodePostfix().equals("") && code.startsWith(settingsMng.getCodePostfix())) return null;
-
-        return code;
-    }
-
 
     @Override
     public void onSentScannedProduct(ProductDTO productDTO) {
@@ -350,7 +345,9 @@ public class EventActivity extends AppCompatActivity
 
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<Void> call = apiClient.putScannedCode("Bearer " + settingsMng.getAccessToken(),
-                event.getId(), 1, list);
+                event.getId(),
+                roomDB.locationDAO().getLocationByName(locationSpinner.getSelectedItem().toString()).getId(),
+                list);
 
         call.enqueue(new Callback<Void>() {
             @Override
@@ -364,18 +361,6 @@ public class EventActivity extends AppCompatActivity
         });
     }
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        unregisterReceiver(myBroadcastReceiver);
-    }
 
     @Override
     protected void onDestroy() {

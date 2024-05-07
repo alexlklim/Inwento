@@ -29,7 +29,7 @@
             android:name=".action.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ProductUpdateActivity"
+            android:name=".action.ProductUpdateActivity"
             android:exported="false" />
         <activity
             android:name=".action.EventActivity"

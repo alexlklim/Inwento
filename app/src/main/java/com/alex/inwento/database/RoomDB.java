@@ -8,11 +8,13 @@ import androidx.room.RoomDatabase;
 
 import com.alex.inwento.database.dao.BranchDAO;
 import com.alex.inwento.database.dao.EmployeeDAO;
+import com.alex.inwento.database.dao.LocationDAO;
 import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
+import com.alex.inwento.database.domain.ProductLocation;
 import com.alex.inwento.util.Util;
 
-@Database(entities = {Branch.class, Employee.class}, version = Util.DATABASE_VERSION, exportSchema = false)
+@Database(entities = {Branch.class, ProductLocation.class, Employee.class}, version = Util.DATABASE_VERSION, exportSchema = false)
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB database;
     private static final String DATABASE_NAME = Util.DATABASE_NAME;
@@ -29,6 +31,7 @@ public abstract class RoomDB extends RoomDatabase {
 
     public abstract BranchDAO branchDAO();
     public abstract EmployeeDAO employeeDAO();
+    public abstract LocationDAO locationDAO();
 
 
 }

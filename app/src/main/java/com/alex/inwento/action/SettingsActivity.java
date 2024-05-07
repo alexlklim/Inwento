@@ -1,31 +1,45 @@
 package com.alex.inwento.action;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.alex.inwento.R;
+import com.alex.inwento.database.RoomDB;
+import com.alex.inwento.http.APIClient;
+import com.alex.inwento.http.RetrofitClient;
+import com.alex.inwento.http.inventory.DataDTO;
 import com.alex.inwento.managers.SettingsMng;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SettingsActivity extends AppCompatActivity {
+    private static final String TAG = "SettingsActivity";
 
     TextView sName, sEmail;
     EditText sServerAddress, sPrefix, sSuffix, sPostfix, sLength, sLengthMax, sLengthMin;
     Button btnSave;
     CheckBox sFilter;
     SettingsMng sm;
+    RoomDB roomDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_settings);
         sm = new SettingsMng(this);
+        roomDB = RoomDB.getInstance(this);
+
 
         sName = findViewById(R.id.sName);
         sEmail = findViewById(R.id.sEmail);
@@ -40,6 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnSave = findViewById(R.id.btnSave);
 
         setValues();
+        sendGetDataRequest();
 
         btnSave.setOnClickListener(view -> applyNewConfig());
 
@@ -78,5 +93,30 @@ public class SettingsActivity extends AppCompatActivity {
     private Integer parseInteger(String value) {
         return TextUtils.isEmpty(value) ? null : Integer.parseInt(value);
     }
+
+
+    private void sendGetDataRequest() {
+        Log.e(TAG, "sendGetDataRequest");
+        APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
+        Call<DataDTO> call = apiClient.getFields("Bearer " + sm.getAccessToken());
+        call.enqueue(new Callback<DataDTO>() {
+            @Override
+            public void onResponse(@NonNull Call<DataDTO> call, @NonNull Response<DataDTO> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    DataDTO dto = response.body();
+                    roomDB.branchDAO().insert(dto.getBranches());
+                    roomDB.locationDAO().insert(dto.getProductLocations());
+                    roomDB.employeeDAO().insert(dto.getEmployees());
+                }
+                else Log.e(TAG, "Get data failed:");
+            }
+            @Override
+            public void onFailure(@NonNull Call<DataDTO> call, @NonNull Throwable t) {
+                Log.e(TAG, "sendLoginRequestRetrofit onFailure", t);
+            }
+        });
+    }
+
 
 }

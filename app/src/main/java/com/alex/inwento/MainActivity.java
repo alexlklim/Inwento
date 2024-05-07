@@ -13,12 +13,13 @@ import com.alex.inwento.action.InventoryActivity;
 import com.alex.inwento.action.LoginActivity;
 import com.alex.inwento.action.SearchActivity;
 import com.alex.inwento.action.SettingsActivity;
-import com.alex.inwento.activities.ProductUpdateActivity;
+import com.alex.inwento.action.ProductUpdateActivity;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.http.auth.RefreshTokenDTO;
 import com.alex.inwento.managers.SettingsMng;
+import com.alex.inwento.util.Endpoints;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-         setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         settingsMng = new SettingsMng(this);
 
+
         sendRefreshTokenRequest();
+
 
 
         btnSearch = findViewById(R.id.btnSearch);
@@ -49,13 +52,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, InventoryActivity.class)));
 
         btnMove = findViewById(R.id.btnMove);
-        btnMove.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, ProductUpdateActivity.class)));
+        btnMove.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ProductUpdateActivity.class);
+            intent.putExtra("ACTION", 1);
+            startActivity(intent);
+        });
+
 
         btnScrap = findViewById(R.id.btnScrap);
-        btnScrap.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, ProductUpdateActivity.class)));
-
+        btnScrap.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ProductUpdateActivity.class);
+            intent.putExtra("ACTION", 2);
+            startActivity(intent);
+        });
         btnSettings = findViewById(R.id.btnSettings);
         btnSettings.setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
@@ -74,8 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     settingsMng.setAuthInfo(response.body());
-                }
-                else handleError(response.code());
+                } else handleError(response.code());
             }
 
             @Override

@@ -5,21 +5,24 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.alex.inwento.database.domain.Employee;
-import com.alex.inwento.database.domain.Location;
+import com.alex.inwento.database.domain.ProductLocation;
+import com.alex.inwento.util.Util;
 
 import java.util.List;
 
 @Dao
 public interface LocationDAO {
 
-    @Query("SELECT * FROM locations ORDER BY id DESC")
-    List<Location> getAll();
+    @Query("SELECT * FROM " + Util.TABLE_NAME_LOCATION + " ORDER BY id DESC")
+    List<ProductLocation> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Location> locations);
+    void insert(List<ProductLocation> productLocations);
 
-    @Query("DELETE FROM locations")
+    @Query("SELECT * FROM " + Util.TABLE_NAME_LOCATION + " WHERE location = :locationName")
+    ProductLocation getLocationByName(String locationName);
+
+    @Query("DELETE FROM  " + Util.TABLE_NAME_LOCATION)
     void deleteAll();
 
 }
