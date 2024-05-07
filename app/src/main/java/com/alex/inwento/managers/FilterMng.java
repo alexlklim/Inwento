@@ -1,7 +1,5 @@
 package com.alex.inwento.managers;
 
-import android.util.Log;
-
 public class FilterMng {
 
 

@@ -71,6 +71,8 @@ public class EventActivity extends AppCompatActivity
     EventDTO event;
     Spinner locationSpinner;
     TextView aeBranch;
+    List<String> locationsList;
+
 
     RoomDB roomDB;
 
@@ -146,8 +148,6 @@ public class EventActivity extends AppCompatActivity
         });
     }
 
-    private List<ProductLocation> productLocationList;
-    List<String> locationsList;
 
     private void initialize() {
         Log.i(TAG, "initialize");
@@ -158,7 +158,7 @@ public class EventActivity extends AppCompatActivity
         btnNotScanned.setText(notScanned);
         btnNew.setText(scanned);
 
-        productLocationList = roomDB.locationDAO().getAll();
+        List<ProductLocation> productLocationList = roomDB.locationDAO().getAll();
         locationsList = productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,

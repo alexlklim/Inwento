@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey;
 import com.alex.inwento.util.Util;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import com.alex.inwento.R;
 
 public class ResultDialog extends AppCompatDialogFragment {
-    private static final String TAG = "ResultDialog";
     private ResultDialogListener mListener;
 
     private String text;

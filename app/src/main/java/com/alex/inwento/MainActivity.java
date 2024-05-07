@@ -11,15 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alex.inwento.action.InventoryActivity;
 import com.alex.inwento.action.LoginActivity;
+import com.alex.inwento.action.ProductUpdateActivity;
 import com.alex.inwento.action.SearchActivity;
 import com.alex.inwento.action.SettingsActivity;
-import com.alex.inwento.action.ProductUpdateActivity;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.http.auth.RefreshTokenDTO;
 import com.alex.inwento.managers.SettingsMng;
-import com.alex.inwento.util.Endpoints;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -94,10 +94,7 @@ public class ScrapProductDialog
         dspReceiver.setText(productDTO.getReceiver());
 
 
-        dscBtnScrap.setOnClickListener(v -> {
-            sendProductUpdateRequest();
-
-        });
+        dscBtnScrap.setOnClickListener(v -> sendProductUpdateRequest());
         return builder.create();
     }
 

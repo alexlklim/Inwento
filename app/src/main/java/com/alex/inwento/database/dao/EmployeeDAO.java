@@ -5,7 +5,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.alex.inwento.database.domain.Branch;
 import com.alex.inwento.database.domain.Employee;
 import com.alex.inwento.util.Util;
 
