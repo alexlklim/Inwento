@@ -25,23 +25,32 @@ public interface APIClient {
 
 
     @POST(Endpoints.LOGIN)
-    Call<AuthDTO> getAuthDTOLogin(@Body LoginDTO credentials);
+    Call<AuthDTO> getAuthDTOLogin(
+            @Body LoginDTO credentials
+    );
 
 
     @POST(Endpoints.REFRESH_TOKEN)
-    Call<AuthDTO> getAuthDTORefresh(@Body RefreshTokenDTO credentials);
+    Call<AuthDTO> getAuthDTORefresh(
+            @Body RefreshTokenDTO credentials
+    );
 
     @GET(Endpoints.GET_CURRENT_INVENTORY)
-    Call<InventoryDTO> getCurrentInventory(@Header("Authorization") String authorization);
+    Call<InventoryDTO> getCurrentInventory(
+            @Header("Authorization") String authorization
+    );
 
     @GET(Endpoints.GET_EVENT_BY_ID)
     Call<EventDTO> getEventById(
             @Header("Authorization") String authorization,
-            @Path("event_id") long eventId);
+            @Path("event_id") long eventId
+    );
 
 
     @GET(Endpoints.GET_SHORT_PRODUCTS)
-    Call<List<ProductShortDTO>> getShortProducts(@Header("Authorization") String authorization);
+    Call<List<ProductShortDTO>> getShortProducts(
+            @Header("Authorization") String authorization
+    );
 
 
     @GET(Endpoints.GET_FULL_PRODUCT_BY_ID)
@@ -71,7 +80,9 @@ public interface APIClient {
 
 
     @GET(Endpoints.GET_FIELDS)
-    Call<DataDTO> getFields(@Header("Authorization") String authorization);
+    Call<DataDTO> getFields(
+            @Header("Authorization") String authorization
+    );
 
 
 
@@ -79,7 +90,8 @@ public interface APIClient {
     @PUT(Endpoints.PUT_PRODUCT_UPDATE)
     Call<Void> putUpdatedProduct(
             @Header("Authorization") String authorization,
-            @Body Map<String, Object> product);
+            @Body Map<String, Object> product
+    );
 
 
 }

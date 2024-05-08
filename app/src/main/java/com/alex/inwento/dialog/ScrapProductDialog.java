@@ -89,7 +89,7 @@ public class ScrapProductDialog
         initializeSpinners();
         dspTitle.setText(productDTO.getTitle());
         dspDesc.setText(productDTO.getDescription());
-        dspCode.setText(productDTO.getBarCode());
+        dspCode.setText("code: t" + productDTO.getBarCode());
         dspLiable.setText(productDTO.getLiableName());
         dspReceiver.setText(productDTO.getReceiver());
 

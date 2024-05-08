@@ -114,6 +114,8 @@ public class SearchActivity
         call.enqueue(new Callback<ProductDTO>() {
             @Override
             public void onResponse(@NonNull Call<ProductDTO> call, @NonNull Response<ProductDTO> response) {
+                recyclerView.clearFocus();
+
                 if (response.isSuccessful()) openProductDialog(response.body());
                 else showToast();
             }
@@ -133,6 +135,7 @@ public class SearchActivity
 
     public void openProductDialog(ProductDTO productDTO) {
         Log.i(TAG, "initializeRecyclerView: ");
+        System.out.println(productDTO);
         ProductDialog.newInstance(this, "null", false, productDTO).show(getSupportFragmentManager(), "product_dialog");
     }
 
@@ -154,7 +157,6 @@ public class SearchActivity
     };
 
 
-    private Set<String> scannedCodesSet = new HashSet<>();
 
     private void handleScanResult(Intent initiatingIntent) {
         Log.i(TAG, "handleScanResult");
@@ -167,26 +169,17 @@ public class SearchActivity
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
+        System.out.println("____________________");
+        System.out.println(decodedData);
 
-        if (decodedLabelType.startsWith("LABEL-TYPE-")){
-            System.out.println("Label: " + decodedLabelType);
-
-            if (!scannedCodesSet.contains(decodedData)) {
-                scannedCodesSet.add(decodedData);
-                sendGetFullProductRequest(decodedData, null);
-                recyclerView.clearFocus();
-            } else {
-                Log.i(TAG, "Duplicate scan event for code: " + decodedData);
-            }
-        }
+        sendGetFullProductRequest(decodedData, null);
+        recyclerView.clearFocus();
 
         productAdapter.setHandlingScanEvent(false);
+        recyclerView.clearFocus();
     }
 
-    // Method to clear the scanned codes set (if needed)
-    private void clearScannedCodesSet() {
-        scannedCodesSet.clear();
-    }
+
 
     @Override
     public void onSentScannedProduct(ProductDTO productDTO) {

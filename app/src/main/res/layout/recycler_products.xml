@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="8"
+        android:layout_weight="10"
         android:orientation="vertical">
 
         <TextView
@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Samsung Galaxy"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
@@ -27,20 +27,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="code: bar1234"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/rpRfidCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="code: bar1234"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/rpllLocation"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical">
@@ -51,19 +52,20 @@
             android:layout_height="wrap_content"
             android:text="CSMM"
             android:textStyle="bold"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/rpLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="pokój 1"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
 
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/rpllImageResult"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
