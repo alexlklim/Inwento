@@ -4,6 +4,7 @@ package com.alex.asset.inventory.controller;
 import com.alex.asset.inventory.dto.EventDTO;
 import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.utils.SecHolder;
+import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,7 +21,7 @@ import java.util.Map;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-    @RequestMapping("/api/v1/inventory/events")
+@RequestMapping("/api/v1/inventory/events")
 @Tag(name = "Event Controller", description = "Event API")
 public class EventController {
     private final String TAG = "EVENT_CONTROLLER - ";
@@ -37,6 +38,16 @@ public class EventController {
         return eventService.getEvent(eventId, eventFields);
     }
 
+    @Operation(summary = "Get short event by id (without products, only their amount) endpoint for android app")
+    @GetMapping("/app/{event_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object> getShortEventById(
+            @PathVariable("event_id") Long eventId) {
+        log.info(TAG + "Get short event by id");
+        return eventService.getEvent(eventId, Utils.EVENT_SHORT_FIELDS);
+    }
+
+
 
     @Operation(summary = "Get events for inventory by id")
     @GetMapping("/inv/{inventory_id}/mode/{mode}/all")
@@ -46,9 +57,12 @@ public class EventController {
             @PathVariable("mode") String mode,
             @RequestBody(required = false) List<String> eventFields) {
         log.info(TAG + "Get events for specific inventory");
-
         return eventService.getEventsForInventory(inventoryId, mode, eventFields, SecHolder.getUserId());
     }
+
+
+
+
 
 
     @Operation(summary = "Create event for current inventory")

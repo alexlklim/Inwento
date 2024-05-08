@@ -68,6 +68,12 @@ public class EventService {
     }
 
 
+
+
+
+
+
+
     @SneakyThrows
     public List<Map<String, Object>> getEventsForInventory(
             Long inventoryId, String mode, List<String> eventFields, Long userId) {

@@ -31,5 +31,5 @@ DROP TABLE IF EXISTS tmp;
 
 
 
-select * from events;
+select * from products;
 select * from locations;
