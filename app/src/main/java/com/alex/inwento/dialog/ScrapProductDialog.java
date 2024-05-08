@@ -89,7 +89,7 @@ public class ScrapProductDialog
         initializeSpinners();
         dspTitle.setText(productDTO.getTitle());
         dspDesc.setText(productDTO.getDescription());
-        dspCode.setText("code: t" + productDTO.getBarCode());
+        dspCode.setText("code: " + productDTO.getBarCode());
         dspLiable.setText(productDTO.getLiableName());
         dspReceiver.setText(productDTO.getReceiver());
 
@@ -146,7 +146,9 @@ public class ScrapProductDialog
         updates.put("scrapping_date", date);
         updates.put("scrapping_reason", dspReason.getText().toString());
 
-        System.out.println(updates);
+        System.out.println("TOKEN : " + token);
+        System.out.println("CHANGES : " + updates);
+
         Call<Void> call = apiClient.putUpdatedProduct("Bearer " + token, updates);
         call.enqueue(new Callback<Void>() {
             @Override

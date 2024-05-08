@@ -108,14 +108,25 @@ public class SearchActivity
         Log.i(TAG, "sendGetFullProductRequest bar code " + barCode);
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<ProductDTO> call;
-        if (productId != null) call = apiClient.getFullProductById("Bearer " + settingsMng.getAccessToken(), productId);
-        else call = apiClient.getFullProductByCode("Bearer " + settingsMng.getAccessToken(), barCode, "null");
+        System.out.println("TOKEN : " + settingsMng.getAccessToken());
+        System.out.println("BAR_CODE : " + barCode);
+        System.out.println("BAR_CODE : " + productId);
+
+        if (productId != null) {
+            call = apiClient.getFullProductById(
+                    "Bearer " + settingsMng.getAccessToken(),
+                    productId);
+        }
+        else {
+            call = apiClient.getFullProductByCode(
+                    "Bearer " + settingsMng.getAccessToken(),
+                    barCode);
+        }
 
         call.enqueue(new Callback<ProductDTO>() {
             @Override
             public void onResponse(@NonNull Call<ProductDTO> call, @NonNull Response<ProductDTO> response) {
                 recyclerView.clearFocus();
-
                 if (response.isSuccessful()) openProductDialog(response.body());
                 else showToast();
             }
@@ -134,10 +145,16 @@ public class SearchActivity
 
 
     public void openProductDialog(ProductDTO productDTO) {
-        Log.i(TAG, "initializeRecyclerView: ");
-        System.out.println(productDTO);
-        ProductDialog.newInstance(this, "null", false, productDTO).show(getSupportFragmentManager(), "product_dialog");
+        if (!isFinishing() && !isDestroyed()) {
+            Log.i(TAG, "openProductDialog: ");
+            System.out.println(productDTO);
+            ProductDialog.newInstance(this, "null", false, productDTO).show(getSupportFragmentManager(), "product_dialog");
+        } else {
+            Log.e(TAG, "Activity is finishing or destroyed, cannot show dialog.");
+        }
     }
+
+
 
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {

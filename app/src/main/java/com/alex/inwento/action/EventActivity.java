@@ -253,7 +253,7 @@ public class EventActivity extends AppCompatActivity
         if (productId != null)
             call = apiClient.getFullProductById("Bearer " + settingsMng.getAccessToken(), productId);
         else
-            call = apiClient.getFullProductByCode("Bearer " + settingsMng.getAccessToken(), barCode, "null");
+            call = apiClient.getFullProductByCode("Bearer " + settingsMng.getAccessToken(), barCode);
 
         call.enqueue(new Callback<ProductDTO>() {
             @Override

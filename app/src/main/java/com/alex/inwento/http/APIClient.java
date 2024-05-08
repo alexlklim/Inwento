@@ -62,8 +62,7 @@ public interface APIClient {
     @GET(Endpoints.GET_FULL_PRODUCT_BY_CODE)
     Call<ProductDTO> getFullProductByCode(
             @Header("Authorization") String authorization,
-            @Path("bar_code") String barCode,
-            @Path("rfid_code") String rfid_code
+            @Path("bar_code") String barCode
     );
 
 

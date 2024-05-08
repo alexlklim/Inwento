@@ -26,7 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductUpdateActivity extends AppCompatActivity {
-    private static final String TAG = "ProductMoveActivity";
+    private static final String TAG = "ProductUpdateActivity";
     SettingsMng settingsMng;
     int action;
     RoomDB roomDB;
@@ -118,7 +118,11 @@ public class ProductUpdateActivity extends AppCompatActivity {
         Log.i(TAG, "sendGetFullProductRequest bar code " + barCode);
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<ProductDTO> call;
-        call = apiClient.getFullProductByCode("Bearer " + settingsMng.getAccessToken(), barCode, "null");
+        call = apiClient.getFullProductByCode(
+                "Bearer " + settingsMng.getAccessToken(),
+                barCode);
+
+
         call.enqueue(new Callback<ProductDTO>() {
             @Override
             public void onResponse(@NonNull Call<ProductDTO> call, @NonNull Response<ProductDTO> response) {

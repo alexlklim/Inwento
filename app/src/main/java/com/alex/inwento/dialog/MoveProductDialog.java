@@ -39,7 +39,7 @@ public class MoveProductDialog
         AppCompatDialogFragment
 implements
 ResultDialog.ResultDialogListener{
-    private static final String TAG = "AddEventDialog";
+    private static final String TAG = "MoveProductDialog";
 
 
     private List<Branch> branchList;
@@ -118,6 +118,12 @@ ResultDialog.ResultDialogListener{
         updates.put("location_id", roomDB.locationDAO().getLocationByName(locationSpinner.getSelectedItem().toString()).getId());
         updates.put("liable_id", roomDB.employeeDAO().getEmployeeIdByFullName(liableSpinner.getSelectedItem().toString()));
         updates.put("receiver", receiverEditText.getText().toString());
+
+
+        System.out.println("TOKEN : " + token);
+        System.out.println("CHANGES : " + updates);
+
+
 
         Call<Void> call = apiClient.putUpdatedProduct("Bearer " + token, updates);
         call.enqueue(new Callback<Void>() {

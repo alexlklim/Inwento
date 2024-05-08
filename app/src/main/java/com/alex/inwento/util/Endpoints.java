@@ -15,7 +15,7 @@ public class Endpoints {
     // Product Endpoints
     public static final String GET_SHORT_PRODUCTS = "v1/products/all/emp/true";
     public static final String GET_FULL_PRODUCT_BY_ID = "v1/products/{product_id}";
-    public static final String GET_FULL_PRODUCT_BY_CODE = "v1/products/filter/unique/{bar_code}/{rfid_code}/null/null";
+    public static final String GET_FULL_PRODUCT_BY_CODE = "v1/products/filter/unique/{bar_code}/null/null/null";
     public static final String PUT_PRODUCT_UPDATE = "v1/products";
 
     // Inventory Events Endpoints
