@@ -26,10 +26,3 @@ DROP TABLE IF EXISTS event_products;
 DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS tmp;
-
-
-
-
-
-select * from products;
-select * from locations;
