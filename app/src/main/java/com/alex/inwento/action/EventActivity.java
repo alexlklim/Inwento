@@ -153,8 +153,8 @@ public class EventActivity extends AppCompatActivity
         Log.i(TAG, "initialize");
         aeBranch.setText(event.getBranch());
         btnScanned.setText(R.string.scanned);
-        String notScanned = getString(R.string.to_scan) + (event.getTotalProductAmount() - event.getScannedProductAmount());
-        String scanned = getString(R.string.new_unknown) + event.getUnknownProductAmount();
+        String notScanned = getString(R.string.to_scan) + " " + (event.getTotalProductAmount() - event.getScannedProductAmount());
+        String scanned = getString(R.string.new_unknown) + " " + event.getUnknownProductAmount();
         btnNotScanned.setText(notScanned);
         btnNew.setText(scanned);
 

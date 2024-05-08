@@ -84,10 +84,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
                 return;
             }
         }
-
-
         sendGetFullProductRequest(decodedData);
-
     }
 
 
