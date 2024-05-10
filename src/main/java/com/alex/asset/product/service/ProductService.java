@@ -1,10 +1,12 @@
 package com.alex.asset.product.service;
 
 
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.ScannedProduct;
 import com.alex.asset.inventory.repo.EventRepo;
@@ -12,6 +14,7 @@ import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
+import com.alex.asset.logs.domain.Log;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
@@ -21,6 +24,7 @@ import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductHistoryRepo;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.domain.Role;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
@@ -149,12 +153,18 @@ public class ProductService implements IProductService {
         updates.forEach((key, value) -> {
             switch (key) {
                 case "active":
+                    // if inventory is active, there is no possibility to delete product
+                    if (inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null) != null) break;
+
                     if (userRepo.getUser(userId).getRoles() == Role.ADMIN) {
                         product.setActive((Boolean) value);
-                        product.setBarCode(null);
-                        product.setRfidCode(null);
-                        product.setInventoryNumber(null);
-                        product.setSerialNumber(null);
+                        if (!product.isActive()){
+                            // delete all unique values for this product
+                            product.setBarCode(null);
+                            product.setRfidCode(null);
+                            product.setInventoryNumber(null);
+                            product.setSerialNumber(null);
+                        }
                         addHistoryToProduct(userId, productId, Activity.VISIBILITY);
                     }
                     break;
@@ -224,8 +234,7 @@ public class ProductService implements IProductService {
                     addHistoryToProduct(userId, productId, Activity.UNIT);
                     break;
                 case "branch_id":
-//                    resolveIssueWithInventory(product, locationService.getBranchById(((Number) value).longValue()));
-                    product.setBranch(locationService.getBranchById(((Number) value).longValue()));
+                    resolveIssueWithInventory(product, locationService.getBranchById(((Number) value).longValue()), userRepo.getUser(userId));
                     addHistoryToProduct(userId, productId, Activity.BRANCH);
                     break;
                 case "location_id":
@@ -296,6 +305,20 @@ public class ProductService implements IProductService {
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, "Product was saved");
     }
 
+    @SneakyThrows
+    private void resolveIssueWithInventory(Product product, Branch branch, User user) {
+        log.error(TAG + "Resolve issue with inventory");
+        Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null);
+        if (inventory != null){
+            Event eventToMove = eventRepo.findByInventoryAndBranch(inventory, branch).orElseThrow(
+                    () -> new ResourceNotFoundException("Event not found by current inventory and branch")
+            );
+            moveProductByBranch(product, eventToMove, user);
+        }
+        product.setBranch(branch);
+        log.error(TAG + "Inventory is not active, no needed to resolve issues with inventory");
+    }
+
 
     @Override
     @Modifying
@@ -312,17 +335,21 @@ public class ProductService implements IProductService {
 
     @SneakyThrows
     public void addHistoryToProduct(Long userId, Long productId, Activity activity) {
-        ProductHistory productHistory = new ProductHistory();
-        productHistory.setActivity(activity);
-        productHistory.setCreated(LocalDateTime.now());
-        productHistory.setProduct(productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found")));
-        productHistory.setUser(userRepo.getUser(userId));
+        log.info(TAG + "Add history to products");
+        ProductHistory productHistory = new ProductHistory().toBuilder()
+                .activity(activity)
+                .created(LocalDateTime.now())
+                .product(productRepo.findById(productId).orElseThrow(
+                        () -> new ResourceNotFoundException("Product with id " + productId + " not found")))
+                .user(userRepo.getUser(userId))
+                .build();
         productHistoryRepo.save(productHistory);
     }
 
 
     @SneakyThrows
     public void moveProductByLocation(Product product, Location location, Long userId) {
+        log.info(TAG + "Move product by location");
         product.setLocation(location);
         productRepo.save(product);
         addHistoryToProduct(userId, product.getId(), Activity.LOCATION);
@@ -334,19 +361,26 @@ public class ProductService implements IProductService {
     }
 
 
-    public void moveProductByBranch(Product product, Event event) {
-        Event oldEvent = eventRepo.findByInventoryAndBranch(
-                inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null),
-                product.getBranch()
-                ).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+    @SneakyThrows
+    public void moveProductByBranch(Product product, Event eventToMove, User user) {
+        log.info(TAG + "Move product by Branch");
+        // is inventory active or no
+        // inventory active -> get scanned product by event and product
+        // change the event in scanned_product
+        // change the branch in product
 
-        ScannedProduct scannedProduct = scannedProductRepo.findByProductAndEvent(product, oldEvent)
-                .orElseThrow(() -> new ResourceNotFoundException("Scanned product not found"));
-        scannedProduct.setEvent(event);
-        scannedProductRepo.save(scannedProduct);
-
-        product.setBranch(event.getBranch());
+        Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null);
+        if (inventory != null){
+            Event oldEvent = eventRepo.findByInventoryAndBranch(inventory, product.getBranch()).orElseThrow(
+                    () -> new ResourceNotFoundException("Event not found for current inventory and product branch"));
+            ScannedProduct scannedProduct = scannedProductRepo.findByProductAndEvent(product, oldEvent).orElse(null);
+            if (scannedProduct == null){
+                scannedProduct = new ScannedProduct(product, eventToMove, user, true);
+            }
+            scannedProduct.setEvent(eventToMove);
+            scannedProductRepo.save(scannedProduct);
+        }
+        product.setBranch(eventToMove.getBranch());
         productRepo.save(product);
-
     }
 }

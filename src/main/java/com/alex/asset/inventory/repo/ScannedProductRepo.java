@@ -11,11 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ScannedProductRepo extends JpaRepository<ScannedProduct, Long> {
-    List<ScannedProduct> findAllByEvent(Event event);
 
-    @Query(value = "SELECT COUNT(*) FROM ScannedProduct sp WHERE sp.event.id = :eventId")
-    int countScannedProductsByEventId(@Param("eventId") Long eventId);
 
+    @Query("SELECT COUNT(sp) " +
+            "FROM ScannedProduct sp " +
+            "WHERE sp.event = ?1 AND sp.isScanned = ?2")
+    int countByEventIdAndIsScanned(Event event, boolean isScanned);
+
+
+    @Query("SELECT sp " +
+            "FROM ScannedProduct sp " +
+            "WHERE sp.event = ?1 AND sp.isScanned = ?2")
+    List<ScannedProduct> findProductsByEventAndIsScanned(Event event, Boolean isScanned);
+
+
+    Optional<ScannedProduct> findScannedProductByEventAndProduct(Event event, Product product);
 
     boolean existsByProductAndEvent(Product product, Event event);
 

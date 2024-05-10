@@ -60,6 +60,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "WHERE p.barCode = ?1 AND p.isActive = true ")
     Optional<Product> getByBarCode(String barCode);
 
+
+
     @Query("SELECT p " +
             "FROM Product p " +
             "WHERE p.rfidCode = ?1 AND p.isActive = true ")

@@ -14,7 +14,6 @@ spring:
         - classpath:database/schema.sql
         - classpath:database/init.sql
         - classpath:database/kst.sql
-#        - classpath:database/products.sql
   mail:
     host: smtp.gmail.com
     port: 587

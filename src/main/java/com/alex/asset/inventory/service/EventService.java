@@ -23,6 +23,7 @@ import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.domain.Role;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.dto.DtoActive;
@@ -62,16 +63,10 @@ public class EventService {
         log.info(TAG + "Get event with id {}", eventId);
         if (eventFields == null || eventFields.isEmpty()) eventFields = Utils.EVENT_FIELDS;
         Event event = eventRepo.findById(eventId).orElseThrow(
-                () -> new ResourceNotFoundException("Event not found with id "+ eventId)
+                () -> new ResourceNotFoundException("Event not found with id " + eventId)
         );
         return eventMapper.toDTOWithCustomFields(event, eventFields);
     }
-
-
-
-
-
-
 
 
     @SneakyThrows
@@ -93,21 +88,9 @@ public class EventService {
     @SneakyThrows
     public Map<String, Object> createEvent(Long userId, EventDTO dto) {
         log.info(TAG + "Create event by user with id {}", userId);
-        Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now())
-                .orElseThrow(() -> new ResourceNotFoundException("No active inventory now"));
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found"));
-        if (eventRepo.existsByBranchAndInventory(branch, inventory))
-            throw new ObjectAlreadyExistException("Event for this branch already exists");
-
-        Event event = new Event();
-        event.setActive(true);
-        event.setInventory(inventory);
-        event.setUser(userRepo.getUser(userId));
-        event.setBranch(branch);
-        event.setInfo(dto.getInfo());
-        logService.addLog(userId, Action.CREATE, Section.EVENT, dto.toString());
-        eventRepo.save(event);
+        Event event = createEventForBranch(userRepo.getUser(userId), branch, dto.getInfo());
         return eventMapper.toDTOWithCustomFields(event, Utils.EVENT_FIELDS);
     }
 
@@ -126,19 +109,36 @@ public class EventService {
 
 
     public void addProductsToEventByRfidCode(List<String> listOfCodes, Long eventId, Long userId) {
-        log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
+        log.info(TAG + "Adding products to event by rfid code by user with id {}", userId);
         Event event = eventRepo.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found with id " + eventId));
-        for (String rfid: listOfCodes){
-            Product product = productRepo.getByBarCode(rfid).orElse(null);
-            if (product == null) return;
-            if (scannedProductRepo.existsByProductAndEvent(product, event)) return;
+        System.out.println("EVENT = " + event.getId());
+        for (String rfidCode : listOfCodes) {
+            System.out.println("CODE: " + rfidCode);
+            Product product = productRepo.getByRfidCode(rfidCode).orElse(null);
+            if (product == null) {
+                log.error(TAG + "PRODUCT IS NULL");
+                continue;
+            }
+            System.out.println("PRODUCT: " + product.getRfidCode());
 
-            ScannedProduct scannedProduct = new ScannedProduct().toBuilder()
-                    .user(userRepo.getUser(userId)).product(product).event(event).build();
+            ScannedProduct scannedProduct = scannedProductRepo.findByProductAndEvent(product, event).orElse(null);
+            if (scannedProduct == null){
+                // if scanned product for this product not found -> create it avutomatically
+                scannedProduct = new ScannedProduct().toBuilder()
+                        .user(userRepo.getUser(userId))
+                        .event(event)
+                        .isScanned(true)
+                        .product(product)
+                        .build();
+            }
+            scannedProduct.setIsScanned(true);
+
+             
             scannedProductRepo.save(scannedProduct);
         }
     }
+
     @SneakyThrows
     @Transactional
     public void addProductsToEventByBarCode(
@@ -174,18 +174,20 @@ public class EventService {
 
     private void handleScannedProduct(
             Product product, Map<String, Object> map, Event event, Location location, Long userId) {
-        log.info("Add product to scanned product");
+        log.info(TAG + "Add product to scanned product");
         if (product.getLocation() != location) {
             productService.moveProductByLocation(product, location, userId);
         }
-        if (product.getBranch() != event.getBranch()){
-            productService.moveProductByBranch(product, event);
+        if (product.getBranch() != event.getBranch()) {
+            productService.moveProductByBranch(product, event, userRepo.getUser(userId));
             return;
         }
-        if (scannedProductRepo.existsByProductAndEvent(product, event)){
-            log.error(TAG + "Product with id {} already scanned in this event", product.getId());
-            return;
-        }
+        ScannedProduct scannedProduct = scannedProductRepo.findScannedProductByEventAndProduct(event, product)
+                .orElse(null);
+        if (scannedProduct == null) return;
+        scannedProduct.setIsScanned(true);
+        scannedProduct.setUser(userRepo.getUser(userId));
+
         map.forEach((key, value) -> {
             switch (key) {
                 case "longitude":
@@ -200,16 +202,15 @@ public class EventService {
             productService.save(product);
             log.info(TAG + "Data about location was updated for product with id {} ", product.getId());
         });
-        ScannedProduct scannedProduct = new ScannedProduct().toBuilder()
-                .user(userRepo.getUser(userId)).product(product).event(event).build();
+
+        
         scannedProductRepo.save(scannedProduct);
     }
 
 
-
     @SneakyThrows
     private void handleUnknownProduct(String code, Event event, Long userId) {
-        log.info("Add unknown product");
+        log.info(TAG + "Add unknown product");
         UnknownProduct unknownProduct = unknownProductRepo.findByCode(code).orElse(null);
         if (unknownProduct == null) {
             unknownProduct = new UnknownProduct().toBuilder()
@@ -227,6 +228,51 @@ public class EventService {
         unknownProductRepo.save(unknownProduct);
     }
 
+    @SneakyThrows
+    public void createEventsForInventory(Long userId) {
+        log.info(TAG + "Create events for Inventory automatically");
+        User user = userRepo.getUser(userId);
+        List<Branch> branches = branchRepo.getActive();
+        for (Branch branch : branches){
+            createEventForBranch(user, branch);
+        }
+    }
 
+    @SneakyThrows
+    private void createEventForBranch(User user, Branch branch) {
+        createEventForBranch(user, branch, "Default Info");
+    }
 
+    @SneakyThrows
+    private Event createEventForBranch(User user, Branch branch, String info) {
+        log.info(TAG + "Create event for Inventory automatically");
+        Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now())
+                .orElseThrow(() -> new ResourceNotFoundException("No active inventory now"));
+
+        if (eventRepo.existsByBranchAndInventory(branch, inventory))
+            throw new ObjectAlreadyExistException("Event for this branch already exists");
+
+        Event event = new Event();
+        event.setActive(true);
+        event.setInventory(inventory);
+        event.setUser(user);
+        event.setBranch(branch);
+        event.setInfo(info);
+        logService.addLog(user.getId(), Action.CREATE, Section.EVENT, info);
+        Event eventFrommDB = eventRepo.save(event);
+        createDBSnapshotForEvent(eventFrommDB);
+
+        return event;
+    }
+
+    private void createDBSnapshotForEvent(Event event) {
+        log.info(TAG + "Create DB SNAPSHOT for event");
+        Branch branch = event.getBranch();
+        List<Product> products = productRepo.findAllByBranch(branch);
+        for (Product product: products){
+            ScannedProduct scannedProduct = new ScannedProduct().toBuilder()
+                    .product(product).event(event).isScanned(false).build();
+            scannedProductRepo.save(scannedProduct);
+        }
+    }
 }

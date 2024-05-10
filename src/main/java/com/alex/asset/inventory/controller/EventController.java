@@ -66,6 +66,7 @@ public class EventController {
 
 
     @Operation(summary = "Create event for current inventory")
+    @Secured("ROLE_ADMIN")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Map<String, Object> create(
@@ -97,7 +98,7 @@ public class EventController {
             @PathVariable("event_id") Long eventId,
             @PathVariable("loc_id") Long locationId,
             @RequestBody List<Map<String, Object>> listOfCodes) {
-        log.info(TAG + "Add product which exists in fact by BAR CODE");
+        log.info(TAG + "BAR CODE Add product which exists in fact by BAR CODE");
         eventService.addProductsToEventByBarCode(listOfCodes, eventId, locationId, SecHolder.getUserId());
     }
 
@@ -107,7 +108,8 @@ public class EventController {
     public void addProductsToEventByRFID(
             @PathVariable("event_id") Long eventId,
             @RequestBody List<String> listOfCodes) {
-        log.info(TAG + "Add product which exists in fact by RFID code");
+        log.info(TAG + "RFID Add product which exists in fact by RFID CODE");
+        System.out.println(listOfCodes);
         eventService.addProductsToEventByRfidCode(listOfCodes, eventId, SecHolder.getUserId());
     }
 

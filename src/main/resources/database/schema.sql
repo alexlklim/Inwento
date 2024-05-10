@@ -259,27 +259,31 @@ CREATE TABLE IF NOT EXISTS events
 
 CREATE TABLE IF NOT EXISTS scanned_products
 (
-    id         BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id         BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created    DATETIME,
-    product_id BIGINT NOT NULL,
-    event_id   BIGINT NOT NULL,
+    updated    DATETIME,
+    product_id BIGINT  NOT NULL,
+    event_id   BIGINT  NOT NULL,
     user_id    BIGINT,
+    is_scanned BOOLEAN NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products (id),
     FOREIGN KEY (event_id) REFERENCES events (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT unique_event_product UNIQUE (product_id, event_id)
 );
 
 
 
 CREATE TABLE IF NOT EXISTS unknown_products
 (
-    id       BIGINT                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    created  DATETIME,
-    code     VARCHAR(255)                   NOT NULL,
-    type_code   ENUM ('RFID_CODE', 'BAR_CODE') NOT NULL,
-    event_id BIGINT                         NOT NULL,
-    user_id  BIGINT,
+    id        BIGINT                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created   DATETIME,
+    code      VARCHAR(255) UNIQUE            NOT NULL,
+    type_code ENUM ('RFID_CODE', 'BAR_CODE') NOT NULL,
+    event_id  BIGINT                         NOT NULL,
+    user_id   BIGINT,
     FOREIGN KEY (event_id) REFERENCES events (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+select * from  scanned_products where event_id = 1;

@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
+@Builder(toBuilder = true)
 @Getter
 @Setter
 @AllArgsConstructor

@@ -64,6 +64,7 @@ public class InventoryService {
         logService.addLog(userId, Action.CREATE, Section.INVENTORY, dto.toString());
         notificationService.sendSystemNotificationToAllUsers(Reason.PLANNED_INVENTORY);
 
+        eventService.createEventsForInventory(userId);
     }
 
 
@@ -97,7 +98,7 @@ public class InventoryService {
         for (Event event : events) {
             unknownProductAmount += unknownProductRepo.countProductsByEventId(event.getId());
             totalProductAmount += productRepo.countProductsByBranchId(event.getBranch().getId());
-            scannedProductAmount += scannedProductRepo.countScannedProductsByEventId(event.getId());
+            scannedProductAmount += scannedProductRepo.countByEventIdAndIsScanned(event, true);
         }
 
         inventoryDto.setScannedProductAmount(scannedProductAmount);

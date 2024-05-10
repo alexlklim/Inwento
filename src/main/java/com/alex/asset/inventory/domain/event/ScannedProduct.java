@@ -1,8 +1,10 @@
 package com.alex.asset.inventory.domain.event;
 
 
+import com.alex.asset.configure.domain.BaseEntityActive;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
+import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -21,13 +23,7 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 @Entity @Table(name = "scanned_products")
-public class ScannedProduct {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @JsonIgnore @CreatedDate @Column(name = "created")
-    LocalDateTime created;
-
+public class ScannedProduct extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -43,4 +39,16 @@ public class ScannedProduct {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     User user;
+
+    @Column(name = "is_scanned")
+    Boolean isScanned;
+
+    @Override
+    public String toString() {
+        return "ScannedProduct{" +
+                "product=" + product.getTitle() +
+                ", event=" + event.getId() +
+                ", isScanned=" + isScanned +
+                '}';
+    }
 }
