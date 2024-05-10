@@ -14,7 +14,6 @@ import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
-import com.alex.asset.logs.domain.Log;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;

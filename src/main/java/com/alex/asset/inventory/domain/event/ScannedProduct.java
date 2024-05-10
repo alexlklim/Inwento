@@ -1,19 +1,14 @@
 package com.alex.asset.inventory.domain.event;
 
 
-import com.alex.asset.configure.domain.BaseEntityActive;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Builder(toBuilder = true)
 @Getter

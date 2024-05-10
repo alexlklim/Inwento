@@ -4,7 +4,6 @@ import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.ScannedProduct;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
-import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -85,7 +84,7 @@ public class EventMapper {
 
 
     private List<Map<String, Object>> getProductsMap(List<ScannedProduct> scannedProductsList) {
-        List<Map<String, Object>> scannedProductsDTOs = scannedProductsList.stream()
+        return scannedProductsList.stream()
                 .map(scannedProduct -> {
                     Map<String, Object> productDTO = new HashMap<>();
                     productDTO.put("id", scannedProduct.getProduct().getId());
@@ -96,6 +95,5 @@ public class EventMapper {
                     return productDTO;
                 })
                 .collect(Collectors.toList());
-        return scannedProductsDTOs;
     }
 }
