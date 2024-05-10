@@ -13,6 +13,8 @@ public class Util {
 
 
     public static final String
+            IS_RFID_SCAN = "is_rfid_scan",
+            IS_SERVER_CONFIGURED = "is_server_configured",
             IS_FILTER = "is_filter",
             IS_REMEMBER_ME = "remember_me",
             FIRST_NAME = "first_name",
@@ -30,7 +32,6 @@ public class Util {
             CODE_LENGTH = "code_length",
             CODE_MAX_LENGTH = "code_max_length",
             CODE_MIN_LENGTH = "code_min_length";
-
 
 
     public static final String DATABASE_NAME = "inwento";

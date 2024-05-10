@@ -36,6 +36,7 @@
     <string name="save_new_settings">Zachowaj nowe ustawienia</string>
     <string name="fake_prefix">1234...</string>
     <string name="logo">logo</string>
+    <string name="user_rfid_scanner">Używaj RFID scaneru</string>
 
 </resources>
 

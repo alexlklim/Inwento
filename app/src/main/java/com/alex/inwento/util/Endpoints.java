@@ -18,8 +18,11 @@ public class Endpoints {
     public static final String GET_FULL_PRODUCT_BY_CODE = "v1/products/filter/unique/{bar_code}/null/null/null";
     public static final String PUT_PRODUCT_UPDATE = "v1/products";
 
+
     // Inventory Events Endpoints
     public static final String PUT_SCANNED_BAR_CODE = "v1/inventory/events/{event_id}/products/barcode/{loc_id}";
+    public static final String PUT_SCANNED_RFID_CODE = "v1/inventory/events/{event_id}/products/rfid";
+
 
     public static final String GET_FIELDS = "v1/company/data";
 

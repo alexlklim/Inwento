@@ -31,7 +31,7 @@ implements ResultDialog.ResultDialogListener{
     TextView sName, sEmail;
     EditText sServerAddress, sPrefix, sSuffix, sPostfix, sLength, sLengthMax, sLengthMin;
     Button btnSave;
-    CheckBox sFilter;
+    CheckBox sFilter, sIsRfidScan;
     SettingsMng sm;
     RoomDB roomDB;
     @Override
@@ -47,6 +47,7 @@ implements ResultDialog.ResultDialogListener{
         sEmail = findViewById(R.id.sEmail);
         sServerAddress = findViewById(R.id.sServerAddress);
         sFilter = findViewById(R.id.sFilter);
+        sIsRfidScan = findViewById(R.id.sIsRfidScan);
         sPrefix = findViewById(R.id.sPrefix);
         sSuffix = findViewById(R.id.sSuffix);
         sPostfix = findViewById(R.id.sPostfix);
@@ -81,6 +82,7 @@ implements ResultDialog.ResultDialogListener{
         sServerAddress.setText(sm.getServerAddress());
 
         sFilter.setChecked(sm.isFilter());
+        sIsRfidScan.setChecked(sm.isRfidScan());
 
         sPrefix.setText(sm.getCodePrefix());
         sSuffix.setText(sm.getCodeSuffix());
@@ -96,6 +98,7 @@ implements ResultDialog.ResultDialogListener{
     public void applyNewConfig() {
         sm.setIsFilter(sFilter.isChecked());
         sm.setServerAddress(sServerAddress.getText().toString());
+        sm.setIsRfidScan(sIsRfidScan.isChecked());
         sm.setCodeSettings(
                 sPrefix.getText().toString(),
                 sSuffix.getText().toString(),

@@ -70,8 +70,8 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingRight="1dp">
+        android:padding="1dp"
+        android:orientation="vertical">
 
 
         <ImageButton
@@ -79,7 +79,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:tint="@color/icon_color"
+            app:tint="@color/icon_color"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_done" />
     </LinearLayout>
 

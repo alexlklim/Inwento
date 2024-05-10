@@ -74,6 +74,13 @@ public interface APIClient {
             @Body List<Map<String, Object>> listOfCodes
     );
 
+    @PUT(Endpoints.PUT_SCANNED_RFID_CODE)
+    Call<Void> putScannedRfidCode(
+            @Header("Authorization") String authorization,
+            @Path("event_id") int eventId,
+            @Body List<String> listOfCodes
+    );
+
 
 
 

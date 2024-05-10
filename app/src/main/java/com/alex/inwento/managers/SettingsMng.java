@@ -117,7 +117,11 @@ public class SettingsMng {
     }
 
 
+    public boolean isRfidScan() {
+        return pref.getBoolean(Util.IS_RFID_SCAN, false);
+    }
 
-
-
+    public void setIsRfidScan(boolean bool) {
+        pref.edit().putBoolean(Util.IS_RFID_SCAN, bool).apply();
+    }
 }

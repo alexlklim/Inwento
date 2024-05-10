@@ -59,13 +59,16 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:gravity="right"
-        android:layout_marginRight="5dp"
+        android:padding="1dp"
+        android:layout_marginRight="1dp"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/reStatus"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_in_process"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
             android:layout_height="wrap_content">
 
         </ImageView>

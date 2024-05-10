@@ -29,7 +29,6 @@ import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.database.RoomDB;
 import com.alex.inwento.database.domain.ProductLocation;
-import com.alex.inwento.dialog.MoveProductDialog;
 import com.alex.inwento.dialog.ProductDialog;
 import com.alex.inwento.dialog.ResultDialog;
 import com.alex.inwento.dialog.UnknownProductDialog;
@@ -73,10 +72,9 @@ public class EventActivity extends AppCompatActivity
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     EventDTO event;
-    List<ProductShortDTO> productNotScannedShortDTOS;
 
     private String chosenProductLocation;
-    boolean isScanned;
+    boolean isScanned, isLocationErrorDialogOpen;
     private String allLocations = "Wszystkie";
 
 
@@ -92,6 +90,7 @@ public class EventActivity extends AppCompatActivity
         getLastLocation();
         chosenProductLocation = allLocations;
         isScanned = false;
+        isLocationErrorDialogOpen = false;
 
         // for getting and filtering codes
         IntentFilter filter = new IntentFilter();
@@ -171,8 +170,14 @@ public class EventActivity extends AppCompatActivity
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(adapter);
 
+        locationSpinner.setFocusable(false);
+
         initRecyclerProducts();
 
+
+        btnScanned.setFocusable(false);
+        btnNew.setFocusable(false);
+  
 
         btnScanned.setOnClickListener(view -> {
             isScanned = true;
@@ -274,6 +279,7 @@ public class EventActivity extends AppCompatActivity
             Log.i(TAG, "BroadcastReceiver");
             String action = intent.getAction();
             assert action != null;
+
             if (action.equals(getResources().getString(R.string.activity_intent_filter_action_bar_code))) {
                 try {
                     handleScanResult(intent);
@@ -293,20 +299,65 @@ public class EventActivity extends AppCompatActivity
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
+        if (chosenProductLocation.equalsIgnoreCase(allLocations)) {
+            Log.e(TAG, "Location is not chosen : ");
+            openLocationErrorDialog();
+            return;
+        }
 
-        if (settingsMng.isFilter() && decodedData != null) {
-            if (FilterMng.filteringData(decodedData, settingsMng) == null) {
-                Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
-                return;
+
+        String[] codes = decodedData.split("\\r?\\n");
+        for (String code : codes) {
+            Log.e(TAG, "handle the code: " + code);
+
+            if (settingsMng.isRfidScan()) {
+                // if we use RFID scanner
+                Log.e(TAG, "We use RFID scan: ");
+                locationSpinner.clearFocus();
+
+                // if code not match the pattern -> ignore
+                // if code not found in this location and branch -> ignore
+                // if code is already scanned in this location and branch -> ignore
+
+                // if code not scanned in this location and branch -> send code to the server
+                // update product recycler
+
+                if (settingsMng.isFilter() && FilterMng.filteringData(code, settingsMng) == null) {
+                    Log.e(TAG, "Code doesn't match the established pattern: " + code);
+                    continue;
+                }
+
+                if (FilterMng.getProductByRFIDAndLocation(event.getScannedProducts(), code, chosenProductLocation) != null) {
+                    Log.e(TAG, "Code already scanned for this location " + code);
+                    continue;
+                }
+                if (FilterMng.getProductByRFIDAndLocation(event.getNotScannedProducts(), code, chosenProductLocation) != null) {
+                    Log.e(TAG, "!!!!!!!!!!!!!!! code will be scanned" + code);
+                    sendPutScannedProductByRfidRequest(code);
+                }
+                Log.e(TAG, "!!!!!!!!!!!!!!!  Code not found : " + code);
+                locationSpinner.clearFocus();
+
+
+            } else {
+                // if we use Bar code scanner
+                if (settingsMng.isFilter() && code != null) {
+                    if (FilterMng.filteringData(code, settingsMng) == null) {
+                        Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                if (FilterMng.isProductExistsByBarCode(event.getScannedProducts(), code) ||
+                        FilterMng.isUnknownProductExistsByBarCode(event.getUnknownProducts(), code)) {
+                    Toast.makeText(this, "Product is already scanned", Toast.LENGTH_SHORT).show();
+                } else sendGetFullProductRequest(code, null);
+
             }
         }
 
-        if (FilterMng.isProductExistsByBarCode(event.getScannedProducts(), decodedData) ||
-                FilterMng.isUnknownProductExistsByBarCode(event.getUnknownProducts(), decodedData)) {
-            Toast.makeText(this, "Product is already scanned", Toast.LENGTH_SHORT).show();
-        } else sendGetFullProductRequest(decodedData, null);
-
     }
+
 
     private void sendGetFullProductRequest(String barCode, Integer productId) {
         Log.i(TAG, "sendGetFullProductRequest");
@@ -388,6 +439,42 @@ public class EventActivity extends AppCompatActivity
             }
         }
     }
+    private void sendPutScannedProductByRfidRequest(String rfidCode) {
+        Log.i(TAG, "sendPutScannedProductByRfidRequest");
+        List<String> listOfRfidCodes = new ArrayList<>();
+        listOfRfidCodes.add(rfidCode);
+
+        APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
+
+        Call<Void> call = apiClient.putScannedRfidCode(
+                "Bearer " + settingsMng.getAccessToken(),
+                event.getId(),
+                listOfRfidCodes);
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Log.e(TAG, "sendPutScannedProductByRfidRequest SUCCESS");
+
+                if (chosenProductLocation.equalsIgnoreCase(allLocations)) {
+                    openLocationErrorDialog();
+                } else {
+                    ProductShortDTO dto = FilterMng.getProductByRFIDAndLocation(event.getNotScannedProducts(), rfidCode, chosenProductLocation);
+                    if (dto != null) {
+                        event.getNotScannedProducts().remove(dto);
+                        event.getScannedProducts().add(dto);
+                        isScanned = false;
+                        initRecyclerProducts();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                Log.e(TAG, "sendPutScannedProductByRfidRequest ON FAILURE", t);
+            }
+        });
+    }
 
 
     private void sendPutScannedProductRequest(ProductDTO dto, String barCode) {
@@ -419,12 +506,10 @@ public class EventActivity extends AppCompatActivity
 
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e(TAG, "senPutScannedProductProductRequest onFailure", t);
+                Log.e(TAG, "senPutScannedProductProductRequest ON FAILURE", t);
             }
         });
     }
-
-
 
 
     @Override
@@ -445,18 +530,18 @@ public class EventActivity extends AppCompatActivity
     }
 
 
-
     private void openLocationErrorDialog() {
         Log.i(TAG, "openLocationErrorDialog");
-        runOnUiThread(() -> {
+        if (!isLocationErrorDialogOpen){
+            isLocationErrorDialogOpen = true;
             ResultDialog
                     .newInstance("Lokalizacjia nie została wybrana", false, this)
                     .show(getSupportFragmentManager(), "location_error_dialog");
-        });
-
+        }
     }
+
     @Override
     public void onOkClicked() {
-
+        isLocationErrorDialogOpen = false;
     }
 }

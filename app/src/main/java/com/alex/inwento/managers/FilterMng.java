@@ -39,6 +39,14 @@ public class FilterMng {
         }
         return false;
     }
+    public static boolean isProductExistsByRfidCode(List<ProductShortDTO> productList, String rfidCodeToFind) {
+        for (ProductShortDTO product : productList) {
+            if (product.getBarCode() != null && product.getRfidCode().equalsIgnoreCase(rfidCodeToFind)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     public static ProductShortDTO getProductById(List<ProductShortDTO> productList, int idToFind) {
@@ -58,5 +66,22 @@ public class FilterMng {
             }
         }
         return false;
+    }
+
+
+    public static ProductShortDTO getProductByRFIDAndLocation(
+            List<ProductShortDTO> products,
+            String rfidCode,
+            String location) {
+        for (ProductShortDTO product : products) {
+            if (product.getRfidCode() != null
+                    && product.getLocation() != null
+                    && product.getRfidCode().equalsIgnoreCase(rfidCode)
+                    && product.getLocation().equalsIgnoreCase(location)) {
+                return product;
+            }
+        }
+        // if no matching product found
+        return null;
     }
 }
