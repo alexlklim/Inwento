@@ -91,7 +91,7 @@ public class SearchActivity
     private void initializeRecyclerView(List<ProductShortDTO> productDtoList) {
         Log.i(TAG, "initializeRecyclerView: ");
         recyclerView = findViewById(R.id.rv_products);
-        productAdapter = new ProductAdapter(false, false, productDtoList, this);
+        productAdapter = new ProductAdapter(this, false, false, productDtoList, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(productAdapter);

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alex.inwento.R;
 import com.alex.inwento.database.RoomDB;
+import com.alex.inwento.dialog.ResultDialog;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.DataDTO;
@@ -23,7 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity
+implements ResultDialog.ResultDialogListener{
     private static final String TAG = "SettingsActivity";
 
     TextView sName, sEmail;
@@ -56,9 +58,22 @@ public class SettingsActivity extends AppCompatActivity {
         setValues();
         sendGetDataRequest();
 
-        btnSave.setOnClickListener(view -> applyNewConfig());
+        btnSave.setOnClickListener(view -> {
+            applyNewConfig();
+            openResultDialog();
+        });
 
     }
+
+    private void openResultDialog() {
+        Log.i(TAG, "openResultDialog");
+        runOnUiThread(() -> {
+            ResultDialog
+                    .newInstance("Nowe ustawienia zachowane", true, this)
+                    .show(getSupportFragmentManager(), "result_dialog");
+        });
+    }
+
 
     private void setValues() {
         sName.setText(sm.getFirstname() + " " + sm.getLastname());
@@ -119,4 +134,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onOkClicked() {
+
+    }
 }

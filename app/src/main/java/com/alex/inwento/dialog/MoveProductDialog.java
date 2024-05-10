@@ -133,7 +133,7 @@ ResultDialog.ResultDialogListener{
                     Log.i(TAG, "sendProductUpdateRequest is successful:");
                     requireActivity().runOnUiThread(() -> {
                         ResultDialog dialog = ResultDialog.newInstance(
-                                "Product " + productDTO.getTitle() + " zastał przesunięty",
+                                "Product " + productDTO.getTitle() + " został przesunięty",
                                 true,
                                 MoveProductDialog.this);
                         dialog.show(getChildFragmentManager(), "MoveProductDialog");

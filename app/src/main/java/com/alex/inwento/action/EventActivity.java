@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -28,7 +29,9 @@ import com.alex.inwento.adapter.ProductAdapter;
 import com.alex.inwento.adapter.UnknownProductAdapter;
 import com.alex.inwento.database.RoomDB;
 import com.alex.inwento.database.domain.ProductLocation;
+import com.alex.inwento.dialog.MoveProductDialog;
 import com.alex.inwento.dialog.ProductDialog;
+import com.alex.inwento.dialog.ResultDialog;
 import com.alex.inwento.dialog.UnknownProductDialog;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
@@ -56,25 +59,26 @@ public class EventActivity extends AppCompatActivity
         implements
         ProductAdapter.OnItemProductClickListener,
         ProductDialog.ProductDialogListener,
-        UnknownProductDialog.UnknownProductScannedListener {
+        UnknownProductDialog.UnknownProductScannedListener,
+        ResultDialog.ResultDialogListener {
     private static final String TAG = "EventActivity";
-
-
-    Button btnScanned, btnNotScanned, btnNew;
-
-    RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
-    SettingsMng settingsMng;
+    private Button btnScanned, btnNotScanned, btnNew;
+    private RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
+    private Spinner locationSpinner;
+    private UnknownProductAdapter unknownProductAdapter;
+    private ProductAdapter productAdapter;
+    private SettingsMng settingsMng;
+    private RoomDB roomDB;
     private Location currentLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    UnknownProductAdapter unknownProductAdapter;
-    ProductAdapter productAdapter;
+
     EventDTO event;
-    Spinner locationSpinner;
-    TextView aeBranch;
-    List<String> locationsList;
+    List<ProductShortDTO> productNotScannedShortDTOS;
 
+    private String chosenProductLocation;
+    boolean isScanned;
+    private String allLocations = "Wszystkie";
 
-    RoomDB roomDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +89,9 @@ public class EventActivity extends AppCompatActivity
         settingsMng = new SettingsMng(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         roomDB = RoomDB.getInstance(this);
-
-        // check if user want to send data about gps to server during inventory
         getLastLocation();
-
+        chosenProductLocation = allLocations;
+        isScanned = false;
 
         // for getting and filtering codes
         IntentFilter filter = new IntentFilter();
@@ -97,35 +100,10 @@ public class EventActivity extends AppCompatActivity
         registerReceiver(myBroadcastReceiver, filter);
 
 
-        btnScanned = findViewById(R.id.btnScanned);
-        btnNotScanned = findViewById(R.id.btnNotScanned);
-        btnNew = findViewById(R.id.btnNew);
-        aeBranch = findViewById(R.id.aeBranch);
-        locationSpinner = findViewById(R.id.aeLocations);
-        recyclerViewProduct = findViewById(R.id.rv_products);
-        recyclerViewUnknownProduct = findViewById(R.id.rv_unknown_products);
-
-
-        btnScanned.setOnClickListener(view -> {
-            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-            initializeProductRecycler(event.getScannedProducts(), true);
-        });
-
-        btnNotScanned.setOnClickListener(view -> {
-            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-            initializeProductRecycler(event.getNotScannedProducts(), false);
-        });
-        btnNew.setOnClickListener(view -> {
-            initializeNewProductRecycler(event.getUnknownProducts());
-            setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
-        });
-
-
         sendGetEventById(getIntent().getIntExtra("EVENT_ID", 0));
 
 
     }
-
 
     private void sendGetEventById(int eventId) {
         Log.i(TAG, "sendGetEventById " + eventId);
@@ -137,7 +115,7 @@ public class EventActivity extends AppCompatActivity
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     event = response.body();
-                    initialize();
+                    firstInit();
                 } else Log.e(TAG, "Something wrong:");
             }
 
@@ -148,47 +126,147 @@ public class EventActivity extends AppCompatActivity
         });
     }
 
+    private void updateAmounts() {
+        Log.i(TAG, "updateAmounts ");
 
-    private void initialize() {
-        Log.i(TAG, "initialize");
+        btnScanned.setText(getString(R.string.scanned) + " " +
+                getProductAmountsForLocation(event.getScannedProducts(), chosenProductLocation));
+        btnNotScanned.setText(getString(R.string.to_scan) + " " +
+                getProductAmountsForLocation(event.getNotScannedProducts(), chosenProductLocation));
+        btnNew.setText(getString(R.string.new_unknown) + " " + event.getUnknownProducts().size());
+    }
+
+    private void firstInit() {
+        Log.i(TAG, "firstInit ");
+
+        TextView aeBranch = findViewById(R.id.aeBranch);
+        btnScanned = findViewById(R.id.btnScanned);
+        btnNotScanned = findViewById(R.id.btnNotScanned);
+        btnNew = findViewById(R.id.btnNew);
+        locationSpinner = findViewById(R.id.aeLocations);
+        recyclerViewProduct = findViewById(R.id.rv_products);
+        recyclerViewUnknownProduct = findViewById(R.id.rv_unknown_products);
+
         aeBranch.setText(event.getBranch());
-        btnScanned.setText(R.string.scanned);
-        String notScanned = getString(R.string.to_scan) + " " + (event.getTotalProductAmount() - event.getScannedProductAmount());
-        String scanned = getString(R.string.new_unknown) + " " + event.getUnknownProductAmount();
-        btnNotScanned.setText(notScanned);
-        btnNew.setText(scanned);
 
-        List<ProductLocation> productLocationList = roomDB.locationDAO().getAll();
-        locationsList = productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
-                locationsList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        locationSpinner.setAdapter(adapter);
-
-        initializeProductRecycler(event.getNotScannedProducts(), false);
-        setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
-    }
-
-    public void initializeProductRecycler(List<ProductShortDTO> productShortDTOS, Boolean isScanned) {
-        productAdapter = new ProductAdapter(true, isScanned, productShortDTOS, this);
-        LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
-        recyclerViewProduct.setLayoutManager(productLayoutManager);
-        recyclerViewProduct.setAdapter(productAdapter);
-    }
-
-    public void initializeNewProductRecycler(List<UnknownProductDTO> unknownProductDTOS) {
-        unknownProductAdapter = new UnknownProductAdapter(unknownProductDTOS);
+        // init recyclers: new products
+        unknownProductAdapter = new UnknownProductAdapter(event.getUnknownProducts());
         LinearLayoutManager unknownProductLayoutManager = new LinearLayoutManager(this);
         recyclerViewUnknownProduct.setLayoutManager(unknownProductLayoutManager);
         recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
+
+        // init recyclerL products
+        productAdapter = new ProductAdapter(this, true, isScanned, event.getNotScannedProducts(), this);
+        LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
+        recyclerViewProduct.setLayoutManager(productLayoutManager);
+        recyclerViewProduct.setAdapter(productAdapter);
+
+        // init location spinner
+        List<String> locationsList = new ArrayList<>();
+        List<ProductLocation> productLocationList = roomDB.locationDAO().getAll();
+        locationsList.add(allLocations);
+        locationsList.addAll(productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList()));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.custom_spinner_item, locationsList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        locationSpinner.setAdapter(adapter);
+
+        initRecyclerProducts();
+
+
+        btnScanned.setOnClickListener(view -> {
+            isScanned = true;
+            initRecyclerProducts();
+        });
+
+        btnNotScanned.setOnClickListener(view -> {
+            isScanned = false;
+            initRecyclerProducts();
+        });
+        btnNew.setOnClickListener(view -> initRecyclerNewProducts());
+
+        locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                chosenProductLocation = (String) parentView.getItemAtPosition(position);
+                isScanned = false;
+                initRecyclerProducts();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                chosenProductLocation = allLocations;
+                isScanned = false;
+                initRecyclerProducts();
+            }
+        });
     }
 
 
-    public void setVisibilityToRecyclers(RecyclerView visibleRV, RecyclerView invisibleRV) {
+    private void initRecyclerProducts() {
+        Log.i(TAG, "initRecyclerProducts ");
+        List<ProductShortDTO> dtos = new ArrayList<>((isScanned) ?
+                filterProductsByLocation(event.getScannedProducts(), chosenProductLocation) :
+                filterProductsByLocation(event.getNotScannedProducts(), chosenProductLocation));
+        productAdapter = new ProductAdapter(this, true, isScanned, dtos, this);
+        LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
+        recyclerViewProduct.setLayoutManager(productLayoutManager);
+        recyclerViewProduct.setAdapter(productAdapter);
+
+        changeRecyclerVisibility(recyclerViewProduct, recyclerViewUnknownProduct);
+        updateAmounts();
+    }
+
+
+    public List<ProductShortDTO> filterProductsByLocation(List<ProductShortDTO> allProducts, String location) {
+        Log.d(TAG, "filterProductsByLocation ");
+        if (location.equalsIgnoreCase(allLocations)) {
+            return allProducts;
+        } else {
+            List<ProductShortDTO> dtos = new ArrayList<>();
+            for (ProductShortDTO dto : allProducts) {
+                if (dto.getLocation().equalsIgnoreCase(location)) {
+                    dtos.add(dto);
+                }
+            }
+            return dtos;
+        }
+    }
+
+    private void initRecyclerNewProducts() {
+        Log.i(TAG, "initRecyclerNewProducts ");
+
+        unknownProductAdapter.updateData(new ArrayList<>(event.getUnknownProducts()));
+        unknownProductAdapter.notifyDataSetChanged();
+        changeRecyclerVisibility(recyclerViewUnknownProduct, recyclerViewProduct);
+        updateAmounts();
+    }
+
+
+    private void changeRecyclerVisibility(RecyclerView visibleRV, RecyclerView invisibleRV) {
+        Log.i(TAG, "changeRecyclerVisibility ");
         visibleRV.setVisibility(View.VISIBLE);
         invisibleRV.setVisibility(View.INVISIBLE);
     }
+
+
+    private void openProductDialog(ProductDTO productDTO) {
+        Log.i(TAG, "openProductDialog");
+        // if product.branch != branch
+        // if product.location != location
+
+        ProductDialog
+                .newInstance(this, event.getBranch(), true, productDTO)
+                .show(getSupportFragmentManager(), "product_dialog");
+    }
+
+    private void openUnknownProductDialog(String barCode) {
+        Log.i(TAG, "openUnknownProductDialog");
+        UnknownProductDialog
+                .newInstance(this, barCode)
+                .show(getSupportFragmentManager(), "new_product_dialog");
+    }
+
 
     private final BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -206,21 +284,6 @@ public class EventActivity extends AppCompatActivity
         }
     };
 
-    private void getLastLocation() {
-        Log.i(TAG, "getLastLocation");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            int FINE_PERMISSION_CODE = 1;
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
-            return;
-        }
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        task.addOnSuccessListener(location -> {
-            if (location != null) currentLocation = location;
-        });
-    }
-
     private void handleScanResult(Intent initiatingIntent) {
         Log.i(TAG, "handleScanResult");
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
@@ -231,29 +294,32 @@ public class EventActivity extends AppCompatActivity
             decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
 
-        if (settingsMng.isFilter()) {
+        if (settingsMng.isFilter() && decodedData != null) {
             if (FilterMng.filteringData(decodedData, settingsMng) == null) {
                 Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-
-        if (ProductShortDTO.doesProductExist(event.getScannedProducts(), decodedData) || UnknownProductDTO.doesProductExist(event.getUnknownProducts(), decodedData)) {
-            showToast();
+        if (FilterMng.isProductExistsByBarCode(event.getScannedProducts(), decodedData) ||
+                FilterMng.isUnknownProductExistsByBarCode(event.getUnknownProducts(), decodedData)) {
+            Toast.makeText(this, "Product is already scanned", Toast.LENGTH_SHORT).show();
         } else sendGetFullProductRequest(decodedData, null);
 
     }
-
 
     private void sendGetFullProductRequest(String barCode, Integer productId) {
         Log.i(TAG, "sendGetFullProductRequest");
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<ProductDTO> call;
         if (productId != null)
-            call = apiClient.getFullProductById("Bearer " + settingsMng.getAccessToken(), productId);
+            call = apiClient.getFullProductById(
+                    "Bearer " + settingsMng.getAccessToken(),
+                    productId);
         else
-            call = apiClient.getFullProductByCode("Bearer " + settingsMng.getAccessToken(), barCode);
+            call = apiClient.getFullProductByCode(
+                    "Bearer " + settingsMng.getAccessToken(),
+                    barCode);
 
         call.enqueue(new Callback<ProductDTO>() {
             @Override
@@ -269,19 +335,19 @@ public class EventActivity extends AppCompatActivity
         });
     }
 
-    private void openUnknownProductDialog(String barCode) {
-        Log.i(TAG, "openUnknownProductDialog");
-        UnknownProductDialog.newInstance(this, barCode).show(getSupportFragmentManager(), "new_product_dialog");
-    }
-
-    private void openProductDialog(ProductDTO productDTO) {
-        Log.i(TAG, "openProductDialog");
-        ProductDialog.newInstance(this, event.getBranch(), true, productDTO).show(getSupportFragmentManager(), "product_dialog");
-
-    }
-
-    private void showToast() {
-        Toast.makeText(this, "Product is already scanned", Toast.LENGTH_SHORT).show();
+    private void getLastLocation() {
+        Log.i(TAG, "getLastLocation");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            int FINE_PERMISSION_CODE = 1;
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(location -> {
+            if (location != null) currentLocation = location;
+        });
     }
 
 
@@ -291,45 +357,40 @@ public class EventActivity extends AppCompatActivity
         sendGetFullProductRequest(null, orderId);
     }
 
-
     @Override
     public void onSentScannedProduct(ProductDTO productDTO) {
         Log.i(TAG, "onSentScannedProduct");
-        sendPutScannedProductProductRequest(productDTO, null);
-        ProductShortDTO dto = ProductShortDTO.getIndexByIdInList(
-                event.getNotScannedProducts(),
-                productDTO.getId());
-        if (dto != null) {
-            event.getNotScannedProducts().remove(dto);
-            event.getScannedProducts().add(dto);
-
-            event.setScannedProductAmount(event.getScannedProductAmount() + 1);
-            String notScanned = "DO ZESKANOWANIA \n" + (event.getTotalProductAmount() - event.getScannedProductAmount());
-            btnNotScanned.setText(notScanned);
-
-            initializeProductRecycler(event.getNotScannedProducts(), false);
-            setVisibilityToRecyclers(recyclerViewProduct, recyclerViewUnknownProduct);
+        sendPutScannedProductRequest(productDTO, null);
+        if (chosenProductLocation.equalsIgnoreCase(allLocations)) {
+            openLocationErrorDialog();
+        } else {
+            ProductShortDTO dto = FilterMng.getProductById(
+                    event.getNotScannedProducts(),
+                    productDTO.getId());
+            if (dto != null) {
+                event.getNotScannedProducts().remove(dto);
+                event.getScannedProducts().add(dto);
+                initRecyclerProducts();
+            }
         }
-
-
     }
 
     @Override
     public void onSentScannedUnknownProduct(String barCode) {
         Log.i(TAG, "onSentScannedUnknownProduct");
-        sendPutScannedProductProductRequest(null, barCode);
-        if (!UnknownProductDTO.doesProductExist(event.getUnknownProducts(), barCode)) {
-            event.getUnknownProducts().add(new UnknownProductDTO(barCode, "EAN"));
+        sendPutScannedProductRequest(null, barCode);
+        if (chosenProductLocation.equalsIgnoreCase(allLocations)) {
+            openLocationErrorDialog();
+        } else {
+            if (!FilterMng.isUnknownProductExistsByBarCode(event.getUnknownProducts(), barCode)) {
+                event.getUnknownProducts().add(new UnknownProductDTO(barCode, "EAN"));
+                initRecyclerNewProducts();
+            }
         }
-        initializeNewProductRecycler(event.getUnknownProducts());
-        setVisibilityToRecyclers(recyclerViewUnknownProduct, recyclerViewProduct);
-        event.setUnknownProductAmount(event.getUnknownProductAmount() + 1);
-        String unknown = "NOWE\n" + event.getUnknownProductAmount();
-        btnNew.setText(unknown);
     }
 
 
-    private void sendPutScannedProductProductRequest(ProductDTO dto, String barCode) {
+    private void sendPutScannedProductRequest(ProductDTO dto, String barCode) {
         Log.i(TAG, "sendPutScannedProductProductRequest");
         List<Map<String, Object>> list = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
@@ -342,9 +403,10 @@ public class EventActivity extends AppCompatActivity
         map.put("longitude", currentLocation.getLongitude());
         map.put("latitude", currentLocation.getLatitude());
         list.add(map);
-
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
-        Call<Void> call = apiClient.putScannedCode("Bearer " + settingsMng.getAccessToken(),
+        if (chosenProductLocation.equalsIgnoreCase(allLocations)) return;
+        Call<Void> call = apiClient.putScannedCode(
+                "Bearer " + settingsMng.getAccessToken(),
                 event.getId(),
                 roomDB.locationDAO().getLocationByName(locationSpinner.getSelectedItem().toString()).getId(),
                 list);
@@ -352,6 +414,7 @@ public class EventActivity extends AppCompatActivity
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                Log.e(TAG, "senPutScannedProductProductRequest SUCCESS");
             }
 
             @Override
@@ -362,10 +425,38 @@ public class EventActivity extends AppCompatActivity
     }
 
 
+
+
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy");
         super.onDestroy();
         unregisterReceiver(myBroadcastReceiver);
+    }
+
+    private int getProductAmountsForLocation(List<ProductShortDTO> dtos, String location) {
+        Log.i(TAG, "getProductAmountsForLocation");
+        if (location.equalsIgnoreCase(allLocations)) {
+            return dtos.size();
+        }
+        return (int) dtos.stream()
+                .filter(dto -> dto.getLocation().equalsIgnoreCase(location))
+                .count();
+    }
+
+
+
+    private void openLocationErrorDialog() {
+        Log.i(TAG, "openLocationErrorDialog");
+        runOnUiThread(() -> {
+            ResultDialog
+                    .newInstance("Lokalizacjia nie została wybrana", false, this)
+                    .show(getSupportFragmentManager(), "location_error_dialog");
+        });
+
+    }
+    @Override
+    public void onOkClicked() {
+
     }
 }

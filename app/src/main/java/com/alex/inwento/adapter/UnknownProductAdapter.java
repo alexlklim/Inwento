@@ -21,9 +21,10 @@ public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAd
 
 
     // Method to update the data set
-    public void updateData(List<UnknownProductDTO> newData) {
-        this.unknownProductList = newData;
-        notifyDataSetChanged();
+
+    public void updateData(List<UnknownProductDTO> newUnknownProducts) {
+        this.unknownProductList.clear(); // Clear existing data
+        this.unknownProductList.addAll(newUnknownProducts); // Add new data
     }
 
     public UnknownProductAdapter(List<UnknownProductDTO> unknownProducts) {

@@ -35,25 +35,4 @@ public class ProductShortDTO {
     @SerializedName("rfid_code")
     private String rfidCode;
 
-    public static boolean doesProductExist(List<ProductShortDTO> productList, String barcodeToFind) {
-        for (ProductShortDTO product : productList) {
-            if (product.getBarCode() != null && product.getBarCode().equalsIgnoreCase(barcodeToFind)) {
-                return true; // Found the product with the barcode
-            }
-        }
-        return false;
-    }
-
-
-    public static ProductShortDTO getIndexByIdInList(List<ProductShortDTO> productList, int idToFind) {
-        System.out.println("AAAAAAAAAA: " + "getIndexByIdInList");
-
-        for (ProductShortDTO dto: productList){
-            if (dto.getId() == idToFind){
-                System.out.println("AAAAAAAAAA: " + productList.indexOf(dto));
-                return dto;
-            }
-        }
-        return null;
-    }
 }

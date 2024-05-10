@@ -1,5 +1,7 @@
 package com.alex.inwento.adapter;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +42,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
         holder.reAmount.setText(event.getScannedProductAmount() + " / " + event.getTotalProductAmount());
         holder.reUnknown.setText("unknown " + event.getUnknownProductAmount());
 
-        if (event.getScannedProductAmount() == event.getTotalProductAmount()) holder.reStatus.setImageResource(R.drawable.ic_done);
-        else holder.reStatus.setImageResource(R.drawable.ic_in_process);
+        if (event.getScannedProductAmount() == event.getTotalProductAmount()) {
+            holder.reStatus.setImageResource(R.drawable.ic_done);
+            holder.reStatus.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+        } else {
+            holder.reStatus.setImageResource(R.drawable.ic_in_process);
+            holder.reStatus.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
 
-
+        }
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemClick(event.getId()));
     }
 

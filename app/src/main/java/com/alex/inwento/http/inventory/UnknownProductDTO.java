@@ -22,13 +22,4 @@ public class UnknownProductDTO {
     @SerializedName("type_code")
     String typeCode;
 
-
-    public static boolean doesProductExist(List<UnknownProductDTO> productList, String codeToFind) {
-        for (UnknownProductDTO product : productList) {
-            if (product.getCode() != null && product.getCode().equalsIgnoreCase(codeToFind)) {
-                return true; // Found the product with the code
-            }
-        }
-        return false; // Product with the code not found
-    }
 }

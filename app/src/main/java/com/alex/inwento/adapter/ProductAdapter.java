@@ -1,5 +1,8 @@
 package com.alex.inwento.adapter;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +11,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
 import com.alex.inwento.http.inventory.ProductShortDTO;
+import com.alex.inwento.http.inventory.UnknownProductDTO;
 
 import java.util.List;
 
@@ -21,11 +26,21 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
     private List<ProductShortDTO> productList;
     private Boolean isInventory, isScanned;
     private boolean isHandlingScanEvent = false;
+    Context context;
+
+    public void updateData(List<ProductShortDTO> productShortDTOs) {
+        this.productList.clear();
+        this.productList.addAll(productShortDTOs);
+        notifyDataSetChanged();
+    }
+
 
     public ProductAdapter(
+            Context context,
             Boolean isInventory, Boolean isScanned,
             List<ProductShortDTO> productList,
             ProductAdapter.OnItemProductClickListener onItemClickListener) {
+        this.context = context;
         this.productList = productList;
         this.isScanned = isScanned;
         this.isInventory = isInventory;
@@ -49,23 +64,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
         holder.rpBranch.setText(product.getBranch());
         holder.rpLocation.setText(product.getLocation());
         if (isInventory) {
-            if (isScanned) holder.rpIsScanned.setImageResource(R.drawable.ic_done);
-            else holder.rpIsScanned.setImageResource(R.drawable.ic_in_process);
-            holder.rpLLLocation.setVisibility(View.VISIBLE);
-            if ( holder.rpLLLocation != null) {
-                ViewGroup parentView = (ViewGroup) holder.rpLLLocation.getParent();
-                if (parentView != null) parentView.removeView(holder.rpLLLocation);
+            if (isScanned) {
+                holder.rpIsScanned.setImageResource(R.drawable.ic_done);
+                holder.rpIsScanned.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+            } else {
+                holder.rpIsScanned.setImageResource(R.drawable.ic_in_process);
+                holder.rpIsScanned.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
             }
+            holder.rpLLLocation.findViewById(R.id.rpBranch).setVisibility(View.GONE);
+
         } else {
             holder.rpLLImageResult.setVisibility(View.INVISIBLE);
-            if ( holder.rpLLImageResult != null) {
-                ViewGroup parentView = (ViewGroup) holder.rpLLImageResult.getParent();
-                if (parentView != null) parentView.removeView(holder.rpLLImageResult);
-            }
+            ViewGroup parentView = (ViewGroup) holder.rpLLImageResult.getParent();
+            if (parentView != null) parentView.removeView(holder.rpLLImageResult);
         }
-
-        // Disable click listener while handling scan event
-//        holder.itemView.setEnabled(false);
 
         holder.itemView.setOnClickListener(view -> {
             if (!isHandlingScanEvent) {
@@ -86,7 +98,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView rpTitle, rpBarCode, rpRfidCode, rpBranch, rpLocation;
         ImageButton rpIsScanned;
-        private LinearLayout rpLLLocation, rpLLImageResult;
+        private final LinearLayout rpLLLocation, rpLLImageResult;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);

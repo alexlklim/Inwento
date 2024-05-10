@@ -52,8 +52,10 @@ public class EventDTO {
 
     @SerializedName("scanned_products")
     private List<ProductShortDTO> scannedProducts;
+
     @SerializedName("not_scanned_products")
     private List<ProductShortDTO> notScannedProducts;
+
     @SerializedName("unknown_products")
     private List<UnknownProductDTO> unknownProducts;
 }

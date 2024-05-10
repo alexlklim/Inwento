@@ -47,10 +47,10 @@ public class ResultDialog extends AppCompatDialogFragment {
         }
 
         drBtnOk.setOnClickListener(v -> {
-            dismiss();
             if (mListener != null) {
                 mListener.onOkClicked();
             }
+            dismiss();
         });
 
         return builder.create();
