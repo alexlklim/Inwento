@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,8 @@ import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.ProductDTO;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +106,6 @@ public class ScrapProductDialog
 
         yearsList = IntStream.rangeClosed(2020, 2024).boxed().collect(Collectors.toList());
         monthList = Arrays.asList("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień");
-        daysList = IntStream.rangeClosed(1, 30).boxed().collect(Collectors.toList());
 
         ArrayAdapter<Integer> adapterYears = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, yearsList);
         adapterYears.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -112,15 +114,66 @@ public class ScrapProductDialog
         ArrayAdapter<String> adapterMonths = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, monthList);
         adapterMonths.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dspDataMonth.setAdapter(adapterMonths);
+        
+        dspDataYear.setSelection(0);
+        dspDataMonth.setSelection(0);
 
+        initDaysSpinner();
+
+        LocalDate today = LocalDate.now();
+        int year = today.getYear(); // Get the current year
+        int month = today.getMonthValue(); // Get the current month (1-based)
+
+
+        dspDataYear.setSelection(yearsList.indexOf(year));
+        dspDataMonth.setSelection(month - 1);
+
+
+        dspDataYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                initDaysSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        dspDataMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                initDaysSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+    }
+    
+    private void initDaysSpinner(){
+        int year = Integer.parseInt(dspDataYear.getSelectedItem().toString());
+        int monthIndex = monthList.indexOf(dspDataMonth.getSelectedItem().toString());
+
+        YearMonth yearMonth = YearMonth.of(year, monthIndex + 1);
+        int daysInMonth = yearMonth.lengthOfMonth();
+
+
+        daysList = IntStream.rangeClosed(1, daysInMonth).boxed().collect(Collectors.toList());
         ArrayAdapter<Integer> adapterDays = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, daysList);
         adapterDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dspDataDay.setAdapter(adapterDays);
 
-        dspDataYear.setSelection(0);
-        dspDataMonth.setSelection(0);
-        dspDataDay.setSelection(0);
 
+        LocalDate today = LocalDate.now();
+        int day = today.getDayOfMonth();
+        System.out.println(day);
+        dspDataDay.setSelection(daysList.indexOf(day));
 
     }
 

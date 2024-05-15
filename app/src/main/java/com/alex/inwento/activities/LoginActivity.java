@@ -1,4 +1,4 @@
-package com.alex.inwento.action;
+package com.alex.inwento.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

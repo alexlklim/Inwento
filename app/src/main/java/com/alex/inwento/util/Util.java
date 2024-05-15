@@ -3,7 +3,7 @@ package com.alex.inwento.util;
 import java.util.Arrays;
 import java.util.List;
 
-public class Util {
+public final class Util {
 
     public static final String APP_NAME = "Asset Track Pro";
     public static final List<String> FIELDS_SHORT_PRODUCT =

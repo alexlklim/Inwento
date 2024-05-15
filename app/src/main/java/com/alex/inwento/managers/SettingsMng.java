@@ -124,4 +124,12 @@ public class SettingsMng {
     public void setIsRfidScan(boolean bool) {
         pref.edit().putBoolean(Util.IS_RFID_SCAN, bool).apply();
     }
+
+    public boolean isServerConfigured() {
+        return pref.getBoolean(Util.IS_SERVER_CONFIGURED, false);
+    }
+
+    public void setIsServerConfigured(boolean bool) {
+        pref.edit().putBoolean(Util.IS_SERVER_CONFIGURED, bool).apply();
+    }
 }

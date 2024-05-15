@@ -21,19 +21,21 @@ public class ProductDialog extends AppCompatDialogFragment {
     private ProductDialog.ProductDialogListener productDialogListener;
     private ProductDTO productDTO;
     private Boolean isInventory;
-    private String currentBranch;
+    private String currentBranch, currentLocation;
     Button dpBtnOk;
-    TextView dpTitle, dpDesc, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpWarning;
+    TextView dpTitle, dpDesc, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpWarning, dpWarningLocation;
 
     public static ProductDialog newInstance(
             ProductDialog.ProductDialogListener listener,
             String currentBranch,
+            String currentLocation,
             Boolean isInventory,
             ProductDTO productDTO) {
         ProductDialog dialog = new ProductDialog();
         dialog.productDialogListener = listener;
         dialog.productDTO = productDTO;
         dialog.currentBranch = currentBranch;
+        dialog.currentLocation = currentLocation;
         dialog.isInventory = isInventory;
         return dialog;
     }
@@ -56,6 +58,7 @@ public class ProductDialog extends AppCompatDialogFragment {
         dpReceiver = view.findViewById(R.id.dpReceiver);
         dpBtnOk = view.findViewById(R.id.dpBtnOk);
         dpWarning = view.findViewById(R.id.dpWarning);
+        dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
 
 
         dpTitle.setText(productDTO.getTitle());
@@ -80,14 +83,35 @@ public class ProductDialog extends AppCompatDialogFragment {
                 // ADD LISTENER
                 dismiss();
             });
-            if (currentBranch.equals(productDTO.getBranch())){
-                // DELETE WARNING IF BRANCHES ARE THE SAME
-                ViewGroup parentView = (ViewGroup) dpWarning.getParent();
-                parentView.removeView(dpWarning);
+
+            if (currentLocation.equalsIgnoreCase("Wszystkie") ||
+                    !currentLocation.equalsIgnoreCase(productDTO.getLocation()) ||
+                    !currentBranch.equalsIgnoreCase(productDTO.getBranch())
+            ){
+
+
+                if (!currentLocation.equalsIgnoreCase(productDTO.getLocation())){
+                    dpWarningLocation.setText("Produckt zanjduje się w innej localizacji");
+                    dpBtnOk.setText(R.string.move);
+                }
+                if (currentLocation.equalsIgnoreCase("Wszystkie")){
+                    dpWarningLocation.setText("Localizacjia nie została wybrana");
+                    dpBtnOk.setText("Ok");
+                }
+
+
             } else {
-                // SET BUTTON TO MOVE IF BRANCHES ARE NOT THE SAME
-                dpBtnOk.setText(R.string.move);
+                ViewGroup parentViewLocation = (ViewGroup) dpWarningLocation.getParent();
+                parentViewLocation.removeView(dpWarningLocation);
             }
+
+            if (!currentBranch.equalsIgnoreCase(productDTO.getBranch())){
+                dpBtnOk.setText("Ok");
+            } else {
+                ViewGroup parentViewBranch = (ViewGroup) dpWarning.getParent();
+                parentViewBranch.removeView(dpWarning);
+            }
+
         }
 
         return builder.create();

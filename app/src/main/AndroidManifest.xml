@@ -23,22 +23,22 @@
         android:theme="@style/Theme.Inwento"
         tools:targetApi="31">
         <activity
-            android:name=".action.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".action.SearchActivity"
+            android:name=".activities.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".action.ProductUpdateActivity"
+            android:name=".activities.ProductUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".action.EventActivity"
+            android:name=".activities.EventActivity"
             android:exported="false" />
         <activity
-            android:name=".action.InventoryActivity"
+            android:name=".activities.InventoryActivity"
             android:exported="false" />
         <activity
-            android:name=".action.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

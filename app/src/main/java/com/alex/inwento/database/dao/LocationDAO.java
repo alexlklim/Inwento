@@ -16,6 +16,12 @@ public interface LocationDAO {
     @Query("SELECT * FROM " + Util.TABLE_NAME_LOCATION + " ORDER BY id DESC")
     List<ProductLocation> getAll();
 
+    @Query("SELECT * FROM locations " +
+            "WHERE branch_id = :branchId " +
+            "ORDER BY id DESC")
+    List<ProductLocation> getAllByBranchId(int branchId);
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<ProductLocation> productLocations);
 

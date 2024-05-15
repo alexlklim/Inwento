@@ -25,10 +25,10 @@
                 android:layout_marginBottom="15dp"
                 android:background="@color/red"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="Product przywiązany do innei lokalizacji!"
+                android:padding="5dp"
+                android:text="Product przywiązany do innego działu!"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -120,6 +120,8 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -144,6 +146,16 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/dpWarningLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Product przywiązany do innej lokalizacji!"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

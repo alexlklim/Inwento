@@ -1,4 +1,4 @@
-package com.alex.inwento.action;
+package com.alex.inwento.activities;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -163,7 +163,10 @@ public class EventActivity extends AppCompatActivity
 
         // init location spinner
         List<String> locationsList = new ArrayList<>();
-        List<ProductLocation> productLocationList = roomDB.locationDAO().getAll();
+        List<ProductLocation> productLocationList = roomDB.locationDAO().getAllByBranchId(
+                roomDB.branchDAO().getBranchByName(event.getBranch()).getId()
+
+        );
         locationsList.add(allLocations);
         locationsList.addAll(productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList()));
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.custom_spinner_item, locationsList);
@@ -261,7 +264,7 @@ public class EventActivity extends AppCompatActivity
         // if product.location != location
 
         ProductDialog
-                .newInstance(this, event.getBranch(), true, productDTO)
+                .newInstance(this, event.getBranch(), chosenProductLocation, true, productDTO)
                 .show(getSupportFragmentManager(), "product_dialog");
     }
 

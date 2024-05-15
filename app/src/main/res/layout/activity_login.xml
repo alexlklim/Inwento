@@ -7,7 +7,7 @@
     android:gravity="center_horizontal"
     android:paddingTop="40dp"
     android:background="@color/main_background"
-    tools:context=".action.LoginActivity">
+    tools:context=".activities.LoginActivity">
 
 
 
@@ -59,6 +59,10 @@
             android:minHeight="48dp"
             android:text=""
             android:textSize="20sp" />
+
+
+
+
 
         <CheckBox
             android:id="@+id/isRememberMe"

@@ -1,4 +1,4 @@
-package com.alex.inwento.action;
+package com.alex.inwento.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

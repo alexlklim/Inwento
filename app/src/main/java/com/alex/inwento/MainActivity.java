@@ -9,11 +9,11 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alex.inwento.action.InventoryActivity;
-import com.alex.inwento.action.LoginActivity;
-import com.alex.inwento.action.ProductUpdateActivity;
-import com.alex.inwento.action.SearchActivity;
-import com.alex.inwento.action.SettingsActivity;
+import com.alex.inwento.activities.InventoryActivity;
+import com.alex.inwento.activities.LoginActivity;
+import com.alex.inwento.activities.ProductUpdateActivity;
+import com.alex.inwento.activities.SearchActivity;
+import com.alex.inwento.activities.SettingsActivity;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;

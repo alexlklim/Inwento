@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,8 +38,8 @@ import retrofit2.Response;
 public class MoveProductDialog
         extends
         AppCompatDialogFragment
-implements
-ResultDialog.ResultDialogListener{
+        implements
+        ResultDialog.ResultDialogListener {
     private static final String TAG = "MoveProductDialog";
 
 
@@ -86,6 +87,7 @@ ResultDialog.ResultDialogListener{
         liableSpinner = view.findViewById(R.id.dmp_liable);
         receiverEditText = view.findViewById(R.id.dmp_receiver);
 
+
         branchList = roomDB.branchDAO().getAll();
         productLocationList = roomDB.locationDAO().getAll();
         employeeList = roomDB.employeeDAO().getAll();
@@ -112,16 +114,22 @@ ResultDialog.ResultDialogListener{
     private void sendProductUpdateRequest() {
         Log.i(TAG, "sendProductUpdateRequest ");
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
+
+
+        System.out.println("LOCATION: " + locationSpinner.getSelectedItem().toString());
+        System.out.println(locationSpinner.getSelectedItem().toString());
+
+        if (locationSpinner.getSelectedItem().toString().equalsIgnoreCase("none")){
+            openLocationErrorDialog();
+            return;
+        }
+
         Map<String, Object> updates = new HashMap<>();
         updates.put("id", productDTO.getId());
         updates.put("branch_id", roomDB.branchDAO().getBranchByName(branchSpinner.getSelectedItem().toString()).getId());
         updates.put("location_id", roomDB.locationDAO().getLocationByName(locationSpinner.getSelectedItem().toString()).getId());
         updates.put("liable_id", roomDB.employeeDAO().getEmployeeIdByFullName(liableSpinner.getSelectedItem().toString()));
         updates.put("receiver", receiverEditText.getText().toString());
-
-
-        System.out.println("TOKEN : " + token);
-        System.out.println("CHANGES : " + updates);
 
 
 
@@ -151,6 +159,7 @@ ResultDialog.ResultDialogListener{
 
     private void initializeSpinners() {
         Log.i(TAG, "initializeSpinner: ");
+
         branches = branchList.stream().map(Branch::getBranch).collect(Collectors.toList());
         locations = productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList());
         employees = employeeList.stream().map(emp -> emp.getFirstName() + " " + emp.getLastName()).collect(Collectors.toList());
@@ -159,18 +168,54 @@ ResultDialog.ResultDialogListener{
         adapterBranch.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         branchSpinner.setAdapter(adapterBranch);
 
+        ArrayAdapter<String> adapterEmp = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, employees);
+        adapterEmp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        liableSpinner.setAdapter(adapterEmp);
+
+        branchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                initLocationSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        initLocationSpinner();
+
+    }
+
+    private void initLocationSpinner() {
+        int branchId = roomDB.branchDAO().getBranchByName(branchSpinner.getSelectedItem().toString()).getId();
+        locations = roomDB.locationDAO().getAllByBranchId(branchId)
+                .stream()
+                .map(ProductLocation::getLocation)
+                .collect(Collectors.toList());
+
+        if (locations.size() == 0){
+            locations.add("none");
+        }
         ArrayAdapter<String> adapterLocation = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, locations);
         adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(adapterLocation);
 
-        ArrayAdapter<String> adapterEmp = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, employees);
-        adapterEmp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        liableSpinner.setAdapter(adapterEmp);
     }
 
 
     @Override
     public void onOkClicked() {
         dismiss();
+    }
+
+
+    private void openLocationErrorDialog() {
+        Log.i(TAG, "openLocationErrorDialog");
+        ResultDialog
+                .newInstance("Lokalizacjia nie została wybrana", false, this)
+                .show(getChildFragmentManager(), "location_error_dialog");
     }
 }

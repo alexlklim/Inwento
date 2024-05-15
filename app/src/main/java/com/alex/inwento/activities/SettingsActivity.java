@@ -1,4 +1,4 @@
-package com.alex.inwento.action;
+package com.alex.inwento.activities;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -123,6 +123,7 @@ implements ResultDialog.ResultDialogListener{
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     DataDTO dto = response.body();
+                    System.out.println(dto);
                     roomDB.branchDAO().insert(dto.getBranches());
                     roomDB.locationDAO().insert(dto.getProductLocations());
                     roomDB.employeeDAO().insert(dto.getEmployees());
