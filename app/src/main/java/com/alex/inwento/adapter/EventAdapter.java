@@ -44,11 +44,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
 
         if (event.getScannedProductAmount() == event.getTotalProductAmount()) {
             holder.reStatus.setImageResource(R.drawable.ic_done);
-            holder.reStatus.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+            holder.reStatus.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.green), PorterDuff.Mode.SRC_IN);
         } else {
             holder.reStatus.setImageResource(R.drawable.ic_in_process);
-            holder.reStatus.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-
+            holder.reStatus.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.red), PorterDuff.Mode.SRC_IN);
         }
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemClick(event.getId()));
     }

@@ -10,8 +10,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
+        android:minHeight="65dp"
         android:gravity="center"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
         android:orientation="horizontal">
 
@@ -19,17 +21,24 @@
             android:id="@+id/aeBranch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="6"
             android:textSize="30sp"
             android:textStyle=""
             android:text="Branch" />
 
         <Spinner
             android:id="@+id/aeLocations"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:layout_gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/border_background"
             android:contentDescription="description" />
+
 
     </LinearLayout>
 
@@ -107,6 +116,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_products"
+                    android:layout_marginRight="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

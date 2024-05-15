@@ -11,8 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,12 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/logo"
             android:paddingStart="40dp"
             android:paddingTop="10dp"
             android:paddingEnd="40dp"
-            app:tint="@color/icon_color"
-            android:contentDescription="@string/logo"
-            app:srcCompat="@drawable/inwento_high_resolution_logo_transparent" />
+            app:srcCompat="@drawable/inwento_high_resolution_logo_transparent"
+            app:tint="@color/icon_color" />
 
         <TextView
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="15dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:background="@color/btnColor" />
@@ -49,116 +49,137 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:orientation="horizontal"
-            android:paddingStart="10dp">
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/border_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:text="@string/user"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/sName"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:gravity="center"
-                android:text="@string/fake_name"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:orientation="horizontal"
-            android:paddingStart="10dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/email"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/sEmail"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:text="@string/fake_email"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/btnColor" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="10dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/server_address"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/sServerAddress"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="3"
-                android:inputType="text"
-                android:text="http://10.1.2.65:9091/api/"
-                android:hint="@string/fake_address" />
-        </LinearLayout>
+                android:minHeight="40dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:gravity="center_vertical"
+                    android:text="@string/user"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/sName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="@string/fake_name"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/email"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/sEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="@string/fake_email"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:orientation="horizontal"
-            android:paddingStart="10dp">
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/border_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="10"
-                android:text="@string/user_rfid_scanner"
-                android:textSize="18sp" />
-
-            <CheckBox
-                android:id="@+id/sIsRfidScan"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="" />
+                android:orientation="horizontal"
+                android:paddingStart="10dp">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@string/server_address"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/sServerAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:hint="@string/fake_address"
+                    android:inputType="text"
+                    android:text="http://10.1.2.65:9091/api/" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="10"
+                    android:text="@string/user_rfid_scanner"
+                    android:textSize="18sp" />
+
+                <CheckBox
+                    android:id="@+id/sIsRfidScan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="" />
+
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:background="@color/btnColor" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/border_background"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:padding="10dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -210,8 +231,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:inputType="text"
-                android:hint="@string/fake_prefix" />
+                android:hint="@string/fake_prefix"
+                android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
@@ -236,8 +257,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:inputType="text"
-                android:hint="@string/fake_suffix" />
+                android:hint="@string/fake_suffix"
+                android:inputType="text" />
         </LinearLayout>
 
 
@@ -263,8 +284,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:inputType="text"
-                android:hint="@string/fake_postfix" />
+                android:hint="@string/fake_postfix"
+                android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
@@ -294,9 +315,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:inputType="number"
                 android:gravity="center"
-                android:hint="@string/zero" />
+                android:hint="@string/zero"
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
@@ -320,9 +341,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:inputType="number"
                 android:gravity="center"
-                android:hint="@string/zero" />
+                android:hint="@string/zero"
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
@@ -346,30 +367,32 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:inputType="number"
                 android:gravity="center"
-                android:hint="@string/zero" />
+                android:hint="@string/zero"
+                android:inputType="number" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/btnColor" />
+
+
+
+    </LinearLayout>
+
 
         <Button
             android:id="@+id/btnSave"
-            android:background="@drawable/btn_rounded"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:text="@string/save_new_settings"
-            app:backgroundTint="@color/btnColorDark"
             android:layout_gravity="center"
-            android:paddingEnd="20dp"
+            android:background="@drawable/btn_rounded"
             android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/save_new_settings"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            app:backgroundTint="@color/btnColorDark" />
 
     </LinearLayout>
 

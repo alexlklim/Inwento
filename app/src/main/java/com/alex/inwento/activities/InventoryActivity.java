@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
 import com.alex.inwento.adapter.EventAdapter;
+import com.alex.inwento.dialog.ResultDialog;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.InventoryDTO;
@@ -24,8 +25,8 @@ import retrofit2.Response;
 
 public class InventoryActivity extends AppCompatActivity
         implements
-        EventAdapter.OnItemClickListener
-{
+        EventAdapter.OnItemClickListener,
+        ResultDialog.ResultDialogListener {
     private static final String TAG = "InventoryActivity";
     SettingsMng settingsMng;
     RecyclerView recyclerView;
@@ -45,8 +46,12 @@ public class InventoryActivity extends AppCompatActivity
     }
 
 
-    public void inventoryIsNotActiveNow(){
-
+    public void openInventoryNotActiveDialog() {
+        runOnUiThread(() -> {
+            ResultDialog
+                    .newInstance("Inventaryzacja została zakończona", false, this)
+                    .show(getSupportFragmentManager(), "result_dialog");
+        });
     }
 
     @Override
@@ -68,14 +73,16 @@ public class InventoryActivity extends AppCompatActivity
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     initialize(response.body());
+                } else {
+                    openInventoryNotActiveDialog();
+                    Log.e(TAG, "Something wrong:");
                 }
-                 else Log.e(TAG, "Something wrong:");
             }
 
             @Override
             public void onFailure(@NonNull Call<InventoryDTO> call, @NonNull Throwable t) {
                 Log.e(TAG, "sendGetCurrentInventory onFailure", t);
-                inventoryIsNotActiveNow();
+                openInventoryNotActiveDialog();
             }
         });
     }
@@ -85,7 +92,7 @@ public class InventoryActivity extends AppCompatActivity
         tvProductAmount = findViewById(R.id.aiAmountProducts);
 
         tvStartData.setText(inventoryDTO.getStartDate());
-        String amount = inventoryDTO.getScannedProductAmount() + " / " + inventoryDTO.getTotalProductAmount();
+        String amount = "Produkty " + inventoryDTO.getScannedProductAmount() + " / " + inventoryDTO.getTotalProductAmount();
         tvProductAmount.setText(amount);
         recyclerView = findViewById(R.id.rv_events);
         eventAdapter = new EventAdapter(inventoryDTO.getEvents(), this);
@@ -101,4 +108,8 @@ public class InventoryActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    @Override
+    public void onOkClicked() {
+        finish();
+    }
 }

@@ -41,7 +41,7 @@ public class ScrapProductDialog
         implements ResultDialog.ResultDialogListener {
     private static final String TAG = "ScrapProductDialog";
 
-    TextView dspTitle, dspDesc, dspCode, dspLiable, dspReceiver;
+    TextView dspTitle, dspCode, dspLiable, dspReceiver, dspWarningScrap;
     Spinner dspDataDay, dspDataMonth, dspDataYear;
     EditText dspReason;
     Button dscBtnScrap;
@@ -74,11 +74,10 @@ public class ScrapProductDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_scrap_product, null);
-        builder.setView(view).setTitle("Umożenie");
+        builder.setView(view);
 
 
         dspTitle = view.findViewById(R.id.dspTitle);
-        dspDesc = view.findViewById(R.id.dspDesc);
         dspCode = view.findViewById(R.id.dspCode);
         dspLiable = view.findViewById(R.id.dspLiable);
         dspReceiver = view.findViewById(R.id.dspReceiver);
@@ -87,15 +86,20 @@ public class ScrapProductDialog
         dspDataMonth = view.findViewById(R.id.dspDataMonth);
         dspDataYear = view.findViewById(R.id.dspDataYear);
         dscBtnScrap = view.findViewById(R.id.dscBtnScrap);
+        dspWarningScrap = view.findViewById(R.id.dspWarningScrap);
 
 
         initializeSpinners();
         dspTitle.setText(productDTO.getTitle());
-        dspDesc.setText(productDTO.getDescription());
         dspCode.setText("code: " + productDTO.getBarCode());
         dspLiable.setText(productDTO.getLiableName());
         dspReceiver.setText(productDTO.getReceiver());
 
+
+        if (productDTO.isScrapped()){
+            TextView dpWarningScrap = view.findViewById(R.id.dspWarningScrap);
+            dpWarningScrap.setVisibility(View.VISIBLE);
+        }
 
         dscBtnScrap.setOnClickListener(v -> sendProductUpdateRequest());
         return builder.create();
@@ -210,7 +214,7 @@ public class ScrapProductDialog
                     Log.i(TAG, "sendProductUpdateRequest is successful:");
                     requireActivity().runOnUiThread(() -> {
                         ResultDialog dialog = ResultDialog.newInstance(
-                                "Product " + productDTO.getTitle() + " został skutecznie umożony",
+                                "Product\n" + productDTO.getTitle() + "\nzostał skutecznie umożony",
                                 true,
                                 ScrapProductDialog.this);
                         dialog.show(getChildFragmentManager(), "MoveProductDialog");

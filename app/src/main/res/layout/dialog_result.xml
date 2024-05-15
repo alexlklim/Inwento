@@ -21,6 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@android:color/transparent"
+            android:tint="@color/green"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_done" />
 
         <TextView
@@ -29,8 +31,7 @@
             android:layout_height="wrap_content"
             android:text="Title"
             android:gravity="center"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="17sp"/>
     </LinearLayout>
 
 

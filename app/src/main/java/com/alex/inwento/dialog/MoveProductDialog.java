@@ -76,10 +76,11 @@ public class MoveProductDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_move_product, null);
-        builder.setView(view).setTitle("Przesunięcie");
+        builder.setView(view);
 
         TextView titleTextView = view.findViewById(R.id.dmp_title);
         TextView codeTextView = view.findViewById(R.id.dmp_code);
+        TextView rfidCodeTextView = view.findViewById(R.id.dmp_code_rfid);
         Button btnMove = view.findViewById(R.id.dmp_move);
 
         branchSpinner = view.findViewById(R.id.dmp_branch);
@@ -95,14 +96,13 @@ public class MoveProductDialog
         initializeSpinners();
 
         titleTextView.setText(productDTO.getTitle());
-        codeTextView.setText(productDTO.getBarCode());
+        codeTextView.setText("bar code: " + productDTO.getBarCode());
+        rfidCodeTextView.setText("rfid: " + productDTO.getRfidCode());
         receiverEditText.setText(productDTO.getReceiver());
 
+        System.out.println(productDTO.toString());
         int branchIndex = branches.indexOf(productDTO.getBranch());
         if (branchIndex != -1) branchSpinner.setSelection(branchIndex);
-
-        int locationIndex = locations.indexOf(productDTO.getLocation());
-        if (locationIndex != -1) locationSpinner.setSelection(locationIndex);
 
         int liableIndex = employees.indexOf(productDTO.getLiableName());
         if (liableIndex != -1) liableSpinner.setSelection(liableIndex);
@@ -115,9 +115,6 @@ public class MoveProductDialog
         Log.i(TAG, "sendProductUpdateRequest ");
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
 
-
-        System.out.println("LOCATION: " + locationSpinner.getSelectedItem().toString());
-        System.out.println(locationSpinner.getSelectedItem().toString());
 
         if (locationSpinner.getSelectedItem().toString().equalsIgnoreCase("none")){
             openLocationErrorDialog();
@@ -141,7 +138,7 @@ public class MoveProductDialog
                     Log.i(TAG, "sendProductUpdateRequest is successful:");
                     requireActivity().runOnUiThread(() -> {
                         ResultDialog dialog = ResultDialog.newInstance(
-                                "Product " + productDTO.getTitle() + " został przesunięty",
+                                "Product \n" + productDTO.getTitle() + " \nzostał przesunięty",
                                 true,
                                 MoveProductDialog.this);
                         dialog.show(getChildFragmentManager(), "MoveProductDialog");
@@ -203,6 +200,14 @@ public class MoveProductDialog
         adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(adapterLocation);
 
+        if (locations.contains(productDTO.getLocation())){
+            int locationIndex = locations.indexOf(productDTO.getLocation());
+            if (locationIndex != -1) locationSpinner.setSelection(locationIndex);
+
+            System.out.println("Locations: " + locations);
+            System.out.println("Location index: " + locationIndex);
+
+        }
     }
 
 

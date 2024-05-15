@@ -19,6 +19,7 @@ import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.DataDTO;
 import com.alex.inwento.managers.SettingsMng;
+import com.alex.inwento.util.Endpoints;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,7 +80,7 @@ implements ResultDialog.ResultDialogListener{
     private void setValues() {
         sName.setText(sm.getFirstname() + " " + sm.getLastname());
         sEmail.setText(sm.getEmail());
-        sServerAddress.setText(sm.getServerAddress());
+        sServerAddress.setText(Endpoints.SERVER);
 
         sFilter.setChecked(sm.isFilter());
         sIsRfidScan.setChecked(sm.isRfidScan());
@@ -91,7 +92,6 @@ implements ResultDialog.ResultDialogListener{
         sLength.setText(Integer.toString(sm.getCodeLength()));
         sLengthMax.setText(Integer.toString(sm.getCodeMaxLength()));
         sLengthMin.setText(Integer.toString(sm.getCodeMinLength()));
-
     }
 
 

@@ -31,7 +31,7 @@ public class ResultDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_result, null);
-        builder.setView(view).setTitle("");
+        builder.setView(view);
 
         drText = view.findViewById(R.id.drText);
         drImage = view.findViewById(R.id.drImage);
@@ -40,10 +40,12 @@ public class ResultDialog extends AppCompatDialogFragment {
         drText.setText(text);
         if (isSuccess) {
             drImage.setImageResource(R.drawable.ic_done);
-            drImage.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_green_light));
+            drImage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.green));
         } else {
             drImage.setImageResource(R.drawable.ic_error);
-            drImage.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light));
+            drImage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.red));
+
+
         }
 
         drBtnOk.setOnClickListener(v -> {

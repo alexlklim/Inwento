@@ -1,105 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="15dp"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="5dp">
-
+        android:padding="15dp">
 
         <TextView
             android:id="@+id/dmp_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/dmp_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="code:"
-            android:layout_gravity="left"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:paddingTop="10dp"
-            android:text="Oddział:"
-            android:textSize="20sp" />
-
-        <Spinner
-            android:id="@+id/dmp_branch"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:contentDescription="description" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
 
 
+            <TextView
+                android:id="@+id/dmp_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="code:"
+                android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:paddingTop="10dp"
-            android:text="Lokalizacjia:"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/dmp_code_rfid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="code:"
+                android:textSize="15sp" />
+        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/dmp_location"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:contentDescription="description" />
-
-
-
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:textStyle="bold"
-            android:text="Osoba odpowiedzialna:"
-            android:textSize="20sp" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_background"
+            android:gravity="start"
+            android:orientation="vertical"
+            android:padding="10dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/dmp_liable"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:contentDescription="description" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:minHeight="40dp"
+                    android:paddingTop="10dp"
+                    android:text="Oddział:"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
+                <Spinner
+                    android:id="@+id/dmp_branch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="6"
+                    android:background="@drawable/border_background"
+                    android:contentDescription="description"
+                    android:minHeight="40dp"
+                    android:padding="5dp" />
 
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:minHeight="40dp"
+                    android:paddingTop="10dp"
+                    android:text="Lokalizacjia:"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-        <TextView
+                <Spinner
+                    android:id="@+id/dmp_location"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="6"
+                    android:background="@drawable/border_background"
+                    android:contentDescription="description"
+                    android:minHeight="40dp"
+                    android:padding="5dp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:text="Użytkownik:"
-            android:textStyle="bold"
-            android:textSize="20sp" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <EditText
-            android:id="@+id/dmp_receiver"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:hint="Imię i nazwisko"
-            android:text="" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="Osoba odpowiedzialna:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+
+            <Spinner
+                android:id="@+id/dmp_liable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/border_background"
+                android:contentDescription="description"
+                android:minHeight="40dp"
+                android:padding="5dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="Użytkownik:"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/dmp_receiver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Imię i nazwisko"
+                android:inputType="text"
+                android:minHeight="70dp"
+                android:text="" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/dmp_move"
@@ -110,8 +177,7 @@
             android:text="Przesunięcie"
             android:textColor="@color/white"
             android:textSize="20sp" />
+
+
     </LinearLayout>
-
-
-
-</LinearLayout>
+</ScrollView>

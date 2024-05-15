@@ -27,6 +27,10 @@ public class ProductDTO {
     private boolean active;
 
 
+    @SerializedName("scrapping")
+    private boolean isScrapped;
+
+
     @SerializedName("branch_id")
     private int branchId;
     @SerializedName("branch")

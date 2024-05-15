@@ -23,7 +23,7 @@ public class ProductDialog extends AppCompatDialogFragment {
     private Boolean isInventory;
     private String currentBranch, currentLocation;
     Button dpBtnOk;
-    TextView dpTitle, dpDesc, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpWarning, dpWarningLocation;
+    TextView dpTitle, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpWarning, dpWarningLocation;
 
     public static ProductDialog newInstance(
             ProductDialog.ProductDialogListener listener,
@@ -46,10 +46,9 @@ public class ProductDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_product, null);
-        builder.setView(view).setTitle("Product");
+        builder.setView(view);
 
         dpTitle = view.findViewById(R.id.dpTitle);
-        dpDesc = view.findViewById(R.id.dpDesc);
         dpCode = view.findViewById(R.id.dpCode);
         dpRfid = view.findViewById(R.id.dpRfid);
         dpBranch = view.findViewById(R.id.dpBranch);
@@ -62,7 +61,6 @@ public class ProductDialog extends AppCompatDialogFragment {
 
 
         dpTitle.setText(productDTO.getTitle());
-        dpDesc.setText(productDTO.getDescription());
         dpCode.setText(productDTO.getBarCode());
         dpRfid.setText(productDTO.getRfidCode());
         dpBranch.setText(productDTO.getBranch());
@@ -71,8 +69,6 @@ public class ProductDialog extends AppCompatDialogFragment {
         dpReceiver.setText(productDTO.getReceiver());
 
         if (!isInventory) {
-            ViewGroup parentView = (ViewGroup) dpWarning.getParent();
-            parentView.removeView(dpWarning);
             dpBtnOk.setOnClickListener(v -> dismiss());
         }
         else {
@@ -83,33 +79,23 @@ public class ProductDialog extends AppCompatDialogFragment {
                 // ADD LISTENER
                 dismiss();
             });
-
-            if (currentLocation.equalsIgnoreCase("Wszystkie") ||
-                    !currentLocation.equalsIgnoreCase(productDTO.getLocation()) ||
-                    !currentBranch.equalsIgnoreCase(productDTO.getBranch())
-            ){
-
-
-                if (!currentLocation.equalsIgnoreCase(productDTO.getLocation())){
-                    dpWarningLocation.setText("Produckt zanjduje się w innej localizacji");
-                    dpBtnOk.setText(R.string.move);
-                }
-                if (currentLocation.equalsIgnoreCase("Wszystkie")){
-                    dpWarningLocation.setText("Localizacjia nie została wybrana");
-                    dpBtnOk.setText("Ok");
-                }
-
-
-            } else {
-                ViewGroup parentViewLocation = (ViewGroup) dpWarningLocation.getParent();
-                parentViewLocation.removeView(dpWarningLocation);
+            if (!currentLocation.equalsIgnoreCase(productDTO.getLocation())){
+                TextView dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
+                dpWarningLocation.setVisibility(View.VISIBLE);
+                dpWarningLocation.setText("Produckt zanjduje się w innej lokalizacji");
+                dpBtnOk.setText(R.string.move);
+            }
+            if (currentLocation.equalsIgnoreCase("Wszystkie")){
+                TextView dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
+                dpWarningLocation.setVisibility(View.VISIBLE);
+                dpWarningLocation.setText("Localizacjia nie została wybrana");
+                dpBtnOk.setText("Ok");
             }
 
             if (!currentBranch.equalsIgnoreCase(productDTO.getBranch())){
+                TextView dpWarningBranch = view.findViewById(R.id.dpWarning);
+                dpWarningBranch.setVisibility(View.VISIBLE);
                 dpBtnOk.setText("Ok");
-            } else {
-                ViewGroup parentViewBranch = (ViewGroup) dpWarning.getParent();
-                parentViewBranch.removeView(dpWarning);
             }
 
         }

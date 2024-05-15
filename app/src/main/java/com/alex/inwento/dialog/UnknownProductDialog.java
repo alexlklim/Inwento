@@ -28,7 +28,7 @@ public class UnknownProductDialog extends AppCompatDialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_unknown_product, null);
-        builder.setView(view).setTitle("Nowy środek trwały");
+        builder.setView(view);
 
         code = view.findViewById(R.id.dup_code);
         btnSave = view.findViewById(R.id.dup_save);
