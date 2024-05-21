@@ -47,18 +47,15 @@ public class InventoryActivity extends AppCompatActivity
 
 
     public void openInventoryNotActiveDialog() {
-        runOnUiThread(() -> {
-            ResultDialog
-                    .newInstance("Inventaryzacja została zakończona", false, this)
-                    .show(getSupportFragmentManager(), "result_dialog");
-        });
+        runOnUiThread(() -> ResultDialog
+                .newInstance(getString(R.string.inventory_finished), false, this)
+                .show(getSupportFragmentManager(), "result_dialog"));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         sendGetCurrentInventory();
-        // get data from DB about event
     }
 
 
@@ -75,7 +72,7 @@ public class InventoryActivity extends AppCompatActivity
                     initialize(response.body());
                 } else {
                     openInventoryNotActiveDialog();
-                    Log.e(TAG, "Something wrong:");
+                    Log.e(TAG, getString(R.string.something_wrong));
                 }
             }
 
@@ -92,7 +89,8 @@ public class InventoryActivity extends AppCompatActivity
         tvProductAmount = findViewById(R.id.aiAmountProducts);
 
         tvStartData.setText(inventoryDTO.getStartDate());
-        String amount = "Produkty " + inventoryDTO.getScannedProductAmount() + " / " + inventoryDTO.getTotalProductAmount();
+        String amount = getString(R.string.products) +
+                inventoryDTO.getScannedProductAmount() + " / " + inventoryDTO.getTotalProductAmount();
         tvProductAmount.setText(amount);
         recyclerView = findViewById(R.id.rv_events);
         eventAdapter = new EventAdapter(inventoryDTO.getEvents(), this);

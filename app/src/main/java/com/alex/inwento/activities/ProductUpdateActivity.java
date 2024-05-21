@@ -82,7 +82,7 @@ public class ProductUpdateActivity extends AppCompatActivity {
 
         if (settingsMng.isFilter()) {
             if (FilterMng.filteringData(decodedData, settingsMng) == null) {
-                Toast.makeText(this, "Code doesn't match the established pattern", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.code_doesnt_match_the_established_pattern), Toast.LENGTH_SHORT).show();
                 return;
             }
         }

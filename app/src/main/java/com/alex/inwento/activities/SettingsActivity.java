@@ -71,7 +71,7 @@ implements ResultDialog.ResultDialogListener{
         Log.i(TAG, "openResultDialog");
         runOnUiThread(() -> {
             ResultDialog
-                    .newInstance("Nowe ustawienia zachowane", true, this)
+                    .newInstance(getString(R.string.new_settings_saved), true, this)
                     .show(getSupportFragmentManager(), "result_dialog");
         });
     }

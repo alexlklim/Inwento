@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     settingsMng.setAuthInfo(response.body());
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
-                else Log.e(TAG, "Login failed:");
+                else Log.e(TAG, getString(R.string.login_failed));
             }
             @Override
             public void onFailure(@NonNull Call<AuthDTO> call, @NonNull Throwable t) {

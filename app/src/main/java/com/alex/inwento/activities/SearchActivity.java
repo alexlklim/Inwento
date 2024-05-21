@@ -181,6 +181,7 @@ public class SearchActivity
 
 
     public void openProductDialog(ProductDTO productDTO) {
+        rvSearch.setText("");
         if (!isFinishing() && !isDestroyed()) {
             Log.i(TAG, "openProductDialog: ");
             ProductDialog.newInstance(this, "null", "null", false, productDTO).show(getSupportFragmentManager(), "product_dialog");

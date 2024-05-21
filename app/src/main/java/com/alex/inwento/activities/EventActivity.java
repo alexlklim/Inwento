@@ -75,7 +75,7 @@ public class EventActivity extends AppCompatActivity
 
     private String chosenProductLocation;
     boolean isScanned, isLocationErrorDialogOpen;
-    private String allLocations = "Wszystkie";
+    private String allLocations = getString(R.string.wszystkie);
 
 
     @Override
@@ -115,7 +115,7 @@ public class EventActivity extends AppCompatActivity
                     assert response.body() != null;
                     event = response.body();
                     firstInit();
-                } else Log.e(TAG, "Something wrong:");
+                } else Log.e(TAG, getString(R.string.something_wrong));
             }
 
             @Override
@@ -538,7 +538,7 @@ public class EventActivity extends AppCompatActivity
         if (!isLocationErrorDialogOpen){
             isLocationErrorDialogOpen = true;
             ResultDialog
-                    .newInstance("Lokalizacjia nie została wybrana", false, this)
+                    .newInstance(getString(R.string.location_was_not_chosen), false, this)
                     .show(getSupportFragmentManager(), "location_error_dialog");
         }
     }

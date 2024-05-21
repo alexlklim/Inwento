@@ -23,10 +23,10 @@
     <string name="fake_name">Alex Klim</string>
     <string name="email">Email:</string>
     <string name="fake_email">alex.klim@gmail.com</string>
-    <string name="server_address">Address servera:</string>
+    <string name="server_address">Adres serwera:</string>
     <string name="fake_address">http://10.10.10.10:9090/api</string>
-    <string name="filter_barcodes">Filter kodów kreskowych</string>
-    <string name="prefix">Prefix</string>
+    <string name="filter_barcodes">Filtruj kody kreskowe</string>
+    <string name="prefix">Prefiks</string>
     <string name="fake_suffix">…1234...</string>
     <string name="fake_postfix">…1234</string>
     <string name="code_lenght">Długość kodu</string>
@@ -36,9 +36,17 @@
     <string name="save_new_settings">Zachowaj nowe ustawienia</string>
     <string name="fake_prefix">1234…</string>
     <string name="logo">logo</string>
-    <string name="user_rfid_scanner">Używaj RFID scaneru</string>
+    <string name="use_rfid_scanner">Używaj skanera RFID</string>
     <string name="product_view">Pogląd produktów</string>
-    <string name="start_writing_title">Zaczniej pisać nazwę</string>
+    <string name="start_writing_title">Zacznij pisać nazwę</string>
+    <string name="something_wrong">Coś poszło nie tak:</string>
+    <string name="wszystkie">Wszystkie</string>
+    <string name="location_was_not_chosen">Lokalizacjia nie została wybrana</string>
+    <string name="products">"Produkty "</string>
+    <string name="inventory_finished">Inventaryzacja została zakończona</string>
+    <string name="login_failed">Login failed:</string>
+    <string name="code_doesnt_match_the_established_pattern">Code doesn\'t match the established pattern</string>
+    <string name="new_settings_saved">Nowe ustawienia zachowane</string>
 
 </resources>
 
