@@ -37,6 +37,8 @@
     <string name="fake_prefix">1234...</string>
     <string name="logo">logo</string>
     <string name="user_rfid_scanner">Używaj RFID scaneru</string>
+    <string name="product_view">Pogląd produktów</string>
+    <string name="start_writing_title">Zaczniej pisać nazwę</string>
 
 </resources>
 

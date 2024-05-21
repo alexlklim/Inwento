@@ -28,7 +28,6 @@ import com.alex.inwento.http.inventory.ProductShortDTO;
 import com.alex.inwento.managers.FilterMng;
 import com.alex.inwento.managers.SettingsMng;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -216,11 +215,9 @@ public class SearchActivity
         productAdapter.setHandlingScanEvent(true);
         String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
         String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-        String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
 
         if (decodedSource == null) {
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
-            decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
         }
         sendGetFullProductRequest(decodedData, null);
         recyclerView.clearFocus();
