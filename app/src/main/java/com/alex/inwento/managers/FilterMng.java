@@ -3,8 +3,8 @@ package com.alex.inwento.managers;
 import com.alex.inwento.http.inventory.ProductShortDTO;
 import com.alex.inwento.http.inventory.UnknownProductDTO;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FilterMng {
 
@@ -17,11 +17,11 @@ public class FilterMng {
             return null;
         }
 
-        if (!settingsMng.getCodePrefix().equals("") && !code.startsWith(settingsMng.getCodePrefix()))
+        if (!settingsMng.getCodePrefix().isEmpty() && !code.startsWith(settingsMng.getCodePrefix()))
             return null;
-        if (!settingsMng.getCodeSuffix().equals("") && !code.contains(settingsMng.getCodeSuffix()))
+        if (!settingsMng.getCodeSuffix().isEmpty() && !code.contains(settingsMng.getCodeSuffix()))
             return null;
-        if (!settingsMng.getCodePostfix().equals("") && !code.endsWith(settingsMng.getCodePostfix()))
+        if (!settingsMng.getCodePostfix().isEmpty() && !code.endsWith(settingsMng.getCodePostfix()))
             return null;
 
         return code;
@@ -29,19 +29,9 @@ public class FilterMng {
 
 
 
-
-
     public static boolean isProductExistsByBarCode(List<ProductShortDTO> productList, String barcodeToFind) {
         for (ProductShortDTO product : productList) {
             if (product.getBarCode() != null && product.getBarCode().equalsIgnoreCase(barcodeToFind)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static boolean isProductExistsByRfidCode(List<ProductShortDTO> productList, String rfidCodeToFind) {
-        for (ProductShortDTO product : productList) {
-            if (product.getBarCode() != null && product.getRfidCode().equalsIgnoreCase(rfidCodeToFind)) {
                 return true;
             }
         }
@@ -81,7 +71,26 @@ public class FilterMng {
                 return product;
             }
         }
-        // if no matching product found
         return null;
     }
+
+
+
+    public static List<ProductShortDTO> filterProductsByTitle(List<ProductShortDTO> products, String searchedTitle) {
+       if (searchedTitle.equalsIgnoreCase(""))
+           return products;
+
+        List<ProductShortDTO> filteredProducts = new ArrayList<>();
+        if (searchedTitle.isEmpty()) {
+            return filteredProducts;
+        }
+
+        for (ProductShortDTO product : products) {
+            if (product.getTitle() != null && product.getTitle().toLowerCase().contains(searchedTitle.toLowerCase())) {
+                filteredProducts.add(product);
+            }
+        }
+        return filteredProducts;
+    }
+
 }

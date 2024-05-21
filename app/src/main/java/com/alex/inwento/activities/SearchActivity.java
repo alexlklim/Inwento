@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,8 +25,10 @@ import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.inventory.ProductDTO;
 import com.alex.inwento.http.inventory.ProductShortDTO;
+import com.alex.inwento.managers.FilterMng;
 import com.alex.inwento.managers.SettingsMng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +45,7 @@ public class SearchActivity
     SettingsMng settingsMng;
     RecyclerView recyclerView;
     ProductAdapter productAdapter;
+    EditText rvSearch;
 
     List<ProductShortDTO> productDtoList;
 
@@ -51,6 +57,10 @@ public class SearchActivity
         setContentView(R.layout.activity_search);
         settingsMng = new SettingsMng(this);
 
+        View rootLayout = findViewById(android.R.id.content);
+        rvSearch = findViewById(R.id.rvSearch);
+
+
         // for getting and filtering codes
         IntentFilter filter = new IntentFilter();
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -61,9 +71,33 @@ public class SearchActivity
         sendGetProductsRequest();
 
         // Clear focus from RecyclerView
-        View rootLayout = findViewById(android.R.id.content);
         rootLayout.requestFocus();
 
+        initTextListener();
+        rvSearch.clearFocus();
+
+    }
+
+
+    public void initTextListener(){
+        rvSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateRecyclerView(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void updateRecyclerView(String searchedTitle) {
+        initializeRecyclerView(FilterMng.filterProductsByTitle(productDtoList, searchedTitle));
     }
 
     private void sendGetProductsRequest() {
@@ -109,9 +143,6 @@ public class SearchActivity
         Log.i(TAG, "sendGetFullProductRequest bar code " + barCode);
         APIClient apiClient = RetrofitClient.getRetrofitInstance().create(APIClient.class);
         Call<ProductDTO> call;
-        System.out.println("TOKEN : " + settingsMng.getAccessToken());
-        System.out.println("BAR_CODE : " + barCode);
-        System.out.println("BAR_CODE : " + productId);
 
         if (productId != null) {
             call = apiClient.getFullProductById(

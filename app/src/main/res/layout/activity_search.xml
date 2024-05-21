@@ -21,6 +21,12 @@
         android:gravity="center"
         android:text="Pogląd produktów" />
 
+    <EditText
+        android:id="@+id/rvSearch"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Zaczniej pisać nazwę" />
+
 
 
 
