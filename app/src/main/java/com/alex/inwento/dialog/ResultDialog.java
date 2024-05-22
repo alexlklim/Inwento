@@ -1,6 +1,7 @@
 package com.alex.inwento.dialog;
 
 import android.app.Dialog;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +41,11 @@ public class ResultDialog extends AppCompatDialogFragment {
         drText.setText(text);
         if (isSuccess) {
             drImage.setImageResource(R.drawable.ic_done);
-            drImage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.green));
+            drImage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.result_success));
         } else {
             drImage.setImageResource(R.drawable.ic_error);
-            drImage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.red));
+            drImage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.result_fail));
+
 
 
         }

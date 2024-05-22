@@ -22,24 +22,18 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderViewHolder> {
 
-    private final ProductAdapter.OnItemProductClickListener onItemClickListener;
+    private final OnItemProductClickListener onItemClickListener;
     private List<ProductShortDTO> productList;
-    private Boolean isInventory, isScanned;
+    private final Boolean isInventory, isScanned;
     private boolean isHandlingScanEvent = false;
-    Context context;
-
-    public void updateData(List<ProductShortDTO> productShortDTOs) {
-        this.productList.clear();
-        this.productList.addAll(productShortDTOs);
-        notifyDataSetChanged();
-    }
-
+    private final Context context;
 
     public ProductAdapter(
             Context context,
-            Boolean isInventory, Boolean isScanned,
+            Boolean isInventory,
+            Boolean isScanned,
             List<ProductShortDTO> productList,
-            ProductAdapter.OnItemProductClickListener onItemClickListener) {
+            OnItemProductClickListener onItemClickListener) {
         this.context = context;
         this.productList = productList;
         this.isScanned = isScanned;
@@ -47,32 +41,36 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
         this.onItemClickListener = onItemClickListener;
     }
 
+    public void updateData(List<ProductShortDTO> productShortDTOs) {
+        this.productList.clear();
+        this.productList.addAll(productShortDTOs);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public ProductAdapter.OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_products, parent, false);
-        return new ProductAdapter.OrderViewHolder(view);
+        return new OrderViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ProductAdapter.OrderViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         ProductShortDTO product = productList.get(position);
 
         holder.rpTitle.setText(product.getTitle());
-        holder.rpBarCode.setText("code: " + product.getBarCode());
-        holder.rpRfidCode.setText("rfid: " + product.getRfidCode());
         holder.rpBranch.setText(product.getBranch());
+        holder.rpProducer.setText(product.getProducer());
         holder.rpLocation.setText(product.getLocation());
+
         if (isInventory) {
             if (isScanned) {
                 holder.rpIsScanned.setImageResource(R.drawable.ic_done);
-                holder.rpIsScanned.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+                holder.rpIsScanned.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.result_success), PorterDuff.Mode.SRC_IN);
             } else {
                 holder.rpIsScanned.setImageResource(R.drawable.ic_in_process);
-                holder.rpIsScanned.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                holder.rpIsScanned.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.result_fail), PorterDuff.Mode.SRC_IN);
             }
-            holder.rpLLLocation.findViewById(R.id.rpBranch).setVisibility(View.GONE);
-
         } else {
             holder.rpLLImageResult.setVisibility(View.INVISIBLE);
             ViewGroup parentView = (ViewGroup) holder.rpLLImageResult.getParent();
@@ -89,28 +87,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.OrderVie
     public void setHandlingScanEvent(boolean handlingScanEvent) {
         isHandlingScanEvent = handlingScanEvent;
     }
+
     @Override
     public int getItemCount() {
         return productList.size();
     }
 
-
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView rpTitle, rpBarCode, rpRfidCode, rpBranch, rpLocation;
+        TextView rpTitle, rpBranch, rpLocation, rpProducer;
         ImageButton rpIsScanned;
-        private final LinearLayout rpLLLocation, rpLLImageResult;
+        private final LinearLayout rpLLImageResult;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             rpTitle = itemView.findViewById(R.id.rpTitle);
-            rpBarCode = itemView.findViewById(R.id.rpBarCode);
-            rpRfidCode = itemView.findViewById(R.id.rpRfidCode);
             rpBranch = itemView.findViewById(R.id.rpBranch);
             rpLocation = itemView.findViewById(R.id.rpLocation);
+            rpProducer = itemView.findViewById(R.id.rpProducer);
             rpIsScanned = itemView.findViewById(R.id.rpIsScanned);
-            rpLLLocation = itemView.findViewById(R.id.rpllLocation);
             rpLLImageResult = itemView.findViewById(R.id.rpllImageResult);
-
         }
     }
 

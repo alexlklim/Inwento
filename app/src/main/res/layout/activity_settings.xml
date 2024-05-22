@@ -155,7 +155,7 @@
                     android:layout_width="0dp"
                     android:layout_height="35dp"
                     android:layout_weight="10"
-                    android:text="@string/user_rfid_scanner"
+                    android:text="Używaj scaneru RFID"
                     android:textSize="18sp" />
 
                 <CheckBox

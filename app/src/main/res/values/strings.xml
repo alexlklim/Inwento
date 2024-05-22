@@ -12,8 +12,6 @@
     <string name="datawedge_intent_key_data_legacy" translatable="false">com.motorolasolutions.emdk.datawedge.data_string</string>
 
 
-
-
     <string name="scanned">ZESKANOWANE</string>
     <string name="to_scan">DO ZESKANOWANIA</string>
     <string name="new_unknown">NOWE</string>
@@ -37,8 +35,8 @@
     <string name="fake_prefix">1234…</string>
     <string name="logo">logo</string>
     <string name="use_rfid_scanner">Używaj skanera RFID</string>
-    <string name="product_view">Pogląd produktów</string>
-    <string name="start_writing_title">Zacznij pisać nazwę</string>
+    <string name="product_view">Podgląd produktów</string>
+    <string name="start_writing_title">Wyszukaj produkt</string>
     <string name="something_wrong">Coś poszło nie tak:</string>
     <string name="wszystkie">Wszystkie</string>
     <string name="location_was_not_chosen">Lokalizacjia nie została wybrana</string>
@@ -47,6 +45,8 @@
     <string name="login_failed">Login failed:</string>
     <string name="code_doesnt_match_the_established_pattern">Code doesn\'t match the established pattern</string>
     <string name="new_settings_saved">Nowe ustawienia zachowane</string>
+
+
 
 </resources>
 

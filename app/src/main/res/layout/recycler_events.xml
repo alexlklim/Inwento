@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:background="@drawable/border_background"
     android:layout_marginTop="5dp"
-    android:padding="5dp"
+    android:padding="10dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -14,6 +14,11 @@
         android:orientation="vertical">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="Umiejscowienie" />
+        <TextView
             android:id="@+id/reTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -21,12 +26,7 @@
             android:textStyle="bold"
             android:text="IT Department" />
 
-        <TextView
-            android:id="@+id/reUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="by Alex Klim" />
+
 
     </LinearLayout>
 
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="unknown 2" />
+            android:text="nieznane 2" />
 
     </LinearLayout>
 

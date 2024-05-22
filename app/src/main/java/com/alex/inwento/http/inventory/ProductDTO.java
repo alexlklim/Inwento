@@ -47,9 +47,19 @@ public class ProductDTO {
     @SerializedName("bar_code")
     private String barCode;
 
+    @SerializedName("serial_number")
+    private String serialNumber;
+
+
     @SerializedName("liable_name")
     private String liableName;
     @SerializedName("receiver")
     private String receiver;
+
+    @SerializedName("producer")
+    private String producer;
+
+
+
 
 }

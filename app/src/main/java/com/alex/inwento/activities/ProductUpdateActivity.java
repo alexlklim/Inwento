@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,13 @@ public class ProductUpdateActivity extends AppCompatActivity {
         filter.addAction(getResources().getString(R.string.activity_intent_filter_action_bar_code));
         registerReceiver(myBroadcastReceiver, filter);
 
+
+        TextView apuAction = findViewById(R.id.apuAction);
+        if (action == 1){
+            apuAction.setText("PRZESUNIĘCIE");
+        } else {
+            apuAction.setText("ZŁOMOWANIE");
+        }
 
     }
 

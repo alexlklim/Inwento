@@ -33,7 +33,7 @@ public class InventoryActivity extends AppCompatActivity
 
 
     EventAdapter eventAdapter;
-    TextView tvStartData, tvProductAmount;
+    TextView tvStartData, aiAmountScannedProducts, aiAmountTotalProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +86,14 @@ public class InventoryActivity extends AppCompatActivity
 
     private void initialize(InventoryDTO inventoryDTO) {
         tvStartData = findViewById(R.id.aiDataInventory);
-        tvProductAmount = findViewById(R.id.aiAmountProducts);
+        aiAmountScannedProducts = findViewById(R.id.aiAmountScannedProducts);
+        aiAmountTotalProducts = findViewById(R.id.aiAmountTotalProducts);
 
-        tvStartData.setText(inventoryDTO.getStartDate());
-        String amount = getString(R.string.products) +
-                inventoryDTO.getScannedProductAmount() + " / " + inventoryDTO.getTotalProductAmount();
-        tvProductAmount.setText(amount);
+        tvStartData.setText(String.valueOf(inventoryDTO.getStartDate()));
+
+        aiAmountScannedProducts.setText(String.valueOf(inventoryDTO.getScannedProductAmount()));
+        aiAmountTotalProducts.setText(String.valueOf(inventoryDTO.getTotalProductAmount()));
+
         recyclerView = findViewById(R.id.rv_events);
         eventAdapter = new EventAdapter(inventoryDTO.getEvents(), this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -101,7 +103,9 @@ public class InventoryActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(int eventId) {
+        Log.e(TAG, "Start new Activity for evevnt: "  + eventId);
         Intent intent = new Intent(this, EventActivity.class);
+        System.out.println(eventId + " IS_EVENT_ID");
         intent.putExtra("EVENT_ID", eventId);
         startActivity(intent);
     }

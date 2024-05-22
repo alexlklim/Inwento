@@ -23,7 +23,8 @@ public class ProductDialog extends AppCompatDialogFragment {
     private Boolean isInventory;
     private String currentBranch, currentLocation;
     Button dpBtnOk;
-    TextView dpTitle, dpCode, dpRfid, dpBranch, dpLocation, dpLiable, dpReceiver, dpWarning, dpWarningLocation;
+    TextView dpTitle, dpBranch, dpLocation, dpLiable, dpReceiver, dpProducer, dpSerialNumber,
+            dpWarningBranch, dpWarningLocation;
 
     public static ProductDialog newInstance(
             ProductDialog.ProductDialogListener listener,
@@ -49,24 +50,25 @@ public class ProductDialog extends AppCompatDialogFragment {
         builder.setView(view);
 
         dpTitle = view.findViewById(R.id.dpTitle);
-        dpCode = view.findViewById(R.id.dpCode);
-        dpRfid = view.findViewById(R.id.dpRfid);
+
         dpBranch = view.findViewById(R.id.dpBranch);
         dpLocation = view.findViewById(R.id.dpLocation);
         dpLiable = view.findViewById(R.id.dpLiable);
         dpReceiver = view.findViewById(R.id.dpReceiver);
         dpBtnOk = view.findViewById(R.id.dpBtnOk);
-        dpWarning = view.findViewById(R.id.dpWarning);
+        dpWarningBranch = view.findViewById(R.id.dpWarningBranch);
         dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
+        dpProducer = view.findViewById(R.id.dpProducer);
+        dpSerialNumber = view.findViewById(R.id.dpSerialNumber);
 
 
         dpTitle.setText(productDTO.getTitle());
-        dpCode.setText(productDTO.getBarCode());
-        dpRfid.setText(productDTO.getRfidCode());
         dpBranch.setText(productDTO.getBranch());
         dpLocation.setText(productDTO.getLocation());
         dpLiable.setText(productDTO.getLiableName());
         dpReceiver.setText(productDTO.getReceiver());
+        dpProducer.setText(productDTO.getProducer());
+        dpSerialNumber.setText(productDTO.getSerialNumber());
 
         if (!isInventory) {
             dpBtnOk.setOnClickListener(v -> dismiss());
@@ -82,10 +84,10 @@ public class ProductDialog extends AppCompatDialogFragment {
             if (!currentLocation.equalsIgnoreCase(productDTO.getLocation())){
                 TextView dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
                 dpWarningLocation.setVisibility(View.VISIBLE);
-                dpWarningLocation.setText("Produckt zanjduje się w innej lokalizacji");
+                dpWarningLocation.setText("Produkt zanjduje się w innej lokalizacji");
                 dpBtnOk.setText(R.string.move);
             }
-            if (currentLocation.equalsIgnoreCase("Wszystkie")){
+            if (currentLocation.equalsIgnoreCase("Wybierz lokalizacjię")){
                 TextView dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
                 dpWarningLocation.setVisibility(View.VISIBLE);
                 dpWarningLocation.setText("Localizacjia nie została wybrana");
@@ -93,7 +95,7 @@ public class ProductDialog extends AppCompatDialogFragment {
             }
 
             if (!currentBranch.equalsIgnoreCase(productDTO.getBranch())){
-                TextView dpWarningBranch = view.findViewById(R.id.dpWarning);
+                TextView dpWarningBranch = view.findViewById(R.id.dpWarningBranch);
                 dpWarningBranch.setVisibility(View.VISIBLE);
                 dpBtnOk.setText("Ok");
             }
@@ -112,3 +114,4 @@ public class ProductDialog extends AppCompatDialogFragment {
     }
 
 }
+// numer seryiny, producent

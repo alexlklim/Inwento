@@ -38,16 +38,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
         EventDTO event = eventList.get(position);
 
         holder.reTitle.setText(event.getBranch());
-        holder.reUser.setText("by " + event.getUserName());
         holder.reAmount.setText(event.getScannedProductAmount() + " / " + event.getTotalProductAmount());
-        holder.reUnknown.setText("unknown " + event.getUnknownProductAmount());
+        holder.reUnknown.setText("nieznane " + event.getUnknownProductAmount());
 
         if (event.getScannedProductAmount() == event.getTotalProductAmount()) {
             holder.reStatus.setImageResource(R.drawable.ic_done);
-            holder.reStatus.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.green), PorterDuff.Mode.SRC_IN);
+            holder.reStatus.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.result_success), PorterDuff.Mode.SRC_IN);
         } else {
             holder.reStatus.setImageResource(R.drawable.ic_in_process);
-            holder.reStatus.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.red), PorterDuff.Mode.SRC_IN);
+            holder.reStatus.setColorFilter(holder.itemView.getContext().getResources().getColor(R.color.result_fail), PorterDuff.Mode.SRC_IN);
         }
         holder.itemView.setOnClickListener(view -> onItemClickListener.onItemClick(event.getId()));
     }
@@ -58,13 +57,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.OrderViewHol
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView reTitle, reUser, reAmount, reUnknown;
+        TextView reTitle, reAmount, reUnknown;
         ImageView reStatus;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             reTitle = itemView.findViewById(R.id.reTitle);
-            reUser = itemView.findViewById(R.id.reUser);
             reAmount = itemView.findViewById(R.id.reAmount);
             reUnknown = itemView.findViewById(R.id.reUnknown);
             reStatus = itemView.findViewById(R.id.reStatus);

@@ -61,7 +61,7 @@ public class EventActivity extends AppCompatActivity
         UnknownProductDialog.UnknownProductScannedListener,
         ResultDialog.ResultDialogListener {
     private static final String TAG = "EventActivity";
-    private Button btnScanned, btnNotScanned, btnNew;
+    private Button btnScanned, btnNotScanned;
     private RecyclerView recyclerViewProduct, recyclerViewUnknownProduct;
     private Spinner locationSpinner;
     private UnknownProductAdapter unknownProductAdapter;
@@ -75,7 +75,7 @@ public class EventActivity extends AppCompatActivity
 
     private String chosenProductLocation;
     boolean isScanned, isLocationErrorDialogOpen;
-    private String allLocations = getString(R.string.wszystkie);
+    private String allLocations = "Wybierz lokalizacjię";
 
 
     @Override
@@ -115,7 +115,7 @@ public class EventActivity extends AppCompatActivity
                     assert response.body() != null;
                     event = response.body();
                     firstInit();
-                } else Log.e(TAG, getString(R.string.something_wrong));
+                } else Log.e(TAG, "Something wrong:");
             }
 
             @Override
@@ -128,11 +128,10 @@ public class EventActivity extends AppCompatActivity
     private void updateAmounts() {
         Log.i(TAG, "updateAmounts ");
 
-        btnScanned.setText(getString(R.string.scanned) + " " +
+        btnScanned.setText(getString(R.string.scanned) + "\n" +
                 getProductAmountsForLocation(event.getScannedProducts(), chosenProductLocation));
-        btnNotScanned.setText(getString(R.string.to_scan) + " " +
+        btnNotScanned.setText("POZOSTAŁE" + "\n" +
                 getProductAmountsForLocation(event.getNotScannedProducts(), chosenProductLocation));
-        btnNew.setText(getString(R.string.new_unknown) + " " + event.getUnknownProducts().size());
     }
 
     private void firstInit() {
@@ -141,7 +140,6 @@ public class EventActivity extends AppCompatActivity
         TextView aeBranch = findViewById(R.id.aeBranch);
         btnScanned = findViewById(R.id.btnScanned);
         btnNotScanned = findViewById(R.id.btnNotScanned);
-        btnNew = findViewById(R.id.btnNew);
         locationSpinner = findViewById(R.id.aeLocations);
         recyclerViewProduct = findViewById(R.id.rv_products);
         recyclerViewUnknownProduct = findViewById(R.id.rv_unknown_products);
@@ -155,8 +153,10 @@ public class EventActivity extends AppCompatActivity
         recyclerViewUnknownProduct.setLayoutManager(unknownProductLayoutManager);
         recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
 
-        // init recyclerL products
-        productAdapter = new ProductAdapter(this, true, isScanned, event.getNotScannedProducts(), this);
+        // init recycler products
+        System.out.println(event.getNotScannedProducts());
+        productAdapter = new ProductAdapter(this, true,
+                isScanned, event.getNotScannedProducts(), this);
         LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
         recyclerViewProduct.setLayoutManager(productLayoutManager);
         recyclerViewProduct.setAdapter(productAdapter);
@@ -165,7 +165,6 @@ public class EventActivity extends AppCompatActivity
         List<String> locationsList = new ArrayList<>();
         List<ProductLocation> productLocationList = roomDB.locationDAO().getAllByBranchId(
                 roomDB.branchDAO().getBranchByName(event.getBranch()).getId()
-
         );
         locationsList.add(allLocations);
         locationsList.addAll(productLocationList.stream().map(ProductLocation::getLocation).collect(Collectors.toList()));
@@ -179,8 +178,7 @@ public class EventActivity extends AppCompatActivity
 
 
         btnScanned.setFocusable(false);
-        btnNew.setFocusable(false);
-  
+
 
         btnScanned.setOnClickListener(view -> {
             isScanned = true;
@@ -191,7 +189,6 @@ public class EventActivity extends AppCompatActivity
             isScanned = false;
             initRecyclerProducts();
         });
-        btnNew.setOnClickListener(view -> initRecyclerNewProducts());
 
         locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -209,6 +206,7 @@ public class EventActivity extends AppCompatActivity
             }
         });
     }
+
 
 
     private void initRecyclerProducts() {
@@ -262,6 +260,8 @@ public class EventActivity extends AppCompatActivity
         Log.i(TAG, "openProductDialog");
         // if product.branch != branch
         // if product.location != location
+
+
 
         ProductDialog
                 .newInstance(this, event.getBranch(), chosenProductLocation, true, productDTO)
@@ -538,7 +538,7 @@ public class EventActivity extends AppCompatActivity
         if (!isLocationErrorDialogOpen){
             isLocationErrorDialogOpen = true;
             ResultDialog
-                    .newInstance(getString(R.string.location_was_not_chosen), false, this)
+                    .newInstance("Lokalizacjia nie została wybrana", false, this)
                     .show(getSupportFragmentManager(), "location_error_dialog");
         }
     }

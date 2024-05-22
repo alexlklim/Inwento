@@ -11,29 +11,25 @@
     <color name="backColor2">#ebedef</color>
 
 
+    <color name="color3">#3C3E63</color>
+    <color name="color4">#3C5763</color>
+    <color name="color5">#3C6363</color>
+    <color name="color6">#463C63</color>
+
+
+    <color name="color7">#63413C</color>
+    <color name="color8">#A0A9B8</color>
+    <color name="color9">#D1E39F</color>
+
+
+
+
+    <color name="result_success">#8DE05E</color>
+    <color name="result_fail">#B22222</color>
+
+
+
     <color name="icon_color">#3c4b64</color>
     <color name="main_background">#00001533</color>
 
-
-
-
-
-<!--    [08:10] Łukasz Borys
-#3c4b64
-[08:10] Łukasz Borys
-jasny
-[08:10] Łukasz Borys
-#303c54
-[08:10] Łukasz Borys
-ciemny
-[08:11] Łukasz Borys
-#acb3bd
-[08:11] Łukasz Borys
-szary
-[08:11] Łukasz Borys
-niebieski
-[08:12] Łukasz Borys
-#321fdb
-[08:12] Łukasz Borys
-tło #ebedef-->
 </resources>

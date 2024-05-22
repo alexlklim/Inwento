@@ -2,7 +2,7 @@ package com.alex.inwento.util;
 
 public final class Endpoints {
 
-    public static String SERVER = "http://10.1.2.65:9091/api/";
+    public static String SERVER = "http://192.168.100.247:9091/api/";
 
     // Authentication Endpoints
     public static final String LOGIN = "v1/auth/login";
@@ -13,7 +13,7 @@ public final class Endpoints {
     public static final String GET_EVENT_BY_ID = "v1/inventory/events/{event_id}";
 
     // Product Endpoints
-    public static final String GET_SHORT_PRODUCTS = "v1/products/all/emp/true";
+    public static final String GET_SHORT_PRODUCTS = "v1/products/all/emp/false";
     public static final String GET_FULL_PRODUCT_BY_ID = "v1/products/{product_id}";
     public static final String GET_FULL_PRODUCT_BY_CODE = "v1/products/filter/unique/{bar_code}/null/null/null";
     public static final String PUT_PRODUCT_UPDATE = "v1/products";

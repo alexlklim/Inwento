@@ -55,4 +55,5 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
 
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.3.2")
 }

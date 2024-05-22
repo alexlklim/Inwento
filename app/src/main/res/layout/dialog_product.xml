@@ -11,6 +11,33 @@
         android:padding="20dp">
 
 
+        <TextView
+            android:id="@+id/dpWarningBranch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/border_background_warning"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Produkt przywiązany do innego działu!"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/dpWarningLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:background="@drawable/border_background_warning"
+            android:text="Produkt przywiązany do innej lokalizacji!"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,62 +54,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border_background"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="code: "
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/dpCode"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:text="1234567890"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="rfid: "
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/dpRfid"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:text="23475869oi7turyhey4w5gf"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-            </LinearLayout>
 
 
             <LinearLayout
@@ -103,7 +75,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="Oddział:"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -113,24 +85,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="CSMM"
                         android:textSize="20sp" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/dpWarning"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@color/red"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="Product przywiązany do innego działu!"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
+
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -141,7 +102,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="Lokalizacja:"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -151,23 +112,65 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="seretariat"
                         android:textSize="20sp" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/dpWarningLocation"
-                    android:layout_width="match_parent"
+
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/red"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="Product przywiązany do innej lokalizacji!"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingTop="1dp"
+                        android:text="Producent:"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/dpProducer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:paddingTop="1dp"
+                        android:text="producer"
+                        android:textSize="20sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingTop="1dp"
+                        android:text="Numer seryjny:"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/dpSerialNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:paddingTop="1dp"
+                        android:text="PN00242"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
 
@@ -189,8 +192,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:paddingTop="10dp"
-                        android:text="Odpowiedzialny:"
+                        android:paddingTop="1dp"
+                        android:text="Osoba odpowiedzialna:"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -199,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="Name Surname"
                         android:textSize="20sp" />
 
@@ -214,7 +217,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="Użytkownik:"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -224,7 +227,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="1dp"
                         android:text="Name Surname"
                         android:textSize="20sp" />
 

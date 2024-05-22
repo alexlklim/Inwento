@@ -35,4 +35,7 @@ public class ProductShortDTO {
     @SerializedName("rfid_code")
     private String rfidCode;
 
+    @SerializedName("producer")
+    private String producer;
+
 }
