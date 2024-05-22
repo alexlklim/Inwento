@@ -19,6 +19,17 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "ORDER BY p.id DESC")
     List<Product> getActive();
 
+    @Query("SELECT p " +
+            "FROM Product p " +
+            "WHERE p.isActive = ?1  AND p.isScrapping = ?2 " +
+            "ORDER BY p.id DESC")
+    List<Product> getProductsListByAdmin(Boolean isActive, Boolean isScraped);
+
+    @Query("SELECT p " +
+            "FROM Product p " +
+            "WHERE p.isScrapping = ?1 " +
+            "ORDER BY p.id DESC")
+    List<Product> getProductsListByEmp(Boolean isScraped);
 
 
     @Query("SELECT p " +

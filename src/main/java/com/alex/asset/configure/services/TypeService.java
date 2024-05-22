@@ -114,7 +114,6 @@ public class TypeService {
 
     @SneakyThrows
     public Type getTypeByType(String type, Long userId) {
-        log.info(TAG + "Get type by type {}", type);
         Type typeFromDB = typeRepo.findTypeByType(type).orElse(null);
         if (typeFromDB == null) {
             addTypes(List.of(type), userId);

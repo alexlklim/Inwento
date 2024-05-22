@@ -179,7 +179,9 @@ public class EventService {
             productService.moveProductByLocation(product, location, userId);
         }
         if (product.getBranch() != event.getBranch()) {
-            productService.moveProductByBranch(product, event, userRepo.getUser(userId));
+            log.error(TAG + "Product doesn't belong to current branch");
+
+//            productService.moveProductByBranch(product, event, userRepo.getUser(userId));
             return;
         }
         ScannedProduct scannedProduct = scannedProductRepo.findScannedProductByEventAndProduct(event, product)

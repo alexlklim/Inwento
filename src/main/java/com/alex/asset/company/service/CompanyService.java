@@ -3,6 +3,7 @@ package com.alex.asset.company.service;
 
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.domain.DataDto;
+import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
@@ -16,6 +17,7 @@ import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.exceptions.errors.LabelSizeIsIncorrectException;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +146,7 @@ public class CompanyService {
         dto.setUnits(configureService.getUnits());
         dto.setAssetStatuses(configureService.getAssetStatuses());
         dto.setBranches(locationService.getBranches());
-        dto.setLocations(locationService.getLocations());
+        dto.setLocations(convertLocationToData(locationService.getLocations()));
         dto.setMPKs(configureService.getMPKs());
         return dto;
     }
@@ -152,11 +155,21 @@ public class CompanyService {
         DataDto dto = new DataDto();
 
         dto.setBranches(locationService.getBranches());
-        dto.setLocations(locationService.getLocations());
+        dto.setLocations(convertLocationToData(locationService.getLocations()));
         dto.setEmployees(userRepo.getActiveUsers()
                 .stream().map(UserMapper::toEmployee)
                 .collect(Collectors.toList()));
 
         return dto;
+    }
+
+
+    private List<DataDto.Location> convertLocationToData(List<Location> locations){
+        List<DataDto.Location> list = new ArrayList<>();
+        for (Location location: locations){
+            list.add(new DataDto.Location(location.getId(), location.getLocation(), location.getBranch().getId()));
+        }
+
+        return list;
     }
 }

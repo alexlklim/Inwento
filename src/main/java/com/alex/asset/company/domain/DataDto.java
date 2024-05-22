@@ -1,7 +1,11 @@
 package com.alex.asset.company.domain;
 
 
-import com.alex.asset.configure.domain.*;
+
+import com.alex.asset.configure.domain.AssetStatus;
+import com.alex.asset.configure.domain.Branch;
+import com.alex.asset.configure.domain.MPK;
+import com.alex.asset.configure.domain.Unit;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -25,6 +29,14 @@ public class DataDto {
     List<Location> locations;
     List<MPK> MPKs;
 
+    @Data
+    @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class Location {
+        private Long id;
+        private String location;
+        private Long branchId;
+    }
 
 
     @Data

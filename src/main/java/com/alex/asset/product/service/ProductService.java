@@ -79,8 +79,11 @@ public class ProductService implements IProductService {
             String mode, Boolean isScrap, List<String> productFields, Long userId) {
         List<Product> products = null;
         if (Role.ADMIN == Role.fromString(mode)) {
-            if (Role.ADMIN == userRepo.getUser(userId).getRoles()) products = productRepo.getAllProducts();
-        } else products = isScrap ? productRepo.getActive() : productRepo.getActiveWithoutScrapped();
+            if (Role.ADMIN == userRepo.getUser(userId).getRoles()) {
+                products = productRepo.getProductsListByAdmin(true, isScrap);
+            }
+        } else products = productRepo.getProductsListByEmp(isScrap);
+
         if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
         if (products == null) return Collections.emptyList();
         return getProductDTOs(products, productFields);

@@ -21,19 +21,14 @@ INSERT IGNORE INTO units (id, is_active, unit) VALUES
 INSERT IGNORE INTO users (id, is_active, firstname, lastname, phone, email, password,
                           last_activity, created, updated, roles)
 VALUES
-(1, TRUE, 'Rafał', 'Kusz', '48 887 754 491', 'rafal@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-(2, TRUE, 'Łukasz', 'Boryś', '48 887 754 491', 'lukasz@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-(3, TRUE, 'Tetiana', 'Klimenko', '48 887 754 491', 'tetiana@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-(4, TRUE, 'Gabriella', 'Krawiec', '48 887 754 491', 'gaby@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-(5, TRUE, 'Gabriella', 'Walczyna', '48 887 754 491', 'gabi@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-(6, TRUE, 'Przemysław', 'Chciuk', '48 887 754 491', 'przemek@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
-(7, TRUE, 'Aneta', 'Ziarno', '48 887 754 491', 'aneta@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
-(8, TRUE, 'Jakub', 'Pelczar', '48 887 754 491', 'jakub@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
-(9, TRUE, 'Julita', 'Niebudkowska-Szczoczarz', '48 887 754 491', 'julita@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
-(10, TRUE, 'Katarzyna', 'Bielak', '48 887 754 491', 'katarzyna@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
-(11, TRUE, 'Natatia', 'Olejarczyk', '48 887 754 491', 'natalia@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
-(12, TRUE, 'Patrycja', 'Skabińska', '48 887 754 491', 'patrycjia@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
-(13, TRUE, 'Renate', 'Cebula', '48 887 754 491', 'renate@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
+(1, TRUE, 'Rafał', 'Kusz', '48 887 754 491', 'r.kusz@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
+(2, TRUE, 'Łukasz', 'Boryś', '48 887 754 491', 'l.borys@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
+(3, TRUE, 'Tetiana', 'Klimenko', '48 887 754 491', 't.klimenko@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
+(4, TRUE, 'Gabriella', 'Krawiec', '48 887 754 491', 'g.krawiec@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
+(5, TRUE, 'Gabriella', 'Walczyna', '48 887 754 491', 'g.walczyna@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN'),
+(7, TRUE, 'Aneta', 'Ziarno', '48 887 754 491', 'a.ziarno@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
+(8, TRUE, 'Jakub', 'Pelczar', '48 887 754 491', 'j.pelczar@csmm.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
+(10, TRUE, 'Katarzyna', 'Bielak', '48 887 754 491', 'k.bielak@delegate.pl', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'EMP'),
 (14, TRUE, 'Alex', 'Klim', '48 887 754 491', 'admin@gmail.com', '$2a$10$G7/RXIL6FTjldvXU60lM9OkZNH/DeniXHbskTUyQ7lVpU/C..Aeb2', NOW(), NOW(), NOW(), 'ADMIN');
 
 
@@ -49,20 +44,22 @@ VALUES
 INSERT IGNORE INTO branches (id, is_active, branch)
 VALUES
     (1, true, 'CSMM'),
-    (2, true, 'Stalowa Wola'),
-    (3, true, 'Katowice');
+    (2, true, 'DELEGATE'),
+    (3, true, 'GLOBLOGIC');
 
 
 INSERT IGNORE INTO locations (id, is_active, location, branch_id)
 VALUES
-    (1, true, 'marketing', 1),
-    (2, true, 'ksiegolosc', 1),
-    (3, true, 'social', 1),
-    (4, true, 'conference', 1),
-    (5, true, 'lukasz', 1),
-    (6, true, 'sekretariat', 1),
-    (7, true, 'prezes', 1),
-    (8, true, 'sekretariat 2', 1);
+    (1, true, 'conference', 1),
+    (2, true, 'elektomobilność', 1),
+    (3, true, 'socjalny', 1),
+    (4, true, 'marketing', 1),
+    (5, true, 'prezes', 1),
+    (6, true, 'księgołość', 1),
+    (7, true, 'lukasz', 1),
+    (8, true, 'sekretariat', 1),
+    (9, true, 'pusty', 1),
+    (10, true, 'kokoko', 2);
 
 INSERT IGNORE INTO mpks (id, is_active, mpk)
 VALUES

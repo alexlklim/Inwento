@@ -92,6 +92,9 @@ public class EventMapper {
                     productDTO.put("bar_code", scannedProduct.getProduct().getBarCode());
                     productDTO.put("rfid_code", scannedProduct.getProduct().getRfidCode());
                     productDTO.put("location", scannedProduct.getProduct().getLocation().getLocation());
+                    productDTO.put("branch", scannedProduct.getProduct().getBranch().getBranch());
+                    productDTO.put("producer", scannedProduct.getProduct().getProducer() != null
+                            ? scannedProduct.getProduct().getProducer() : "");
                     return productDTO;
                 })
                 .collect(Collectors.toList());

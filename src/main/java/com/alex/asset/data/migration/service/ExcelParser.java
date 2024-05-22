@@ -56,6 +56,7 @@ public class ExcelParser {
                 Product asset = new Product();
                 if (Objects.equals(getStringValue(row.getCell(1)), "0.0") && row.getCell(1) != null) continue;
                 else asset.setTitle(getStringValue(row.getCell(1)));
+                System.out.println(asset.getTitle());
 
                 if (!Objects.equals(getStringValue(row.getCell(2)), "0.0") && row.getCell(2) != null)
                     asset.setDescription(getStringValue(row.getCell(2)));
