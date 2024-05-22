@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backColor"
+    android:background="@color/main_background"
     android:orientation="vertical"
     tools:context=".activities.SettingsActivity">
 
@@ -78,7 +78,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:gravity="center"
-                    android:text="@string/fake_name"
+                    android:text=""
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -103,7 +103,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="@string/fake_email"
+                    android:text=""
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
@@ -141,7 +141,7 @@
                     android:layout_weight="3"
                     android:hint="@string/fake_address"
                     android:inputType="text"
-                    android:text="http://10.1.2.65:9091/api/" />
+                    android:text="" />
             </LinearLayout>
 
             <LinearLayout
@@ -155,7 +155,7 @@
                     android:layout_width="0dp"
                     android:layout_height="35dp"
                     android:layout_weight="10"
-                    android:text="Używaj scaneru RFID"
+                    android:text="@string/use_rfid_scanner"
                     android:textSize="18sp" />
 
                 <CheckBox
@@ -248,7 +248,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
-                android:text="Suffix "
+                android:text="@string/suffix"
                 android:textSize="18sp" />
 
             <EditText
@@ -275,7 +275,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_vertical"
-                android:text="Postfix "
+                android:text="@string/postfix"
                 android:textSize="18sp" />
 
             <EditText
@@ -307,7 +307,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="@string/code_lenght"
+                android:text="@string/code_length"
                 android:textSize="18sp" />
 
             <EditText
@@ -333,7 +333,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="@string/max_code_lenght"
+                android:text="@string/max_code_length"
                 android:textSize="18sp" />
 
             <EditText
@@ -359,7 +359,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="@string/min_code_lenght"
+                android:text="@string/min_code_length"
                 android:textSize="18sp" />
 
             <EditText

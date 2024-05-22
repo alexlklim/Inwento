@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Produkty"
+                    android:text="@string/products"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Inwentaryzacja"
+                    android:text="@string/inventory"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Przesunięcie"
+                    android:text="@string/move_product"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -158,7 +158,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Złomowanie"
+                    android:text="@string/scrap_product"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -198,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="Ustawienia"
+                    android:text="@string/settings"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>

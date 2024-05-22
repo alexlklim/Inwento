@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginBottom="20dp"
-            android:text="Nieznany kod:"
+            android:text="@string/unknown_code"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
             android:id="@+id/dup_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="bar23234r"
+            android:text="@string/fake"
             android:gravity="center"
             android:textSize="20sp" />
 
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:background="@drawable/btn_rounded"
-        android:text="zachowaj jako nowy produckt"
+        android:text="@string/save_like_new_product"
         android:textColor="@color/white"
         android:textSize="20sp" />
 </LinearLayout>

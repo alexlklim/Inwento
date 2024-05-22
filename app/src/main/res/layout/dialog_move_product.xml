@@ -13,7 +13,7 @@
             android:id="@+id/dmp_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
+            android:text="@string/title"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                     android:layout_weight="4"
                     android:minHeight="40dp"
                     android:paddingTop="10dp"
-                    android:text="Oddział:"
+                    android:text="@string/branch"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                     android:layout_weight="4"
                     android:minHeight="40dp"
                     android:paddingTop="10dp"
-                    android:text="Lokalizacjia:"
+                    android:text="@string/location"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -129,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="Osoba odpowiedzialna:"
+                android:text="@string/liable_user"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -152,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-                android:text="Użytkownik:"
+                android:text="@string/receiver"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -161,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="Imię i nazwisko"
+                android:hint="@string/name_and_surname"
                 android:inputType="text"
                 android:minHeight="70dp"
                 android:text="" />
@@ -174,7 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/btn_rounded"
-            android:text="Przesunięcie"
+            android:text="@string/move_product"
             android:textColor="@color/white"
             android:textSize="20sp" />
 

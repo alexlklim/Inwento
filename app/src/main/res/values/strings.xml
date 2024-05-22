@@ -27,10 +27,10 @@
     <string name="prefix">Prefiks</string>
     <string name="fake_suffix">…1234...</string>
     <string name="fake_postfix">…1234</string>
-    <string name="code_lenght">Długość kodu</string>
+    <string name="code_length">Długość kodu</string>
     <string name="zero">0</string>
-    <string name="min_code_lenght">Minimalna długość kodu</string>
-    <string name="max_code_lenght">Maksymalna długość kodu</string>
+    <string name="min_code_length">Minimalna długość kodu</string>
+    <string name="max_code_length">Maksymalna długość kodu</string>
     <string name="save_new_settings">Zachowaj nowe ustawienia</string>
     <string name="fake_prefix">1234…</string>
     <string name="logo">logo</string>
@@ -45,7 +45,41 @@
     <string name="login_failed">Login failed:</string>
     <string name="code_doesnt_match_the_established_pattern">Code doesn\'t match the established pattern</string>
     <string name="new_settings_saved">Nowe ustawienia zachowane</string>
-
+    <string name="inventory">Inwentaryzacja</string>
+    <string name="inventory_start_date">Początek inwentaryzacji:</string>
+    <string name="scanned_products">Zeskanowane produkty:</string>
+    <string name="total_product_amount">Wszystkie produkty:</string>
+    <string name="login_desc">Zaloguj się żeby kontynuować</string>
+    <string name="login">login</string>
+    <string name="password">password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="move_product">Przesunięcie</string>
+    <string name="scrap_product">Złomowanie</string>
+    <string name="settings">Ustawienia</string>
+    <string name="suffix">Suffix</string>
+    <string name="postfix">Postfix</string>
+    <string name="branch">Oddział:</string>
+    <string name="location">Lokalizacjia:</string>
+    <string name="liable_user">Osoba odpowiedzialna:</string>
+    <string name="receiver">Użytkownik:</string>
+    <string name="name_and_surname">Imię i nazwisko</string>
+    <string name="title">Title</string>
+    <string name="producer">Producent:</string>
+    <string name="serial_number">Numer seryjny:</string>
+    <string name="close">Zamknij</string>
+    <string name="ok">ok</string>
+    <string name="scrap_date">Data umożenia:</string>
+    <string name="year">Rok:</string>
+    <string name="month">Miesiąc:</string>
+    <string name="day">Dzień:</string>
+    <string name="scrap_reason">Powód umożenia</string>
+    <string name="scrap">Umożenie</string>
+    <string name="bar_code">bar code:</string>
+    <string name="rfid_code">rfid code:</string>
+    <string name="unknown_code">Nieznany kod:</string>
+    <string name="save_like_new_product">Zachowaj jako nowy produckt</string>
+    <string name="place">Umiejscowienie</string>
+    <string name="fake">fake</string>
 
 
 </resources>

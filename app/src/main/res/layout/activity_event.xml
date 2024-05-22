@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:background="@color/icon_color"
         android:orientation="horizontal"
         android:paddingTop="10dp"
@@ -33,12 +33,12 @@
         <TextView
             android:id="@+id/aeBranch"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="5"
             android:fontFamily="@font/lato_regular"
             android:gravity="center"
-            android:text="CSMM"
+            android:text="@string/fake"
             android:textColor="@color/white"
             android:textSize="30sp" />
     </LinearLayout>

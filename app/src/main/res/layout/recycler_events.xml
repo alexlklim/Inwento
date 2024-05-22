@@ -17,14 +17,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="Umiejscowienie" />
+            android:text="@string/place" />
         <TextView
             android:id="@+id/reTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="IT Department" />
+            android:text="@string/fake" />
 
 
 
@@ -43,14 +43,14 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="45 / 70" />
+            android:text="12 / 30" />
 
         <TextView
             android:id="@+id/reUnknown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:text="nieznane 2" />
+            android:text="unknown 2" />
 
     </LinearLayout>
 

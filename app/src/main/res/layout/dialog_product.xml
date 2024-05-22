@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -50,7 +50,7 @@
                 android:id="@+id/dpTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:text="@string/title"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -76,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingTop="1dp"
-                        android:text="Oddział:"
+                        android:text="@string/branch"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:paddingTop="1dp"
-                        android:text="CSMM"
+                        android:text="@string/fake"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -103,17 +103,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingTop="1dp"
-                        android:text="Lokalizacja:"
+                        android:text="@string/location"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/dpLocation"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:paddingTop="1dp"
-                        android:text="seretariat"
+                        android:text="@string/fake"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -133,17 +133,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingTop="1dp"
-                        android:text="Producent:"
+                        android:text="@string/producer"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/dpProducer"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:paddingTop="1dp"
-                        android:text="producer"
+                        android:text="@string/fake"
                         android:textSize="20sp" />
                 </LinearLayout>
                 <LinearLayout
@@ -156,7 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingTop="1dp"
-                        android:text="Numer seryjny:"
+                        android:text="@string/serial_number"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -166,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:paddingTop="1dp"
-                        android:text="PN00242"
+                        android:text="@string/fake"
                         android:textSize="20sp" />
                 </LinearLayout>
 
@@ -193,7 +193,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingTop="1dp"
-                        android:text="Osoba odpowiedzialna:"
+                        android:text="@string/liable_user"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -203,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:paddingTop="1dp"
-                        android:text="Name Surname"
+                        android:text="@string/name_and_surname"
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -218,7 +218,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="1dp"
-                        android:text="Użytkownik:"
+                        android:text="@string/user"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -228,7 +228,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:paddingTop="1dp"
-                        android:text="Name Surname"
+                        android:text="@string/name_and_surname"
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -243,7 +243,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/btn_rounded"
-            android:text="zamknij"
+            android:text="@string/close"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>

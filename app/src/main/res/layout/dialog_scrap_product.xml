@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:text="code:"
+                    android:text="@string/bar_code"
                     android:textSize="15sp" />
 
                 <TextView
@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:text="rfid code:"
+                    android:text="@string/rfid_code"
                     android:textSize="15sp" />
 
 
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Osoba odpowiedzialna:"
+                    android:text="@string/liable_user"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -91,7 +91,7 @@
                     android:layout_marginRight="5dp"
                     android:background="@drawable/border_background"
                     android:padding="10dp"
-                    android:text="Name Surname"
+                    android:text="@string/name_and_surname"
                     android:textSize="17sp" />
 
 
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:text="Użytkownik:"
+                    android:text="@string/user"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -112,7 +112,7 @@
                     android:layout_marginRight="5dp"
                     android:background="@drawable/border_background"
                     android:padding="10dp"
-                    android:text="Name Surname"
+                    android:text="@string/name_and_surname"
                     android:textSize="17sp" />
 
             </LinearLayout>
@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="Data umożenia:"
+                    android:text="@string/scrap_date"
                     android:textSize="20sp"
                     android:textStyle="bold" />
                 <LinearLayout
@@ -145,7 +145,7 @@
                         android:layout_weight="5"
                         android:paddingTop="10dp"
                         android:paddingStart="20dp"
-                        android:text="Rok: "
+                        android:text="@string/year"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -175,7 +175,7 @@
                         android:layout_weight="5"
                         android:paddingStart="20dp"
                         android:paddingTop="10dp"
-                        android:text="Miesiąc: "
+                        android:text="@string/month"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -205,7 +205,7 @@
                         android:layout_weight="5"
                         android:paddingStart="20dp"
                         android:paddingTop="10dp"
-                        android:text="Dzień: "
+                        android:text="@string/day"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -231,7 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="Powód umożenia"
+                    android:hint="@string/scrap_reason"
                     android:inputType="text"
                     android:minHeight="70dp"
                     android:text="" />
@@ -244,7 +244,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:background="@drawable/btn_rounded"
-                android:text="Umożenie"
+                android:text="@string/scrap"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
         </LinearLayout>
