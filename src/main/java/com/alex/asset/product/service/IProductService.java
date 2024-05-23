@@ -26,4 +26,7 @@ public interface IProductService {
     List<ProductHistoryDto> getHistoryOfProductById(Long productId)
             throws ResourceNotFoundException;
 
+    List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate);
+
+    List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate);
 }

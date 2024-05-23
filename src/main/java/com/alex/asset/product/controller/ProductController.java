@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +86,26 @@ public class ProductController {
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products by key word {}", keyWord);
         return productService.getByValue(keyWord, productFields);
+    }
+
+    @Operation(summary = "Get products in a special range (warranty period)")
+    @GetMapping("/filter/warranty_period/{start_date}/{end_date}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Map<String, Object>> getProductsByWarrantyPeriod(
+            @PathVariable("start_date") String startDate,
+            @PathVariable("end_date") String endDate) {
+        log.info(TAG + "Get products in a special range (warranty period) " );
+        return productService.getByWarrantyPeriod(startDate, endDate);
+    }
+
+    @Operation(summary = "Get products in a special range (inspection period)")
+    @GetMapping("/filter/inspection_period/{start_date}/{end_date}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Map<String, Object>> getProductsByInspectionPeriod(
+            @PathVariable("start_date") String startDate,
+            @PathVariable("end_date") String endDate) {
+        log.info(TAG + "Get products in a special range (inspection period) " );
+        return productService.getByInspectionPeriod(startDate, endDate);
     }
 
     @Operation(summary = "Update or create product")

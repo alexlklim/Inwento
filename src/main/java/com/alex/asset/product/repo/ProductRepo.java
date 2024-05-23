@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,26 +28,24 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     @Query("SELECT p " +
             "FROM Product p " +
-            "WHERE p.isScrapping = ?1 " +
+            "WHERE p.isScrapping = ?1 AND p.isActive = true " +
             "ORDER BY p.id DESC")
     List<Product> getProductsListByEmp(Boolean isScraped);
 
+    @Query("SELECT p " +
+            "FROM Product p " +
+            "WHERE p.warrantyPeriod BETWEEN :startDate AND :endDate " +
+            "AND p.isActive = true " +
+            "ORDER BY p.id DESC")
+    List<Product> getProductsByWarrantyPeriod(@Param("startDate") LocalDate startDate,
+                                              @Param("endDate") LocalDate endDate);
 
     @Query("SELECT p " +
             "FROM Product p " +
-            "WHERE p.isActive = true AND p.isScrapping = false " +
+            "WHERE p.inspectionDate BETWEEN :startDate AND :endDate AND p.isActive = true " +
             "ORDER BY p.id DESC")
-    List<Product> getActiveWithoutScrapped();
-
-
-
-
-    @Query("SELECT p " +
-            "FROM Product p " +
-            "WHERE p.isActive = true " +
-            "ORDER BY p.id DESC")
-    List<Product> getAllProducts();
-
+    List<Product> getProductsByInspectionPeriod(@Param("startDate") LocalDate startDate,
+                                              @Param("endDate") LocalDate endDate);
 
 
 
@@ -61,7 +60,7 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "FROM Product p " +
             "WHERE LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
             "LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
-            "LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%')")
+            "LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%') AND p.isActive = true")
     List<Product> getByKeyWord(@Param("prefix") String prefix);
 
 
@@ -78,6 +77,12 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
             "WHERE p.rfidCode = ?1 AND p.isActive = true ")
     Optional<Product> getByRfidCode(String rfidCode);
 
+
+    @Query("SELECT p " +
+            "FROM Product p " +
+            "WHERE p.branch = ?1 " +
+            "AND p.isActive = true " +
+            "AND (p.isScrapping IS NULL OR p.isScrapping = false)")
     List<Product> findAllByBranch(Branch branch);
 
     boolean existsByBarCode(String barCode);
@@ -89,11 +94,14 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE (:barCode IS NULL OR p.barCode = :barCode) " +
             "AND (:rfidCode IS NULL OR p.rfidCode = :rfidCode) " +
             "AND (:inventoryNumber IS NULL OR p.inventoryNumber = :inventoryNumber) " +
-            "AND (:serialNumber IS NULL OR p.serialNumber = :serialNumber)")
+            "AND (:serialNumber IS NULL OR p.serialNumber = :serialNumber) " +
+            "AND p.isActive = true ")
     Optional<Product> findByUniqueValues(String barCode, String rfidCode, String inventoryNumber, String serialNumber);
 
 
 
-    @Query(value = "SELECT COUNT(*) FROM Product sp WHERE sp.branch.id = :branchId")
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM Product sp " +
+            "WHERE sp.branch.id = :branchId AND sp.isActive = true ")
     int countProductsByBranchId(@Param("branchId") Long branchId);
 }

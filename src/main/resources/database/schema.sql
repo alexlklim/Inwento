@@ -4,13 +4,13 @@ CREATE TABLE IF NOT EXISTS users
     id            BIGINT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
     created       DATETIME,
     updated       DATETIME,
+    last_activity DATETIME              NOT NULL,
     is_active     BOOLEAN               NOT NULL,
     firstname     VARCHAR(255)          NOT NULL,
     lastname      VARCHAR(255)          NOT NULL,
     phone         VARCHAR(255)          NOT NULL,
     email         VARCHAR(255) UNIQUE   NOT NULL,
     password      VARCHAR(255)          NOT NULL,
-    last_activity DATETIME              NOT NULL,
     roles         ENUM ('ADMIN', 'EMP') NOT NULL
 );
 
@@ -286,4 +286,4 @@ CREATE TABLE IF NOT EXISTS unknown_products
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-select * from  scanned_products where event_id = 1;
+SHOW INDEX FROM products;

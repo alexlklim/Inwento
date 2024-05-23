@@ -122,6 +122,29 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate) {
+        return getProductDTOs(
+                productRepo.getProductsByWarrantyPeriod(
+                        LocalDate.parse((String) startDate),
+                        LocalDate.parse((String) endDate)
+                ),
+                Utils.PRODUCT_FIELDS);
+
+    }
+
+
+    @Override
+    public List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate) {
+        return getProductDTOs(
+                productRepo.getProductsByInspectionPeriod(
+                        LocalDate.parse((String) startDate),
+                        LocalDate.parse((String) endDate)
+                ),
+                Utils.PRODUCT_FIELDS);
+
+    }
+
+    @Override
     @Modifying
     @SneakyThrows
     public void update(Map<String, Object> updates, Long userId) {
@@ -334,6 +357,7 @@ public class ProductService implements IProductService {
                 .map(ProductMapper::toProductHistoryDto)
                 .toList();
     }
+
 
     @SneakyThrows
     public void addHistoryToProduct(Long userId, Long productId, Activity activity) {
