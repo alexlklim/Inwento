@@ -1,6 +1,7 @@
 package com.alex.asset.product.controller;
 
 
+import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
@@ -22,7 +23,6 @@ import java.util.Map;
 @Tag(name = "Product Controller", description = "Product API")
 public class ProductController {
     private final String TAG = "PRODUCT_CONTROLLER - ";
-
     private final ProductService productService;
 
 
@@ -79,13 +79,14 @@ public class ProductController {
     }
 
     @Operation(summary = "Get products by title/bar code/rfid code")
-    @GetMapping("/filter/{key_word}")
+    @GetMapping("/filter/{is_scrapped}/{key_word}")
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getProductsByTitleOrBarCode(
             @PathVariable("key_word") String keyWord,
+            @PathVariable("is_scrapped") Boolean isScrapped,
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products by key word {}", keyWord);
-        return productService.getByValue(keyWord, productFields);
+        return productService.getByValue(keyWord, isScrapped, productFields);
     }
 
     @Operation(summary = "Get products in a special range (warranty period)")
@@ -111,9 +112,17 @@ public class ProductController {
     @Operation(summary = "Update or create product")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public void updateProduct(@RequestBody Map<String, Object> updates) {
+    public ProductCodesDTO updateProduct(@RequestBody Map<String, Object> updates) {
         log.info(TAG + "Update product");
-        productService.update(updates, SecHolder.getUserId());
+        return productService.update(updates, SecHolder.getUserId());
+    }
+
+    @Operation(summary = "Create or create product")
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ProductCodesDTO createProduct(@RequestBody Map<String, Object> updates) {
+        log.info(TAG + "Create product");
+        return productService.createProduct(updates, SecHolder.getUserId());
     }
 
     @Operation(summary = "Get product history by id")

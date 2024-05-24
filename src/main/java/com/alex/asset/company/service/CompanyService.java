@@ -16,7 +16,7 @@ import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.Utils;
-import com.alex.asset.utils.exceptions.errors.LabelSizeIsIncorrectException;
+import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -97,12 +97,12 @@ public class CompanyService {
                 case "email_configured": company.setIsEmailConfigured((boolean) value); break;
 
 
-                case "rfid_length": company.setRfidLength((Integer) value); break;
-                case "rfid_length_max": company.setRfidLengthMax((Integer) value); break;
-                case "rfid_length_min": company.setRfidLengthMin((Integer) value); break;
-                case "rfid_prefix": company.setRfidPrefix((String) value); break;
-                case "rfid_suffix": company.setRfidSuffix((String) value); break;
-                case "rfid_postfix": company.setRfidPostfix((String) value); break;
+                case "rfid_length": company.setRfidCodeLength((Integer) value); break;
+                case "rfid_length_max": company.setRfidCodeLengthMax((Integer) value); break;
+                case "rfid_length_min": company.setRfidCodeLengthMin((Integer) value); break;
+                case "rfid_prefix": company.setRfidCodePrefix((String) value); break;
+                case "rfid_suffix": company.setRfidCodeSuffix((String) value); break;
+                case "rfid_postfix": company.setRfidCodePostfix((String) value); break;
                 case "bar_code_length": company.setBarCodeLength((Integer) value); break;
                 case "bar_code_length_max": company.setBarCodeLengthMax((Integer) value); break;
                 case "bar_code_length_min": company.setBarCodeLengthMin((Integer) value); break;
@@ -119,6 +119,10 @@ public class CompanyService {
         logService.addLog(userId, Action.UPDATE, Section.COMPANY, company.getCompany());
         notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
         return getInfoAboutCompany(Utils.COMPANY_FIELDS_SIMPLE);
+    }
+
+    private void checkTheConsistenceOfLength(){
+
     }
 
     @SneakyThrows

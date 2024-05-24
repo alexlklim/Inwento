@@ -1,7 +1,9 @@
 package com.alex.asset.product.service;
 
+import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.dto.ProductHistoryDto;
-import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -18,15 +20,18 @@ public interface IProductService {
                                           List<String> productFields, Long userId)
             throws ResourceNotFoundException;
 
-    List<Map<String, Object>> getByValue(String keyWord, List<String> productFields);
+    List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields);
 
-    void update(Map<String, Object> updates, Long userId)
+    ProductCodesDTO update(Map<String, Object> updates, Long userId)
             throws ResourceNotFoundException;
 
     List<ProductHistoryDto> getHistoryOfProductById(Long productId)
             throws ResourceNotFoundException;
 
+
+
     List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate);
 
     List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate);
+
 }

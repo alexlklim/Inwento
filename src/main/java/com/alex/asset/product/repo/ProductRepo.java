@@ -58,10 +58,15 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     @Query("SELECT p " +
             "FROM Product p " +
-            "WHERE LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
-            "LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
-            "LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%') AND p.isActive = true")
-    List<Product> getByKeyWord(@Param("prefix") String prefix);
+            "WHERE (LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
+            "       LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%')) " +
+            "      AND p.isScrapping = :is_scrapped " +
+            "      AND p.isActive = true")
+    List<Product> getByKeyWord(
+            @Param("prefix") String prefix,
+            @Param("is_scrapped") Boolean isScrapped
+    );
+
 
 
 

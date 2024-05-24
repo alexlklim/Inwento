@@ -1,11 +1,16 @@
-package com.alex.asset.utils.exceptions;
+package com.alex.asset.exceptions;
 
 
-import com.alex.asset.utils.exceptions.errors.*;
-import com.alex.asset.utils.exceptions.errors.user_error.ObjectAlreadyExistException;
-import com.alex.asset.utils.exceptions.errors.user_error.UserFailedAuthentication;
-import com.alex.asset.utils.exceptions.errors.user_error.UserIsNotOwnerOfEvent;
-import com.alex.asset.utils.exceptions.errors.user_error.UserNotRegisterYet;
+import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
+import com.alex.asset.exceptions.email.EmailIsNotConfigured;
+import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgress;
+import com.alex.asset.exceptions.product.IdNotProvidedException;
+import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
+import com.alex.asset.exceptions.product.ValueIsNotUnique;
+import com.alex.asset.exceptions.security.UserFailedAuthentication;
+import com.alex.asset.exceptions.security.UserNotRegisterYet;
+import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -35,8 +40,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            IllegalArgumentException.class,
-            UserIsNotOwnerOfEvent.class})
+            IllegalArgumentException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleIllegalArgument(Exception ex) {
         log.error(TAG + ex.getMessage());
@@ -50,8 +55,10 @@ public class ControllerAdvice {
             IllegalStateException.class,
             IOException.class,
             ObjectAlreadyExistException.class,
-            UserAlreadyCreateEventForThisBranch.class,
-            UserNotRegisterYet.class})
+            UserNotRegisterYet.class,
+            IdNotProvidedException.class,
+            LengthOfCodeNotConfigured.class
+    })
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionBody handleUserAlreadyExistException(Exception ex) {
         log.error(TAG + ex.getMessage());
@@ -59,19 +66,12 @@ public class ControllerAdvice {
     }
 
 
-    @ExceptionHandler({
-            AccessNotAllowed.class})
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionBody handleForbiddenException(Exception ex) {
-        log.error(TAG + ex.getMessage());
-        return new ExceptionBody(HttpStatus.FORBIDDEN.value(), ex.getMessage());
-    }
+
 
     @ExceptionHandler({
             EmailIsNotConfigured.class,
-            InventIsAlreadyInProgress.class,
-            InventIsAlreadyNotActive.class,
-            InventIsNotStartedYet.class})
+            InventIsAlreadyInProgress.class
+    })
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionBody handleInventConflict(Exception ex) {
         log.error(TAG + ex.getMessage());
@@ -85,7 +85,8 @@ public class ControllerAdvice {
             MalformedJwtException.class,
             SignatureException.class,
             MailAuthenticationException.class,
-            NonceExpiredException.class})
+            NonceExpiredException.class
+    })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ExceptionBody handleJwtExceptions(Exception ex) {
         log.error(TAG + ex.getMessage());

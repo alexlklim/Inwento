@@ -1,4 +1,4 @@
-package com.alex.asset.utils.exceptions.errors.user_error;
+package com.alex.asset.exceptions.security;
 
 public class UserNotRegisterYet extends RuntimeException{
 

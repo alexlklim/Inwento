@@ -1,7 +1,7 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.exceptions.errors.user_error.UserFailedAuthentication;
+import com.alex.asset.exceptions.security.UserFailedAuthentication;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

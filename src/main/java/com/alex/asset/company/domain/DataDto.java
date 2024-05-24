@@ -19,12 +19,9 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DataDto {
     List<Employee> employees;
-
     List<Type> types;
-
     List<Unit> units;
     List<AssetStatus> assetStatuses;
-
     List<Branch> branches;
     List<Location> locations;
     List<MPK> MPKs;

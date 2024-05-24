@@ -1,4 +1,4 @@
-package com.alex.asset.utils.exceptions;
+package com.alex.asset.exceptions;
 
 
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.alex.asset.utils.exceptions.errors;
+package com.alex.asset.exceptions.company;
 
 public class LabelSizeIsIncorrectException extends RuntimeException{
     public LabelSizeIsIncorrectException( final String message) {

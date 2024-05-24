@@ -39,12 +39,12 @@ public class CompanyMapper {
                 case "bar_code_suffix": dtoMap.put("bar_code_suffix", company.getBarCodeSuffix() != null ? company.getBarCodeSuffix() : ""); break;
                 case "bar_code_postfix": dtoMap.put("bar_code_postfix", company.getBarCodePostfix() != null ? company.getBarCodePostfix() : ""); break;
 
-                case "rfid_length": dtoMap.put("rfid_length", company.getRfidLength() != null ? company.getRfidLength() : ""); break;
-                case "rfid_length_max": dtoMap.put("rfid_length_max", company.getRfidLengthMax() != null ? company.getRfidLengthMax() : ""); break;
-                case "rfid_length_min": dtoMap.put("rfid_length_min", company.getRfidLengthMin() != null ? company.getRfidLengthMin() : ""); break;
-                case "rfid_prefix": dtoMap.put("rfid_prefix", company.getRfidPrefix() != null ? company.getRfidPrefix() : ""); break;
-                case "rfid_suffix": dtoMap.put("rfid_suffix", company.getRfidSuffix() != null ? company.getRfidSuffix() : ""); break;
-                case "rfid_postfix": dtoMap.put("rfid_postfix", company.getRfidPostfix() != null ? company.getRfidPostfix() : ""); break;
+                case "rfid_length": dtoMap.put("rfid_length", company.getRfidCodeLength() != null ? company.getRfidCodeLength() : ""); break;
+                case "rfid_length_max": dtoMap.put("rfid_length_max", company.getRfidCodeLengthMax() != null ? company.getRfidCodeLengthMax() : ""); break;
+                case "rfid_length_min": dtoMap.put("rfid_length_min", company.getRfidCodeLengthMin() != null ? company.getRfidCodeLengthMin() : ""); break;
+                case "rfid_prefix": dtoMap.put("rfid_prefix", company.getRfidCodePrefix() != null ? company.getRfidCodePrefix() : ""); break;
+                case "rfid_suffix": dtoMap.put("rfid_suffix", company.getRfidCodeSuffix() != null ? company.getRfidCodeSuffix() : ""); break;
+                case "rfid_postfix": dtoMap.put("rfid_postfix", company.getRfidCodePostfix() != null ? company.getRfidCodePostfix() : ""); break;
 
 
                 default: break;

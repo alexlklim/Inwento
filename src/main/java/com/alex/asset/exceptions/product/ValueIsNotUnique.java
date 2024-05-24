@@ -1,4 +1,4 @@
-package com.alex.asset.utils.exceptions.errors;
+package com.alex.asset.exceptions.product;
 
 public class ValueIsNotUnique  extends RuntimeException {
     public ValueIsNotUnique( final String message) {

@@ -4,7 +4,7 @@ import com.alex.asset.security.domain.Token;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.TokenRepo;
 import com.alex.asset.utils.DateService;
-import com.alex.asset.utils.exceptions.errors.user_error.UserFailedAuthentication;
+import com.alex.asset.exceptions.security.UserFailedAuthentication;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

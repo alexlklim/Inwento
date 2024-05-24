@@ -1,11 +1,17 @@
 package com.alex.asset.product.service;
 
 
+import com.alex.asset.company.domain.Company;
+import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.exceptions.product.IdNotProvidedException;
+import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
+import com.alex.asset.exceptions.product.ValueIsNotUnique;
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.ScannedProduct;
@@ -18,6 +24,7 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
+import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.dto.ProductHistoryDto;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductHistoryRepo;
@@ -26,8 +33,6 @@ import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.Utils;
-import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
-import com.alex.asset.utils.exceptions.errors.ValueIsNotUnique;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -50,15 +55,17 @@ public class ProductService implements IProductService {
 
     private final String TAG = "PRODUCT_SERVICE - ";
     private final LogService logService;
+    private final ConfigureService configureService;
+    private final TypeService typeService;
+    private final LocationService locationService;
     private final ProductRepo productRepo;
     private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
     private final EventRepo eventRepo;
     private final InventoryRepo inventoryRepo;
     private final ScannedProductRepo scannedProductRepo;
-    private final ConfigureService configureService;
-    private final TypeService typeService;
-    private final LocationService locationService;
+    private final CompanyRepo companyRepo;
+
 
     @Override
     @SneakyThrows
@@ -115,10 +122,10 @@ public class ProductService implements IProductService {
 
     @Override
     @SneakyThrows
-    public List<Map<String, Object>> getByValue(String keyWord, List<String> productFields) {
+    public List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields) {
         log.info(TAG + "get product by title");
         if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
-        return getProductDTOs(productRepo.getByKeyWord(keyWord), productFields);
+        return getProductDTOs(productRepo.getByKeyWord(keyWord, isScrapped), productFields);
     }
 
     @Override
@@ -144,35 +151,74 @@ public class ProductService implements IProductService {
 
     }
 
+
     @Override
     @Modifying
     @SneakyThrows
-    public void update(Map<String, Object> updates, Long userId) {
+    public ProductCodesDTO update(Map<String, Object> updates, Long userId) {
         log.info(TAG + "Update or create product");
         if (updates.containsKey("id")) {
             Long productId = ((Number) updates.get("id")).longValue();
             Product product = productRepo.findById(productId).orElseThrow(
                     () -> new ResourceNotFoundException("Product not found"));
             updates.remove("id");
-            updateProduct(updates, product, userId);
+            return updateProduct(updates, product, userId, false);
         } else {
-            createProduct(updates, userId);
+            throw new IdNotProvidedException("Problem occurs with the id of product, Be sure you provide it");
         }
     }
 
+
     @SneakyThrows
-    private void createProduct(Map<String, Object> updates, Long userId) {
+    @Transactional
+    public ProductCodesDTO createProduct(Map<String, Object> updates, Long userId) {
         log.info(TAG + "Create product");
+        Company company = companyRepo.findAll().get(0);
+
+
+        if (companyRepo.areNullOrZeroBarCodeLength(company)) {
+            throw new LengthOfCodeNotConfigured("RFID or BAR code length are null or zero. Please configure it to continue");
+        }
+
+
         Product entity = new Product();
         entity.setActive(true);
         entity.setCreatedBy(userRepo.getUser(userId));
         productRepo.save(entity);
+
+        entity.setBarCode(generateBarCode(company, entity.getId()));
+        entity.setRfidCode(generateRfidCode(company, entity.getId()));
+
         logService.addLog(userId, Action.CREATE, Section.PRODUCT, "Product was saved");
-        updateProduct(updates, entity, userId);
+        return updateProduct(updates, entity, userId, true);
     }
 
     @SneakyThrows
-    private void updateProduct(Map<String, Object> updates, Product product, Long userId) throws ValueIsNotUnique {
+    private String generateBarCode(Company company, Long productId) {
+        log.info(TAG + "Generate Bar Code");
+        String barCode =
+                (company.getBarCodePrefix() != null ? company.getBarCodePrefix() : "") +
+                (company.getBarCodeSuffix() != null ? company.getBarCodeSuffix() : "");
+
+        // get the number of zeros in bar code
+        int numberOfZeros = company.getBarCodeLength() - barCode.length() - Long.toString(productId).length();
+        String zeros = String.format("%0" + numberOfZeros + "d", 0);
+        return barCode + zeros + productId;
+    }
+
+    @SneakyThrows
+    private String generateRfidCode(Company company, Long productId) {
+        log.info(TAG + "Generate RFID Code");
+        String rfidCode =
+                (company.getRfidCodePrefix() != null ? company.getRfidCodePrefix() : "") +
+                (company.getRfidCodeSuffix() != null ? company.getRfidCodeSuffix() : "");
+        int numberOfZeros = company.getBarCodeLength() - rfidCode.length() - Long.toString(productId).length();
+        String zeros = String.format("%0" + numberOfZeros + "d", 0);
+        return rfidCode + zeros + productId;
+    }
+
+    @SneakyThrows
+    private ProductCodesDTO updateProduct(Map<String, Object> updates, Product product, Long userId, boolean isCreated) throws ValueIsNotUnique {
         log.info(TAG + "Update product by user with id {}", userId);
         Long productId = (product.getId() != null) ? product.getId() : 0;
         updates.forEach((key, value) -> {
@@ -259,7 +305,13 @@ public class ProductService implements IProductService {
                     addHistoryToProduct(userId, productId, Activity.UNIT);
                     break;
                 case "branch_id":
-                    resolveIssueWithInventory(product, locationService.getBranchById(((Number) value).longValue()), userRepo.getUser(userId));
+                    Branch branch = locationService.getBranchById(((Number) value).longValue());
+                    if (!isCreated){
+                        resolveIssueWithInventory(
+                                product,
+                                branch,
+                                userRepo.getUser(userId));
+                    } else product.setBranch(branch);
                     addHistoryToProduct(userId, productId, Activity.BRANCH);
                     break;
                 case "location_id":
@@ -328,6 +380,13 @@ public class ProductService implements IProductService {
         });
         productRepo.save(product);
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, "Product was saved");
+
+
+        return ProductCodesDTO.builder()
+                .id(product.getId())
+                .barCode(product.getBarCode())
+                .rfidCode(product.getRfidCode())
+                .build();
     }
 
     @SneakyThrows

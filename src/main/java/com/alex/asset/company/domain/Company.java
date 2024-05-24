@@ -48,22 +48,22 @@ public class Company extends BaseEntity {
 
 
     @Column(name = "rfid_length")
-    Integer rfidLength;
+    Integer rfidCodeLength;
 
     @Column(name = "rfid_length_max")
-    Integer rfidLengthMax;
+    Integer rfidCodeLengthMax;
 
     @Column(name = "rfid_length_min")
-    Integer rfidLengthMin;
+    Integer rfidCodeLengthMin;
 
     @Column(name = "rfid_prefix")
-    String rfidPrefix;
+    String rfidCodePrefix;
 
     @Column(name = "rfid_suffix")
-    String rfidSuffix;
+    String rfidCodeSuffix;
 
     @Column(name = "rfid_postfix")
-    String rfidPostfix;
+    String rfidCodePostfix;
 
     @Column(name = "bar_code_length")
     Integer barCodeLength;
