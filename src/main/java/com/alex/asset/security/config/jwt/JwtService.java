@@ -20,7 +20,6 @@ import java.util.function.Function;
 @Slf4j
 @Service
 public class JwtService {
-    private final String TAG = "JWT SERVICE - ";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
