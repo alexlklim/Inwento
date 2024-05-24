@@ -37,6 +37,7 @@ public class ExcelParser {
     private final ConfigureService configureService;
     private final TypeService typeService;
     private final LocationService locationService;
+    private final ProductService productService;
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
     private final LogService logService;
@@ -87,7 +88,6 @@ public class ExcelParser {
                         asset.setBarCode(barcode);
                     }
                 }
-
 
 
                 if (!Objects.equals(getStringValue(row.getCell(7)), "0.0") && row.getCell(7) != null) {
@@ -218,8 +218,6 @@ public class ExcelParser {
         return tempFile;
     }
 
-
-    private final ProductService productService;
 
     public int saveAssets(List<Product> assetList, Long userId) {
         log.info(TAG + "Save assets by user with id");

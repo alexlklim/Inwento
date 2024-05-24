@@ -20,10 +20,11 @@ public class Location extends BaseEntityActive {
     String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference @JsonIgnore
+    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "branch_id", referencedColumnName = "id")
     @Schema(description = "Type", example = "Office Equipment")
-    private Branch branch;
+    Branch branch;
 
     public Location(String location, Branch branch) {
         this.location = location;

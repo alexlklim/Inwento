@@ -46,11 +46,11 @@ public class Product extends BaseEntity {
 
     @Transient
     @JsonProperty("user_liable_id")
-    private Long userLiableId;
+     Long userLiableId;
 
     @Transient
     @JsonProperty("user_liable_name")
-    private String userLiableName;
+     String userLiableName;
 
     String receiver;
 

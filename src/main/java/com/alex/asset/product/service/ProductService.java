@@ -89,7 +89,7 @@ public class ProductService implements IProductService {
         return getProductDTOs(products, productFields);
     }
 
-    private List<Map<String, Object>> getProductDTOs(List<Product> products, List<String> productFields) {
+    List<Map<String, Object>> getProductDTOs(List<Product> products, List<String> productFields) {
         return products.stream().map(product -> ProductMapper.toDTOWithCustomFields(product, productFields)).toList();
     }
 
@@ -183,7 +183,7 @@ public class ProductService implements IProductService {
 
                     if (userRepo.getUser(userId).getRoles() == Role.ADMIN) {
                         product.setActive((Boolean) value);
-                        if (!product.isActive()){
+                        if (!product.isActive()) {
                             // delete all unique values for this product
                             product.setBarCode(null);
                             product.setRfidCode(null);
@@ -334,7 +334,7 @@ public class ProductService implements IProductService {
     private void resolveIssueWithInventory(Product product, Branch branch, User user) {
         log.error(TAG + "Resolve issue with inventory");
         Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null);
-        if (inventory != null){
+        if (inventory != null) {
             Event eventToMove = eventRepo.findByInventoryAndBranch(inventory, branch).orElseThrow(
                     () -> new ResourceNotFoundException("Event not found by current inventory and branch")
             );
@@ -396,11 +396,11 @@ public class ProductService implements IProductService {
         // change the branch in product
 
         Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null);
-        if (inventory != null){
+        if (inventory != null) {
             Event oldEvent = eventRepo.findByInventoryAndBranch(inventory, product.getBranch()).orElseThrow(
                     () -> new ResourceNotFoundException("Event not found for current inventory and product branch"));
             ScannedProduct scannedProduct = scannedProductRepo.findByProductAndEvent(product, oldEvent).orElse(null);
-            if (scannedProduct == null){
+            if (scannedProduct == null) {
                 scannedProduct = new ScannedProduct(product, eventToMove, user, true);
             }
             scannedProduct.setEvent(eventToMove);

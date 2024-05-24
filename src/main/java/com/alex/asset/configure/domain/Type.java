@@ -25,9 +25,10 @@ public class Type extends BaseEntityActive {
     @Schema(description = "Type", example = "Office Equipment")
     String type;
 
-    @JsonManagedReference @JsonIgnore
+    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "type")
-    private List<Subtype> subtypes = new ArrayList<>();
+    List<Subtype> subtypes = new ArrayList<>();
 
 
     public Type(String type) {

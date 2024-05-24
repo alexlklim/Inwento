@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @CrossOrigin
@@ -18,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/inventory")
 @Tag(name = "Inventory Controller", description = "Inventory API")
 public class InventoryController {
-    private final String TAG = "INVENTORY_CONTROLLER - ";
+     private final String TAG = "INVENTORY_CONTROLLER - ";
 
-    private final InventoryService inventoryService;
+     private final InventoryService inventoryService;
 
 
     @Operation(summary = "Get inventory by id")
@@ -32,6 +35,26 @@ public class InventoryController {
         log.info(TAG + "Get inventory with id {}", inventoryId);
         return inventoryService.getInventoryById(inventoryId, SecHolder.getUserId());
     }
+
+
+    @Operation(summary = "Get full information about inventory by id (include all scanned/ not scanned/ unknown products)")
+    @GetMapping("/{inventory_id}/full")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object> getFullInventoryById(
+            @PathVariable("inventory_id") Long inventoryId) {
+        log.info(TAG + "Get inventory with id {}", inventoryId);
+        return inventoryService.getFullInventoryById(inventoryId, SecHolder.getUserId());
+    }
+
+    @Operation(summary = "Get inventories")
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<InventoryDto> getInventories() {
+        log.info(TAG + "Get all inventories");
+        return inventoryService.getInventories();
+    }
+
+
 
     @Operation(summary = "get current active inventory (it returns 404 if no active inventory now")
     @GetMapping("/current")

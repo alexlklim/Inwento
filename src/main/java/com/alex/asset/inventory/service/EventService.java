@@ -44,19 +44,18 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class EventService {
-    private final String TAG = "EVENT_SERVICE - ";
-    private final EventRepo eventRepo;
-    private final UserRepo userRepo;
-    private final InventoryRepo inventoryRepo;
-    private final BranchRepo branchRepo;
-    private final UnknownProductRepo unknownProductRepo;
-    private final ProductService productService;
-    private final LogService logService;
-    private final EventMapper eventMapper;
-
-    private final LocationRepo locationRepo;
-    private final ProductRepo productRepo;
-    private final ScannedProductRepo scannedProductRepo;
+     private final String TAG = "EVENT_SERVICE - ";
+     private final ProductService productService;
+     private final LogService logService;
+     private final EventMapper eventMapper;
+     private final EventRepo eventRepo;
+     private final UserRepo userRepo;
+     private final InventoryRepo inventoryRepo;
+     private final BranchRepo branchRepo;
+     private final UnknownProductRepo unknownProductRepo;
+     private final LocationRepo locationRepo;
+     private final ProductRepo productRepo;
+     private final ScannedProductRepo scannedProductRepo;
 
     @SneakyThrows
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
@@ -172,7 +171,7 @@ public class EventService {
 
     }
 
-    private void handleScannedProduct(
+     void handleScannedProduct(
             Product product, Map<String, Object> map, Event event, Location location, Long userId) {
         log.info(TAG + "Add product to scanned product");
         if (product.getLocation() != location) {
@@ -211,7 +210,7 @@ public class EventService {
 
 
     @SneakyThrows
-    private void handleUnknownProduct(String code, Event event, Long userId) {
+     void handleUnknownProduct(String code, Event event, Long userId) {
         log.info(TAG + "Add unknown product");
         UnknownProduct unknownProduct = unknownProductRepo.findByCode(code).orElse(null);
         if (unknownProduct == null) {
@@ -241,12 +240,12 @@ public class EventService {
     }
 
     @SneakyThrows
-    private void createEventForBranch(User user, Branch branch) {
+     void createEventForBranch(User user, Branch branch) {
         createEventForBranch(user, branch, "Default Info");
     }
 
     @SneakyThrows
-    private Event createEventForBranch(User user, Branch branch, String info) {
+     Event createEventForBranch(User user, Branch branch, String info) {
         log.info(TAG + "Create event for Inventory automatically");
         Inventory inventory = inventoryRepo.getCurrentInventory(LocalDate.now())
                 .orElseThrow(() -> new ResourceNotFoundException("No active inventory now"));
@@ -267,7 +266,7 @@ public class EventService {
         return event;
     }
 
-    private void createDBSnapshotForEvent(Event event) {
+     void createDBSnapshotForEvent(Event event) {
         log.info(TAG + "Create DB SNAPSHOT for event");
         Branch branch = event.getBranch();
         List<Product> products = productRepo.findAllByBranch(branch);

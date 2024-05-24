@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
@@ -31,14 +30,13 @@ public class LogDto {
     String userEmail;
 
     @Schema(description = "Action", example = "UPDATE")
-    private Action action;
+    Action action;
 
     @Schema(description = "Section", example = "COMPANY")
-    private Section section;
+    Section section;
 
     @Schema(description = "Text", example = "Change name of company")
     String text;
-
 
 
 }

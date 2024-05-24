@@ -14,8 +14,10 @@ import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
+import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.domain.BaseEntity;
 import com.alex.asset.utils.exceptions.errors.InventIsAlreadyInProgress;
 import com.alex.asset.utils.exceptions.errors.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -83,6 +87,43 @@ public class InventoryService {
     }
 
 
+    public Map<String, Object> getFullInventoryById(Long inventoryId, Long userId) {
+        Map<String, Object> inventoryMap = new HashMap<>();
+        inventoryMap.put("inventory_dto", getInventoryById(inventoryId, userId));
+        // get events for this inventory
+        // unknown -> get all unknown_products where event_id in (event ids)
+        // scanned -> get all scanned products where id in (event ids)
+        // sort products by fields isScanned (true or false) and add their product (FK) to proper list
+
+        List<Long> eventIds = eventRepo.getActiveEventsByInventory(
+                inventoryRepo.findById(inventoryId).orElseThrow(
+                        () -> new ResourceNotFoundException("Event not found with id " + inventoryId)
+                )
+        ).stream().map(BaseEntity::getId).toList();
+
+        inventoryMap.put("unknown_products", unknownProductRepo.getAllByEvents(eventIds));
+        inventoryMap.put("scanned_products",
+                scannedProductRepo.getScannedProductsByEvents(eventIds, true).stream().map(
+                        scannedProduct -> ProductMapper.toDTOWithCustomFields(
+                                scannedProduct.getProduct(),
+                                Utils.PRODUCT_FIELDS_REPORT)
+                ).toList()
+        );
+        inventoryMap.put("not_scanned_products",
+                scannedProductRepo.getScannedProductsByEvents(eventIds, false).stream().map(
+                        scannedProduct -> ProductMapper.toDTOWithCustomFields(
+                                scannedProduct.getProduct(),
+                                Utils.PRODUCT_FIELDS_REPORT)
+                ).toList()
+        );
+
+        inventoryMap.put("total_product_amount", scannedProductRepo.countByEventsId(eventIds));
+        inventoryMap.put("scanned_product_amount", scannedProductRepo.countByEventsIdAndIsScanned(eventIds, true));
+        inventoryMap.put("unknown_product_amount", unknownProductRepo.countProductsByEventIds(eventIds));
+
+        return inventoryMap;
+    }
+
     @SneakyThrows
     public InventoryDto getInventoryById(Long inventoryId, Long userId) {
         log.info(TAG + "Get inventory by id {}", inventoryId);
@@ -125,4 +166,8 @@ public class InventoryService {
     }
 
 
+    public List<InventoryDto> getInventories() {
+        // get all active inventories
+        return inventoryRepo.findAll().stream().map(inventoryMapper::toDto).toList();
+    }
 }

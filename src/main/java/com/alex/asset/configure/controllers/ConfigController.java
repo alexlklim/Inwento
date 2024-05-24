@@ -102,7 +102,6 @@ public class ConfigController {
     }
 
 
-
     @Operation(summary = "Get all active MPK")
     @GetMapping("/mpk")
     @ResponseStatus(HttpStatus.OK)

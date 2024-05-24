@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MailStructure {
-    private String email;
-    private String subject;
-    private String message;
+     String email;
+     String subject;
+     String message;
 }

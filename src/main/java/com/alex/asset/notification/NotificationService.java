@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 @Service
 public class NotificationService {
 
-    private final String TAG = "NOTIFICATION_SERVICE - ";
+     private final String TAG = "NOTIFICATION_SERVICE - ";
 
-    private final LogService logService;
-    private final NotificationRepo notificationRepo;
-    private final NotificationMapper notificationMapper;
-    private final UserRepo userRepo;
+     private final LogService logService;
+     private final NotificationRepo notificationRepo;
+     private final NotificationMapper notificationMapper;
+     private final UserRepo userRepo;
 
 
     public List<NotificationDto> getNotifications(Long userId) {

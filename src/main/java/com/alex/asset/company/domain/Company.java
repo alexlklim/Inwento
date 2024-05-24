@@ -45,4 +45,41 @@ public class Company extends BaseEntity {
     String host, port, username, password, protocol;
 
 
+
+
+    @Column(name = "rfid_length")
+    Integer rfidLength;
+
+    @Column(name = "rfid_length_max")
+    Integer rfidLengthMax;
+
+    @Column(name = "rfid_length_min")
+    Integer rfidLengthMin;
+
+    @Column(name = "rfid_prefix")
+    String rfidPrefix;
+
+    @Column(name = "rfid_suffix")
+    String rfidSuffix;
+
+    @Column(name = "rfid_postfix")
+    String rfidPostfix;
+
+    @Column(name = "bar_code_length")
+    Integer barCodeLength;
+
+    @Column(name = "bar_code_length_max")
+    Integer barCodeLengthMax;
+
+    @Column(name = "bar_code_length_min")
+    Integer barCodeLengthMin;
+
+    @Column(name = "bar_code_prefix")
+    String barCodePrefix;
+
+    @Column(name = "bar_code_suffix")
+    String barCodeSuffix;
+
+    @Column(name = "bar_code_postfix")
+    String barCodePostfix;
 }

@@ -24,8 +24,8 @@ import java.util.Map;
 @RequestMapping("/api/v1/inventory/events")
 @Tag(name = "Event Controller", description = "Event API")
 public class EventController {
-    private final String TAG = "EVENT_CONTROLLER - ";
-    private final EventService eventService;
+     private final String TAG = "EVENT_CONTROLLER - ";
+     private final EventService eventService;
 
 
     @Operation(summary = "Get event by id")
@@ -37,6 +37,8 @@ public class EventController {
         log.info(TAG + "Get event by id");
         return eventService.getEvent(eventId, eventFields);
     }
+
+
 
     @Operation(summary = "Get short event by id (without products, only their amount) endpoint for android app")
     @GetMapping("/app/{event_id}")

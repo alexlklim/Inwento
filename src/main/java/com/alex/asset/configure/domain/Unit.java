@@ -20,4 +20,5 @@ public class Unit extends BaseEntityActive {
     @Column(name = "unit")
     @Schema(description = "Unit", example = "szt.")
     String unit;
+
 }

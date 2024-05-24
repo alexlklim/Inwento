@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +36,7 @@ public class ProductController {
         log.info(TAG + "Try to get all products with custom or all fields");
         return productService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
     }
+
     @Operation(summary = "Get list of products with fields, mode:admin/emp  scrap:true/false")
     @PostMapping("/all/{mode}/{scrap}")
     @ResponseStatus(HttpStatus.OK)
@@ -94,7 +94,7 @@ public class ProductController {
     public List<Map<String, Object>> getProductsByWarrantyPeriod(
             @PathVariable("start_date") String startDate,
             @PathVariable("end_date") String endDate) {
-        log.info(TAG + "Get products in a special range (warranty period) " );
+        log.info(TAG + "Get products in a special range (warranty period) ");
         return productService.getByWarrantyPeriod(startDate, endDate);
     }
 
@@ -104,7 +104,7 @@ public class ProductController {
     public List<Map<String, Object>> getProductsByInspectionPeriod(
             @PathVariable("start_date") String startDate,
             @PathVariable("end_date") String endDate) {
-        log.info(TAG + "Get products in a special range (inspection period) " );
+        log.info(TAG + "Get products in a special range (inspection period) ");
         return productService.getByInspectionPeriod(startDate, endDate);
     }
 

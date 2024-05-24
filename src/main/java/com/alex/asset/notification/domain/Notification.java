@@ -23,15 +23,17 @@ public class Notification extends BaseEntity {
     boolean isViewed;
 
     @Enumerated(EnumType.STRING)
-    private Reason reason;
+    Reason reason;
 
     String message;
 
 
-    @ManyToOne @JoinColumn(name = "to_user_id")
+    @ManyToOne
+    @JoinColumn(name = "to_user_id")
     User user;
 
-    @ManyToOne @JoinColumn(name = "created_by")
+    @ManyToOne
+    @JoinColumn(name = "created_by")
     User createdBy;
 
 }

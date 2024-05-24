@@ -18,10 +18,30 @@ public interface ScannedProductRepo extends JpaRepository<ScannedProduct, Long> 
     int countByEventIdAndIsScanned(Event event, boolean isScanned);
 
 
+    @Query("SELECT COUNT(sp) " +
+            "FROM ScannedProduct sp " +
+            "WHERE sp.event.id IN (?1) AND sp.isScanned = ?2")
+    int countByEventsIdAndIsScanned(List<Long> event, boolean isScanned);
+
+
+    @Query("SELECT COUNT(sp) " +
+            "FROM ScannedProduct sp " +
+            "WHERE sp.event.id IN (?1) ")
+    int countByEventsId(List<Long> event);
+
+
     @Query("SELECT sp " +
             "FROM ScannedProduct sp " +
             "WHERE sp.event = ?1 AND sp.isScanned = ?2")
     List<ScannedProduct> findProductsByEventAndIsScanned(Event event, Boolean isScanned);
+
+
+    @Query("SELECT sp " +
+            "FROM ScannedProduct sp " +
+            "WHERE sp.event.id IN (?1) AND sp.isScanned = ?2 " +
+            "ORDER BY sp.created DESC ")
+    List<ScannedProduct> getScannedProductsByEvents(List<Long> eventIds, Boolean isScanned);
+
 
 
     Optional<ScannedProduct> findScannedProductByEventAndProduct(Event event, Product product);

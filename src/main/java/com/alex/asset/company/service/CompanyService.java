@@ -17,7 +17,6 @@ import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.Utils;
 import com.alex.asset.utils.exceptions.errors.LabelSizeIsIncorrectException;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -164,9 +163,9 @@ public class CompanyService {
     }
 
 
-    private List<DataDto.Location> convertLocationToData(List<Location> locations){
+    private List<DataDto.Location> convertLocationToData(List<Location> locations) {
         List<DataDto.Location> list = new ArrayList<>();
-        for (Location location: locations){
+        for (Location location : locations) {
             list.add(new DataDto.Location(location.getId(), location.getLocation(), location.getBranch().getId()));
         }
 

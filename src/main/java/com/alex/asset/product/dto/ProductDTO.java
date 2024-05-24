@@ -112,7 +112,6 @@ public class ProductDTO {
     String subtype;
 
 
-
     @Schema(description = "Producer", example = "Zebra")
     String producer;
 

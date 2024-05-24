@@ -54,7 +54,7 @@ public class LogService {
         logRepo.save(log);
     }
 
-    private LogDto toDto(Log entity) {
+    LogDto toDto(Log entity) {
         LogDto dto = new LogDto();
         dto.setId(entity.getId());
         dto.setCreated(entity.getCreated());

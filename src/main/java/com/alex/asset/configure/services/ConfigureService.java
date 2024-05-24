@@ -24,14 +24,14 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class ConfigureService {
-    private final String TAG = "FIELD_SERVICE - ";
+     private final String TAG = "FIELD_SERVICE - ";
 
-    private final LogService logService;
+     private final LogService logService;
 
-    private final MpkRepo mpkRepo;
-    private final AssetStatusRepo assetStatusRepo;
-    private final UnitRepo unitRepo;
-    private final KstRepo kstRepo;
+     private final MpkRepo mpkRepo;
+     private final AssetStatusRepo assetStatusRepo;
+     private final UnitRepo unitRepo;
+     private final KstRepo kstRepo;
 
 
 

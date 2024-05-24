@@ -8,10 +8,16 @@ import lombok.*;
 import java.security.Principal;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@Data @Getter @Setter @Builder(toBuilder = true) @NoArgsConstructor @AllArgsConstructor
+@Data
+@Getter
+@Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomPrincipal implements Principal {
     private String name; // email
     private Long userId;
+
     @Override
     public String getName() {
         return name;

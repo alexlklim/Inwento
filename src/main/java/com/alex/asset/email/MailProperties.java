@@ -12,9 +12,9 @@ import java.util.Properties;
 @ConfigurationProperties(prefix = "spring.mail")
 public class MailProperties {
 
-    private String host;
-    private int port;
-    private String username;
-    private String password;
-    private Properties properties;
+     String host;
+     int port;
+     String username;
+     String password;
+     Properties properties;
 }

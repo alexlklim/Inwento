@@ -17,25 +17,30 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "logs") @Entity
+@Table(name = "logs")
+@Entity
 public class Log {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @JsonIgnore @CreatedDate @Column(name = "created")
+    @JsonIgnore
+    @CreatedDate
+    @Column(name = "created")
     LocalDateTime created;
 
-    @ManyToOne @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     User user;
 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action")
-    private Action action;
+    Action action;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "section")
-    private Section section;
+    Section section;
 
     String text;
 

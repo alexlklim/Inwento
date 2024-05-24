@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TypeService {
-    private final String TAG = "TYPE_SERVICE - ";
-    private final TypeRepo typeRepo;
-    private final SubtypeRepo subtypeRepo;
-    private final LogService logService;
+     private final String TAG = "TYPE_SERVICE - ";
+     private final TypeRepo typeRepo;
+     private final SubtypeRepo subtypeRepo;
+     private final LogService logService;
 
 
     @SneakyThrows
@@ -61,7 +61,7 @@ public class TypeService {
     }
 
 
-    private List<DataDto.Subtype> convertSubtypesToDTOs(List<Subtype> subtypes) {
+    private  List<DataDto.Subtype> convertSubtypesToDTOs(List<Subtype> subtypes) {
         return subtypes.stream()
                 .map(subtype -> new DataDto.Subtype(subtype.getId(), subtype.getSubtype()))
                 .collect(Collectors.toList());
@@ -103,11 +103,11 @@ public class TypeService {
         Type type = typeRepo.findById(typeId).orElseThrow(
                 () -> new ResourceNotFoundException("Type with id " + typeId + " was not found"));
 
-        list.stream().map(subtype -> {
+
+        list.forEach(subtype -> {
             Subtype newSubtype = new Subtype(subtype, type);
             subtypeRepo.save(newSubtype);
             logService.addLog(userId, Action.CREATE, Section.SUBTYPE, "Add subtype " + newSubtype.getSubtype());
-            return newSubtype;
         });
     }
 

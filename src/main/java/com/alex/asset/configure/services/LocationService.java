@@ -25,10 +25,10 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class LocationService {
-    private final String TAG = "LOCATION_SERVICE - ";
-    private final LogService logService;
-    private final BranchRepo branchRepo;
-    private final LocationRepo locationRepo;
+     private final String TAG = "LOCATION_SERVICE - ";
+     private final LogService logService;
+     private final BranchRepo branchRepo;
+     private final LocationRepo locationRepo;
 
     public Branch getBranchByBranch(String branch, Long userId) {
         Branch branchFromDB = branchRepo.findBranchByBranch(branch).orElse(null);

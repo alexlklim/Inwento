@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 @Configuration
 @RequiredArgsConstructor
 public class EmailService {
-    private JavaMailSender mailSender;
-    private CompanyRepo companyRepo;
+     JavaMailSender mailSender;
+     CompanyRepo companyRepo;
 
 
     @Autowired
@@ -73,7 +73,7 @@ public class EmailService {
 
 
     @SneakyThrows
-    private void sendMail(MailStructure mailStructure) {
+     void sendMail(MailStructure mailStructure) {
         Company company = companyRepo.findAll().get(0);
         if (!company.getIsEmailConfigured()) throw new EmailIsNotConfigured("Email is not configured");
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();

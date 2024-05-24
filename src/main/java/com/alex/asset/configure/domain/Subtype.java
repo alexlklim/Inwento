@@ -24,10 +24,11 @@ public class Subtype extends BaseEntityActive {
     String subtype;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference @JsonIgnore
+    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "type_id", referencedColumnName = "id")
     @Schema(description = "Type", example = "Office Equipment")
-    private Type type;
+    Type type;
 
     public Subtype(String subtype, Type type) {
         this.subtype = subtype;

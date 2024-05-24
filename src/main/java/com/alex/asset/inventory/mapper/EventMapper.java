@@ -83,7 +83,7 @@ public class EventMapper {
     }
 
 
-    private List<Map<String, Object>> getProductsMap(List<ScannedProduct> scannedProductsList) {
+    List<Map<String, Object>> getProductsMap(List<ScannedProduct> scannedProductsList) {
         return scannedProductsList.stream()
                 .map(scannedProduct -> {
                     Map<String, Object> productDTO = new HashMap<>();

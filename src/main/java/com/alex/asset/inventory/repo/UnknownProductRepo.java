@@ -15,6 +15,16 @@ public interface UnknownProductRepo extends JpaRepository<UnknownProduct, Long> 
 
     List<UnknownProduct> findAllByEvent(Event event);
 
+
+    @Query("SELECT e " +
+            "FROM UnknownProduct e " +
+            "WHERE e.event.id IN :eventIds " +
+            "ORDER BY e.created DESC")
+    List<UnknownProduct> getAllByEvents(@Param("eventIds") List<Long> eventIds);
+
     @Query(value = "SELECT COUNT(*) FROM UnknownProduct up WHERE up.event.id = :eventId")
     int countProductsByEventId(@Param("eventId") Long eventId);
+
+    @Query(value = "SELECT COUNT(*) FROM UnknownProduct up WHERE up.event.id  IN (?1) ")
+    int countProductsByEventIds(List<Long> eventIds);
 }

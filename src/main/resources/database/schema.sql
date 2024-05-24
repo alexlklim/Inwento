@@ -35,6 +35,21 @@ CREATE TABLE IF NOT EXISTS company
     label_type          VARCHAR(255),
 
 
+    rfid_length INTEGER,
+    rfid_length_max INTEGER,
+    rfid_length_min INTEGER,
+    rfid_prefix VARCHAR(255),
+    rfid_suffix VARCHAR(255),
+    rfid_postfix VARCHAR(255),
+
+    bar_code_length INTEGER,
+    bar_code_length_max INTEGER,
+    bar_code_length_min INTEGER,
+    bar_code_prefix VARCHAR(255),
+    bar_code_suffix VARCHAR(255),
+    bar_code_postfix VARCHAR(255),
+
+
     is_email_configured BOOLEAN             NOT NULL,
     host                VARCHAR(255),
     port                VARCHAR(255),
@@ -286,4 +301,5 @@ CREATE TABLE IF NOT EXISTS unknown_products
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-SHOW INDEX FROM products;
+
+
