@@ -75,6 +75,11 @@ public class Utils {
     public static  final List<String> COMPANY_FIELDS_SIMPLE = Arrays.asList(
             "company", "city", "street", "zip_code", "nip", "regon", "phone", "email",
             "label_width", "label_height", "label_type",
-            "email_host", "email_port", "email_username", "email_password", "email_protocol", "email_configured"
+            "email_host", "email_port", "email_username", "email_password", "email_protocol", "email_configured",
+            "rfid_length", "rfid_length_max", "rfid_length_min",
+            "rfid_prefix", "rfid_suffix", "rfid_postfix",
+
+            "bar_code_length", "bar_code_length_max", "bar_code_length_min",
+            "bar_code_prefix", "bar_code_suffix", "bar_code_postfix"
     );
 }

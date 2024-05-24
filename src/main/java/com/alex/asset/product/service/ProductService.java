@@ -125,8 +125,8 @@ public class ProductService implements IProductService {
     public List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate) {
         return getProductDTOs(
                 productRepo.getProductsByWarrantyPeriod(
-                        LocalDate.parse((String) startDate),
-                        LocalDate.parse((String) endDate)
+                        LocalDate.parse(startDate),
+                        LocalDate.parse(endDate)
                 ),
                 Utils.PRODUCT_FIELDS);
 
@@ -137,8 +137,8 @@ public class ProductService implements IProductService {
     public List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate) {
         return getProductDTOs(
                 productRepo.getProductsByInspectionPeriod(
-                        LocalDate.parse((String) startDate),
-                        LocalDate.parse((String) endDate)
+                        LocalDate.parse(startDate),
+                        LocalDate.parse(endDate)
                 ),
                 Utils.PRODUCT_FIELDS);
 

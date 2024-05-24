@@ -46,14 +46,14 @@ public class CompanyService {
 
 
     @SneakyThrows
-    public Map<String, Object> getInfoAboutCompany(List<String> companyFields, Long userId) {
+    public Map<String, Object> getInfoAboutCompany(List<String> companyFields) {
         log.info(TAG + "Get information about company");
         if (companyFields == null || companyFields.isEmpty()) companyFields = Utils.COMPANY_FIELDS;
         Map<String, Object> map = new HashMap<>();
         if (companyFields.contains("all_configuration")) {
             map.put("all_configuration", getAllFields());
         }
-        return CompanyMapper.toDTOWithCustomFields(map, companyRepo.findAll().get(0), companyFields, userId);
+        return CompanyMapper.toDTOWithCustomFields(map, companyRepo.findAll().get(0), companyFields);
     }
 
 
@@ -65,30 +65,15 @@ public class CompanyService {
         Company company = companyRepo.findAll().get(0);
         updates.forEach((key, value) -> {
             switch (key) {
-                case "company":
-                    company.setCompany((String) value);
-                    break;
-                case "city":
-                    company.setCity((String) value);
-                    break;
-                case "street":
-                    company.setStreet((String) value);
-                    break;
-                case "zip_code":
-                    company.setZipCode((String) value);
-                    break;
-                case "nip":
-                    company.setNip((String) value);
-                    break;
-                case "regon":
-                    company.setRegon((String) value);
-                    break;
-                case "phone":
-                    company.setPhone((String) value);
-                    break;
-                case "email":
-                    company.setEmail((String) value);
-                    break;
+                case "company": company.setCompany((String) value); break;
+                case "city": company.setCity((String) value); break;
+                case "street": company.setStreet((String) value); break;
+                case "zip_code": company.setZipCode((String) value); break;
+                case "nip": company.setNip((String) value); break;
+                case "regon": company.setRegon((String) value); break;
+                case "phone": company.setPhone((String) value); break;
+                case "email": company.setEmail((String) value); break;
+
                 case "label_height": {
                     Double labelHeight = (Double) value;
                     if (labelHeight > Double.MIN_VALUE && labelHeight < Double.MAX_VALUE)
@@ -103,27 +88,29 @@ public class CompanyService {
                     else throw new LabelSizeIsIncorrectException("Label width is incorrect: " + labelWidth);
                     break;
                 }
-                case "label_type":
-                    company.setLabelType((String) value);
-                    break;
-                case "email_host":
-                    company.setHost((String) value);
-                    break;
-                case "email_port":
-                    company.setPort((String) value);
-                    break;
-                case "email_username":
-                    company.setUsername((String) value);
-                    break;
-                case "email_password":
-                    company.setPassword((String) value);
-                    break;
-                case "email_protocol":
-                    company.setProtocol((String) value);
-                    break;
-                case "email_configured":
-                    company.setIsEmailConfigured((boolean) value);
-                    break;
+                case "label_type": company.setLabelType((String) value); break;
+                case "email_host": company.setHost((String) value); break;
+                case "email_port": company.setPort((String) value); break;
+                case "email_username": company.setUsername((String) value); break;
+                case "email_password": company.setPassword((String) value); break;
+                case "email_protocol": company.setProtocol((String) value); break;
+                case "email_configured": company.setIsEmailConfigured((boolean) value); break;
+
+
+                case "rfid_length": company.setRfidLength((Integer) value); break;
+                case "rfid_length_max": company.setRfidLengthMax((Integer) value); break;
+                case "rfid_length_min": company.setRfidLengthMin((Integer) value); break;
+                case "rfid_prefix": company.setRfidPrefix((String) value); break;
+                case "rfid_suffix": company.setRfidSuffix((String) value); break;
+                case "rfid_postfix": company.setRfidPostfix((String) value); break;
+                case "bar_code_length": company.setBarCodeLength((Integer) value); break;
+                case "bar_code_length_max": company.setBarCodeLengthMax((Integer) value); break;
+                case "bar_code_length_min": company.setBarCodeLengthMin((Integer) value); break;
+                case "bar_code_prefix": company.setBarCodePrefix((String) value); break;
+                case "bar_code_suffix": company.setBarCodeSuffix((String) value); break;
+                case "bar_code_postfix": company.setBarCodePostfix((String) value); break;
+
+
                 default:
                     break;
             }
@@ -131,7 +118,7 @@ public class CompanyService {
         companyRepo.save(company);
         logService.addLog(userId, Action.UPDATE, Section.COMPANY, company.getCompany());
         notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
-        return getInfoAboutCompany(Utils.COMPANY_FIELDS_SIMPLE, userId);
+        return getInfoAboutCompany(Utils.COMPANY_FIELDS_SIMPLE);
     }
 
     @SneakyThrows
