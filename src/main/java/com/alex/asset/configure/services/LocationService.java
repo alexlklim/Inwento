@@ -53,8 +53,14 @@ public class LocationService {
     public List<Location> getLocations(){
         return locationRepo.getActive();
     }
+    public List<Location> getAllLocations(){
+        return locationRepo.findAll();
+    }
     public List<Branch> getBranches() {
         return branchRepo.getActive();
+    }
+    public List<Branch> getAllBranches() {
+        return branchRepo.findAll();
     }
 
     @SneakyThrows

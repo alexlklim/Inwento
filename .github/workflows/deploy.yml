@@ -16,7 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '21'  # Use the appropriate Java version
+          java-version: '21'
 
       - name: Build with Maven
         run: mvn clean install
@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /usr/zebra
+            cd /usr/zebra/Inwento
             git pull origin main
+            mvn clean install
             sudo systemctl restart inwento.service
-

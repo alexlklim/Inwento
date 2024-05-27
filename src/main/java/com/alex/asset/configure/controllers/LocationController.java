@@ -31,7 +31,7 @@ public class LocationController {
     @ResponseStatus(HttpStatus.OK)
     public List<Branch> getAllBranches() {
         log.info(TAG + "Try to get all branches");
-        return locationService.getBranches();
+        return locationService.getAllBranches();
     }
 
     @Operation(summary = "Add new branch")
@@ -59,7 +59,7 @@ public class LocationController {
     @ResponseStatus(HttpStatus.OK)
     public List<Location> getAllLocations() {
         log.info(TAG + "Try to get all locations");
-        return locationService.getLocations();
+        return locationService.getAllLocations();
     }
 
     @Operation(summary = "Add new location")
