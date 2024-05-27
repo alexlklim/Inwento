@@ -1,6 +1,8 @@
 package com.alex.asset.configure.controllers;
 
 import com.alex.asset.company.domain.DataDto;
+import com.alex.asset.configure.domain.Subtype;
+import com.alex.asset.configure.domain.Type;
 import com.alex.asset.configure.services.TypeService;
 import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dto.DtoActive;
@@ -37,10 +39,10 @@ public class TypeController {
     @Operation(summary = "Add new Types")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTypes(
+    public List<Type> addTypes(
             @RequestBody List<String> listTypes) {
         log.info(TAG + "Try to add types");
-        typeService.addTypes(
+         return typeService.addTypes(
                 listTypes,
                 SecHolder.getUserId());
     }
@@ -60,11 +62,11 @@ public class TypeController {
     @Operation(summary = "Add new Subtype to special type")
     @PostMapping("/{type_id}/subtype")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addSubtypes(
+    public List<Subtype> addSubtypes(
             @PathVariable("type_id") Long typeId,
             @RequestBody List<String> listSubtype) {
         log.info(TAG + "Try to add subtypes");
-        typeService.addSubtypes(
+        return typeService.addSubtypes(
                 typeId,
                 listSubtype,
                 SecHolder.getUserId());

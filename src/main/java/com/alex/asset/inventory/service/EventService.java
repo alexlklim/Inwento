@@ -171,7 +171,7 @@ public class EventService {
 
     }
 
-     void handleScannedProduct(
+    private void handleScannedProduct(
             Product product, Map<String, Object> map, Event event, Location location, Long userId) {
         log.info(TAG + "Add product to scanned product");
         if (product.getLocation() != location) {

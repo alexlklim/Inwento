@@ -16,6 +16,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,14 +68,17 @@ public class TypeService {
                 .collect(Collectors.toList());
     }
 
-    public void addTypes(List<String> list, Long userId) {
+    public List<Type> addTypes(List<String> list, Long userId) {
         log.info(TAG + "Add types {} by user with id {}", list, userId);
+        List<Type> types = new ArrayList<>();
         for (String type : list) {
             if (!typeRepo.existsByType(type)) {
-                typeRepo.save(new Type(type));
+                types.add(typeRepo.save(new Type(type)));
                 logService.addLog(userId, Action.CREATE, Section.TYPE, "Add type " + type);
             }
         }
+
+        return types;
     }
 
     @SneakyThrows
@@ -98,7 +102,8 @@ public class TypeService {
     }
 
     @SneakyThrows
-    public void addSubtypes(Long typeId, List<String> list, Long userId) {
+    public List<Subtype> addSubtypes(Long typeId, List<String> list, Long userId) {
+        List<Subtype> subtypes = new ArrayList<>();
         log.info(TAG + "Add subtypes {} by user with id {}", list, userId);
         Type type = typeRepo.findById(typeId).orElseThrow(
                 () -> new ResourceNotFoundException("Type with id " + typeId + " was not found"));
@@ -106,9 +111,10 @@ public class TypeService {
 
         list.forEach(subtype -> {
             Subtype newSubtype = new Subtype(subtype, type);
-            subtypeRepo.save(newSubtype);
+            subtypes.add(subtypeRepo.save(newSubtype));
             logService.addLog(userId, Action.CREATE, Section.SUBTYPE, "Add subtype " + newSubtype.getSubtype());
         });
+        return subtypes;
     }
 
 
