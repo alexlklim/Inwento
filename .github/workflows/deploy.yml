@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /usr/zebra/inwento.jar
+            cd /usr/zebra
             git pull origin main
-            mvn clean install
             sudo systemctl restart inwento.service
+
