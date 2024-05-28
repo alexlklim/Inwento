@@ -23,3 +23,13 @@ jobs:
       run: chmod u+x gradlew
     - name: Run build with Gradle Wrapper
       run: ./gradlew clean build
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /usr/zebra
+          git pull origin main
+          sudo systemctl restart inwento.service
