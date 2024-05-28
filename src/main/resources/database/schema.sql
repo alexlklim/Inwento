@@ -35,19 +35,19 @@ CREATE TABLE IF NOT EXISTS company
     label_type          VARCHAR(255),
 
 
-    rfid_length INTEGER,
-    rfid_length_max INTEGER,
-    rfid_length_min INTEGER,
-    rfid_prefix VARCHAR(255),
-    rfid_suffix VARCHAR(255),
-    rfid_postfix VARCHAR(255),
+    rfid_length         INTEGER,
+    rfid_length_max     INTEGER,
+    rfid_length_min     INTEGER,
+    rfid_prefix         VARCHAR(255),
+    rfid_suffix         VARCHAR(255),
+    rfid_postfix        VARCHAR(255),
 
-    bar_code_length INTEGER,
+    bar_code_length     INTEGER,
     bar_code_length_max INTEGER,
     bar_code_length_min INTEGER,
-    bar_code_prefix VARCHAR(255),
-    bar_code_suffix VARCHAR(255),
-    bar_code_postfix VARCHAR(255),
+    bar_code_prefix     VARCHAR(255),
+    bar_code_suffix     VARCHAR(255),
+    bar_code_postfix    VARCHAR(255),
 
 
     is_email_configured BOOLEAN             NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS product_history
     activity   ENUM ('VISIBILITY', 'PRODUCT_WAS_CREATED', 'TITLE', 'PRICE', 'BAR_CODE', 'RFID_CODE', 'INVENTORY_NUMBER',
         'SERIAL_NUMBER', 'LIABLE', 'LOCATION',
         'RECEIVER', 'KST', 'ASSET_STATUS', 'UNIT', 'BRANCH', 'MPK', 'TYPE', 'SUBTYPE', 'PRODUCER',
-        'SUPPLIER', 'SCRAPPING', 'DOCUMENT', 'DOCUMENT_DATE', 'WARRANTY_PERIOD', 'INSPECTION_DATE', 'GPS'),
+        'SUPPLIER', 'SCRAPPING', 'DOCUMENT', 'DOCUMENT_DATE', 'WARRANTY_PERIOD', 'INSPECTION_DATE', 'GPS', 'COMMENT'),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
 );
@@ -302,4 +302,14 @@ CREATE TABLE IF NOT EXISTS unknown_products
 );
 
 
+CREATE TABLE IF NOT EXISTS comments
+(
+    id         BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    created    DATETIME,
+    comment    VARCHAR(255) UNIQUE NOT NULL,
+    user_id    BIGINT,
+    product_id BIGINT,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (product_id) REFERENCES products (id)
+);
 

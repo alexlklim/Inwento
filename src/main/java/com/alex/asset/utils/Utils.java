@@ -34,7 +34,9 @@ public class Utils {
             "producer", "supplier",
             "scrapping", "scrapping_date", "scrapping_reason", "document",
             "document_date", "warranty_period", "inspection_date",
-            "longitude", "latitude"
+            "longitude", "latitude",
+
+            "comments"
     );
 
     public static  final List<String> PRODUCT_FIELDS_REPORT = Arrays.asList(
@@ -81,5 +83,6 @@ public class Utils {
 
             "bar_code_length", "bar_code_length_max", "bar_code_length_min",
             "bar_code_prefix", "bar_code_suffix", "bar_code_postfix"
+
     );
 }

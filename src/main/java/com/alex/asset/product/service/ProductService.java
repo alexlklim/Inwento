@@ -1,6 +1,8 @@
 package com.alex.asset.product.service;
 
 
+import com.alex.asset.comments.Comment;
+import com.alex.asset.comments.CommentService;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.configure.domain.Branch;
@@ -374,6 +376,11 @@ public class ProductService implements IProductService {
                     product.setLatitude((Double) value);
                     addHistoryToProduct(userId, productId, Activity.GPS);
                     break;
+                case "comments":
+                    Comment comment = commentService.createComment((String) value, product, userRepo.getUser(userId));
+                    product.getComments().add(comment);
+                    addHistoryToProduct(userId, productId, Activity.COMMENT);
+                    break;
                 default:
                     break;
             }
@@ -388,6 +395,8 @@ public class ProductService implements IProductService {
                 .rfidCode(product.getRfidCode())
                 .build();
     }
+
+    private final CommentService commentService;
 
     @SneakyThrows
     private void resolveIssueWithInventory(Product product, Branch branch, User user) {

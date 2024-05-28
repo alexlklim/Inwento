@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS unknown_products;
 DROP TABLE IF EXISTS scanned_products;
+DROP TABLE IF EXISTS comments;
 
 
 DROP TABLE IF EXISTS events;
@@ -27,3 +28,4 @@ DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS tmp;
 
+select * from comments;

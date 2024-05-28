@@ -10,5 +10,8 @@ public enum Activity {
     SCRAPPING,
     DOCUMENT, DOCUMENT_DATE, WARRANTY_PERIOD,
     INSPECTION_DATE,
-    GPS
+    GPS,
+
+
+    COMMENT
 }

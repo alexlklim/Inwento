@@ -39,19 +39,6 @@ public class DataMigrationController {
                 SecHolder.getUserId());
     }
 
-    @Operation(summary = "Parse excel to products objects TEST")
-    @PostMapping("/test/{last_row}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Product> parseExcelToProductObjectsTest(
-            @PathVariable("last_row") int lastRow
-    ) {
-        log.info(TAG + "Parse excel to product objects TEST");
-        return excelParser.parseExcel(
-                new File("C:\\Folder\\server\\assets.xlsx"),
-                lastRow,
-                SecHolder.getUserId());
-    }
-
 
     @Operation(summary = "Save received asset in DB")
     @PostMapping("/save")

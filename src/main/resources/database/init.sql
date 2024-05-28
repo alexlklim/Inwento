@@ -6,7 +6,8 @@ INSERT IGNORE INTO asset_statuses (id, is_active, asset_status) VALUES
 (4, true, 'wycofane z użytkowania'),
 (5, true, 'przeznaczone do sprzedaży'),
 (6, true, 'sprzedane'),
-(7, true, 'zniszczone lub utracone');
+(7, true, 'zniszczone lub utracone'),
+(8, true, 'w serwisie');
 
 INSERT IGNORE INTO units (id, is_active, unit) VALUES
 (1, true, 'szt.'),
@@ -38,7 +39,7 @@ INSERT IGNORE INTO company (
     city, street, zip_code, nip, regon, phone, email)
 VALUES
     (1,NOW(), NOW(), false, 'Cyfore Sieci Multimedialne',
-    'Warsaw', 'Kwiatkowskiego 2', '23-345','33232323', '434343', '4800585885', 'alex@gmail.com');
+    'Warsaw', 'Kwiatkowskiego 2', '23-345','33232323', '434343', '4800585885', 'csmm@gmail.com');
 
 
 INSERT IGNORE INTO branches (id, is_active, branch)

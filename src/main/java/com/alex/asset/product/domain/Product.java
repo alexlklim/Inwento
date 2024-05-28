@@ -1,5 +1,6 @@
 package com.alex.asset.product.domain;
 
+import com.alex.asset.comments.Comment;
 import com.alex.asset.configure.domain.*;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
@@ -11,6 +12,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -93,6 +95,12 @@ public class Product extends BaseEntity {
 
 
     Double longitude, latitude;
+
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    List<Comment> comments;
+
+
 
     @Override
     public String toString() {
