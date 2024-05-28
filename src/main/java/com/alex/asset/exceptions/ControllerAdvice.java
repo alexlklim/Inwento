@@ -36,7 +36,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionBody handleResourceNotFound(ResourceNotFoundException ex) {
         log.error(TAG + ex.getMessage());
-        return new ExceptionBody(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ExceptionBody(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
 
     @ExceptionHandler({
