@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - main  # Change to your default branch
 
 jobs:
   build:
@@ -29,6 +29,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /usr/zebra/Inwento
-            git pull origin main
+            git pull origin main 
             mvn clean install
             sudo systemctl restart inwento.service
