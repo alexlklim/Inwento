@@ -1,6 +1,7 @@
 package com.alex.asset.configure.repo;
 
 
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Subtype;
 import com.alex.asset.configure.domain.Type;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface SubtypeRepo extends JpaRepository<Subtype, Long> {
 
 
     Optional<Subtype> findSubtypeBySubtypeAndType(String subtype, Type type);
+
+    boolean existsBySubtypeAndType(String location, Type type);
 }

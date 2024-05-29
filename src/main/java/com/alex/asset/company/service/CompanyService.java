@@ -6,7 +6,7 @@ import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
-import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.configure.services.Type2Service;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -38,7 +38,7 @@ public class CompanyService {
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
 
-    private final TypeService typeService;
+    private final Type2Service type2Service;
     private final ConfigureService configureService;
     private final LocationService locationService;
     private final LogService logService;
@@ -125,7 +125,7 @@ public class CompanyService {
         dto.setEmployees(userRepo.getActiveUsers()
                 .stream().map(UserMapper::toEmployee)
                 .collect(Collectors.toList()));
-        dto.setTypes(typeService.getTypes());
+        dto.setTypes(type2Service.getTypes());
         dto.setUnits(configureService.getUnits());
         dto.setAssetStatuses(configureService.getAssetStatuses());
         dto.setBranches(locationService.getBranches());

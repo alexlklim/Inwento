@@ -3,7 +3,7 @@ package com.alex.asset.data.migration.service;
 import com.alex.asset.configure.domain.*;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
-import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.configure.services.Type2Service;
 import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
@@ -35,7 +35,7 @@ public class ExcelParser {
 
     private final String TAG = "DATA_MIGRATION_CONTROLLER - ";
     private final ConfigureService configureService;
-    private final TypeService typeService;
+    private final Type2Service type2Service;
     private final LocationService locationService;
     private final ProductService productService;
     private final ProductRepo productRepo;
@@ -145,10 +145,10 @@ public class ExcelParser {
                     if (mpk != null) asset.setMpk(mpk);
                 }
                 if (!Objects.equals(getStringValue(row.getCell(16)), "0.0") && row.getCell(16) != null) {
-                    Type type = typeService.getTypeByType(getStringValue(row.getCell(16)), userId);
+                    Type type = type2Service.getTypeByType(getStringValue(row.getCell(16)), userId);
                     asset.setType(type);
                     if (!Objects.equals(getStringValue(row.getCell(17)), "0.0") && row.getCell(17) != null) {
-                        Subtype subtype = typeService.getSubtypeBySubtypeAndType(type, getStringValue(row.getCell(17)), userId);
+                        Subtype subtype = type2Service.getSubtypeBySubtypeAndType(type, getStringValue(row.getCell(17)), userId);
                         if (subtype != null) asset.setSubtype(subtype);
                     }
                 }

@@ -7,7 +7,7 @@ import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
-import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.configure.services.Type2Service;
 import com.alex.asset.exceptions.product.IdNotProvidedException;
 import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
 import com.alex.asset.exceptions.product.ValueIsNotUnique;
@@ -57,7 +57,7 @@ public class ProductService implements IProductService {
     private final String TAG = "PRODUCT_SERVICE - ";
     private final LogService logService;
     private final ConfigureService configureService;
-    private final TypeService typeService;
+    private final Type2Service type2Service;
     private final LocationService locationService;
     private final CommentService commentService;
     private final ProductRepo productRepo;
@@ -325,11 +325,11 @@ public class ProductService implements IProductService {
                     product.getProductHistories().add(createProductHistory(user, product, Activity.MPK));
                     break;
                 case UtilProduct.TYPE_ID:
-                    product.setType(typeService.getTypeById(((Number) value).longValue()));
+                    product.setType(type2Service.getTypeById(((Number) value).longValue()));
                     product.getProductHistories().add(createProductHistory(user, product, Activity.TYPE));
                     break;
                 case UtilProduct.SUBTYPE_ID:
-                    product.setSubtype(typeService.getSubtypeById(((Number) value).longValue()));
+                    product.setSubtype(type2Service.getSubtypeById(((Number) value).longValue()));
                     product.getProductHistories().add(createProductHistory(user, product, Activity.SUBTYPE));
                     break;
                 case UtilProduct.PRODUCER:

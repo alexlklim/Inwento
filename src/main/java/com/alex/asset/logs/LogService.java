@@ -5,6 +5,7 @@ import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Log;
 import com.alex.asset.logs.domain.LogDto;
 import com.alex.asset.logs.domain.Section;
+import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -40,18 +41,23 @@ public class LogService {
     }
 
 
+
     @Transactional
     @SneakyThrows
-    public void addLog(Long userId, Action action, Section section, String text) {
+    public void addLog(User user, Action action, Section section, String text) {
         log.info(TAG + "add new log");
         Log log = new Log();
-        log.setUser(userRepo.findById(userId).orElseThrow(
-                () -> new ResourceNotFoundException("User with id " + userId + " not found")
-        ));
+        log.setUser(user);
         log.setAction(action);
         log.setSection(section);
         log.setText(text);
         logRepo.save(log);
+    }
+    @Transactional
+    @SneakyThrows
+    public void addLog(Long userId, Action action, Section section, String text) {
+        log.info(TAG + "add new log");
+        addLog(userRepo.getUser(userId), action, section, text);
     }
 
     LogDto toDto(Log entity) {

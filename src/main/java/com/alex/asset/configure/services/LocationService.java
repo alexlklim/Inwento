@@ -7,6 +7,7 @@ import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.utils.dto.DtoActive;
+import com.alex.asset.utils.dto.DtoData;
 import com.alex.asset.utils.dto.DtoName;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
@@ -33,7 +34,7 @@ public class LocationService {
     public Branch getBranchByBranch(String branch, Long userId) {
         Branch branchFromDB = branchRepo.findBranchByBranch(branch).orElse(null);
         if (branchFromDB == null){
-            return addBranch(new DtoName(branch), userId);
+            return addBranch(new DtoData(branch), userId);
         }
         return branchFromDB;
     }
@@ -53,14 +54,8 @@ public class LocationService {
     public List<Location> getLocations(){
         return locationRepo.getActive();
     }
-    public List<Location> getAllLocations(){
-        return locationRepo.findAll();
-    }
     public List<Branch> getBranches() {
         return branchRepo.getActive();
-    }
-    public List<Branch> getAllBranches() {
-        return branchRepo.findAll();
     }
 
     @SneakyThrows
@@ -75,19 +70,12 @@ public class LocationService {
         return locationFromDB;
     }
     @SneakyThrows
-    public Branch addBranch(DtoName dto, Long userId) {
+    public Branch addBranch(DtoData dto, Long userId) {
         log.info(TAG + "Add branch {}", dto.getName());
         if (branchRepo.existsByBranch(dto.getName()))
-            throw new ObjectAlreadyExistException("Branch with name " + dto.getName() + " already exists");
-
+            return null;
         logService.addLog(userId, Action.CREATE, Section.BRANCH, dto.toString());
         return branchRepo.save(new Branch(dto.getName()));
-    }
-
-    public void updateBranch(DtoActive dto, Long userId) {
-        log.info(TAG + "Update branch {}", dto.getId());
-        branchRepo.update(dto.isActive(), dto.getId());
-        logService.addLog(userId, Action.UPDATE, Section.BRANCH, dto.toString());
     }
 
 
@@ -106,9 +94,5 @@ public class LocationService {
 
 
 
-    public void updateLocation(DtoActive dto, Long userId) {
-        log.info(TAG + "Update location {}", dto.getId());
-        locationRepo.update(dto.isActive(), dto.getId());
-        logService.addLog(userId, Action.UPDATE, Section.LOCATION, dto.toString());
-    }
+
 }

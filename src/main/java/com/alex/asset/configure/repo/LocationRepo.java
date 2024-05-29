@@ -19,7 +19,6 @@ public interface LocationRepo extends JpaRepository<Location, Long> {
     @Query("UPDATE Location l SET l.isActive = ?1 WHERE l.id = ?2")
     void update(boolean bool, Long id);
 
-    Optional<Location> findLocationByLocation(String location);
 
     @Query("SELECT l FROM Location l WHERE l.location = ?1 and l.branch = ?2")
     Optional<Location> findLocationByLocationAndBranch(String location, Branch branch);
