@@ -1,4 +1,4 @@
-package com.alex.asset.utils;
+package com.alex.asset.utils.dictionaries;
 
 import lombok.extern.slf4j.Slf4j;
 

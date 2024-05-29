@@ -4,7 +4,7 @@ package com.alex.asset.email;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.UtilsSecurity;
+import com.alex.asset.utils.dictionaries.UtilsSecurity;
 import com.alex.asset.exceptions.email.EmailIsNotConfigured;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

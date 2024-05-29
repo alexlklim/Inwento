@@ -1,7 +1,7 @@
 package com.alex.asset.company.service;
 
 import com.alex.asset.company.domain.Company;
-import com.alex.asset.utils.UtilCompany;
+import com.alex.asset.utils.dictionaries.UtilCompany;
 
 import java.util.List;
 import java.util.Map;

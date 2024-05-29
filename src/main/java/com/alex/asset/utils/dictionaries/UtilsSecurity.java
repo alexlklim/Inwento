@@ -1,4 +1,4 @@
-package com.alex.asset.utils;
+package com.alex.asset.utils.dictionaries;
 
 public class UtilsSecurity {
 

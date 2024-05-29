@@ -1,9 +1,8 @@
 package com.alex.asset.product.service.interfaces;
 
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.dto.ProductHistoryDto;
-import com.alex.asset.exceptions.shared.ResourceNotFoundException;
-import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ public interface IProductService {
 
     List<ProductHistoryDto> getHistoryOfProductById(Long productId)
             throws ResourceNotFoundException;
-
 
 
     List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate);

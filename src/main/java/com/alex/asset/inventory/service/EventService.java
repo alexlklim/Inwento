@@ -25,7 +25,7 @@ import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.UtilEvent;
+import com.alex.asset.utils.dictionaries.UtilEvent;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;

@@ -1,7 +1,7 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.utils.DateService;
-import com.alex.asset.utils.UtilsSecurity;
+import com.alex.asset.utils.dictionaries.UtilsSecurity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

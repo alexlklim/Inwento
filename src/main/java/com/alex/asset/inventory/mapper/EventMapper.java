@@ -5,8 +5,8 @@ import com.alex.asset.inventory.domain.event.ScannedProduct;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
 import com.alex.asset.product.repo.ProductRepo;
-import com.alex.asset.utils.UtilEvent;
-import com.alex.asset.utils.UtilProduct;
+import com.alex.asset.utils.dictionaries.UtilEvent;
+import com.alex.asset.utils.dictionaries.UtilProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

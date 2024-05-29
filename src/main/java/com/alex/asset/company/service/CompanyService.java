@@ -15,7 +15,7 @@ import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.UtilCompany;
+import com.alex.asset.utils.dictionaries.UtilCompany;
 import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

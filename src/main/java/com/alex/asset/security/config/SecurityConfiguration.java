@@ -1,7 +1,7 @@
 package com.alex.asset.security.config;
 
 import com.alex.asset.security.config.jwt.JwtAuthenticationFilter;
-import com.alex.asset.utils.UtilsSecurity;
+import com.alex.asset.utils.dictionaries.UtilsSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

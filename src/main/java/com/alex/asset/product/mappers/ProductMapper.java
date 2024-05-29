@@ -1,7 +1,7 @@
 package com.alex.asset.product.mappers;
 
 import com.alex.asset.product.domain.Product;
-import com.alex.asset.utils.UtilProduct;
+import com.alex.asset.utils.dictionaries.UtilProduct;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

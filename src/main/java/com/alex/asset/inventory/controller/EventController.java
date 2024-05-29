@@ -4,7 +4,7 @@ package com.alex.asset.inventory.controller;
 import com.alex.asset.inventory.dto.EventDTO;
 import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.utils.SecHolder;
-import com.alex.asset.utils.UtilEvent;
+import com.alex.asset.utils.dictionaries.UtilEvent;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

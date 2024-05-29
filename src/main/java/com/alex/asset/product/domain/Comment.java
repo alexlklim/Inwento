@@ -1,7 +1,6 @@
 package com.alex.asset.product.domain;
 
 
-import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
