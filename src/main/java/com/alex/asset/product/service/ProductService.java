@@ -1,7 +1,6 @@
 package com.alex.asset.product.service;
 
 
-import com.alex.asset.product.domain.Comment;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.configure.domain.Branch;
@@ -23,11 +22,10 @@ import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
+import com.alex.asset.product.domain.Comment;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductCodesDTO;
-import com.alex.asset.product.dto.ProductHistoryDto;
-import com.alex.asset.product.mappers.ProductHistoryMapper;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.product.service.interfaces.IProductService;
@@ -162,7 +160,7 @@ public class ProductService implements IProductService {
         log.info(TAG + "Update or create product");
         if (updates.containsKey(UtilProduct.ID)) {
             Product product = productRepo.findById(
-                    ((Number) updates.get(UtilProduct.ID)).longValue())
+                            ((Number) updates.get(UtilProduct.ID)).longValue())
                     .orElseThrow(
                             () -> new ResourceNotFoundException("Product not found"));
             updates.remove(UtilProduct.ID);
@@ -414,19 +412,19 @@ public class ProductService implements IProductService {
     }
 
 
-
     public ProductHistory createProductHistory(Long userId, Product product, Activity activity) {
         log.info(TAG + "Create Product History");
         return createProductHistory(userRepo.getUser(userId), product, activity);
     }
+
     public ProductHistory createProductHistory(User user, Product product, Activity activity) {
         log.info(TAG + "Create Product History");
         return new ProductHistory().toBuilder()
-                        .activity(activity)
-                        .created(LocalDateTime.now())
-                        .product(product)
-                        .user(user)
-                        .build();
+                .activity(activity)
+                .created(LocalDateTime.now())
+                .product(product)
+                .user(user)
+                .build();
     }
 
 
