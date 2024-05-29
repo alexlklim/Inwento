@@ -1,4 +1,4 @@
-package com.alex.asset.comments;
+package com.alex.asset.product.comments;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

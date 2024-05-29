@@ -4,7 +4,7 @@ package com.alex.asset.email;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsSecurity;
 import com.alex.asset.exceptions.email.EmailIsNotConfigured;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -46,7 +46,7 @@ public class EmailService {
         mail.setSubject("Asset Track Pro");
         mail.setMessage("For " + user.getFirstname() + " " + user.getLastname() +
                 " account was created in Inventory System. Please login using this link  \n" +
-                Utils.ENDPOINT_LOGIN);
+                UtilsSecurity.ENDPOINT_LOGIN);
         sendMail(mail);
 
     }
@@ -58,7 +58,7 @@ public class EmailService {
         mail.setEmail(email);
         mail.setSubject("Asset Track Pro");
         mail.setMessage("Link to restore password  \n" +
-                Utils.ENDPOINT_RECOVERY + token);
+                UtilsSecurity.ENDPOINT_RECOVERY + token);
         sendMail(mail);
     }
 

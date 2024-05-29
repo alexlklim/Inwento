@@ -1,7 +1,7 @@
 package com.alex.asset.security.config;
 
 import com.alex.asset.security.config.jwt.JwtAuthenticationFilter;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsSecurity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req
-                                .requestMatchers(Utils.PUBLIC_ROUTES).permitAll()
+                                .requestMatchers(UtilsSecurity.PUBLIC_ROUTES).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

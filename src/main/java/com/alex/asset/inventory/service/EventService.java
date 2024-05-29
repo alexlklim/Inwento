@@ -25,7 +25,7 @@ import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsEvent;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
@@ -60,7 +60,7 @@ public class EventService {
     @SneakyThrows
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
         log.info(TAG + "Get event with id {}", eventId);
-        if (eventFields == null || eventFields.isEmpty()) eventFields = Utils.EVENT_FIELDS;
+        if (eventFields == null || eventFields.isEmpty()) eventFields = UtilsEvent.getAll();
         Event event = eventRepo.findById(eventId).orElseThrow(
                 () -> new ResourceNotFoundException("Event not found with id " + eventId)
         );
@@ -90,7 +90,7 @@ public class EventService {
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found"));
         Event event = createEventForBranch(userRepo.getUser(userId), branch, dto.getInfo());
-        return eventMapper.toDTOWithCustomFields(event, Utils.EVENT_FIELDS);
+        return eventMapper.toDTOWithCustomFields(event, UtilsEvent.getAll());
     }
 
 

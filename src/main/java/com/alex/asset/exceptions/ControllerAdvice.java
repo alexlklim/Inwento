@@ -28,7 +28,6 @@ import java.io.IOException;
 @Slf4j
 @RestControllerAdvice
 public class ControllerAdvice {
-
     private final String TAG = "CONTROLLER_ADVICE - ";
 
 

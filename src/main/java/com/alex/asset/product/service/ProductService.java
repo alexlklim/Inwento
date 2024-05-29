@@ -1,8 +1,8 @@
 package com.alex.asset.product.service;
 
 
-import com.alex.asset.comments.Comment;
-import com.alex.asset.comments.CommentService;
+import com.alex.asset.product.comments.Comment;
+import com.alex.asset.product.comments.CommentService;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.configure.domain.Branch;
@@ -34,7 +34,7 @@ import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsProduct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +78,7 @@ public class ProductService implements IProductService {
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
             throw new ResourceNotFoundException("Product was deleted with id " + userId);
         }
-        if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+        if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
         return ProductMapper.toDTOWithCustomFields(product, productFields);
     }
 
@@ -93,7 +93,7 @@ public class ProductService implements IProductService {
             }
         } else products = productRepo.getProductsListByEmp(isScrap);
 
-        if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+        if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
         if (products == null) return Collections.emptyList();
         return getProductDTOs(products, productFields);
     }
@@ -116,7 +116,7 @@ public class ProductService implements IProductService {
             if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
                 throw new ResourceNotFoundException("Product was deleted with id " + userId);
             }
-            if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+            if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
             return ProductMapper.toDTOWithCustomFields(product, productFields);
         } else throw new ResourceNotFoundException("Product not found with this code ");
     }
@@ -126,7 +126,7 @@ public class ProductService implements IProductService {
     @SneakyThrows
     public List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields) {
         log.info(TAG + "get product by title");
-        if (productFields == null || productFields.isEmpty()) productFields = Utils.PRODUCT_FIELDS;
+        if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
         return getProductDTOs(productRepo.getByKeyWord(keyWord, isScrapped), productFields);
     }
 
@@ -137,7 +137,7 @@ public class ProductService implements IProductService {
                         LocalDate.parse(startDate),
                         LocalDate.parse(endDate)
                 ),
-                Utils.PRODUCT_FIELDS);
+                UtilsProduct.getAll());
 
     }
 
@@ -149,7 +149,7 @@ public class ProductService implements IProductService {
                         LocalDate.parse(startDate),
                         LocalDate.parse(endDate)
                 ),
-                Utils.PRODUCT_FIELDS);
+                UtilsProduct.getAll());
 
     }
 

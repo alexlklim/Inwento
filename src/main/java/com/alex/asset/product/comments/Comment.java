@@ -1,10 +1,8 @@
-package com.alex.asset.comments;
+package com.alex.asset.product.comments;
 
 
-import com.alex.asset.configure.domain.BaseEntityActive;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.utils.domain.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,7 +34,9 @@ public class Comment {
 
     String comment;
 
-    @ManyToOne @JoinColumn(name = "user_id") @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     User user;
 
 

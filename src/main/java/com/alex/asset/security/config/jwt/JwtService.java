@@ -1,7 +1,7 @@
 package com.alex.asset.security.config.jwt;
 
 import com.alex.asset.utils.DateService;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsSecurity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -67,7 +67,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(Utils.SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(UtilsSecurity.SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

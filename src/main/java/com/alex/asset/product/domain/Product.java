@@ -1,6 +1,6 @@
 package com.alex.asset.product.domain;
 
-import com.alex.asset.comments.Comment;
+import com.alex.asset.product.comments.Comment;
 import com.alex.asset.configure.domain.*;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
@@ -12,14 +12,17 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Builder(toBuilder = true)
-@Getter @Setter @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity @Table(name = "products")
+@Entity
+@Table(name = "products")
 public class Product extends BaseEntity {
 
     @Column(name = "is_active")
@@ -40,40 +43,52 @@ public class Product extends BaseEntity {
     String serialNumber;
 
 
-    @ManyToOne @JoinColumn(name = "created_by_id") @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "created_by_id")
+    @JsonIgnore
     User createdBy;
 
-    @ManyToOne @JoinColumn(name = "liable_id") @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "liable_id")
+    @JsonBackReference
     User liable;
 
     @Transient
     @JsonProperty("user_liable_id")
-     Long userLiableId;
+    Long userLiableId;
 
     @Transient
     @JsonProperty("user_liable_name")
-     String userLiableName;
+    String userLiableName;
 
     String receiver;
 
-    @ManyToOne @JoinColumn(name = "kst_id")
+    @ManyToOne
+    @JoinColumn(name = "kst_id")
     KST kst;
-    @ManyToOne @JoinColumn(name = "asset_status_id")
+    @ManyToOne
+    @JoinColumn(name = "asset_status_id")
     AssetStatus assetStatus;
-    @ManyToOne @JoinColumn(name = "unit_id")
+    @ManyToOne
+    @JoinColumn(name = "unit_id")
     Unit unit;
 
-    @ManyToOne @JoinColumn(name = "branch_id")
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
     Branch branch;
-    @ManyToOne @JoinColumn(name = "location_id")
+    @ManyToOne
+    @JoinColumn(name = "location_id")
     Location location;
 
-    @ManyToOne @JoinColumn(name = "mpk_id")
+    @ManyToOne
+    @JoinColumn(name = "mpk_id")
     MPK mpk;
 
-    @ManyToOne @JoinColumn(name = "type_id")
+    @ManyToOne
+    @JoinColumn(name = "type_id")
     Type type;
-    @ManyToOne @JoinColumn(name = "subtype_id")
+    @ManyToOne
+    @JoinColumn(name = "subtype_id")
     Subtype subtype;
 
     String producer, supplier;
@@ -99,7 +114,6 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     List<Comment> comments;
-
 
 
     @Override
@@ -136,8 +150,6 @@ public class Product extends BaseEntity {
                 ", latitude=" + latitude +
                 '}';
     }
-
-
 
 
     public static boolean containsProductWithBarcode(List<Product> productList, String barcode) {

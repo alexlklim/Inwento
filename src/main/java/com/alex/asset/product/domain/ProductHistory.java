@@ -35,6 +35,4 @@ public class ProductHistory {
     @Enumerated(EnumType.STRING)
     Activity activity;
 
-
-
 }

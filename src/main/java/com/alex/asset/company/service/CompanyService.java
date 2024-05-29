@@ -15,7 +15,7 @@ import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsCompany;
 import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -48,7 +48,7 @@ public class CompanyService {
     @SneakyThrows
     public Map<String, Object> getInfoAboutCompany(List<String> companyFields) {
         log.info(TAG + "Get information about company");
-        if (companyFields == null || companyFields.isEmpty()) companyFields = Utils.COMPANY_FIELDS;
+        if (companyFields == null || companyFields.isEmpty()) companyFields = UtilsCompany.getAll();
         Map<String, Object> map = new HashMap<>();
         if (companyFields.contains("all_configuration")) {
             map.put("all_configuration", getAllFields());
@@ -118,7 +118,7 @@ public class CompanyService {
         companyRepo.save(company);
         logService.addLog(userId, Action.UPDATE, Section.COMPANY, company.getCompany());
         notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
-        return getInfoAboutCompany(Utils.COMPANY_FIELDS_SIMPLE);
+        return getInfoAboutCompany(UtilsCompany.getFieldsSimpleView());
     }
 
     private void checkTheConsistenceOfLength(){

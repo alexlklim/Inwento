@@ -1,4 +1,4 @@
-package com.alex.asset.comments;
+package com.alex.asset.product.comments;
 
 
 import com.alex.asset.product.domain.Product;
@@ -8,15 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CommentService {
-
-    private final CommentRepo commentRepo;
 
     public Comment createComment(String comment, Product product, User user) {
         return new Comment().toBuilder()

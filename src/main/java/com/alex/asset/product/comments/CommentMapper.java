@@ -1,21 +1,20 @@
-package com.alex.asset.comments;
+package com.alex.asset.product.comments;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentMapper {
-    public static List<CommentDTO> toDTO(List<Comment> comments){
+    public static List<CommentDTO> toDTOs(List<Comment> comments){
         List<CommentDTO> DTOs = new ArrayList<>();
         for (Comment comment: comments){
-            DTOs.add(entityToDto(comment));
+            DTOs.add(toDTO(comment));
         }
-
         return  DTOs;
     }
 
 
 
-    private static CommentDTO entityToDto(Comment comment){
+    private static CommentDTO toDTO(Comment comment){
         return new CommentDTO().toBuilder()
                 .comment(comment.getComment())
                 .created(comment.getCreated())

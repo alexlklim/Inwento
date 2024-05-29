@@ -16,7 +16,8 @@ import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
-import com.alex.asset.utils.Utils;
+import com.alex.asset.utils.UtilsEvent;
+import com.alex.asset.utils.UtilsProduct;
 import com.alex.asset.utils.domain.BaseEntity;
 import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgress;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
@@ -106,14 +107,14 @@ public class InventoryService {
                 scannedProductRepo.getScannedProductsByEvents(eventIds, true).stream().map(
                         scannedProduct -> ProductMapper.toDTOWithCustomFields(
                                 scannedProduct.getProduct(),
-                                Utils.PRODUCT_FIELDS_REPORT)
+                                UtilsProduct.getFieldsForReport())
                 ).toList()
         );
         inventoryMap.put("not_scanned_products",
                 scannedProductRepo.getScannedProductsByEvents(eventIds, false).stream().map(
                         scannedProduct -> ProductMapper.toDTOWithCustomFields(
                                 scannedProduct.getProduct(),
-                                Utils.PRODUCT_FIELDS_REPORT)
+                                UtilsProduct.getFieldsForReport())
                 ).toList()
         );
 
@@ -146,7 +147,7 @@ public class InventoryService {
         inventoryDto.setUnknownProductAmount(unknownProductAmount);
         inventoryDto.setTotalProductAmount(totalProductAmount);
         inventoryDto.setEvents(
-                eventService.getEventsForInventory(inventoryId, "emp", Utils.EVENT_SHORT_FIELDS, userId)
+                eventService.getEventsForInventory(inventoryId, "emp", UtilsEvent.getFieldsSimpleView(), userId)
         );
 
         return inventoryDto;

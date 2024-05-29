@@ -1,6 +1,6 @@
 package com.alex.asset.product.mappers;
 
-import com.alex.asset.comments.CommentMapper;
+import com.alex.asset.product.comments.CommentMapper;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductHistoryDto;
@@ -143,7 +143,7 @@ public class ProductMapper {
                     dtoMap.put("latitude", product.getLatitude()!= null ? product.getLatitude() : "");
                     break;
                 case "comments":
-                    dtoMap.put("comments", product.getComments() != null ? CommentMapper.toDTO(product.getComments()) : "");
+                    dtoMap.put("comments", product.getComments() != null ? CommentMapper.toDTOs(product.getComments()) : "");
                     break;
                 default:
                     break;
