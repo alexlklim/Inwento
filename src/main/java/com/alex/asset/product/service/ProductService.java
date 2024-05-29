@@ -414,18 +414,6 @@ public class ProductService implements IProductService {
     }
 
 
-    @Override
-    @Modifying
-    @SneakyThrows
-    public List<ProductHistoryDto> getHistoryOfProductById(Long productId) {
-        log.info(TAG + "Get history of product with id {}", productId);
-        return ProductHistoryMapper.toDTOs(
-                productRepo.findById(productId).orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + productId + " was not found"))
-                .getProductHistories());
-    }
-
-
 
     public ProductHistory createProductHistory(Long userId, Product product, Activity activity) {
         log.info(TAG + "Create Product History");

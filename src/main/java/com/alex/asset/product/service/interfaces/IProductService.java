@@ -2,7 +2,6 @@ package com.alex.asset.product.service.interfaces;
 
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.product.dto.ProductCodesDTO;
-import com.alex.asset.product.dto.ProductHistoryDto;
 
 import java.util.List;
 import java.util.Map;
@@ -22,9 +21,6 @@ public interface IProductService {
     List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields);
 
     ProductCodesDTO update(Map<String, Object> updates, Long userId)
-            throws ResourceNotFoundException;
-
-    List<ProductHistoryDto> getHistoryOfProductById(Long productId)
             throws ResourceNotFoundException;
 
 
