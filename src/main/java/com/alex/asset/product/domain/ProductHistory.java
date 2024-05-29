@@ -29,8 +29,12 @@ public class ProductHistory {
     @ManyToOne @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne @JoinColumn(name = "product_id")
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
     Product product;
+
 
     @Enumerated(EnumType.STRING)
     Activity activity;

@@ -1,6 +1,5 @@
 package com.alex.asset.product.domain;
 
-import com.alex.asset.product.comments.Comment;
 import com.alex.asset.configure.domain.*;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.utils.domain.BaseEntity;
@@ -115,6 +114,8 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     List<Comment> comments;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    List<ProductHistory> productHistories;
 
     @Override
     public String toString() {
@@ -152,23 +153,5 @@ public class Product extends BaseEntity {
     }
 
 
-    public static boolean containsProductWithBarcode(List<Product> productList, String barcode) {
-        return productList.stream()
-                .anyMatch(product -> barcode.equals(product.getBarCode()));
-    }
 
-    public static boolean containsProductWithRfidCode(List<Product> productList, String rfidCode) {
-        return productList.stream()
-                .anyMatch(product -> rfidCode.equals(product.getRfidCode()));
-    }
-
-    public static boolean containsProductWithInventoryNumber(List<Product> productList, String inventoryNumber) {
-        return productList.stream()
-                .anyMatch(product -> inventoryNumber.equals(product.getInventoryNumber()));
-    }
-
-    public static boolean containsProductWithSerialNumber(List<Product> productList, String serialNumber) {
-        return productList.stream()
-                .anyMatch(product -> serialNumber.equals(product.getSerialNumber()));
-    }
 }

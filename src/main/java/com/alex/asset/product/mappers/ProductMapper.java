@@ -1,9 +1,7 @@
 package com.alex.asset.product.mappers;
 
-import com.alex.asset.product.comments.CommentMapper;
 import com.alex.asset.product.domain.Product;
-import com.alex.asset.product.domain.ProductHistory;
-import com.alex.asset.product.dto.ProductHistoryDto;
+import com.alex.asset.utils.UtilProduct;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -13,137 +11,133 @@ import java.util.Map;
 
 @Service
 public class ProductMapper {
-    public static ProductHistoryDto toProductHistoryDto(ProductHistory productHistory) {
-        return new ProductHistoryDto().toBuilder()
-                .created(productHistory.getCreated())
-                .username(productHistory.getUser().getFirstname() + productHistory.getUser().getLastname())
-                .email(productHistory.getUser().getEmail())
-                .activity(productHistory.getActivity())
-                .build();
-    }
 
     public static Map<String, Object> toDTOWithCustomFields(Product product, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
-        dtoMap.put("id", product.getId());
-        dtoMap.put("active", product.isActive());
-        dtoMap.put("title", product.getTitle());
+        dtoMap.put(UtilProduct.ID, product.getId());
+        dtoMap.put(UtilProduct.ACTIVE, product.isActive());
+        dtoMap.put(UtilProduct.TITLE, product.getTitle());
         for (String field : fields) {
             switch (field) {
-                case "description":
-                    dtoMap.put("description", product.getDescription()!= null ? product.getDescription() : "");
+                case UtilProduct.DESCRIPTION:
+                    dtoMap.put(UtilProduct.TITLE, product.getDescription()!= null ? product.getDescription() : "");
                     break;
-                case "price":
-                    dtoMap.put("price", product.getPrice()!= null ? product.getPrice() : "");
+                case UtilProduct.PRICE:
+                    dtoMap.put(UtilProduct.PRICE, product.getPrice()!= null ? product.getPrice() : "");
                     break;
-                case "bar_code":
-                    dtoMap.put("bar_code", product.getBarCode()!= null ? product.getBarCode() : "");
+                case UtilProduct.BAR_CODE:
+                    dtoMap.put(UtilProduct.BAR_CODE, product.getBarCode()!= null ? product.getBarCode() : "");
                     break;
-                case "rfid_code":
-                    dtoMap.put("rfid_code", product.getRfidCode()!= null ? product.getRfidCode() : "");
+                case UtilProduct.RFID_CODE:
+                    dtoMap.put(UtilProduct.RFID_CODE, product.getRfidCode()!= null ? product.getRfidCode() : "");
                     break;
-                case "inventory_number":
-                    dtoMap.put("inventory_number", product.getInventoryNumber()!= null ? product.getInventoryNumber() : "");
+                case UtilProduct.INVENTORY_NUMBER:
+                    dtoMap.put(UtilProduct.INVENTORY_NUMBER, product.getInventoryNumber()!= null ? product.getInventoryNumber() : "");
                     break;
-                case "serial_number":
-                    dtoMap.put("serial_number", product.getSerialNumber()!= null ? product.getSerialNumber() : "");
+                case UtilProduct.SERIAL_NUMBER:
+                    dtoMap.put(UtilProduct.SERIAL_NUMBER, product.getSerialNumber()!= null ? product.getSerialNumber() : "");
                     break;
-                case "liable_id":
-                    dtoMap.put("liable_id", product.getLiable() != null ? product.getLiable().getId() : "");
+                case UtilProduct.LIABLE_ID:
+                    dtoMap.put(UtilProduct.LIABLE_ID, product.getLiable() != null ? product.getLiable().getId() : "");
                     break;
-                case "liable_name":
-                    String liableName = (product.getLiable() != null && product.getLiable().getFirstname() != null && product.getLiable().getLastname() != null)
-                            ? product.getLiable().getFirstname() + " " + product.getLiable().getLastname() : "";
-                    dtoMap.put("liable_name", liableName);
-                    break;
-
-
-                case "receiver":
-                    dtoMap.put("receiver", product.getReceiver()!= null ? product.getReceiver() : "");
-                    break;
-                case "kst_id":
-                    dtoMap.put("kst_id", product.getKst() != null ? product.getKst().getId() : "");
-                    break;
-                case "asset_status_id":
-                    dtoMap.put("asset_status_id", product.getAssetStatus() != null ? product.getAssetStatus().getId() : "");
-                    break;
-                case "unit_id":
-                    dtoMap.put("unit_id", product.getUnit() != null ? product.getUnit().getId() : "");
-                    break;
-                case "branch_id":
-                    dtoMap.put("branch_id", product.getBranch() != null ? product.getBranch().getId() : "");
-                    break;
-                case "location_id":
-                    dtoMap.put("location_id", product.getLocation() != null ? product.getLocation().getId() : "");
-                    break;
-                case "mpk_id":
-                    dtoMap.put("mpk_id", product.getMpk() != null ? product.getMpk().getId() : "");
-                    break;
-                case "type_id":
-                    dtoMap.put("type_id", product.getType() != null ? product.getType().getId() : "");
-                    break;
-                case "subtype_id":
-                    dtoMap.put("subtype_id", product.getSubtype() != null ? product.getSubtype().getId() : "");
+                case UtilProduct.LIABLE_NAME:
+                    dtoMap.put(
+                            UtilProduct.LIABLE_NAME,
+                            (product.getLiable() != null && product.getLiable().getFirstname() != null && product.getLiable().getLastname() != null) ?
+                                    product.getLiable().getFirstname() + " " + product.getLiable().getLastname() : "");
                     break;
 
-                case "kst":
-                    dtoMap.put("kst", product.getKst() != null ? product.getKst().getKst() : "");
+
+                case UtilProduct.RECEIVER:
+                    dtoMap.put(UtilProduct.RECEIVER, product.getReceiver()!= null ? product.getReceiver() : "");
                     break;
-                case "asset_status":
-                    dtoMap.put("asset_status", product.getAssetStatus() != null ? product.getAssetStatus().getAssetStatus() : "");
+                case UtilProduct.KST_ID:
+                    dtoMap.put(UtilProduct.KST_ID, product.getKst() != null ? product.getKst().getId() : "");
                     break;
-                case "unit":
-                    dtoMap.put("unit", product.getUnit() != null ? product.getUnit().getUnit() : "");
+                case UtilProduct.ASSET_STATUS_ID:
+                    dtoMap.put(UtilProduct.ASSET_STATUS_ID, product.getAssetStatus() != null ? product.getAssetStatus().getId() : "");
                     break;
-                case "branch":
-                    dtoMap.put("branch", product.getBranch() != null ? product.getBranch().getBranch() : "");
+                case UtilProduct.UNIT_ID:
+                    dtoMap.put(UtilProduct.UNIT_ID, product.getUnit() != null ? product.getUnit().getId() : "");
                     break;
-                case "location":
-                    dtoMap.put("location", product.getLocation() != null ? product.getLocation().getLocation() : "");
+                case UtilProduct.BRANCH_ID:
+                    dtoMap.put(UtilProduct.BRANCH_ID, product.getBranch() != null ? product.getBranch().getId() : "");
                     break;
-                case "mpk":
-                    dtoMap.put("mpk", product.getMpk() != null ? product.getMpk().getMpk() : "");
+                case UtilProduct.LOCATION_ID:
+                    dtoMap.put(UtilProduct.LOCATION_ID, product.getLocation() != null ? product.getLocation().getId() : "");
                     break;
-                case "type":
-                    dtoMap.put("type", product.getType() != null ? product.getType().getType() : "");
+                case UtilProduct.MPK_ID:
+                    dtoMap.put(UtilProduct.MPK_ID, product.getMpk() != null ? product.getMpk().getId() : "");
                     break;
-                case "subtype":
-                    dtoMap.put("subtype", product.getSubtype() != null ? product.getSubtype().getSubtype() : "");
+                case UtilProduct.TYPE_ID:
+                    dtoMap.put(UtilProduct.TYPE_ID, product.getType() != null ? product.getType().getId() : "");
                     break;
-                case "producer":
-                    dtoMap.put("producer", product.getProducer()!= null ? product.getProducer() : "");
+                case UtilProduct.SUBTYPE_ID:
+                    dtoMap.put(UtilProduct.SUBTYPE_ID, product.getSubtype() != null ? product.getSubtype().getId() : "");
                     break;
-                case "supplier":
-                    dtoMap.put("supplier", product.getSupplier() != null ? product.getSupplier() : "");
+
+                case UtilProduct.KST:
+                    dtoMap.put(UtilProduct.KST, product.getKst() != null ? product.getKst().getKst() : "");
                     break;
-                case "scrapping":
-                    dtoMap.put("scrapping", product.isScrapping());
+                case UtilProduct.ASSET_STATUS:
+                    dtoMap.put(UtilProduct.ASSET_STATUS, product.getAssetStatus() != null ? product.getAssetStatus().getAssetStatus() : "");
                     break;
-                case "scrapping_date":
-                    dtoMap.put("scrapping_date", product.getScrappingDate()!= null ? product.getScrappingDate() : "");
+                case UtilProduct.UNIT:
+                    dtoMap.put(UtilProduct.UNIT, product.getUnit() != null ? product.getUnit().getUnit() : "");
                     break;
-                case "scrapping_reason":
-                    dtoMap.put("scrapping_reason", product.getScrappingReason()!= null ? product.getScrappingReason() : "");
+                case UtilProduct.BRANCH:
+                    dtoMap.put(UtilProduct.BRANCH, product.getBranch() != null ? product.getBranch().getBranch() : "");
                     break;
-                case "document":
-                    dtoMap.put("document", product.getDocument()!= null ? product.getDocument() : "");
+                case UtilProduct.LOCATION:
+                    dtoMap.put(UtilProduct.LOCATION, product.getLocation() != null ? product.getLocation().getLocation() : "");
                     break;
-                case "document_date":
-                    dtoMap.put("document_date", product.getDocumentDate()!= null ? product.getDocumentDate() : "");
+                case UtilProduct.MPK:
+                    dtoMap.put(UtilProduct.MPK, product.getMpk() != null ? product.getMpk().getMpk() : "");
                     break;
-                case "warranty_period":
-                    dtoMap.put("warranty_period", product.getWarrantyPeriod()!= null ? product.getWarrantyPeriod() : "");
+                case UtilProduct.TYPE:
+                    dtoMap.put(UtilProduct.TYPE, product.getType() != null ? product.getType().getType() : "");
                     break;
-                case "inspection_date":
-                    dtoMap.put("inspection_date", product.getInspectionDate()!= null ? product.getInspectionDate() : "");
+                case UtilProduct.SUBTYPE:
+                    dtoMap.put(UtilProduct.SUBTYPE, product.getSubtype() != null ? product.getSubtype().getSubtype() : "");
                     break;
-                case "longitude":
-                    dtoMap.put("longitude", product.getLongitude()!= null ? product.getLongitude() : "");
+                case UtilProduct.PRODUCER:
+                    dtoMap.put(UtilProduct.PRODUCER, product.getProducer()!= null ? product.getProducer() : "");
                     break;
-                case "latitude":
-                    dtoMap.put("latitude", product.getLatitude()!= null ? product.getLatitude() : "");
+                case UtilProduct.SUPPLIER:
+                    dtoMap.put(UtilProduct.SUPPLIER, product.getSupplier() != null ? product.getSupplier() : "");
                     break;
-                case "comments":
-                    dtoMap.put("comments", product.getComments() != null ? CommentMapper.toDTOs(product.getComments()) : "");
+                case UtilProduct.SCRAPPING:
+                    dtoMap.put(UtilProduct.SCRAPPING, product.isScrapping());
+                    break;
+                case UtilProduct.SCRAPPING_DATE:
+                    dtoMap.put(UtilProduct.SCRAPPING_DATE, product.getScrappingDate()!= null ? product.getScrappingDate() : "");
+                    break;
+                case UtilProduct.SCRAPPING_REASON:
+                    dtoMap.put(UtilProduct.SCRAPPING_REASON, product.getScrappingReason()!= null ? product.getScrappingReason() : "");
+                    break;
+                case UtilProduct.DOCUMENT:
+                    dtoMap.put(UtilProduct.DOCUMENT, product.getDocument()!= null ? product.getDocument() : "");
+                    break;
+                case UtilProduct.DOCUMENT_DATE:
+                    dtoMap.put(UtilProduct.DOCUMENT_DATE, product.getDocumentDate()!= null ? product.getDocumentDate() : "");
+                    break;
+                case UtilProduct.WARRANTY_PERIOD:
+                    dtoMap.put(UtilProduct.WARRANTY_PERIOD, product.getWarrantyPeriod()!= null ? product.getWarrantyPeriod() : "");
+                    break;
+                case UtilProduct.INSPECTION_DATE:
+                    dtoMap.put(UtilProduct.INSPECTION_DATE, product.getInspectionDate()!= null ? product.getInspectionDate() : "");
+                    break;
+                case UtilProduct.LONGITUDE:
+                    dtoMap.put(UtilProduct.LONGITUDE, product.getLongitude()!= null ? product.getLongitude() : "");
+                    break;
+                case UtilProduct.LATITUDE:
+                    dtoMap.put(UtilProduct.LATITUDE, product.getLatitude()!= null ? product.getLatitude() : "");
+                    break;
+                case UtilProduct.COMMENTS:
+                    dtoMap.put(UtilProduct.COMMENTS, product.getComments() != null ? CommentMapper.toDTOs(product.getComments()) : "");
+                    break;
+                case UtilProduct.HISTORY:
+                    dtoMap.put(UtilProduct.HISTORY, product.getProductHistories() != null ? ProductHistoryMapper.toDTOs(product.getProductHistories()) : "");
                     break;
                 default:
                     break;

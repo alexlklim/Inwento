@@ -1,6 +1,7 @@
-package com.alex.asset.product.comments;
+package com.alex.asset.product.service;
 
 
+import com.alex.asset.product.domain.Comment;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.domain.User;
 import lombok.RequiredArgsConstructor;

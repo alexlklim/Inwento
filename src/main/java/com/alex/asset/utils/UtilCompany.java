@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class UtilsCompany {
+public class UtilCompany {
     public final static String COMPANY = "company";
     public final static String CITY = "city";
     public final static String STREET = "street";
@@ -42,7 +42,7 @@ public class UtilsCompany {
 
     public static List<String> getAll() {
         List<String> values = new ArrayList<>();
-        Field[] fields = UtilsCompany.class.getDeclaredFields();
+        Field[] fields = UtilCompany.class.getDeclaredFields();
         for (Field field : fields) {
             if (field.getType().equals(String.class)) {
                 try {

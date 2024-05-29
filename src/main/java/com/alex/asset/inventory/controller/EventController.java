@@ -4,7 +4,7 @@ package com.alex.asset.inventory.controller;
 import com.alex.asset.inventory.dto.EventDTO;
 import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.utils.SecHolder;
-import com.alex.asset.utils.UtilsEvent;
+import com.alex.asset.utils.UtilEvent;
 import com.alex.asset.utils.dto.DtoActive;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,7 +46,7 @@ public class EventController {
     public Map<String, Object> getShortEventById(
             @PathVariable("event_id") Long eventId) {
         log.info(TAG + "Get short event by id");
-        return eventService.getEvent(eventId, UtilsEvent.getFieldsSimpleView());
+        return eventService.getEvent(eventId, UtilEvent.getFieldsSimpleView());
     }
 
 

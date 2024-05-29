@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class UtilsProduct {
+public class UtilProduct {
 
+    public final static String ID = "id";
+    public final static String ACTIVE = "active";
+    public final static String TITLE = "title";
     public final static String DESCRIPTION = "description";
     public final static String PRICE = "price";
     public final static String BAR_CODE = "bar_code";
@@ -59,7 +62,7 @@ public class UtilsProduct {
 
     public static List<String> getAll() {
         List<String> values = new ArrayList<>();
-        Field[] fields = UtilsProduct.class.getDeclaredFields();
+        Field[] fields = UtilProduct.class.getDeclaredFields();
         for (Field field : fields) {
             if (field.getType().equals(String.class)) {
                 try {

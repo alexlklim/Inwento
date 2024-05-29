@@ -5,6 +5,8 @@ import com.alex.asset.inventory.domain.event.ScannedProduct;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
 import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.utils.UtilEvent;
+import com.alex.asset.utils.UtilProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,54 +27,41 @@ public class EventMapper {
 
     public Map<String, Object> toDTOWithCustomFields(Event event, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
-        dtoMap.put("id", event.getId());
+        dtoMap.put(UtilEvent.ID, event.getId());
         for (String field : fields) {
             switch (field) {
-                case "active":
-                    dtoMap.put("active", event.isActive());
+                case UtilEvent.ACTIVE: dtoMap.put(UtilEvent.ACTIVE, event.isActive()); break;
+                case UtilEvent.INFO: dtoMap.put(UtilEvent.INFO, event.getInfo()); break;
+                case UtilEvent.INVENTORY_ID: dtoMap.put(UtilEvent.INVENTORY_ID, event.getInventory().getId()); break;
+                case UtilEvent.BRANCH_ID: dtoMap.put(UtilEvent.BRANCH_ID, event.getBranch().getId()); break;
+                case UtilEvent.BRANCH: dtoMap.put(UtilEvent.BRANCH, event.getBranch().getBranch()); break;
+                case UtilEvent.USER_ID: dtoMap.put(UtilEvent.USER_ID, event.getUser().getId()); break;
+                case UtilEvent.USER_EMAIL: dtoMap.put(UtilEvent.USER_EMAIL, event.getUser().getEmail()); break;
+
+                case UtilEvent.USER_NAME:
+                    dtoMap.put(UtilEvent.USER_NAME, event.getUser().getFirstname() + " " + event.getUser().getLastname());
                     break;
-                case "info":
-                    dtoMap.put("info", event.getInfo());
+                case UtilEvent.UNKNOWN_PRODUCTS:
+                    dtoMap.put(UtilEvent.UNKNOWN_PRODUCTS, unknownProductRepo.findAllByEvent(event));
                     break;
-                case "inventory_id":
-                    dtoMap.put("inventory_id", event.getInventory().getId());
-                    break;
-                case "branch_id":
-                    dtoMap.put("branch_id", event.getBranch().getId());
-                    break;
-                case "branch":
-                    dtoMap.put("branch", event.getBranch().getBranch());
-                    break;
-                case "user_id":
-                    dtoMap.put("user_id", event.getUser().getId());
-                    break;
-                case "user_email":
-                    dtoMap.put("user_email", event.getUser().getEmail());
-                    break;
-                case "user_name":
-                    dtoMap.put("user_name", event.getUser().getFirstname() + " " + event.getUser().getLastname());
-                    break;
-                case "unknown_products":
-                    dtoMap.put("unknown_products", unknownProductRepo.findAllByEvent(event));
-                    break;
-                case "scanned_products":
+                case UtilEvent.SCANNED_PRODUCTS:
                     List<ScannedProduct> scannedProductsList =
                             scannedProductRepo.findProductsByEventAndIsScanned(event, true);
-                    dtoMap.put("scanned_products", getProductsMap(scannedProductsList));
+                    dtoMap.put(UtilEvent.SCANNED_PRODUCTS, getProductsMap(scannedProductsList));
                     break;
-                case "not_scanned_products":
+                case UtilEvent.NOT_SCANNED_PRODUCTS:
                     List<ScannedProduct> productsNotScannedDTOs =
                             scannedProductRepo.findProductsByEventAndIsScanned(event, false);
-                    dtoMap.put("not_scanned_products", getProductsMap(productsNotScannedDTOs));
+                    dtoMap.put(UtilEvent.NOT_SCANNED_PRODUCTS, getProductsMap(productsNotScannedDTOs));
                     break;
-                case "unknown_product_amount":
-                    dtoMap.put("unknown_product_amount", unknownProductRepo.countProductsByEventId(event.getId()));
+                case UtilEvent.UNKNOWN_PRODUCT_AMOUNT:
+                    dtoMap.put(UtilEvent.UNKNOWN_PRODUCT_AMOUNT, unknownProductRepo.countProductsByEventId(event.getId()));
                     break;
-                case "total_product_amount":
-                    dtoMap.put("total_product_amount", productRepo.countProductsByBranchId(event.getBranch().getId()));
+                case UtilEvent.TOTAL_PRODUCT_AMOUNT:
+                    dtoMap.put(UtilEvent.TOTAL_PRODUCT_AMOUNT, productRepo.countProductsByBranchId(event.getBranch().getId()));
                     break;
-                case "scanned_product_amount":
-                    dtoMap.put("scanned_product_amount", scannedProductRepo.countByEventIdAndIsScanned(event, true));
+                case UtilEvent.SCANNED_PRODUCT_AMOUNT:
+                    dtoMap.put(UtilEvent.SCANNED_PRODUCT_AMOUNT, scannedProductRepo.countByEventIdAndIsScanned(event, true));
                     break;
                 default:
                     break;
@@ -87,13 +76,13 @@ public class EventMapper {
         return scannedProductsList.stream()
                 .map(scannedProduct -> {
                     Map<String, Object> productDTO = new HashMap<>();
-                    productDTO.put("id", scannedProduct.getProduct().getId());
-                    productDTO.put("title", scannedProduct.getProduct().getTitle());
-                    productDTO.put("bar_code", scannedProduct.getProduct().getBarCode());
-                    productDTO.put("rfid_code", scannedProduct.getProduct().getRfidCode());
-                    productDTO.put("location", scannedProduct.getProduct().getLocation().getLocation());
-                    productDTO.put("branch", scannedProduct.getProduct().getBranch().getBranch());
-                    productDTO.put("producer", scannedProduct.getProduct().getProducer() != null
+                    productDTO.put(UtilProduct.ID, scannedProduct.getProduct().getId());
+                    productDTO.put(UtilProduct.TITLE, scannedProduct.getProduct().getTitle());
+                    productDTO.put(UtilProduct.BAR_CODE, scannedProduct.getProduct().getBarCode());
+                    productDTO.put(UtilProduct.RFID_CODE, scannedProduct.getProduct().getRfidCode());
+                    productDTO.put(UtilProduct.LOCATION, scannedProduct.getProduct().getLocation().getLocation());
+                    productDTO.put(UtilProduct.BRANCH, scannedProduct.getProduct().getBranch().getBranch());
+                    productDTO.put(UtilProduct.PRODUCER, scannedProduct.getProduct().getProducer() != null
                             ? scannedProduct.getProduct().getProducer() : "");
                     return productDTO;
                 })

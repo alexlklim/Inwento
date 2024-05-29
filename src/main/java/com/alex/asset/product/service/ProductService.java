@@ -1,8 +1,7 @@
 package com.alex.asset.product.service;
 
 
-import com.alex.asset.product.comments.Comment;
-import com.alex.asset.product.comments.CommentService;
+import com.alex.asset.product.domain.Comment;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.configure.domain.Branch;
@@ -28,13 +27,14 @@ import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.dto.ProductHistoryDto;
+import com.alex.asset.product.mappers.ProductHistoryMapper;
 import com.alex.asset.product.mappers.ProductMapper;
-import com.alex.asset.product.repo.ProductHistoryRepo;
 import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.product.service.interfaces.IProductService;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.UtilsProduct;
+import com.alex.asset.utils.UtilProduct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +61,8 @@ public class ProductService implements IProductService {
     private final ConfigureService configureService;
     private final TypeService typeService;
     private final LocationService locationService;
+    private final CommentService commentService;
     private final ProductRepo productRepo;
-    private final ProductHistoryRepo productHistoryRepo;
     private final UserRepo userRepo;
     private final EventRepo eventRepo;
     private final InventoryRepo inventoryRepo;
@@ -78,7 +79,7 @@ public class ProductService implements IProductService {
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
             throw new ResourceNotFoundException("Product was deleted with id " + userId);
         }
-        if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
+        if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
         return ProductMapper.toDTOWithCustomFields(product, productFields);
     }
 
@@ -93,7 +94,7 @@ public class ProductService implements IProductService {
             }
         } else products = productRepo.getProductsListByEmp(isScrap);
 
-        if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
+        if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
         if (products == null) return Collections.emptyList();
         return getProductDTOs(products, productFields);
     }
@@ -116,7 +117,7 @@ public class ProductService implements IProductService {
             if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
                 throw new ResourceNotFoundException("Product was deleted with id " + userId);
             }
-            if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
+            if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
             return ProductMapper.toDTOWithCustomFields(product, productFields);
         } else throw new ResourceNotFoundException("Product not found with this code ");
     }
@@ -126,7 +127,7 @@ public class ProductService implements IProductService {
     @SneakyThrows
     public List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields) {
         log.info(TAG + "get product by title");
-        if (productFields == null || productFields.isEmpty()) productFields = UtilsProduct.getAll();
+        if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
         return getProductDTOs(productRepo.getByKeyWord(keyWord, isScrapped), productFields);
     }
 
@@ -137,7 +138,7 @@ public class ProductService implements IProductService {
                         LocalDate.parse(startDate),
                         LocalDate.parse(endDate)
                 ),
-                UtilsProduct.getAll());
+                UtilProduct.getAll());
 
     }
 
@@ -149,7 +150,7 @@ public class ProductService implements IProductService {
                         LocalDate.parse(startDate),
                         LocalDate.parse(endDate)
                 ),
-                UtilsProduct.getAll());
+                UtilProduct.getAll());
 
     }
 
@@ -159,11 +160,12 @@ public class ProductService implements IProductService {
     @SneakyThrows
     public ProductCodesDTO update(Map<String, Object> updates, Long userId) {
         log.info(TAG + "Update or create product");
-        if (updates.containsKey("id")) {
-            Long productId = ((Number) updates.get("id")).longValue();
-            Product product = productRepo.findById(productId).orElseThrow(
-                    () -> new ResourceNotFoundException("Product not found"));
-            updates.remove("id");
+        if (updates.containsKey(UtilProduct.ID)) {
+            Product product = productRepo.findById(
+                    ((Number) updates.get(UtilProduct.ID)).longValue())
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Product not found"));
+            updates.remove(UtilProduct.ID);
             return updateProduct(updates, product, userId, false);
         } else {
             throw new IdNotProvidedException("Problem occurs with the id of product, Be sure you provide it");
@@ -176,8 +178,6 @@ public class ProductService implements IProductService {
     public ProductCodesDTO createProduct(Map<String, Object> updates, Long userId) {
         log.info(TAG + "Create product");
         Company company = companyRepo.findAll().get(0);
-
-
         if (companyRepo.areNullOrZeroBarCodeLength(company)) {
             throw new LengthOfCodeNotConfigured("RFID or BAR code length are null or zero. Please configure it to continue");
         }
@@ -186,6 +186,8 @@ public class ProductService implements IProductService {
         Product entity = new Product();
         entity.setActive(true);
         entity.setCreatedBy(userRepo.getUser(userId));
+        entity.setProductHistories(new ArrayList<>());
+        entity.setComments(new ArrayList<>());
         productRepo.save(entity);
 
         entity.setBarCode(generateBarCode(company, entity.getId()));
@@ -200,7 +202,7 @@ public class ProductService implements IProductService {
         log.info(TAG + "Generate Bar Code");
         String barCode =
                 (company.getBarCodePrefix() != null ? company.getBarCodePrefix() : "") +
-                (company.getBarCodeSuffix() != null ? company.getBarCodeSuffix() : "");
+                        (company.getBarCodeSuffix() != null ? company.getBarCodeSuffix() : "");
 
         // get the number of zeros in bar code
         int numberOfZeros = company.getBarCodeLength() - barCode.length() - Long.toString(productId).length();
@@ -213,7 +215,7 @@ public class ProductService implements IProductService {
         log.info(TAG + "Generate RFID Code");
         String rfidCode =
                 (company.getRfidCodePrefix() != null ? company.getRfidCodePrefix() : "") +
-                (company.getRfidCodeSuffix() != null ? company.getRfidCodeSuffix() : "");
+                        (company.getRfidCodeSuffix() != null ? company.getRfidCodeSuffix() : "");
         int numberOfZeros = company.getBarCodeLength() - rfidCode.length() - Long.toString(productId).length();
         String zeros = String.format("%0" + numberOfZeros + "d", 0);
         return rfidCode + zeros + productId;
@@ -222,10 +224,10 @@ public class ProductService implements IProductService {
     @SneakyThrows
     private ProductCodesDTO updateProduct(Map<String, Object> updates, Product product, Long userId, boolean isCreated) throws ValueIsNotUnique {
         log.info(TAG + "Update product by user with id {}", userId);
-        Long productId = (product.getId() != null) ? product.getId() : 0;
+        User user = userRepo.getUser(userId);
         updates.forEach((key, value) -> {
             switch (key) {
-                case "active":
+                case UtilProduct.ACTIVE:
                     // if inventory is active, there is no possibility to delete product
                     if (inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null) != null) break;
 
@@ -238,148 +240,148 @@ public class ProductService implements IProductService {
                             product.setInventoryNumber(null);
                             product.setSerialNumber(null);
                         }
-                        addHistoryToProduct(userId, productId, Activity.VISIBILITY);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.VISIBILITY));
                     }
                     break;
-                case "title":
+                case UtilProduct.TITLE:
                     product.setTitle((String) value);
-                    addHistoryToProduct(userId, productId, Activity.TITLE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.TITLE));
                     break;
-                case "description":
+                case UtilProduct.DESCRIPTION:
                     product.setDescription((String) value);
                     break;
-                case "price":
+                case UtilProduct.PRICE:
                     product.setPrice(((Number) value).doubleValue());
-                    addHistoryToProduct(userId, productId, Activity.PRICE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.PRICE));
                     break;
-                case "bar_code":
+                case UtilProduct.BAR_CODE:
                     if (productRepo.existsByBarCode((String) value)) {
                         throw new ValueIsNotUnique("Bar code " + value + " is taken");
                     } else {
                         product.setBarCode((String) value);
-                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.BAR_CODE));
                     }
                     break;
-                case "rfid_code":
+                case UtilProduct.RFID_CODE:
                     if (productRepo.existsByRfidCode((String) value)) {
                         throw new ValueIsNotUnique("Rfid code " + value + "is taken");
                     } else {
                         product.setRfidCode((String) value);
-                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.RFID_CODE));
                     }
                     break;
-                case "inventory_number":
+                case UtilProduct.INVENTORY_NUMBER:
                     if (productRepo.existsByInventoryNumber((String) value)) {
                         throw new ValueIsNotUnique("Inventory number " + value + "is taken");
                     } else {
                         product.setInventoryNumber((String) value);
-                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.INVENTORY_NUMBER));
                     }
                     break;
-                case "serial_number":
+                case UtilProduct.SERIAL_NUMBER:
                     if (productRepo.existsBySerialNumber((String) value)) {
                         throw new ValueIsNotUnique("Serial number " + value + "is taken");
                     } else {
                         product.setSerialNumber((String) value);
-                        addHistoryToProduct(userId, productId, Activity.BAR_CODE);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.SERIAL_NUMBER));
                     }
                     break;
-                case "liable_id":
+                case UtilProduct.LIABLE_ID:
                     product.setLiable(userRepo.findById(((Number) value).longValue()).orElseThrow(
                             () -> new ResourceNotFoundException("Liable person with id " + value + " not found")
                     ));
-                    addHistoryToProduct(userId, productId, Activity.LIABLE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.LIABLE));
                     break;
-                case "receiver":
+                case UtilProduct.RECEIVER:
                     product.setReceiver((String) value);
-                    addHistoryToProduct(userId, productId, Activity.RECEIVER);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.RECEIVER));
                     break;
-                case "kst_id":
+                case UtilProduct.KST_ID:
                     product.setKst(configureService.getKSTById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.KST);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.KST));
                     break;
-                case "asset_status_id":
+                case UtilProduct.ASSET_STATUS_ID:
                     product.setAssetStatus(configureService.getAssetStatusById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.ASSET_STATUS);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.ASSET_STATUS));
                     break;
-                case "unit_id":
+                case UtilProduct.UNIT_ID:
                     product.setUnit(configureService.getUnitById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.UNIT);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.UNIT));
                     break;
-                case "branch_id":
+                case UtilProduct.BRANCH_ID:
                     Branch branch = locationService.getBranchById(((Number) value).longValue());
-                    if (!isCreated){
+                    if (!isCreated) {
                         resolveIssueWithInventory(
                                 product,
                                 branch,
                                 userRepo.getUser(userId));
                     } else product.setBranch(branch);
-                    addHistoryToProduct(userId, productId, Activity.BRANCH);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.BRANCH));
                     break;
-                case "location_id":
+                case UtilProduct.LOCATION_ID:
                     product.setLocation(locationService.getLocationById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.LOCATION);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.LOCATION));
                     break;
-                case "mpk_id":
+                case UtilProduct.MPK_ID:
                     product.setMpk(configureService.getMPKById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.MPK);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.MPK));
                     break;
-                case "type_id":
+                case UtilProduct.TYPE_ID:
                     product.setType(typeService.getTypeById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.TYPE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.TYPE));
                     break;
-                case "subtype_id":
+                case UtilProduct.SUBTYPE_ID:
                     product.setSubtype(typeService.getSubtypeById(((Number) value).longValue()));
-                    addHistoryToProduct(userId, productId, Activity.SUBTYPE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.SUBTYPE));
                     break;
-                case "producer":
+                case UtilProduct.PRODUCER:
                     product.setProducer((String) value);
-                    addHistoryToProduct(userId, productId, Activity.PRODUCER);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.PRODUCER));
                     break;
-                case "supplier":
+                case UtilProduct.SUPPLIER:
                     product.setSupplier((String) value);
-                    addHistoryToProduct(userId, productId, Activity.SUPPLIER);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.SUPPLIER));
                     break;
-                case "scrapping":
+                case UtilProduct.SCRAPPING:
                     product.setScrapping((Boolean) value);
-                    addHistoryToProduct(userId, productId, Activity.SCRAPPING);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.SCRAPPING));
                     break;
-                case "scrapping_date":
+                case UtilProduct.SCRAPPING_DATE:
                     product.setScrappingDate(LocalDate.parse((String) value));
-                    addHistoryToProduct(userId, productId, Activity.SCRAPPING);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.SCRAPPING));
                     break;
-                case "scrapping_reason":
+                case UtilProduct.SCRAPPING_REASON:
                     product.setScrappingReason((String) value);
-                    addHistoryToProduct(userId, productId, Activity.SCRAPPING);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.SCRAPPING));
                     break;
-                case "document":
+                case UtilProduct.DOCUMENT:
                     product.setDocument((String) value);
-                    addHistoryToProduct(userId, productId, Activity.DOCUMENT);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.DOCUMENT));
                     break;
-                case "document_date":
+                case UtilProduct.DOCUMENT_DATE:
                     product.setDocumentDate(LocalDate.parse((String) value));
-                    addHistoryToProduct(userId, productId, Activity.DOCUMENT_DATE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.DOCUMENT_DATE));
                     break;
-                case "warranty_period":
+                case UtilProduct.WARRANTY_PERIOD:
                     product.setWarrantyPeriod(LocalDate.parse((String) value));
-                    addHistoryToProduct(userId, productId, Activity.WARRANTY_PERIOD);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.WARRANTY_PERIOD));
                     break;
-                case "inspection_date":
+                case UtilProduct.INSPECTION_DATE:
                     product.setInspectionDate(LocalDate.parse((String) value));
-                    addHistoryToProduct(userId, productId, Activity.INSPECTION_DATE);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.INSPECTION_DATE));
                     break;
-                case "longitude":
+                case UtilProduct.LONGITUDE:
                     product.setLongitude((Double) value);
-                    addHistoryToProduct(userId, productId, Activity.GPS);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.GPS));
                     break;
-                case "latitude":
+                case UtilProduct.LATITUDE:
                     product.setLatitude((Double) value);
-                    addHistoryToProduct(userId, productId, Activity.GPS);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.GPS));
                     break;
-                case "comments":
+                case UtilProduct.COMMENTS:
                     Comment comment = commentService.createComment((String) value, product, userRepo.getUser(userId));
                     product.getComments().add(comment);
-                    addHistoryToProduct(userId, productId, Activity.COMMENT);
+                    product.getProductHistories().add(createProductHistory(user, product, Activity.COMMENT));
                     break;
                 default:
                     break;
@@ -396,7 +398,6 @@ public class ProductService implements IProductService {
                 .build();
     }
 
-    private final CommentService commentService;
 
     @SneakyThrows
     private void resolveIssueWithInventory(Product product, Branch branch, User user) {
@@ -418,26 +419,26 @@ public class ProductService implements IProductService {
     @SneakyThrows
     public List<ProductHistoryDto> getHistoryOfProductById(Long productId) {
         log.info(TAG + "Get history of product with id {}", productId);
-        Product product = productRepo.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " was not found"));
-        return productHistoryRepo.findAllByProductOrderByCreatedDesc(product)
-                .stream()
-                .map(ProductMapper::toProductHistoryDto)
-                .toList();
+        return ProductHistoryMapper.toDTOs(
+                productRepo.findById(productId).orElseThrow(
+                        () -> new ResourceNotFoundException("Product with id " + productId + " was not found"))
+                .getProductHistories());
     }
 
 
-    @SneakyThrows
-    public void addHistoryToProduct(Long userId, Long productId, Activity activity) {
-        log.info(TAG + "Add history to products");
-        ProductHistory productHistory = new ProductHistory().toBuilder()
-                .activity(activity)
-                .created(LocalDateTime.now())
-                .product(productRepo.findById(productId).orElseThrow(
-                        () -> new ResourceNotFoundException("Product with id " + productId + " not found")))
-                .user(userRepo.getUser(userId))
-                .build();
-        productHistoryRepo.save(productHistory);
+
+    public ProductHistory createProductHistory(Long userId, Product product, Activity activity) {
+        log.info(TAG + "Create Product History");
+        return createProductHistory(userRepo.getUser(userId), product, activity);
+    }
+    public ProductHistory createProductHistory(User user, Product product, Activity activity) {
+        log.info(TAG + "Create Product History");
+        return new ProductHistory().toBuilder()
+                        .activity(activity)
+                        .created(LocalDateTime.now())
+                        .product(product)
+                        .user(user)
+                        .build();
     }
 
 
@@ -446,12 +447,7 @@ public class ProductService implements IProductService {
         log.info(TAG + "Move product by location");
         product.setLocation(location);
         productRepo.save(product);
-        addHistoryToProduct(userId, product.getId(), Activity.LOCATION);
-    }
-
-    @SneakyThrows
-    public void save(Product product) {
-        productRepo.save(product);
+        product.getProductHistories().add(createProductHistory(userId, product, Activity.LOCATION));
     }
 
 

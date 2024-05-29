@@ -1,4 +1,4 @@
-package com.alex.asset.product.service;
+package com.alex.asset.product.service.interfaces;
 
 import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.dto.ProductHistoryDto;

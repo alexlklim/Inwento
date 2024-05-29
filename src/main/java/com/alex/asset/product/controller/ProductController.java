@@ -109,7 +109,7 @@ public class ProductController {
         return productService.getByInspectionPeriod(startDate, endDate);
     }
 
-    @Operation(summary = "Update or create product")
+    @Operation(summary = "Update product")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductCodesDTO updateProduct(@RequestBody Map<String, Object> updates) {
@@ -117,7 +117,7 @@ public class ProductController {
         return productService.update(updates, SecHolder.getUserId());
     }
 
-    @Operation(summary = "Create or create product")
+    @Operation(summary = "Create product")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductCodesDTO createProduct(@RequestBody Map<String, Object> updates) {
@@ -125,13 +125,5 @@ public class ProductController {
         return productService.createProduct(updates, SecHolder.getUserId());
     }
 
-    @Operation(summary = "Get product history by id")
-    @GetMapping("/history/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProductHistoryDto> getHistoryOfProductById(
-            @PathVariable("id") Long productId) {
-        log.info(TAG + "Get history of product");
-        return productService.getHistoryOfProductById(productId);
-    }
 
 }

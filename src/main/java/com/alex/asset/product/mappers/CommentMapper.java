@@ -1,4 +1,7 @@
-package com.alex.asset.product.comments;
+package com.alex.asset.product.mappers;
+
+import com.alex.asset.product.domain.Comment;
+import com.alex.asset.product.dto.CommentDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +14,6 @@ public class CommentMapper {
         }
         return  DTOs;
     }
-
-
-
     private static CommentDTO toDTO(Comment comment){
         return new CommentDTO().toBuilder()
                 .comment(comment.getComment())

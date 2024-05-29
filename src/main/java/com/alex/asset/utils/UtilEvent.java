@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class UtilsEvent {
+public class UtilEvent {
 
+    public final static String ID = "id";
+    public final static String ACTIVE = "active";
     public final static String INFO = "info";
     public final static String INVENTORY_ID = "inventory_id";
     public final static String BRANCH_ID = "branch_id";
@@ -26,7 +28,7 @@ public class UtilsEvent {
 
     public static List<String> getAll() {
         List<String> values = new ArrayList<>();
-        Field[] fields = UtilsEvent.class.getDeclaredFields();
+        Field[] fields = UtilEvent.class.getDeclaredFields();
         for (Field field : fields) {
             if (field.getType().equals(String.class)) {
                 try {

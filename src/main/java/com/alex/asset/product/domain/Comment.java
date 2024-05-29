@@ -1,4 +1,4 @@
-package com.alex.asset.product.comments;
+package com.alex.asset.product.domain;
 
 
 import com.alex.asset.product.domain.Product;

@@ -4,6 +4,7 @@ import com.alex.asset.configure.domain.*;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.TypeService;
+import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -12,7 +13,6 @@ import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,6 @@ public class ExcelParser {
                 Product asset = new Product();
                 if (Objects.equals(getStringValue(row.getCell(1)), "0.0") && row.getCell(1) != null) continue;
                 else asset.setTitle(getStringValue(row.getCell(1)));
-                System.out.println(asset.getTitle());
 
                 if (!Objects.equals(getStringValue(row.getCell(2)), "0.0") && row.getCell(2) != null)
                     asset.setDescription(getStringValue(row.getCell(2)));
@@ -84,7 +83,9 @@ public class ExcelParser {
                         double numericValue = cell.getNumericCellValue();
                         barcode = String.valueOf((long) numericValue);
                     } else barcode = "";
-                    if (!barcode.equals("0.0") && !productRepo.existsByBarCode(barcode) && !Product.containsProductWithBarcode(assets, barcode)) {
+                    if (!barcode.equals("0.0")
+                            && !productRepo.existsByBarCode(barcode)
+                            && !ProductComparator.containsProductWithBarcode(assets, barcode)) {
                         asset.setBarCode(barcode);
                     }
                 }
@@ -92,7 +93,8 @@ public class ExcelParser {
 
                 if (!Objects.equals(getStringValue(row.getCell(7)), "0.0") && row.getCell(7) != null) {
                     String rfidCode = getStringValue(row.getCell(7));
-                    if (!productRepo.existsByRfidCode(rfidCode) && !Product.containsProductWithRfidCode(assets, rfidCode)) {
+                    if (!productRepo.existsByRfidCode(rfidCode)
+                            && !ProductComparator.containsProductWithRfidCode(assets, rfidCode)) {
                         asset.setRfidCode(rfidCode);
                     }
                 }
@@ -100,13 +102,14 @@ public class ExcelParser {
                 if (!Objects.equals(getStringValue(row.getCell(8)), "0.0") && row.getCell(8) != null) {
                     String inventoryNumber = getStringValue(row.getCell(8));
                     if (!productRepo.existsByInventoryNumber(inventoryNumber)
-                            && !Product.containsProductWithInventoryNumber(assets, inventoryNumber)) {
+                            && !ProductComparator.containsProductWithInventoryNumber(assets, inventoryNumber)) {
                         asset.setInventoryNumber(inventoryNumber);
                     }
                 }
                 if (!Objects.equals(getStringValue(row.getCell(9)), "0.0") && row.getCell(9) != null) {
                     String serialNumber = getStringValue(row.getCell(9));
-                    if (!productRepo.existsBySerialNumber(serialNumber) && !Product.containsProductWithSerialNumber(assets, serialNumber)) {
+                    if (!productRepo.existsBySerialNumber(serialNumber)
+                            && !ProductComparator.containsProductWithSerialNumber(assets, serialNumber)) {
                         asset.setSerialNumber(serialNumber);
                     }
                 }
@@ -228,9 +231,15 @@ public class ExcelParser {
             product.setCreatedBy(userRepo.getUser(userId));
             product.setActive(true);
             product.setLiable(userRepo.findById(product.getUserLiableId()).orElse(null));
-            Product productFromDb = productRepo.save(product);
+
+            product.getProductHistories().add(
+                    productService.createProductHistory(
+                            userId,
+                            product,
+                            Activity.PRODUCT_WAS_CREATED));
+
+            productRepo.save(product);
             logService.addLog(userId, Action.CREATE, Section.PRODUCT, product.getTitle());
-            productService.addHistoryToProduct(userId, productFromDb.getId(), Activity.PRODUCT_WAS_CREATED);
             amountOfSavedProduct++;
         }
         return amountOfSavedProduct;

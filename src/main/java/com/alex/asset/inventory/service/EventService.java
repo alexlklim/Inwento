@@ -25,7 +25,7 @@ import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.UtilsEvent;
+import com.alex.asset.utils.UtilEvent;
 import com.alex.asset.utils.dto.DtoActive;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
@@ -60,7 +60,7 @@ public class EventService {
     @SneakyThrows
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
         log.info(TAG + "Get event with id {}", eventId);
-        if (eventFields == null || eventFields.isEmpty()) eventFields = UtilsEvent.getAll();
+        if (eventFields == null || eventFields.isEmpty()) eventFields = UtilEvent.getAll();
         Event event = eventRepo.findById(eventId).orElseThrow(
                 () -> new ResourceNotFoundException("Event not found with id " + eventId)
         );
@@ -90,7 +90,7 @@ public class EventService {
         Branch branch = branchRepo.findById(dto.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch with id " + dto.getBranchId() + " not found"));
         Event event = createEventForBranch(userRepo.getUser(userId), branch, dto.getInfo());
-        return eventMapper.toDTOWithCustomFields(event, UtilsEvent.getAll());
+        return eventMapper.toDTOWithCustomFields(event, UtilEvent.getAll());
     }
 
 
@@ -111,16 +111,12 @@ public class EventService {
         log.info(TAG + "Adding products to event by rfid code by user with id {}", userId);
         Event event = eventRepo.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found with id " + eventId));
-        System.out.println("EVENT = " + event.getId());
         for (String rfidCode : listOfCodes) {
-            System.out.println("CODE: " + rfidCode);
             Product product = productRepo.getByRfidCode(rfidCode).orElse(null);
             if (product == null) {
                 log.error(TAG + "PRODUCT IS NULL");
                 continue;
             }
-            System.out.println("PRODUCT: " + product.getRfidCode());
-
             ScannedProduct scannedProduct = scannedProductRepo.findByProductAndEvent(product, event).orElse(null);
             if (scannedProduct == null){
                 // if scanned product for this product not found -> create it avutomatically
@@ -179,8 +175,6 @@ public class EventService {
         }
         if (product.getBranch() != event.getBranch()) {
             log.error(TAG + "Product doesn't belong to current branch");
-
-//            productService.moveProductByBranch(product, event, userRepo.getUser(userId));
             return;
         }
         ScannedProduct scannedProduct = scannedProductRepo.findScannedProductByEventAndProduct(event, product)
@@ -200,7 +194,7 @@ public class EventService {
                 default:
                     break;
             }
-            productService.save(product);
+            productRepo.save(product);
             log.info(TAG + "Data about location was updated for product with id {} ", product.getId());
         });
 
