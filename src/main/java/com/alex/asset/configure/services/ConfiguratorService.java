@@ -57,6 +57,7 @@ public class ConfiguratorService {
         log.info(TAG + "Get all configurations");
 
         Map<String, Object> dtoMap = new HashMap<>();
+
         Map<String, Supplier<Object>> dataFetchers = Map.of(
                 UtilConfigurator.ASSET_STATUS, assetStatusRepo::findAll,
                 UtilConfigurator.UNIT, unitRepo::findAll,

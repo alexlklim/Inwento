@@ -364,3 +364,4 @@ CREATE TABLE IF NOT EXISTS serviced_assets
 
 );
 
+select * from service_provider;

@@ -15,14 +15,12 @@ public class ProductMapper {
 
     public static Map<String, Object> toDTOWithCustomFields(Product product, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
-        dtoMap.put(UtilProduct.ID, product.getId());
-        dtoMap.put(UtilProduct.ACTIVE, product.isActive());
-        dtoMap.put(UtilProduct.TITLE, product.getTitle());
-
         Map<String, Supplier<Object>> dataFetchers = new HashMap<>();
+        dataFetchers.put(UtilProduct.ID, product::getId);
+        dataFetchers.put(UtilProduct.ACTIVE, product::isActive);
         dataFetchers.put(UtilProduct.TITLE, product::getTitle);
-        dataFetchers.put(UtilProduct.DESCRIPTION, product::getDescription);
-        dataFetchers.put(UtilProduct.PRICE, product::getPrice);
+        dataFetchers.put(UtilProduct.DESCRIPTION, () -> product.getDescription() != null ? product.getDescription() : "");
+        dataFetchers.put(UtilProduct.PRICE, () -> product.getPrice() != null ? product.getPrice() : "");
         dataFetchers.put(UtilProduct.BAR_CODE, product::getBarCode);
         dataFetchers.put(UtilProduct.RFID_CODE, product::getRfidCode);
         dataFetchers.put(UtilProduct.INVENTORY_NUMBER, product::getInventoryNumber);
@@ -67,8 +65,8 @@ public class ProductMapper {
                 () -> product.getType() != null ? product.getType().getType() : "");
         dataFetchers.put(UtilProduct.SUBTYPE,
                 () -> product.getSubtype() != null ? product.getSubtype().getSubtype() : "");
-        dataFetchers.put(UtilProduct.PRODUCER, product::getProducer);
-        dataFetchers.put(UtilProduct.SUPPLIER, product::getSupplier);
+        dataFetchers.put(UtilProduct.PRODUCER, () -> product.getProducer() != null ? product.getProducer() : "");
+        dataFetchers.put(UtilProduct.SUPPLIER,() -> product.getSupplier() != null ? product.getSupplier() : "");
         dataFetchers.put(UtilProduct.SCRAPPING, product::isScrapping);
         dataFetchers.put(UtilProduct.SCRAPPING_DATE,
                 () -> product.getScrappingDate() != null ? product.getScrappingDate() : "");
