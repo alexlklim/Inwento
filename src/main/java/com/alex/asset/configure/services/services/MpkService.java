@@ -1,16 +1,11 @@
 package com.alex.asset.configure.services.services;
 
 import com.alex.asset.configure.domain.MPK;
-import com.alex.asset.configure.repo.AssetStatusRepo;
-import com.alex.asset.configure.repo.KstRepo;
 import com.alex.asset.configure.repo.MpkRepo;
-import com.alex.asset.configure.repo.UnitRepo;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.security.domain.User;
-import com.alex.asset.security.repo.UserRepo;
-import com.alex.asset.utils.dictionaries.UtilConfigurator;
 import com.alex.asset.utils.dto.DtoData;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 

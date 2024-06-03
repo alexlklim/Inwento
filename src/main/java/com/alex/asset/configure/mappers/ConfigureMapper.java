@@ -5,10 +5,7 @@ import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.domain.Subtype;
 import com.alex.asset.configure.domain.Type;
-import com.alex.asset.configure.repo.SubtypeRepo;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;

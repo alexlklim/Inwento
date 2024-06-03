@@ -3,11 +3,9 @@ package com.alex.asset.company.service;
 
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.domain.DataDto;
-import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.mappers.ConfigureMapper;
-import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
-import com.alex.asset.configure.services.Type2Service;
+import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -17,7 +15,6 @@ import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dictionaries.UtilCompany;
-import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +22,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

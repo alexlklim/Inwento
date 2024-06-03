@@ -6,8 +6,6 @@ import com.alex.asset.company.service.CompanyRepo;
 import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
-import com.alex.asset.configure.services.LocationService;
-import com.alex.asset.configure.services.Type2Service;
 import com.alex.asset.configure.services.services.BranchService;
 import com.alex.asset.configure.services.services.MpkService;
 import com.alex.asset.configure.services.services.TypeService;
@@ -60,8 +58,6 @@ public class ProductService implements IProductService {
     private final String TAG = "PRODUCT_SERVICE - ";
     private final LogService logService;
     private final ConfigureService configureService;
-    private final Type2Service type2Service;
-    private final LocationService locationService;
     private final CommentService commentService;
     private final TypeService typeService;
     private final BranchService branchService;

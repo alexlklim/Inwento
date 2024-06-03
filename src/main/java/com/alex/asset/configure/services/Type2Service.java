@@ -1,22 +1,19 @@
 package com.alex.asset.configure.services;
 
 
-import com.alex.asset.company.domain.DataDto;
-import com.alex.asset.configure.mappers.ConfigureMapper;
 import com.alex.asset.configure.domain.Subtype;
 import com.alex.asset.configure.domain.Type;
 import com.alex.asset.configure.repo.SubtypeRepo;
 import com.alex.asset.configure.repo.TypeRepo;
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
-import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
