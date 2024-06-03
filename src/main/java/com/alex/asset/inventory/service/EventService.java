@@ -139,7 +139,8 @@ public class EventService {
     public void addProductsToEventByBarCode(
             List<Map<String, Object>> inventoryData, Long eventId, Long locationId, Long userId) {
         log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
-        Event event = eventRepo.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
+        Event event = eventRepo.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
         Location location = locationRepo.findById(locationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Location with id " + locationId + " not found"));
 

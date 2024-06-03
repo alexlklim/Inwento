@@ -62,11 +62,7 @@ public class ConfiguratorService {
                 UtilConfigurator.LOCATION, () -> ConfigureMapper.convertLocationToDTOs(branchService.getAllLocations()),
                 UtilConfigurator.TYPE, () -> ConfigureMapper.convertTypesToDTOs(typeService.getAllTypes()),
                 UtilConfigurator.SUBTYPE, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
-                UtilConfigurator.EMPLOYEE,
-                () -> userRepo.getActiveUsers()
-                        .stream()
-                        .map(UserMapper::toEmployee)
-                        .collect(Collectors.toList())
+                UtilConfigurator.EMPLOYEE, () -> userRepo.getActiveUsers().stream().map(UserMapper::toEmployee).collect(Collectors.toList())
         );
         for (String field : fields) {
             Supplier<Object> dataFetcher = dataFetchers.get(field);

@@ -39,18 +39,6 @@ public class LocationService {
         return branchFromDB;
     }
 
-    @SneakyThrows
-    public Branch getBranchById(Long id) {
-        return branchRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Branch with id " + id + " not found")
-        );
-    }
-    @SneakyThrows
-    public Location getLocationById(Long id) {
-        return locationRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Location with id " + id + " not found")
-        );
-    }
     public List<Location> getLocations(){
         return locationRepo.getActive();
     }

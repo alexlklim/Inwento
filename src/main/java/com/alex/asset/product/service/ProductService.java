@@ -314,13 +314,9 @@ public class ProductService implements IProductService {
                     product.getProductHistories().add(createProductHistory(user, product, Activity.UNIT));
                     break;
                 case UtilProduct.BRANCH_ID:
-                    Branch branch = locationService.getBranchById(((Number) value).longValue());
-                    if (!isCreated) {
-                        resolveIssueWithInventory(
-                                product,
-                                branch,
-                                userRepo.getUser(userId));
-                    } else product.setBranch(branch);
+                    Branch branch = branchService.getBranchById(((Number) value).longValue()).orElse(null);
+                    if (!isCreated && branch != null) resolveIssueWithInventory(product, branch, userRepo.getUser(userId));
+                    else product.setBranch(branch);
                     product.getProductHistories().add(createProductHistory(user, product, Activity.BRANCH));
                     break;
                 case UtilProduct.LOCATION_ID:
@@ -428,7 +424,6 @@ public class ProductService implements IProductService {
 
 
     public ProductHistory createProductHistory(Long userId, Product product, Activity activity) {
-        log.info(TAG + "Create Product History");
         return createProductHistory(userRepo.getUser(userId), product, activity);
     }
 

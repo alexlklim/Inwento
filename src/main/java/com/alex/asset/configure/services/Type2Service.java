@@ -30,33 +30,18 @@ public class Type2Service {
     private final LogService logService;
 
 
-
-
-    public List<Type> addTypes(List<String> list, Long userId) {
+    public void addTypes(List<String> list, Long userId) {
         log.info(TAG + "Add types {} by user with id {}", list, userId);
-        List<Type> types = new ArrayList<>();
         for (String type : list) {
             if (!typeRepo.existsByType(type)) {
-                types.add(typeRepo.save(new Type(type)));
+                typeRepo.save(new Type(type));
                 logService.addLog(userId, Action.CREATE, Section.TYPE, "Add type " + type);
             }
         }
-
-        return types;
     }
 
-
-
-
-
-
-
-
-
-
     @SneakyThrows
-    public List<Subtype> addSubtypes(Long typeId, List<String> list, Long userId) {
-        List<Subtype> subtypes = new ArrayList<>();
+    public void addSubtypes(Long typeId, List<String> list, Long userId) {
         log.info(TAG + "Add subtypes {} by user with id {}", list, userId);
         Type type = typeRepo.findById(typeId).orElseThrow(
                 () -> new ResourceNotFoundException("Type with id " + typeId + " was not found"));
@@ -64,10 +49,9 @@ public class Type2Service {
 
         list.forEach(subtype -> {
             Subtype newSubtype = new Subtype(subtype, type);
-            subtypes.add(subtypeRepo.save(newSubtype));
+            subtypeRepo.save(newSubtype);
             logService.addLog(userId, Action.CREATE, Section.SUBTYPE, "Add subtype " + newSubtype.getSubtype());
         });
-        return subtypes;
     }
 
 
