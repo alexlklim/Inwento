@@ -37,9 +37,6 @@ public class ConfigureService {
     private final KstRepo kstRepo;
 
 
-
-
-
     @SneakyThrows
     public MPK addMPK(DtoName dto, Long userId) {
         log.info(TAG + "Add MPK {}", dto.getName());
@@ -53,6 +50,7 @@ public class ConfigureService {
 
     @SneakyThrows
     public AssetStatus getAssetStatusById(Long id) {
+        log.info(TAG + "Add asset status by id");
         return assetStatusRepo.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Asset status not found id " + id)
         );
@@ -60,6 +58,7 @@ public class ConfigureService {
 
     @SneakyThrows
     public Unit getUnitById(Long id) {
+        log.info(TAG + "Add unit by id");
         return unitRepo.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Unit not found id " + id)
         );
@@ -67,17 +66,12 @@ public class ConfigureService {
 
     @SneakyThrows
     public KST getKSTById(Long id) {
+        log.info(TAG + "Add KST by id");
         return kstRepo.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("KST not found id " + id)
         );
     }
 
-    @SneakyThrows
-    public MPK getMPKById(Long id) {
-        return mpkRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("MPK not found id " + id)
-        );
-    }
 
 
     public KST getKSTByNum(String num) {
