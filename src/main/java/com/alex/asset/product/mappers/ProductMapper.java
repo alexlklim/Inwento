@@ -18,7 +18,9 @@ public class ProductMapper {
         dtoMap.put(UtilProduct.ID, product.getId());
         dtoMap.put(UtilProduct.ACTIVE, product.isActive());
         dtoMap.put(UtilProduct.TITLE, product.getTitle());
+
         Map<String, Supplier<Object>> dataFetchers = new HashMap<>();
+        dataFetchers.put(UtilProduct.TITLE, product::getTitle);
         dataFetchers.put(UtilProduct.DESCRIPTION, product::getDescription);
         dataFetchers.put(UtilProduct.PRICE, product::getPrice);
         dataFetchers.put(UtilProduct.BAR_CODE, product::getBarCode);

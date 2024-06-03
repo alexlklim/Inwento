@@ -228,7 +228,6 @@ public class ExcelParser {
 
         for (Product product : assetList) {
             log.info(TAG + "Save asset with bar code: " + product.getBarCode());
-            System.out.println(product);
             product.setCreatedBy(userRepo.getUser(userId));
             product.setActive(true);
             product.setLiable(userRepo.findById(product.getUserLiableId()).orElse(null));
