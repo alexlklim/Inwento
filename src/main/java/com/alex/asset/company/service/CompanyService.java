@@ -4,6 +4,7 @@ package com.alex.asset.company.service;
 import com.alex.asset.company.domain.Company;
 import com.alex.asset.company.domain.DataDto;
 import com.alex.asset.configure.domain.Location;
+import com.alex.asset.configure.mappers.ConfigureMapper;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.Type2Service;
@@ -37,9 +38,6 @@ public class CompanyService {
     private final String TAG = "COMPANY_SERVICE - ";
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
-
-    private final Type2Service type2Service;
-    private final ConfigureService configureService;
     private final LocationService locationService;
     private final LogService logService;
     private final NotificationService notificationService;
@@ -50,9 +48,6 @@ public class CompanyService {
         log.info(TAG + "Get information about company");
         if (companyFields == null || companyFields.isEmpty()) companyFields = UtilCompany.getAll();
         Map<String, Object> map = new HashMap<>();
-        if (companyFields.contains(UtilCompany.ALL_CONFIGURATION)) {
-            map.put(UtilCompany.ALL_CONFIGURATION, getAllFields());
-        }
         return CompanyMapper.toDTOWithCustomFields(map, companyRepo.findAll().get(0), companyFields);
     }
 
@@ -118,27 +113,11 @@ public class CompanyService {
         return getInfoAboutCompany(UtilCompany.getFieldsSimpleView());
     }
 
-    @SneakyThrows
-    private DataDto getAllFields() {
-        log.info(TAG + "Get all fields");
-        DataDto dto = new DataDto();
-        dto.setEmployees(userRepo.getActiveUsers()
-                .stream().map(UserMapper::toEmployee)
-                .collect(Collectors.toList()));
-        dto.setTypes(type2Service.getTypes());
-        dto.setUnits(configureService.getUnits());
-        dto.setAssetStatuses(configureService.getAssetStatuses());
-        dto.setBranches(locationService.getBranches());
-        dto.setLocations(convertLocationToData(locationService.getLocations()));
-        dto.setMPKs(configureService.getMPKs());
-        return dto;
-    }
-
     public DataDto getData() {
         DataDto dto = new DataDto();
 
-        dto.setBranches(locationService.getBranches());
-        dto.setLocations(convertLocationToData(locationService.getLocations()));
+        dto.setBranches(ConfigureMapper.convertBranchToDTOs(locationService.getBranches()));
+        dto.setLocations(ConfigureMapper.convertLocationToDTOs(locationService.getLocations()));
         dto.setEmployees(userRepo.getActiveUsers()
                 .stream().map(UserMapper::toEmployee)
                 .collect(Collectors.toList()));
@@ -146,13 +125,4 @@ public class CompanyService {
         return dto;
     }
 
-
-    private List<DataDto.Location> convertLocationToData(List<Location> locations) {
-        List<DataDto.Location> list = new ArrayList<>();
-        for (Location location : locations) {
-            list.add(new DataDto.Location(location.getId(), location.getLocation(), location.getBranch().getId()));
-        }
-
-        return list;
-    }
 }

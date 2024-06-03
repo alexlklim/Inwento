@@ -3,7 +3,6 @@ package com.alex.asset.company.domain;
 
 
 import com.alex.asset.configure.domain.AssetStatus;
-import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.MPK;
 import com.alex.asset.configure.domain.Unit;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -26,6 +25,15 @@ public class DataDto {
     List<Location> locations;
     List<MPK> MPKs;
 
+
+    @Data
+    @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class Branch {
+        private Long id;
+        private String branch;
+        private Boolean active;
+    }
     @Data
     @AllArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -33,6 +41,7 @@ public class DataDto {
         private Long id;
         private String location;
         private Long branchId;
+        private Boolean active;
     }
 
 
@@ -51,8 +60,7 @@ public class DataDto {
     public static class Type {
         private Long id;
         private String type;
-        private List<Subtype> subtypes;
-
+        private Boolean active;
     }
 
     @AllArgsConstructor
@@ -60,5 +68,6 @@ public class DataDto {
     public static class Subtype {
         private Long id;
         private String subtype;
+        private Boolean active;
     }
 }

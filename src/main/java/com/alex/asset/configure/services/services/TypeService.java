@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -67,11 +68,17 @@ public class TypeService {
         logService.addLog(user, Action.UPDATE, Section.SUBTYPE, String.valueOf(dto.getId()));
     }
 
-
+    public Optional<Type> getTypeById(Long typeId) {
+        return typeRepo.findById(typeId);
+    }
+    public Optional<Subtype> getSubtypeById(Long subtypeId) {
+        return subtypeRepo.findById(subtypeId);
+    }
     public List<Type> getAllTypes() {
         return typeRepo.findAll();
     }
-    public List<Subtype> getAllSubtypes(){
+
+    public List<Subtype> getAllSubtypes() {
         return subtypeRepo.findAll();
     }
 }

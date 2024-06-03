@@ -8,6 +8,9 @@ import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.LocationService;
 import com.alex.asset.configure.services.Type2Service;
+import com.alex.asset.configure.services.services.BranchService;
+import com.alex.asset.configure.services.services.MpkService;
+import com.alex.asset.configure.services.services.TypeService;
 import com.alex.asset.exceptions.product.IdNotProvidedException;
 import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
 import com.alex.asset.exceptions.product.ValueIsNotUnique;
@@ -60,6 +63,10 @@ public class ProductService implements IProductService {
     private final Type2Service type2Service;
     private final LocationService locationService;
     private final CommentService commentService;
+    private final TypeService typeService;
+    private final BranchService branchService;
+    private final MpkService mpkService;
+
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
     private final EventRepo eventRepo;
@@ -317,20 +324,28 @@ public class ProductService implements IProductService {
                     product.getProductHistories().add(createProductHistory(user, product, Activity.BRANCH));
                     break;
                 case UtilProduct.LOCATION_ID:
-                    product.setLocation(locationService.getLocationById(((Number) value).longValue()));
-                    product.getProductHistories().add(createProductHistory(user, product, Activity.LOCATION));
+                    branchService.getLocationById(((Number) value).longValue()).ifPresent(location -> {
+                        product.setLocation(location);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.LOCATION));
+                    });
                     break;
                 case UtilProduct.MPK_ID:
-                    product.setMpk(configureService.getMPKById(((Number) value).longValue()));
-                    product.getProductHistories().add(createProductHistory(user, product, Activity.MPK));
+                    mpkService.getMPKById(((Number) value).longValue()).ifPresent(mpk -> {
+                        product.setMpk(mpk);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.MPK));
+                    });
                     break;
                 case UtilProduct.TYPE_ID:
-                    product.setType(type2Service.getTypeById(((Number) value).longValue()));
-                    product.getProductHistories().add(createProductHistory(user, product, Activity.TYPE));
+                    typeService.getTypeById(((Number) value).longValue()).ifPresent(type -> {
+                        product.setType(type);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.TYPE));
+                    });
                     break;
                 case UtilProduct.SUBTYPE_ID:
-                    product.setSubtype(type2Service.getSubtypeById(((Number) value).longValue()));
-                    product.getProductHistories().add(createProductHistory(user, product, Activity.SUBTYPE));
+                    typeService.getSubtypeById(((Number) value).longValue()).ifPresent(subtype -> {
+                        product.setSubtype(subtype);
+                        product.getProductHistories().add(createProductHistory(user, product, Activity.SUBTYPE));
+                    });
                     break;
                 case UtilProduct.PRODUCER:
                     product.setProducer((String) value);

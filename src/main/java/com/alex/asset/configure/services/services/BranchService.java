@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Slf4j
@@ -60,6 +61,14 @@ public class BranchService {
         log.info(TAG + "Update location {}", dto.getId());
         locationRepo.update(dto.isActive(), dto.getId());
         logService.addLog(userId, Action.UPDATE, Section.LOCATION, dto.toString());
+    }
+
+    public Optional<Branch> getBranchById(Long branchId) {
+        return branchRepo.findById(branchId);
+    }
+
+    public Optional<Location> getLocationById(Long locationId) {
+        return locationRepo.findById(locationId);
     }
 
     public List<Branch> getAllBranches() {

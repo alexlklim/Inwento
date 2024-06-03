@@ -40,19 +40,6 @@ public class ConfigureService {
     private final KstRepo kstRepo;
 
 
-    public List<Unit> getUnits() {
-        return unitRepo.getActive();
-    }
-
-    public List<MPK> getMPKs() {
-        return mpkRepo.getActive();
-    }
-
-    public List<AssetStatus> getAssetStatuses() {
-        return assetStatusRepo.getActive();
-    }
-
-
 
 
 

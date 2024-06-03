@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Slf4j
@@ -34,6 +35,10 @@ public class MpkService {
 
 
     private final MpkRepo mpkRepo;
+
+    public Optional<MPK> getMPKById(Long mpkId){
+        return mpkRepo.findById(mpkId);
+    }
 
     public List<MPK> getAll(){
         return mpkRepo.findAll();
@@ -56,5 +61,7 @@ public class MpkService {
             logService.addLog(user, Action.UPDATE, Section.MPK, dto.toString());
         }
     }
+
+
 
 }

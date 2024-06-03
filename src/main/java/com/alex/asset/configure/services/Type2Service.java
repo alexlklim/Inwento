@@ -28,30 +28,8 @@ public class Type2Service {
     private final TypeRepo typeRepo;
     private final SubtypeRepo subtypeRepo;
     private final LogService logService;
-    private final ConfigureMapper configureMapper;
 
 
-    @SneakyThrows
-    public Type getTypeById(Long id) {
-        log.info(TAG + "Get type by id {}", id);
-        return typeRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Type with id " + id + " was not found")
-        );
-    }
-
-    @SneakyThrows
-    public Subtype getSubtypeById(Long id) {
-        log.info(TAG + "Get subtype by id {}", id);
-        return subtypeRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Subtype with id " + id + " was not found")
-        );
-    }
-
-
-    public List<DataDto.Type> getTypes() {
-        log.info(TAG + "Get types");
-        return configureMapper.convertTypesToDTOs(typeRepo.getActive());
-    }
 
 
     public List<Type> addTypes(List<String> list, Long userId) {
@@ -115,10 +93,6 @@ public class Type2Service {
         return subtypeFromDb;
 
     }
-
-
-
-
 
 
 

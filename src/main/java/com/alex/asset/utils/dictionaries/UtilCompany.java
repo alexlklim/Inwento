@@ -37,7 +37,6 @@ public class UtilCompany {
     public final static String BAR_CODE_PREFIX = "bar_code_prefix";
     public final static String BAR_CODE_SUFFIX = "bar_code_suffix";
     public final static String BAR_CODE_POSTFIX = "bar_code_postfix";
-    public final static String ALL_CONFIGURATION = "all_configuration";
 
 
     public static List<String> getAll() {

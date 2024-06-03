@@ -1,6 +1,7 @@
 package com.alex.asset.configure.mappers;
 
 import com.alex.asset.company.domain.DataDto;
+import com.alex.asset.configure.domain.Branch;
 import com.alex.asset.configure.domain.Location;
 import com.alex.asset.configure.domain.Subtype;
 import com.alex.asset.configure.domain.Type;
@@ -15,29 +16,47 @@ import java.util.stream.Collectors;
 
 
 @Slf4j
-@Service
-@RequiredArgsConstructor
 public class ConfigureMapper {
-    private final SubtypeRepo subtypeRepo;
-
-    public List<DataDto.Type> convertTypesToDTOs(List<Type> types) {
+    public static List<DataDto.Type> convertTypesToDTOs(List<Type> types) {
         return types.stream()
-                .map(type -> new DataDto.Type(type.getId(), type.getType(),
-                        convertSubtypesToDTOs(subtypeRepo.findByActiveTrueAndType(type))))
+                .map(type -> new DataDto.Type(
+                        type.getId(),
+                        type.getType(),
+                        type.isActive()))
                 .collect(Collectors.toList());
     }
 
-    public List<DataDto.Subtype> convertSubtypesToDTOs(List<Subtype> subtypes) {
+    public static List<DataDto.Subtype> convertSubtypesToDTOs(List<Subtype> subtypes) {
         return subtypes.stream()
-                .map(subtype -> new DataDto.Subtype(subtype.getId(), subtype.getSubtype()))
+                .map(subtype -> new DataDto.Subtype(
+                        subtype.getId(),
+                        subtype.getSubtype(),
+                        subtype.isActive()))
                 .collect(Collectors.toList());
     }
 
 
-    public List<DataDto.Location> convertLocationToDTOs(List<Location> locations) {
+    public static List<DataDto.Location> convertLocationToDTOs(List<Location> locations) {
         List<DataDto.Location> list = new ArrayList<>();
         for (Location location : locations) {
-            list.add(new DataDto.Location(location.getId(), location.getLocation(), location.getBranch().getId()));
+            list.add(new DataDto.Location(
+                    location.getId(),
+                    location.getLocation(),
+                    location.getBranch().getId(),
+                    location.isActive()));
+        }
+
+        return list;
+    }
+
+
+    public static List<DataDto.Branch> convertBranchToDTOs(List<Branch> branches) {
+        List<DataDto.Branch> list = new ArrayList<>();
+        for (Branch branch : branches) {
+            list.add(new DataDto.Branch(
+                    branch.getId(),
+                    branch.getBranch(),
+                    branch.isActive()));
         }
 
         return list;

@@ -41,7 +41,6 @@ public class ConfiguratorService {
     private final TypeService typeService;
     private final MpkService mpkService;
     private final BranchService branchService;
-    private final ConfigureMapper configureMapper;
 
 
     private final AssetStatusRepo assetStatusRepo;
@@ -59,11 +58,15 @@ public class ConfiguratorService {
                 UtilConfigurator.UNIT, unitRepo::findAll,
                 UtilConfigurator.KST, kstRepo::findAll,
                 UtilConfigurator.MPK, mpkService::getAll,
-                UtilConfigurator.BRANCH, branchService::getAllBranches,
-                UtilConfigurator.LOCATION, () -> configureMapper.convertLocationToDTOs(branchService.getAllLocations()),
-                UtilConfigurator.TYPE, () -> configureMapper.convertTypesToDTOs(typeService.getAllTypes()),
-                UtilConfigurator.SUBTYPE, () -> configureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
-                UtilConfigurator.EMPLOYEE, () -> userRepo.getActiveUsers().stream().map(UserMapper::toEmployee).collect(Collectors.toList())
+                UtilConfigurator.BRANCH, () -> ConfigureMapper.convertBranchToDTOs(branchService.getAllBranches()),
+                UtilConfigurator.LOCATION, () -> ConfigureMapper.convertLocationToDTOs(branchService.getAllLocations()),
+                UtilConfigurator.TYPE, () -> ConfigureMapper.convertTypesToDTOs(typeService.getAllTypes()),
+                UtilConfigurator.SUBTYPE, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
+                UtilConfigurator.EMPLOYEE,
+                () -> userRepo.getActiveUsers()
+                        .stream()
+                        .map(UserMapper::toEmployee)
+                        .collect(Collectors.toList())
         );
         for (String field : fields) {
             Supplier<Object> dataFetcher = dataFetchers.get(field);
