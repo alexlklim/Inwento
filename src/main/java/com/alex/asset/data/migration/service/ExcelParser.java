@@ -231,7 +231,7 @@ public class ExcelParser {
             product.setCreatedBy(userRepo.getUser(userId));
             product.setActive(true);
             product.setLiable(userRepo.findById(product.getUserLiableId()).orElse(null));
-
+            product.setProductHistories(new ArrayList<>());
             product.getProductHistories().add(
                     productService.createProductHistory(
                             userId,

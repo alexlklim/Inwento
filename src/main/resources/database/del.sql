@@ -7,6 +7,10 @@ DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS inventories;
 
 DROP TABLE IF EXISTS product_history;
+
+DROP TABLE IF EXISTS serviced_assets;
+
+
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS subtypes;
 DROP TABLE IF EXISTS types;
@@ -28,4 +32,8 @@ DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS tmp;
 
-select * from comments;
+
+DROP TABLE IF EXISTS contact_person;
+DROP TABLE IF EXISTS service_provider;
+DROP TABLE IF EXISTS service_provider_contact_person;
+

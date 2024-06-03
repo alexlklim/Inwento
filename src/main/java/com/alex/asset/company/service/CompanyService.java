@@ -109,6 +109,8 @@ public class CompanyService {
         return getInfoAboutCompany(UtilCompany.getFieldsSimpleView());
     }
 
+
+
     public DataDto getData() {
         DataDto dto = new DataDto();
 

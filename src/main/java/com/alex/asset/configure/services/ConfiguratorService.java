@@ -1,5 +1,6 @@
 package com.alex.asset.configure.services;
 
+import com.alex.asset.configure.domain.ServiceProvider;
 import com.alex.asset.configure.mappers.ConfigureMapper;
 import com.alex.asset.configure.domain.KST;
 import com.alex.asset.configure.repo.AssetStatusRepo;
@@ -8,13 +9,16 @@ import com.alex.asset.configure.repo.UnitRepo;
 import com.alex.asset.configure.services.services.BranchService;
 import com.alex.asset.configure.services.services.MpkService;
 import com.alex.asset.configure.services.services.TypeService;
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
+import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dictionaries.UtilConfigurator;
+import com.alex.asset.utils.dictionaries.UtilProduct;
 import com.alex.asset.utils.dto.DtoData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +39,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConfiguratorService {
 
-    private final String TAG = "FIELD_SERVICE - ";
+    private final String TAG = "CONFIGURATOR_SERVICE - ";
 
     private final LogService logService;
     private final TypeService typeService;
@@ -62,6 +66,7 @@ public class ConfiguratorService {
                 UtilConfigurator.LOCATION, () -> ConfigureMapper.convertLocationToDTOs(branchService.getAllLocations()),
                 UtilConfigurator.TYPE, () -> ConfigureMapper.convertTypesToDTOs(typeService.getAllTypes()),
                 UtilConfigurator.SUBTYPE, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
+//                UtilConfigurator.SERVICE_PROVIDER, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
                 UtilConfigurator.EMPLOYEE, () -> userRepo.getActiveUsers().stream().map(UserMapper::toEmployee).collect(Collectors.toList())
         );
         for (String field : fields) {
@@ -87,6 +92,7 @@ public class ConfiguratorService {
         handlers.put(UtilConfigurator.LOCATION, this::handleLocations);
         handlers.put(UtilConfigurator.TYPE, this::handleTypes);
         handlers.put(UtilConfigurator.SUBTYPE, this::handleSubtypes);
+        handlers.put(UtilConfigurator.SERVICE_PROVIDER, this::handleServiceProviders);
 
         updates.forEach((key, value) -> {
             BiConsumer<List<Map<String, Object>>, User> handler = handlers.get(key);
@@ -97,58 +103,73 @@ public class ConfiguratorService {
 
     }
 
-    private void handleAssetStatus(List<Map<String, Object>> DTOs, User user) {
+
+
+    private void handleAssetStatus(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleAssetStatus");
-        for (Map<String, Object> assetStatusData : DTOs) {
+        for (Map<String, Object> map : maps) {
             assetStatusRepo.update(
-                    (boolean) assetStatusData.get(UtilConfigurator.ACTIVE),
-                    ((Integer) assetStatusData.get(UtilConfigurator.ID)).longValue());
+                    (boolean) map.get(UtilConfigurator.ACTIVE),
+                    ((Integer) map.get(UtilConfigurator.ID)).longValue());
         }
-        logService.addLog(user, Action.UPDATE, Section.ASSET_STATUS, DTOs.toString());
+        logService.addLog(user, Action.UPDATE, Section.ASSET_STATUS, maps.toString());
     }
 
-    private void handleUnits(List<Map<String, Object>> DTOs, User user) {
+    private void handleUnits(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleUnits");
-        for (Map<String, Object> unitData : DTOs) {
+        for (Map<String, Object> map : maps) {
             unitRepo.update(
-                    (boolean) unitData.get(UtilConfigurator.ACTIVE),
-                    ((Integer) unitData.get(UtilConfigurator.ID)).longValue());
+                    (boolean) map.get(UtilConfigurator.ACTIVE),
+                    ((Integer) map.get(UtilConfigurator.ID)).longValue());
         }
-        logService.addLog(user, Action.UPDATE, Section.UNIT, DTOs.toString());
+        logService.addLog(user, Action.UPDATE, Section.UNIT, maps.toString());
     }
 
 
-    private void handleKSTs(List<Map<String, Object>> DTOs, User user) {
+    private void handleKSTs(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleKSTs");
-        DTOs.forEach(kstData -> kstRepo.update(
-                (boolean) kstData.get(UtilConfigurator.ACTIVE),
-                ((Integer) kstData.get(UtilConfigurator.ID)).longValue())
+        maps.forEach(map -> kstRepo.update(
+                (boolean) map.get(UtilConfigurator.ACTIVE),
+                ((Integer) map.get(UtilConfigurator.ID)).longValue())
         );
-        logService.addLog(user, Action.UPDATE, Section.KST, DTOs.toString());
+        logService.addLog(user, Action.UPDATE, Section.KST, maps.toString());
     }
 
 
-    private void handleMPKs(List<Map<String, Object>> mpkList, User user) {
+    private void handleMPKs(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleMPKs");
-        for (Map<String, Object> mpkData : mpkList) {
-            if (mpkData.containsKey(UtilConfigurator.ID)) {
+        for (Map<String, Object> map : maps) {
+            if (map.containsKey(UtilConfigurator.ID)) {
                 mpkService.updateMPK(
                         new DtoData(
-                                ((Integer) mpkData.get(UtilConfigurator.ID)).longValue(),
-                                (boolean) mpkData.get(UtilConfigurator.ACTIVE)),
+                                ((Integer) map.get(UtilConfigurator.ID)).longValue(),
+                                (boolean) map.get(UtilConfigurator.ACTIVE)),
                         user);
-            } else if (mpkData.containsKey(UtilConfigurator.NAME)) {
+            } else if (map.containsKey(UtilConfigurator.NAME)) {
                 mpkService.createMPK(
-                        new DtoData((String) mpkData.get(UtilConfigurator.NAME)),
+                        new DtoData((String) map.get(UtilConfigurator.NAME)),
                         user);
             }
         }
     }
 
+    private final ServiceService serviceService;
+    private void handleServiceProviders(List<Map<String, Object>> maps, User user) {
+        log.info(TAG + "Update configurations handleServiceProviders");
+        for (Map<String, Object> map : maps) {
+            if (map.containsKey(UtilConfigurator.ID)) {
+                serviceService.updateServiceProvider(map,((Number) map.get(UtilProduct.ID)).longValue(), user);
+            } else {
+                serviceService.addServiceProvider(map, user);
+            }
+        }
 
-    private void handleBranches(List<Map<String, Object>> branchList, User user) {
+    }
+
+
+    private void handleBranches(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleBranches");
-        for (Map<String, Object> branchData : branchList) {
+        for (Map<String, Object> branchData : maps) {
             if (branchData.containsKey(UtilConfigurator.ID)) {
                 branchService.updateBranch(
                         new DtoData(
@@ -164,9 +185,9 @@ public class ConfiguratorService {
     }
 
 
-    private void handleLocations(List<Map<String, Object>> locationList, User user) {
+    private void handleLocations(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleLocations");
-        for (Map<String, Object> locationData : locationList) {
+        for (Map<String, Object> locationData : maps) {
             if (locationData.containsKey(UtilConfigurator.ID)) {
                 branchService.updateLocation(
                         new DtoData(
@@ -183,9 +204,9 @@ public class ConfiguratorService {
         }
     }
 
-    private void handleTypes(List<Map<String, Object>> typesList, User user) {
+    private void handleTypes(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleTypes");
-        for (Map<String, Object> typeData : typesList) {
+        for (Map<String, Object> typeData : maps) {
             if (typeData.containsKey(UtilConfigurator.ID)) {
                 typeService.updateType(
                         new DtoData(
@@ -200,9 +221,9 @@ public class ConfiguratorService {
         }
     }
 
-    private void handleSubtypes(List<Map<String, Object>> subtypeList, User user) {
+    private void handleSubtypes(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleSubtypes");
-        for (Map<String, Object> subtypeData : subtypeList) {
+        for (Map<String, Object> subtypeData : maps) {
             if (subtypeData.containsKey(UtilConfigurator.ID)) {
                 typeService.updateSubtype(
                         new DtoData(

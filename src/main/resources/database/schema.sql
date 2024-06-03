@@ -313,3 +313,54 @@ CREATE TABLE IF NOT EXISTS comments
     FOREIGN KEY (product_id) REFERENCES products (id)
 );
 
+
+CREATE TABLE IF NOT EXISTS service_provider
+(
+    id      BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active    BOOLEAN NOT NULL,
+    created DATETIME,
+    updated DATETIME,
+    company VARCHAR(255) UNIQUE NOT NULL,
+    nip     VARCHAR(255) UNIQUE NOT NULL,
+    address VARCHAR(255) UNIQUE NOT NULL
+);
+CREATE TABLE IF NOT EXISTS contact_person
+(
+    id           BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active    BOOLEAN NOT NULL,
+    created      DATETIME,
+    updated      DATETIME,
+    firstname    VARCHAR(255) UNIQUE NOT NULL,
+    lastname     VARCHAR(255) UNIQUE NOT NULL,
+    phone_number VARCHAR(255) UNIQUE NOT NULL,
+    email        VARCHAR(255) UNIQUE NOT NULL,
+    service_provider_id BIGINT NOT NULL,
+    FOREIGN KEY (service_provider_id) REFERENCES service_provider(id)
+);
+
+
+CREATE TABLE IF NOT EXISTS serviced_assets
+(
+    id           BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active    BOOLEAN NOT NULL,
+    created      DATETIME,
+    updated      DATETIME,
+    product_id    BIGINT NOT NULL,
+    service_start_date     DATETIME,
+    service_end_date     DATETIME,
+    planned_service_period     DATETIME,
+    service_provider_id    BIGINT NOT NULL,
+    contact_person_id    BIGINT NOT NULL,
+    send_by_id    BIGINT NOT NULL,
+    received_by_id    BIGINT NOT NULL,
+    delivery ENUM('kurier', 'odbiór osobisty'),
+
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (service_provider_id) REFERENCES service_provider(id),
+    FOREIGN KEY (contact_person_id) REFERENCES contact_person(id),
+    FOREIGN KEY (send_by_id) REFERENCES users(id),
+    FOREIGN KEY (received_by_id) REFERENCES users(id)
+
+
+);
+
