@@ -1,7 +1,6 @@
 package com.alex.asset.product.controller;
 
 
-import com.alex.asset.product.service.ProductService;
 import com.alex.asset.product.service.SerProductService;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;

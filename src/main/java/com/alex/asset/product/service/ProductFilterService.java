@@ -1,15 +1,6 @@
 package com.alex.asset.product.service;
 
-import com.alex.asset.company.service.CompanyRepo;
-import com.alex.asset.configure.services.ConfigureService;
-import com.alex.asset.configure.services.services.BranchService;
-import com.alex.asset.configure.services.services.MpkService;
-import com.alex.asset.configure.services.services.TypeService;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
-import com.alex.asset.inventory.repo.EventRepo;
-import com.alex.asset.inventory.repo.InventoryRepo;
-import com.alex.asset.inventory.repo.ScannedProductRepo;
-import com.alex.asset.logs.LogService;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;

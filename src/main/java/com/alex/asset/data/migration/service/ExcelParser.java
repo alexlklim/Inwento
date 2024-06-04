@@ -39,7 +39,6 @@ public class ExcelParser {
     private final Type2Service type2Service;
     private final LocationService locationService;
     private final ProductHistoryService productHistoryService;
-    private final ProductService productService;
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
     private final LogService logService;

@@ -1,19 +1,16 @@
 package com.alex.asset.configure.services;
 
-import com.alex.asset.configure.domain.ServiceProvider;
-import com.alex.asset.configure.mappers.ConfigureMapper;
 import com.alex.asset.configure.domain.KST;
+import com.alex.asset.configure.mappers.ConfigureMapper;
 import com.alex.asset.configure.repo.AssetStatusRepo;
 import com.alex.asset.configure.repo.KstRepo;
 import com.alex.asset.configure.repo.UnitRepo;
 import com.alex.asset.configure.services.services.BranchService;
 import com.alex.asset.configure.services.services.MpkService;
 import com.alex.asset.configure.services.services.TypeService;
-import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
-import com.alex.asset.product.domain.Product;
 import com.alex.asset.security.UserMapper;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;

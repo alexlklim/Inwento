@@ -4,7 +4,6 @@ package com.alex.asset.product.service;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.domain.ProductHistory;
-import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.domain.User;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;

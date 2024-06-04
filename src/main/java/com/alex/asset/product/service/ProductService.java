@@ -25,7 +25,6 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Comment;
 import com.alex.asset.product.domain.Product;
-import com.alex.asset.product.domain.ProductHistory;
 import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.domain.Role;
@@ -40,7 +39,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
