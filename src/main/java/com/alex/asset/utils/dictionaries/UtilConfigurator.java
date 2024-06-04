@@ -31,11 +31,12 @@ public class UtilConfigurator {
     public final static String SERVICE_PROVIDER_ADDRESS = "address";
 
 
-    public final static String CONTACT_PERSON = "service_provider";
+    public final static String CONTACT_PERSON = "contact_person";
     public final static String CONTACT_PERSON_FIRSTNAME = "firstname";
     public final static String CONTACT_PERSON_LASTNAME = "lastname";
     public final static String CONTACT_PERSON_PHONE_NUMBER = "phone_number";
     public final static String CONTACT_PERSON_EMAIL = "email";
+    public final static String CONTACT_PERSON_SERVICE_PROVIDER_ID = "service_provider_id";
 
 
 }

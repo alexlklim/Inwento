@@ -11,6 +11,7 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.product.service.ProductHistoryService;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.security.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class ExcelParser {
     private final ConfigureService configureService;
     private final Type2Service type2Service;
     private final LocationService locationService;
+    private final ProductHistoryService productHistoryService;
     private final ProductService productService;
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
@@ -233,7 +235,7 @@ public class ExcelParser {
             product.setLiable(userRepo.findById(product.getUserLiableId()).orElse(null));
             product.setProductHistories(new ArrayList<>());
             product.getProductHistories().add(
-                    productService.createProductHistory(
+                    productHistoryService.createProductHistory(
                             userId,
                             product,
                             Activity.PRODUCT_WAS_CREATED));

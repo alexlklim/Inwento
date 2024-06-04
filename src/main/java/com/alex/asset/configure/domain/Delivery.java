@@ -14,4 +14,13 @@ public enum Delivery {
         this.displayName = displayName;
     }
 
+
+    public static Delivery fromString(String value) {
+        for (Delivery delivery : Delivery.values()) {
+            if (delivery.name().equalsIgnoreCase(value)) {
+                return delivery;
+            }
+        }
+        throw new IllegalArgumentException("No constant with value " + value + " found in enum Delivery");
+    }
 }

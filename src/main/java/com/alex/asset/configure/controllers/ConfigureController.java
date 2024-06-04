@@ -32,7 +32,7 @@ public class ConfigureController {
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getConfigurations(
             @RequestParam(required = false) List<String> fields) {
-        log.info(TAG + "Get configurations with fields: " + fields);
+        log.info(TAG + "getConfigurations: " + fields);
         return configureService.getAllConfigurations(fields);
     }
 
@@ -42,7 +42,7 @@ public class ConfigureController {
     @ResponseStatus(HttpStatus.OK)
     public void updateConfigurations(
             @RequestBody Map<String, Object> updates) {
-        log.info(TAG + "Update configurations");
+        log.info(TAG + "updateConfigurations");
         configureService.updateConfigurations(updates, SecHolder.getUserId());
     }
 
@@ -51,7 +51,7 @@ public class ConfigureController {
     @GetMapping("/kst/{kst_num}")
     public ResponseEntity<List<KST>> getKSTByNum(
             @PathVariable("kst_num") String num) {
-        log.info(TAG + "Try to get KST by num");
+        log.info(TAG + "getKSTByNum");
         if (num.length() < 2)
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(

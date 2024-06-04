@@ -22,6 +22,9 @@ import java.time.LocalDate;
 @Table(name = "serviced_assets")
 public class ServicedAsset extends BaseEntity {
 
+    @Column(name = "is_active")
+    boolean isActive;
+
     @Column(name = "service_start_date")
     LocalDate serviceStartDate;
 
@@ -29,7 +32,7 @@ public class ServicedAsset extends BaseEntity {
     LocalDate serviceEndDate;
 
     @Column(name = "planned_service_period")
-    LocalDate plannedServicePeriod;
+    Integer plannedServicePeriod;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "delivery", nullable = false)

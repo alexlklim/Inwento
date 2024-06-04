@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@ToString
 @Table(name = "service_provider")
 public class ServiceProvider extends BaseEntity {
 

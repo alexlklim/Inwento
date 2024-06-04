@@ -16,6 +16,8 @@ public class ProductMapper {
     public static Map<String, Object> toDTOWithCustomFields(Product product, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
         Map<String, Supplier<Object>> dataFetchers = new HashMap<>();
+
+
         dataFetchers.put(UtilProduct.ID, product::getId);
         dataFetchers.put(UtilProduct.ACTIVE, product::isActive);
         dataFetchers.put(UtilProduct.TITLE, product::getTitle);
@@ -92,5 +94,10 @@ public class ProductMapper {
 
         fields.forEach(field -> dtoMap.put(field, dataFetchers.getOrDefault(field, () -> "").get()));
         return dtoMap;
+    }
+
+
+    public static List<Map<String, Object>> toDTOsWithCustomFields(List<Product> products, List<String> productFields) {
+        return products.stream().map(product -> toDTOWithCustomFields(product, productFields)).toList();
     }
 }

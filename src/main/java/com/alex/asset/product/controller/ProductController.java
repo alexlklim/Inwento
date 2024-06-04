@@ -2,6 +2,7 @@ package com.alex.asset.product.controller;
 
 
 import com.alex.asset.product.dto.ProductCodesDTO;
+import com.alex.asset.product.service.ProductFilterService;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class ProductController {
     private final String TAG = "PRODUCT_CONTROLLER - ";
     private final ProductService productService;
+    private final ProductFilterService productFilterService;
 
 
     @Operation(summary = "Get list of products with fields, mode:admin/emp  scrap:true/false")
@@ -33,7 +35,7 @@ public class ProductController {
             @PathVariable("scrap") Boolean isScrap,
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products with custom or all fields");
-        return productService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
+        return productFilterService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
     }
 
     @Operation(summary = "Get list of products with fields, mode:admin/emp  scrap:true/false")
@@ -44,7 +46,7 @@ public class ProductController {
             @PathVariable("scrap") Boolean isScrap,
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products with custom or all fields");
-        return productService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
+        return productFilterService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
     }
 
 
@@ -55,7 +57,7 @@ public class ProductController {
             @PathVariable("id") Long id,
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get product by id {}", id);
-        return productService.getById(productFields, id, SecHolder.getUserId());
+        return productFilterService.getById(productFields, id, SecHolder.getUserId());
     }
 
 
@@ -72,7 +74,7 @@ public class ProductController {
             @PathVariable(name = "serial_number", required = false) String serialNumber,
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get product by unique values {} / {} / {} / {}", barCode, rfidCode, inventoryNumber, serialNumber);
-        return productService.getByUniqueValues(
+        return productFilterService.getByUniqueValues(
                 barCode, rfidCode, inventoryNumber, serialNumber,
                 productFields, SecHolder.getUserId());
     }
@@ -85,7 +87,7 @@ public class ProductController {
             @PathVariable("is_scrapped") Boolean isScrapped,
             @RequestBody(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products by key word {}", keyWord);
-        return productService.getByValue(keyWord, isScrapped, productFields);
+        return productFilterService.getByValue(keyWord, isScrapped, productFields);
     }
 
     @Operation(summary = "Get products in a special range (warranty period)")
@@ -95,7 +97,7 @@ public class ProductController {
             @PathVariable("start_date") String startDate,
             @PathVariable("end_date") String endDate) {
         log.info(TAG + "Get products in a special range (warranty period) ");
-        return productService.getByWarrantyPeriod(startDate, endDate);
+        return productFilterService.getByWarrantyPeriod(startDate, endDate);
     }
 
     @Operation(summary = "Get products in a special range (inspection period)")
@@ -105,7 +107,7 @@ public class ProductController {
             @PathVariable("start_date") String startDate,
             @PathVariable("end_date") String endDate) {
         log.info(TAG + "Get products in a special range (inspection period) ");
-        return productService.getByInspectionPeriod(startDate, endDate);
+        return productFilterService.getByInspectionPeriod(startDate, endDate);
     }
 
     @Operation(summary = "Update product")

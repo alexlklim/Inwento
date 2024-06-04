@@ -1,10 +1,7 @@
 package com.alex.asset.configure.mappers;
 
 import com.alex.asset.company.domain.DataDto;
-import com.alex.asset.configure.domain.Branch;
-import com.alex.asset.configure.domain.Location;
-import com.alex.asset.configure.domain.Subtype;
-import com.alex.asset.configure.domain.Type;
+import com.alex.asset.configure.domain.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -58,4 +55,5 @@ public class ConfigureMapper {
 
         return list;
     }
+
 }

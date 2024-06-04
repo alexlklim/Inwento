@@ -348,7 +348,7 @@ CREATE TABLE IF NOT EXISTS serviced_assets
     product_id    BIGINT NOT NULL,
     service_start_date     DATETIME,
     service_end_date     DATETIME,
-    planned_service_period     DATETIME,
+    planned_service_period     INTEGER,
     service_provider_id    BIGINT NOT NULL,
     contact_person_id    BIGINT NOT NULL,
     send_by_id    BIGINT NOT NULL,
@@ -363,5 +363,3 @@ CREATE TABLE IF NOT EXISTS serviced_assets
 
 
 );
-
-select * from service_provider;

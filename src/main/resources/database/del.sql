@@ -37,3 +37,4 @@ DROP TABLE IF EXISTS contact_person;
 DROP TABLE IF EXISTS service_provider;
 DROP TABLE IF EXISTS service_provider_contact_person;
 
+select * from contact_person;

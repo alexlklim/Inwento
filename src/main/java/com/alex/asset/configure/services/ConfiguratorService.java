@@ -45,6 +45,7 @@ public class ConfiguratorService {
     private final TypeService typeService;
     private final MpkService mpkService;
     private final BranchService branchService;
+    private final ServiceService serviceService;
 
 
     private final AssetStatusRepo assetStatusRepo;
@@ -57,6 +58,7 @@ public class ConfiguratorService {
         log.info(TAG + "Get all configurations");
 
         Map<String, Object> dtoMap = new HashMap<>();
+        System.out.println(serviceService.getAllServiceProviders());
 
         Map<String, Supplier<Object>> dataFetchers = Map.of(
                 UtilConfigurator.ASSET_STATUS, assetStatusRepo::findAll,
@@ -67,7 +69,7 @@ public class ConfiguratorService {
                 UtilConfigurator.LOCATION, () -> ConfigureMapper.convertLocationToDTOs(branchService.getAllLocations()),
                 UtilConfigurator.TYPE, () -> ConfigureMapper.convertTypesToDTOs(typeService.getAllTypes()),
                 UtilConfigurator.SUBTYPE, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
-//                UtilConfigurator.SERVICE_PROVIDER, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
+                UtilConfigurator.SERVICE_PROVIDER, serviceService::getAllServiceProviders,
                 UtilConfigurator.EMPLOYEE, () -> userRepo.getActiveUsers().stream().map(UserMapper::toEmployee).collect(Collectors.toList())
         );
         for (String field : fields) {
@@ -94,6 +96,7 @@ public class ConfiguratorService {
         handlers.put(UtilConfigurator.TYPE, this::handleTypes);
         handlers.put(UtilConfigurator.SUBTYPE, this::handleSubtypes);
         handlers.put(UtilConfigurator.SERVICE_PROVIDER, this::handleServiceProviders);
+        handlers.put(UtilConfigurator.CONTACT_PERSON, this::handleContactPerson);
 
         updates.forEach((key, value) -> {
             BiConsumer<List<Map<String, Object>>, User> handler = handlers.get(key);
@@ -103,7 +106,6 @@ public class ConfiguratorService {
         });
 
     }
-
 
 
     private void handleAssetStatus(List<Map<String, Object>> maps, User user) {
@@ -154,7 +156,17 @@ public class ConfiguratorService {
         }
     }
 
-    private final ServiceService serviceService;
+    private void handleContactPerson(List<Map<String, Object>> maps, User user) {
+        log.info(TAG + "Update configurations handleContactPerson");
+        for (Map<String, Object> map : maps) {
+            if (map.containsKey(UtilConfigurator.ID)) {
+                serviceService.updateContactPerson(map,((Number) map.get(UtilProduct.ID)).longValue(), user);
+            } else {
+                serviceService.addContactPerson(map, user);
+            }
+        }
+    }
+
     private void handleServiceProviders(List<Map<String, Object>> maps, User user) {
         log.info(TAG + "Update configurations handleServiceProviders");
         for (Map<String, Object> map : maps) {
@@ -164,7 +176,6 @@ public class ConfiguratorService {
                 serviceService.addServiceProvider(map, user);
             }
         }
-
     }
 
 
