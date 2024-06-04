@@ -13,5 +13,7 @@ public enum Activity {
     GPS,
 
 
-    COMMENT
+    COMMENT,
+
+    SERVICE
 }

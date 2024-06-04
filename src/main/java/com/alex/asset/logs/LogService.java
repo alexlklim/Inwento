@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -27,8 +29,7 @@ public class LogService {
 
     public List<LogDto> getAllLogs() {
         log.info(TAG + "get all logs");
-        return logRepo.findAllByOrderByCreatedDesc()
-                .stream().map(this::toDto).toList();
+        return LogMapper.toDTOs(logRepo.findAllByOrderByCreatedDesc());
 
     }
 
@@ -37,7 +38,7 @@ public class LogService {
         log.info(TAG + "get logs for user with id {}", userId);
         return logRepo.findAllByUserOrderByCreatedDesc(userRepo.findById(userId).orElseThrow(
                         () -> new ResourceNotFoundException("User with id " + userId + " not found")))
-                .stream().map(this::toDto).toList();
+                .stream().map(LogMapper::toDto).toList();
     }
 
 
@@ -46,11 +47,7 @@ public class LogService {
     @SneakyThrows
     public void addLog(User user, Action action, Section section, String text) {
         log.info(TAG + "add new log");
-        Log log = new Log();
-        log.setUser(user);
-        log.setAction(action);
-        log.setSection(section);
-        log.setText(text);
+        Log log = new Log().toBuilder().user(user).action(action).section(section).text(text).build();
         logRepo.save(log);
     }
     @Transactional
@@ -60,16 +57,13 @@ public class LogService {
         addLog(userRepo.getUser(userId), action, section, text);
     }
 
-    LogDto toDto(Log entity) {
-        LogDto dto = new LogDto();
-        dto.setId(entity.getId());
-        dto.setCreated(entity.getCreated());
-        dto.setUserEmail(entity.getUser().getEmail());
-        dto.setAction(entity.getAction());
-        dto.setSection(entity.getSection());
-        dto.setText(entity.getText());
-        return dto;
+
+    public List<LogDto> getLogsForSpecificDateRange(LocalDate startDate, LocalDate endDate) {
+
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
+
+        return LogMapper.toDTOs(
+                logRepo.getLogsByDataRange(startDateTime, endDateTime));
     }
-
-
 }

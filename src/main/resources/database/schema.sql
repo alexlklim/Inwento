@@ -201,7 +201,8 @@ CREATE TABLE IF NOT EXISTS product_history
     activity   ENUM ('VISIBILITY', 'PRODUCT_WAS_CREATED', 'TITLE', 'PRICE', 'BAR_CODE', 'RFID_CODE', 'INVENTORY_NUMBER',
         'SERIAL_NUMBER', 'LIABLE', 'LOCATION',
         'RECEIVER', 'KST', 'ASSET_STATUS', 'UNIT', 'BRANCH', 'MPK', 'TYPE', 'SUBTYPE', 'PRODUCER',
-        'SUPPLIER', 'SCRAPPING', 'DOCUMENT', 'DOCUMENT_DATE', 'WARRANTY_PERIOD', 'INSPECTION_DATE', 'GPS', 'COMMENT'),
+        'SUPPLIER', 'SCRAPPING', 'DOCUMENT', 'DOCUMENT_DATE', 'WARRANTY_PERIOD', 'INSPECTION_DATE', 'GPS', 'COMMENT',
+        'SERVICE'),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
 );
@@ -316,50 +317,47 @@ CREATE TABLE IF NOT EXISTS comments
 
 CREATE TABLE IF NOT EXISTS service_provider
 (
-    id      BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active    BOOLEAN NOT NULL,
-    created DATETIME,
-    updated DATETIME,
-    company VARCHAR(255) UNIQUE NOT NULL,
-    nip     VARCHAR(255) UNIQUE NOT NULL,
-    address VARCHAR(255) UNIQUE NOT NULL
+    id        BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active BOOLEAN             NOT NULL,
+    created   DATETIME,
+    updated   DATETIME,
+    company   VARCHAR(255) UNIQUE NOT NULL,
+    nip       VARCHAR(255) UNIQUE NOT NULL,
+    address   VARCHAR(255) UNIQUE NOT NULL
 );
 CREATE TABLE IF NOT EXISTS contact_person
 (
-    id           BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active    BOOLEAN NOT NULL,
-    created      DATETIME,
-    updated      DATETIME,
-    firstname    VARCHAR(255) UNIQUE NOT NULL,
-    lastname     VARCHAR(255) UNIQUE NOT NULL,
-    phone_number VARCHAR(255) UNIQUE NOT NULL,
-    email        VARCHAR(255) UNIQUE NOT NULL,
-    service_provider_id BIGINT NOT NULL,
-    FOREIGN KEY (service_provider_id) REFERENCES service_provider(id)
+    id                  BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active           BOOLEAN             NOT NULL,
+    created             DATETIME,
+    updated             DATETIME,
+    firstname           VARCHAR(255) UNIQUE NOT NULL,
+    lastname            VARCHAR(255) UNIQUE NOT NULL,
+    phone_number        VARCHAR(255) UNIQUE NOT NULL,
+    email               VARCHAR(255) UNIQUE NOT NULL,
+    service_provider_id BIGINT              NOT NULL,
+    FOREIGN KEY (service_provider_id) REFERENCES service_provider (id)
 );
 
 
 CREATE TABLE IF NOT EXISTS serviced_assets
 (
-    id           BIGINT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    is_active    BOOLEAN NOT NULL,
-    created      DATETIME,
-    updated      DATETIME,
-    product_id    BIGINT NOT NULL,
+    id                     BIGINT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    is_active              BOOLEAN NOT NULL,
+    created                DATETIME,
+    updated                DATETIME,
+    product_id             BIGINT  NOT NULL,
     service_start_date     DATETIME,
-    service_end_date     DATETIME,
-    planned_service_period     INTEGER,
-    service_provider_id    BIGINT NOT NULL,
-    contact_person_id    BIGINT NOT NULL,
-    send_by_id    BIGINT NOT NULL,
-    received_by_id    BIGINT NOT NULL,
-    delivery ENUM('kurier', 'odbiór osobisty'),
-
-    FOREIGN KEY (product_id) REFERENCES products(id),
-    FOREIGN KEY (service_provider_id) REFERENCES service_provider(id),
-    FOREIGN KEY (contact_person_id) REFERENCES contact_person(id),
-    FOREIGN KEY (send_by_id) REFERENCES users(id),
-    FOREIGN KEY (received_by_id) REFERENCES users(id)
-
-
+    service_end_date       DATETIME,
+    planned_service_period INTEGER,
+    service_provider_id    BIGINT  NOT NULL,
+    contact_person_id      BIGINT  NOT NULL,
+    send_by_id             BIGINT  NOT NULL,
+    received_by_id         BIGINT  NOT NULL,
+    delivery               ENUM ('kurier', 'odbiór osobisty'),
+    FOREIGN KEY (product_id) REFERENCES products (id),
+    FOREIGN KEY (service_provider_id) REFERENCES service_provider (id),
+    FOREIGN KEY (contact_person_id) REFERENCES contact_person (id),
+    FOREIGN KEY (send_by_id) REFERENCES users (id),
+    FOREIGN KEY (received_by_id) REFERENCES users (id)
 );

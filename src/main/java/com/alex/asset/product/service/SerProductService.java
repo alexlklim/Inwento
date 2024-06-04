@@ -5,6 +5,7 @@ import com.alex.asset.configure.repo.ContactPersonRepo;
 import com.alex.asset.configure.repo.ServiceProviderRepo;
 import com.alex.asset.exceptions.product.ValueIsNotUnique;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
+import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.ServicedAsset;
 import com.alex.asset.product.mappers.ServiceMapper;
 import com.alex.asset.product.repo.ProductRepo;
@@ -36,6 +37,7 @@ public class SerProductService {
     private final ServiceProviderRepo serviceProviderRepo;
     private final ContactPersonRepo contactPersonRepo;
     private final ServicedAssetRepo servicedAssetRepo;
+    private final ProductHistoryService productHistoryService;
 
 
 
@@ -48,6 +50,7 @@ public class SerProductService {
             updates.remove(UtilProduct.ID);
             return updateServicedAsset(updates, servicedAsset, userId);
         }
+
         return updateServicedAsset(updates, new ServicedAsset(), userId);
 
     }
@@ -59,7 +62,6 @@ public class SerProductService {
             throws ValueIsNotUnique {
         log.info(TAG + "Update product by user with id {}", userId);
         User user = userRepo.getUser(userId);
-        System.out.println(updates);
         updates.forEach((key, value) -> {
             switch (key) {
                 case UtilsServicedAsset.ACTIVE:
@@ -113,6 +115,8 @@ public class SerProductService {
                     break;
             }
         });
+        servicedAsset.getProduct().getProductHistories().add(
+                productHistoryService.createProductHistory(user, servicedAsset.getProduct(), Activity.SERVICE));
         servicedAssetRepo.save(servicedAsset);
         return new HashMap<>();
     }

@@ -6,11 +6,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -45,6 +48,18 @@ public class LogController {
         log.info(TAG + "Get logs for user with id {}", userId);
         return logService.getLogsForSpecificUser(userId);
     }
+
+    @Operation(summary = "Get all logs")
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/date/{start_date}/{end_date}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<LogDto> getLogsByDateRange(
+            @PathVariable("start_date") LocalDate startDate,
+            @PathVariable("end_date") LocalDate endDate) {
+        log.info(TAG + "Get logs for user with id ");
+        return logService.getLogsForSpecificDateRange(startDate, endDate);
+    }
+
 
 
 }

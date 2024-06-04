@@ -33,9 +33,9 @@ public class ProductController {
     public List<Map<String, Object>> getAllProductsWithCustomFields(
             @PathVariable("mode") String mode,
             @PathVariable("scrap") Boolean isScrap,
-            @RequestParam(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Try to get all products with custom or all fields");
-        return productFilterService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
+        return productFilterService.getAllProducts(mode, isScrap, fields, SecHolder.getUserId());
     }
 
     @Operation(summary = "Get list of products with fields, mode:admin/emp  scrap:true/false")
@@ -44,9 +44,9 @@ public class ProductController {
     public List<Map<String, Object>> getAllProductsWithCustomFieldsApp(
             @PathVariable("mode") String mode,
             @PathVariable("scrap") Boolean isScrap,
-            @RequestParam(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Try to get all products with custom or all fields");
-        return productFilterService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
+        return productFilterService.getAllProducts(mode, isScrap, fields, SecHolder.getUserId());
     }
 
 
@@ -55,9 +55,9 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getById(
             @PathVariable("id") Long id,
-            @RequestParam(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Try to get product by id {}", id);
-        return productFilterService.getById(productFields, id, SecHolder.getUserId());
+        return productFilterService.getById(fields, id, SecHolder.getUserId());
     }
 
 
@@ -72,11 +72,11 @@ public class ProductController {
             @PathVariable(name = "rfid_code", required = false) String rfidCode,
             @PathVariable(name = "inventory_number", required = false) String inventoryNumber,
             @PathVariable(name = "serial_number", required = false) String serialNumber,
-            @RequestParam(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Try to get product by unique values {} / {} / {} / {}", barCode, rfidCode, inventoryNumber, serialNumber);
         return productFilterService.getByUniqueValues(
                 barCode, rfidCode, inventoryNumber, serialNumber,
-                productFields, SecHolder.getUserId());
+                fields, SecHolder.getUserId());
     }
 
     @Operation(summary = "Get products by title/bar code/rfid code")
@@ -85,10 +85,10 @@ public class ProductController {
     public List<Map<String, Object>> getProductsByTitleOrBarCode(
             @PathVariable("key_word") String keyWord,
             @PathVariable("is_scrapped") Boolean isScrapped,
-            @RequestParam(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Try to get all products by key word {}", keyWord);
-        return productFilterService.getByValue(keyWord, isScrapped, productFields);
-    }
+        return productFilterService.getByValue(keyWord, isScrapped, fields);
+     }
 
     @Operation(summary = "Get products in a special range (warranty period)")
     @GetMapping("/filter/warranty_period/{start_date}/{end_date}")
