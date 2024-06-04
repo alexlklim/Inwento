@@ -6,6 +6,7 @@ import com.alex.asset.configure.repo.ServiceProviderRepo;
 import com.alex.asset.exceptions.product.ValueIsNotUnique;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.product.domain.ServicedAsset;
+import com.alex.asset.product.mappers.ServiceMapper;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.product.repo.ServicedAssetRepo;
 import com.alex.asset.security.domain.Role;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 @Slf4j
 @Service
@@ -115,4 +117,17 @@ public class SerProductService {
         return new HashMap<>();
     }
 
+    public List<Map<String, Object>> getAllServicedAsset(List<String> fields, Long userId) {
+        return ServiceMapper.toDTOsWithCustomFields(servicedAssetRepo.findAll(), fields);
+
+    }
+
+    @SneakyThrows
+    public Map<String, Object> getServicedAssetById(Long assetId, List<String> fields, Long userId) {
+        return ServiceMapper.toDTOWithCustomFields(
+                servicedAssetRepo.findById(assetId).orElseThrow(
+                        () -> new ResourceNotFoundException("Serviced asset not found with id " + assetId)
+                ), fields
+        );
+    }
 }

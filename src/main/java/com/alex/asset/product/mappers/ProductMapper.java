@@ -1,7 +1,11 @@
 package com.alex.asset.product.mappers;
 
 import com.alex.asset.product.domain.Product;
+import com.alex.asset.product.domain.ServicedAsset;
+import com.alex.asset.product.repo.ServicedAssetRepo;
 import com.alex.asset.utils.dictionaries.UtilProduct;
+import com.alex.asset.utils.dictionaries.UtilsServicedAsset;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,13 +14,29 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 
+@RequiredArgsConstructor
 @Service
 public class ProductMapper {
 
-    public static Map<String, Object> toDTOWithCustomFields(Product product, List<String> fields) {
+    public static Map<String, Object> toDTOWithCustomFields(
+            Product product, List<String> fields, List<ServicedAsset> servicedAssets) {
+        Map<String, Object> dtoMap = toDTOWithCustomFields(product, fields);
+        dtoMap.put(
+                UtilProduct.SERVICED_HISTORY,
+                ServiceMapper.toDTOsWithCustomFields(
+                        servicedAssets,
+                        UtilsServicedAsset.getFieldsShortView()
+                )
+        );
+        return dtoMap;
+
+    }
+
+    public static Map<String, Object> toDTOWithCustomFields(
+            Product product,
+            List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
         Map<String, Supplier<Object>> dataFetchers = new HashMap<>();
-
 
         dataFetchers.put(UtilProduct.ID, product::getId);
         dataFetchers.put(UtilProduct.ACTIVE, product::isActive);
@@ -33,7 +53,7 @@ public class ProductMapper {
                 () -> (product.getLiable() != null
                         && product.getLiable().getFirstname() != null
                         && product.getLiable().getLastname() != null) ?
-                product.getLiable().getFirstname() + " " + product.getLiable().getLastname() : "");
+                        product.getLiable().getFirstname() + " " + product.getLiable().getLastname() : "");
         dataFetchers.put(UtilProduct.RECEIVER, () -> product.getReceiver() != null ? product.getReceiver() : "");
         dataFetchers.put(UtilProduct.KST_ID,
                 () -> product.getKst() != null ? product.getKst().getId() : "");
@@ -68,7 +88,7 @@ public class ProductMapper {
         dataFetchers.put(UtilProduct.SUBTYPE,
                 () -> product.getSubtype() != null ? product.getSubtype().getSubtype() : "");
         dataFetchers.put(UtilProduct.PRODUCER, () -> product.getProducer() != null ? product.getProducer() : "");
-        dataFetchers.put(UtilProduct.SUPPLIER,() -> product.getSupplier() != null ? product.getSupplier() : "");
+        dataFetchers.put(UtilProduct.SUPPLIER, () -> product.getSupplier() != null ? product.getSupplier() : "");
         dataFetchers.put(UtilProduct.SCRAPPING, product::isScrapping);
         dataFetchers.put(UtilProduct.SCRAPPING_DATE,
                 () -> product.getScrappingDate() != null ? product.getScrappingDate() : "");
@@ -97,7 +117,8 @@ public class ProductMapper {
     }
 
 
-    public static List<Map<String, Object>> toDTOsWithCustomFields(List<Product> products, List<String> productFields) {
+    public static List<Map<String, Object>> toDTOsWithCustomFields(
+            List<Product> products, List<String> productFields) {
         return products.stream().map(product -> toDTOWithCustomFields(product, productFields)).toList();
     }
 }

@@ -33,7 +33,7 @@ public class ProductController {
     public List<Map<String, Object>> getAllProductsWithCustomFields(
             @PathVariable("mode") String mode,
             @PathVariable("scrap") Boolean isScrap,
-            @RequestBody(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products with custom or all fields");
         return productFilterService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
     }
@@ -44,7 +44,7 @@ public class ProductController {
     public List<Map<String, Object>> getAllProductsWithCustomFieldsApp(
             @PathVariable("mode") String mode,
             @PathVariable("scrap") Boolean isScrap,
-            @RequestBody(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products with custom or all fields");
         return productFilterService.getAllProducts(mode, isScrap, productFields, SecHolder.getUserId());
     }
@@ -55,7 +55,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getById(
             @PathVariable("id") Long id,
-            @RequestBody(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> productFields) {
         log.info(TAG + "Try to get product by id {}", id);
         return productFilterService.getById(productFields, id, SecHolder.getUserId());
     }
@@ -72,7 +72,7 @@ public class ProductController {
             @PathVariable(name = "rfid_code", required = false) String rfidCode,
             @PathVariable(name = "inventory_number", required = false) String inventoryNumber,
             @PathVariable(name = "serial_number", required = false) String serialNumber,
-            @RequestBody(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> productFields) {
         log.info(TAG + "Try to get product by unique values {} / {} / {} / {}", barCode, rfidCode, inventoryNumber, serialNumber);
         return productFilterService.getByUniqueValues(
                 barCode, rfidCode, inventoryNumber, serialNumber,
@@ -85,7 +85,7 @@ public class ProductController {
     public List<Map<String, Object>> getProductsByTitleOrBarCode(
             @PathVariable("key_word") String keyWord,
             @PathVariable("is_scrapped") Boolean isScrapped,
-            @RequestBody(required = false) List<String> productFields) {
+            @RequestParam(required = false) List<String> productFields) {
         log.info(TAG + "Try to get all products by key word {}", keyWord);
         return productFilterService.getByValue(keyWord, isScrapped, productFields);
     }

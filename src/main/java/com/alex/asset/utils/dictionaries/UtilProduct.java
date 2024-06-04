@@ -55,6 +55,7 @@ public class UtilProduct {
     // it allows to add only one comment
     public final static String COMMENTS = "comments";
     public final static String HISTORY = "history";
+    public final static String SERVICED_HISTORY = "serviced_history";
 
 
 
@@ -83,6 +84,13 @@ public class UtilProduct {
                 SUPPLIER, SCRAPPING, SCRAPPING_DATE, SCRAPPING_REASON,
                 DOCUMENT, DOCUMENT_DATE, WARRANTY_PERIOD, INSPECTION_DATE,
                 LONGITUDE, LATITUDE
+        );
+    }
+
+
+    public static List<String> getFieldsShortView() {
+        return List.of(
+                ID, TITLE, BAR_CODE, RFID_CODE, SERIAL_NUMBER
         );
     }
 }

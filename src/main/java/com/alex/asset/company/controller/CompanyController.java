@@ -30,7 +30,7 @@ public class CompanyController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getInfo(
-            @RequestBody(required = false) List<String> companyFields) {
+            @RequestParam(required = false) List<String> companyFields) {
         log.info(TAG + "Get company info");
         return companyService.getInfoAboutCompany(companyFields);
     }

@@ -4,6 +4,7 @@ import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.product.domain.Product;
 import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
+import com.alex.asset.product.repo.ServicedAssetRepo;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.repo.UserRepo;
 import com.alex.asset.utils.dictionaries.UtilProduct;
@@ -27,6 +28,7 @@ public class ProductFilterService {
 
     private final String TAG = "PRODUCT_SERVICE - ";
 
+    private final ServicedAssetRepo servicedAssetRepo;
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
 
