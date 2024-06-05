@@ -161,4 +161,8 @@ public class ServiceService {
     public List<ServiceProvider> getAllServiceProviders() {
         return serviceProviderRepo.findAll();
     }
+
+    public Object getAllActiveServiceProviders() {
+        return serviceProviderRepo.getActive();
+    }
 }

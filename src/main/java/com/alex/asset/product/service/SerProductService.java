@@ -42,7 +42,7 @@ public class SerProductService {
 
 
     public Map<String, Object> serviceProduct(Map<String, Object> updates, Long userId) {
-        log.info(TAG + "serviceProduct");
+        log.info(TAG + "serviceProduct userId " + userId);
         if (updates.containsKey(UtilsServicedAsset.ID)) {
             ServicedAsset servicedAsset = servicedAssetRepo.findById(
                             ((Number) updates.get(UtilProduct.ID)).longValue())
@@ -61,7 +61,7 @@ public class SerProductService {
     private Map<String, Object> updateServicedAsset(
             Map<String, Object> updates, ServicedAsset servicedAsset, Long userId)
             throws ValueIsNotUnique {
-        log.info(TAG + "updateServicedAsset");
+        log.info(TAG + "updateServicedAsset userId " + userId);
         User user = userRepo.getUser(userId);
         updates.forEach((key, value) -> {
             switch (key) {
@@ -81,6 +81,7 @@ public class SerProductService {
                         try {
                             servicedAsset.setPlannedServicePeriod(Integer.parseInt((String) value));
                         } catch (NumberFormatException e) {
+                            log.error(TAG + "setPlannedServicePeriod");
                         }
                     } else if (value instanceof Integer) {
                         servicedAsset.setPlannedServicePeriod((Integer) value);
@@ -123,14 +124,14 @@ public class SerProductService {
     }
 
     public List<Map<String, Object>> getAllServicedAsset(List<String> fields, Long userId) {
-        log.info(TAG + "getAllServicedAsset");
+        log.info(TAG + "getAllServicedAsset userID " + userId);
         return ServiceMapper.toDTOsWithCustomFields(servicedAssetRepo.findAll(), fields);
 
     }
 
     @SneakyThrows
     public Map<String, Object> getServicedAssetById(Long assetId, List<String> fields, Long userId) {
-        log.info(TAG + "getServicedAssetById");
+        log.info(TAG + "getServicedAssetById userId " + userId);
         return ServiceMapper.toDTOWithCustomFields(
                 servicedAssetRepo.findById(assetId).orElseThrow(
                         () -> new ResourceNotFoundException("Serviced asset not found with id " + assetId)

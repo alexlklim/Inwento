@@ -57,6 +57,7 @@ public class DataDto {
 
     @AllArgsConstructor
     @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Type {
         private Long id;
         private String type;
@@ -65,9 +66,11 @@ public class DataDto {
 
     @AllArgsConstructor
     @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Subtype {
         private Long id;
         private String subtype;
         private Boolean active;
+        private Long typeId;
     }
 }

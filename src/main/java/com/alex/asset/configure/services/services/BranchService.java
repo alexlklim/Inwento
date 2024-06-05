@@ -78,4 +78,12 @@ public class BranchService {
     public List<Location> getAllLocations() {
         return locationRepo.findAll();
     }
+
+    public List<Branch> getAllActiveBranches() {
+        return branchRepo.getActive();
+    }
+
+    public List<Location> getAllActiveLocations() {
+        return locationRepo.getActive();
+    }
 }

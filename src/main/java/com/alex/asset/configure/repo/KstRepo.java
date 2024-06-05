@@ -1,6 +1,8 @@
 package com.alex.asset.configure.repo;
 
+import com.alex.asset.configure.domain.AssetStatus;
 import com.alex.asset.configure.domain.KST;
+import com.alex.asset.configure.domain.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +13,8 @@ import java.util.Optional;
 
 public interface KstRepo extends JpaRepository<KST, Long> {
 
+    @Query("SELECT u FROM KST u WHERE u.isActive = true")
+    List<KST> getActive();
 
     @Query("SELECT k FROM KST k WHERE k.num LIKE :prefix% and k.isActive = true")
     List<KST> findByNum(@Param("prefix") String prefix);
@@ -24,5 +28,6 @@ public interface KstRepo extends JpaRepository<KST, Long> {
 
 
     Optional<KST> findKSTByNum(String kst);
+
 
 }

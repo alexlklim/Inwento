@@ -25,4 +25,5 @@ public interface AssetStatusRepo extends JpaRepository<AssetStatus, Long> {
 
     Optional<AssetStatus> findAssetStatusByAssetStatus(String assetStatus);
 
+
 }

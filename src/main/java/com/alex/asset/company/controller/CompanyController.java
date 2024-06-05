@@ -31,7 +31,7 @@ public class CompanyController {
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getInfo(
             @RequestParam(required = false) List<String> fields) {
-        log.info(TAG + "Get company info");
+        log.info(TAG + "getInfo");
 
         return companyService.getInfoAboutCompany(fields);
     }
@@ -41,10 +41,10 @@ public class CompanyController {
     @Secured("ROLE_ADMIN")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Object> updateCompany(
+    public void updateCompany(
             @RequestBody Map<String, Object> updates) {
-        log.info(TAG + "Update company info");
-        return companyService.updateCompany(updates, SecHolder.getUserId());
+        log.info(TAG + "updateCompany");
+        companyService.updateCompany(updates, SecHolder.getUserId());
     }
 
 
@@ -52,7 +52,7 @@ public class CompanyController {
     @GetMapping("/data")
     @ResponseStatus(HttpStatus.OK)
     public DataDto getDataForAndroidApp() {
-        log.info(TAG + "Get data (branches/locations/employees)");
+        log.info(TAG + "getDataForAndroidApp");
         return companyService.getData();
     }
 

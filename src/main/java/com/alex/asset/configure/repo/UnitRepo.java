@@ -1,5 +1,6 @@
 package com.alex.asset.configure.repo;
 
+import com.alex.asset.configure.domain.AssetStatus;
 import com.alex.asset.configure.domain.Unit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,5 +27,7 @@ public interface UnitRepo extends JpaRepository<Unit, Long> {
 
 
     Optional<Unit> findUnitByUnit(String unit);
+
+
 
 }

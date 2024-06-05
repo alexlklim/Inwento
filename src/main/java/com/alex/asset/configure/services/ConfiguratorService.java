@@ -51,24 +51,32 @@ public class ConfiguratorService {
     private final UserRepo userRepo;
 
 
-    public Map<String, Object> getAllConfigurations(List<String> fields) {
+
+    public Map<String, Object> getAllConfigurations(List<String> fields, Boolean isOnlyActive) {
         log.info(TAG + "Get all configurations");
 
         Map<String, Object> dtoMap = new HashMap<>();
         System.out.println(serviceService.getAllServiceProviders());
 
         Map<String, Supplier<Object>> dataFetchers = Map.of(
-                UtilConfigurator.ASSET_STATUS, assetStatusRepo::findAll,
-                UtilConfigurator.UNIT, unitRepo::findAll,
-                UtilConfigurator.KST, kstRepo::findAll,
-                UtilConfigurator.MPK, mpkService::getAll,
-                UtilConfigurator.BRANCH, () -> ConfigureMapper.convertBranchToDTOs(branchService.getAllBranches()),
-                UtilConfigurator.LOCATION, () -> ConfigureMapper.convertLocationToDTOs(branchService.getAllLocations()),
-                UtilConfigurator.TYPE, () -> ConfigureMapper.convertTypesToDTOs(typeService.getAllTypes()),
-                UtilConfigurator.SUBTYPE, () -> ConfigureMapper.convertSubtypesToDTOs(typeService.getAllSubtypes()),
-                UtilConfigurator.SERVICE_PROVIDER, serviceService::getAllServiceProviders,
+                UtilConfigurator.ASSET_STATUS, () -> isOnlyActive ? assetStatusRepo.getActive() : assetStatusRepo.findAll(),
+                UtilConfigurator.UNIT, () -> isOnlyActive ? unitRepo.getActive() : unitRepo.findAll(),
+                UtilConfigurator.KST, () -> isOnlyActive ? kstRepo.getActive() : kstRepo.findAll(),
+                UtilConfigurator.MPK, () -> isOnlyActive ? mpkService.getOnlyActive() : mpkService.getAll(),
+                UtilConfigurator.BRANCH, () -> ConfigureMapper.convertBranchToDTOs(
+                        isOnlyActive ? branchService.getAllActiveBranches() : branchService.getAllBranches()),
+                UtilConfigurator.LOCATION, () -> ConfigureMapper.convertLocationToDTOs(
+                        isOnlyActive ? branchService.getAllActiveLocations() : branchService.getAllLocations()),
+                UtilConfigurator.TYPE, () -> ConfigureMapper.convertTypesToDTOs(
+                        isOnlyActive ? typeService.getAllActiveTypes() : typeService.getAllTypes()),
+                UtilConfigurator.SUBTYPE, () -> ConfigureMapper.convertSubtypesToDTOs(
+                        isOnlyActive ? typeService.getAllActiveSubtypes() : typeService.getAllSubtypes()),
+                UtilConfigurator.SERVICE_PROVIDER, () ->
+                        isOnlyActive ? serviceService.getAllActiveServiceProviders() : serviceService.getAllServiceProviders(),
                 UtilConfigurator.EMPLOYEE, () -> userRepo.getActiveUsers().stream().map(UserMapper::toEmployee).collect(Collectors.toList())
         );
+
+
         for (String field : fields) {
             Supplier<Object> dataFetcher = dataFetchers.get(field);
             if (dataFetcher != null) {
@@ -254,4 +262,6 @@ public class ConfiguratorService {
         log.info(TAG + "Get KST by num");
         return kstRepo.findByNum(name);
     }
+
+
 }

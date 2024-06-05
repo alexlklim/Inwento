@@ -25,7 +25,8 @@ public class ConfigureMapper {
                 .map(subtype -> new DataDto.Subtype(
                         subtype.getId(),
                         subtype.getSubtype(),
-                        subtype.isActive()))
+                        subtype.isActive(),
+                        subtype.getType().getId()))
                 .collect(Collectors.toList());
     }
 

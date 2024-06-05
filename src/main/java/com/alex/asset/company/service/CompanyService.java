@@ -32,16 +32,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompanyService {
     private final String TAG = "COMPANY_SERVICE - ";
-    private final UserRepo userRepo;
-    private final CompanyRepo companyRepo;
     private final LocationService locationService;
     private final LogService logService;
     private final NotificationService notificationService;
+    private final UserRepo userRepo;
+    private final CompanyRepo companyRepo;
 
 
     @SneakyThrows
     public Map<String, Object> getInfoAboutCompany(List<String> companyFields) {
-        log.info(TAG + "Get information about company");
+        log.info(TAG + "getInfoAboutCompany");
         if (companyFields == null || companyFields.isEmpty()) companyFields = UtilCompany.getAll();
         Map<String, Object> map = new HashMap<>();
         return CompanyMapper.toDTOWithCustomFields(map, companyRepo.findAll().get(0), companyFields);
@@ -51,19 +51,35 @@ public class CompanyService {
     @SneakyThrows
     @Modifying
     @Transactional
-    public Map<String, Object> updateCompany(Map<String, Object> updates, Long userId) throws LabelSizeIsIncorrectException {
-        log.info(TAG + "Update company by user with id {}", userId);
+    public void updateCompany(Map<String, Object> updates, Long userId) throws LabelSizeIsIncorrectException {
+        log.info(TAG + "updateCompany userId {}", userId);
         Company company = companyRepo.findAll().get(0);
         updates.forEach((key, value) -> {
             switch (key) {
-                case UtilCompany.COMPANY: company.setCompany((String) value); break;
-                case UtilCompany.CITY: company.setCity((String) value); break;
-                case UtilCompany.STREET: company.setStreet((String) value); break;
-                case UtilCompany.ZIP_CODE: company.setZipCode((String) value); break;
-                case UtilCompany.NIP: company.setNip((String) value); break;
-                case UtilCompany.REGON: company.setRegon((String) value); break;
-                case UtilCompany.PHONE: company.setPhone((String) value); break;
-                case UtilCompany.EMAIL: company.setEmail((String) value); break;
+                case UtilCompany.COMPANY:
+                    company.setCompany((String) value);
+                    break;
+                case UtilCompany.CITY:
+                    company.setCity((String) value);
+                    break;
+                case UtilCompany.STREET:
+                    company.setStreet((String) value);
+                    break;
+                case UtilCompany.ZIP_CODE:
+                    company.setZipCode((String) value);
+                    break;
+                case UtilCompany.NIP:
+                    company.setNip((String) value);
+                    break;
+                case UtilCompany.REGON:
+                    company.setRegon((String) value);
+                    break;
+                case UtilCompany.PHONE:
+                    company.setPhone((String) value);
+                    break;
+                case UtilCompany.EMAIL:
+                    company.setEmail((String) value);
+                    break;
 
                 case UtilCompany.LABEL_HEIGHT: {
                     Double labelHeight = (Double) value;
@@ -79,47 +95,82 @@ public class CompanyService {
                     else throw new LabelSizeIsIncorrectException("Label width is incorrect: " + labelWidth);
                     break;
                 }
-                case UtilCompany.LABEL_TYPE: company.setLabelType((String) value); break;
-                case UtilCompany.EMAIL_HOST: company.setHost((String) value); break;
-                case UtilCompany.EMAIL_PORT: company.setPort((String) value); break;
-                case UtilCompany.EMAIL_USERNAME: company.setUsername((String) value); break;
-                case UtilCompany.EMAIL_PASSWORD: company.setPassword((String) value); break;
-                case UtilCompany.EMAIL_PROTOCOL: company.setProtocol((String) value); break;
-                case UtilCompany.EMAIL_CONFIGURED: company.setIsEmailConfigured((boolean) value); break;
+                case UtilCompany.LABEL_TYPE:
+                    company.setLabelType((String) value);
+                    break;
+                case UtilCompany.EMAIL_HOST:
+                    company.setHost((String) value);
+                    break;
+                case UtilCompany.EMAIL_PORT:
+                    company.setPort((String) value);
+                    break;
+                case UtilCompany.EMAIL_USERNAME:
+                    company.setUsername((String) value);
+                    break;
+                case UtilCompany.EMAIL_PASSWORD:
+                    company.setPassword((String) value);
+                    break;
+                case UtilCompany.EMAIL_PROTOCOL:
+                    company.setProtocol((String) value);
+                    break;
+                case UtilCompany.EMAIL_CONFIGURED:
+                    company.setIsEmailConfigured((boolean) value);
+                    break;
 
-                case UtilCompany.RFID_LENGTH: company.setRfidCodeLength((Integer) value); break;
-                case UtilCompany.RFID_LENGTH_MAX: company.setRfidCodeLengthMax((Integer) value); break;
-                case UtilCompany.RFID_LENGTH_MIN: company.setRfidCodeLengthMin((Integer) value); break;
-                case UtilCompany.RFID_PREFIX: company.setRfidCodePrefix((String) value); break;
-                case UtilCompany.RFID_SUFFIX: company.setRfidCodeSuffix((String) value); break;
-                case UtilCompany.RFID_POSTFIX: company.setRfidCodePostfix((String) value); break;
-                case UtilCompany.BAR_CODE_LENGTH: company.setBarCodeLength((Integer) value); break;
-                case UtilCompany.BAR_CODE_LENGTH_MAX: company.setBarCodeLengthMax((Integer) value); break;
-                case UtilCompany.BAR_CODE_LENGTH_MIN: company.setBarCodeLengthMin((Integer) value); break;
-                case UtilCompany.BAR_CODE_PREFIX: company.setBarCodePrefix((String) value); break;
-                case UtilCompany.BAR_CODE_SUFFIX: company.setBarCodeSuffix((String) value); break;
-                case UtilCompany.BAR_CODE_POSTFIX: company.setBarCodePostfix((String) value); break;
+                case UtilCompany.RFID_LENGTH:
+                    company.setRfidCodeLength((Integer) value);
+                    break;
+                case UtilCompany.RFID_LENGTH_MAX:
+                    company.setRfidCodeLengthMax((Integer) value);
+                    break;
+                case UtilCompany.RFID_LENGTH_MIN:
+                    company.setRfidCodeLengthMin((Integer) value);
+                    break;
+                case UtilCompany.RFID_PREFIX:
+                    company.setRfidCodePrefix((String) value);
+                    break;
+                case UtilCompany.RFID_SUFFIX:
+                    company.setRfidCodeSuffix((String) value);
+                    break;
+                case UtilCompany.RFID_POSTFIX:
+                    company.setRfidCodePostfix((String) value);
+                    break;
+                case UtilCompany.BARCODE_LENGTH:
+                    company.setBarCodeLength((Integer) value);
+                    break;
+                case UtilCompany.BARCODE_LENGTH_MAX:
+                    company.setBarCodeLengthMax((Integer) value);
+                    break;
+                case UtilCompany.BARCODE_LENGTH_MIN:
+                    company.setBarCodeLengthMin((Integer) value);
+                    break;
+                case UtilCompany.BARCODE_PREFIX:
+                    company.setBarCodePrefix((String) value);
+                    break;
+                case UtilCompany.BARCODE_SUFFIX:
+                    company.setBarCodeSuffix((String) value);
+                    break;
+                case UtilCompany.BARCODE_POSTFIX:
+                    company.setBarCodePostfix((String) value);
+                    break;
 
-                default: break;
+                default:
+                    break;
             }
         });
         companyRepo.save(company);
         logService.addLog(userId, Action.UPDATE, Section.COMPANY, company.getCompany());
         notificationService.sendSystemNotificationToUsersWithRole(Reason.COMPANY_WAS_UPDATED, Role.ADMIN);
-        return getInfoAboutCompany(UtilCompany.getFieldsSimpleView());
     }
-
 
 
     public DataDto getData() {
         DataDto dto = new DataDto();
-
         dto.setBranches(ConfigureMapper.convertBranchToDTOs(locationService.getBranches()));
         dto.setLocations(ConfigureMapper.convertLocationToDTOs(locationService.getLocations()));
         dto.setEmployees(userRepo.getActiveUsers()
                 .stream().map(UserMapper::toEmployee)
                 .collect(Collectors.toList()));
-
         return dto;
     }
 

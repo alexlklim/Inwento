@@ -81,4 +81,12 @@ public class TypeService {
     public List<Subtype> getAllSubtypes() {
         return subtypeRepo.findAll();
     }
+
+    public List<Type> getAllActiveTypes() {
+        return typeRepo.getActive();
+    }
+
+    public List<Subtype> getAllActiveSubtypes() {
+        return subtypeRepo.getActive();
+    }
 }

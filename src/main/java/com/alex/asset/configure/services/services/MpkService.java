@@ -37,6 +37,9 @@ public class MpkService {
     public List<MPK> getAll(){
         return mpkRepo.findAll();
     }
+    public List<MPK> getOnlyActive() {
+        return mpkRepo.getActive();
+    }
     public void createMPK(DtoData dto, User user) {
         log.info(TAG + "Add MPK {}", dto.getName());
         if (mpkRepo.existsByMpk(dto.getName())) return;

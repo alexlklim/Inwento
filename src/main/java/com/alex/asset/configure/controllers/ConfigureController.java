@@ -28,12 +28,21 @@ public class ConfigureController {
 
 
     @Operation(summary = "get all configurations (full view, active and not active)")
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getConfigurations(
             @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "getConfigurations: " + fields);
-        return configureService.getAllConfigurations(fields);
+        return configureService.getAllConfigurations(fields, false);
+    }
+
+    @Operation(summary = "get all configurations (full view, active and not active)")
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object> getOnlyActiveConfigurations(
+            @RequestParam(required = false) List<String> fields) {
+        log.info(TAG + "getOnlyActiveConfigurations: " + fields);
+        return configureService.getAllConfigurations(fields, true);
     }
 
 
