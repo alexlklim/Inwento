@@ -41,7 +41,9 @@ public class ProductFilterService {
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
             throw new ResourceNotFoundException("Product was deleted with id " + userId);
         }
-        if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
+        if (productFields.contains(UtilProduct.SERVICED_HISTORY)){
+            return ProductMapper.toDTOWithCustomFields(product, productFields, servicedAssetRepo.findAllByProduct(product));
+        }
         return ProductMapper.toDTOWithCustomFields(product, productFields);
     }
 
