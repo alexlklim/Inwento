@@ -3,6 +3,7 @@ package com.alex.asset.product.service;
 import com.alex.asset.configure.domain.ContactPerson;
 import com.alex.asset.configure.repo.ContactPersonRepo;
 import com.alex.asset.configure.repo.ServiceProviderRepo;
+import com.alex.asset.exceptions.product.ValueIsNotAllowed;
 import com.alex.asset.exceptions.product.ValueIsNotUnique;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.product.domain.Activity;
@@ -90,16 +91,19 @@ public class SerProductService {
                 case UtilsServicedAsset.PRODUCT_ID:
                     servicedAsset.setProduct(
                             productRepo.findById(((Number) value).longValue())
-                                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + value)));
+                                    .orElseThrow(
+                                            () -> new ResourceNotFoundException("Product not found with id " + value)));
                     break;
                 case UtilsServicedAsset.SERVICE_PROVIDER_ID:
                     servicedAsset.setServiceProvider(
                             serviceProviderRepo.findById(((Number) value).longValue())
-                                    .orElseThrow(() -> new ResourceNotFoundException("Service Provider not found with id " + value)));
+                                    .orElseThrow(
+                                            () -> new ResourceNotFoundException("Service Provider not found with id " + value)));
                     break;
                 case UtilsServicedAsset.CONTACT_PERSON_ID:
                     ContactPerson contactPerson = contactPersonRepo.findById(((Number) value).longValue())
-                            .orElseThrow(() -> new ResourceNotFoundException("Contact person not found with id " + value));
+                            .orElseThrow(
+                                    () -> new ResourceNotFoundException("Contact person not found with id " + value));
                     if (contactPerson.getServiceProvider() != servicedAsset.getServiceProvider())
                         throw new ResourceNotFoundException("Contact person for this service provider not found");
                     servicedAsset.setContactPerson(contactPerson);
@@ -119,13 +123,21 @@ public class SerProductService {
         });
         servicedAsset.getProduct().getProductHistories().add(
                 productHistoryService.createProductHistory(user, servicedAsset.getProduct(), Activity.SERVICE));
+
+        if (servicedAsset.getServiceStartDate() == null)
+            throw new ValueIsNotAllowed("Service start data can't be null");
+        if (servicedAsset.getPlannedServicePeriod() == null)
+            throw new ValueIsNotAllowed("Planned service period can't be null");
+
         servicedAssetRepo.save(servicedAsset);
         return new HashMap<>();
     }
 
     public List<Map<String, Object>> getAllServicedAsset(List<String> fields, Long userId) {
         log.info(TAG + "getAllServicedAsset userID " + userId);
-        return ServiceMapper.toDTOsWithCustomFields(servicedAssetRepo.findAll(), fields);
+        return ServiceMapper.toDTOsWithCustomFields(
+                servicedAssetRepo.findAll(),
+                fields.isEmpty() ? UtilsServicedAsset.getAllFields() : fields);
 
     }
 
@@ -134,8 +146,8 @@ public class SerProductService {
         log.info(TAG + "getServicedAssetById userId " + userId);
         return ServiceMapper.toDTOWithCustomFields(
                 servicedAssetRepo.findById(assetId).orElseThrow(
-                        () -> new ResourceNotFoundException("Serviced asset not found with id " + assetId)
-                ), fields
+                        () -> new ResourceNotFoundException("Serviced asset not found with id " + assetId)),
+                fields.isEmpty() ? UtilsServicedAsset.getAllFields() : fields
         );
     }
 }

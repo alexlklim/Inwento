@@ -25,7 +25,7 @@ import com.alex.asset.logs.domain.Section;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.Comment;
 import com.alex.asset.product.domain.Product;
-import com.alex.asset.product.dto.ProductCodesDTO;
+import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
@@ -68,7 +68,7 @@ public class ProductService {
 
     @Modifying
     @SneakyThrows
-    public ProductCodesDTO update(Map<String, Object> updates, Long userId) {
+    public Map<String, Object> update(Map<String, Object> updates, Long userId) {
         log.info(TAG + "Update or create product");
         if (updates.containsKey(UtilProduct.ID)) {
             Product product = productRepo.findById(
@@ -85,7 +85,7 @@ public class ProductService {
 
     @SneakyThrows
     @Transactional
-    public ProductCodesDTO createProduct(Map<String, Object> updates, Long userId) {
+    public Map<String, Object> createProduct(Map<String, Object> updates, Long userId) {
         log.info(TAG + "Create product");
         Company company = companyRepo.findAll().get(0);
         if (companyRepo.areNullOrZeroBarCodeLength(company)) {
@@ -132,7 +132,7 @@ public class ProductService {
     }
 
     @SneakyThrows
-    private ProductCodesDTO updateProduct(Map<String, Object> updates, Product product, Long userId, boolean isCreated) throws ValueIsNotUnique {
+    private Map<String, Object> updateProduct(Map<String, Object> updates, Product product, Long userId, boolean isCreated) throws ValueIsNotUnique {
         log.info(TAG + "Update product by user with id {}", userId);
         User user = userRepo.getUser(userId);
         updates.forEach((key, value) -> {
@@ -305,12 +305,8 @@ public class ProductService {
         productRepo.save(product);
         logService.addLog(userId, Action.UPDATE, Section.PRODUCT, "Product was saved");
 
+        return ProductMapper.toDTOWithCustomFields(product, UtilProduct.getProductCodes());
 
-        return ProductCodesDTO.builder()
-                .id(product.getId())
-                .barCode(product.getBarCode())
-                .rfidCode(product.getRfidCode())
-                .build();
     }
 
 

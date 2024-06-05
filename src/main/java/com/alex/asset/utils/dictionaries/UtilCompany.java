@@ -9,7 +9,6 @@ import java.util.List;
 @Slf4j
 public class UtilCompany {
     public final static String COMPANY = "company";
-    public final static String COMPANY_NAME = "company_name";
     public final static String CITY = "city";
     public final static String STREET = "street";
     public final static String ZIP_CODE = "zip_code";
@@ -52,18 +51,9 @@ public class UtilCompany {
 
 
     public static List<String> getAll() {
-        List<String> values = new ArrayList<>();
-        Field[] fields = UtilCompany.class.getDeclaredFields();
-        for (Field field : fields) {
-            if (field.getType().equals(String.class)) {
-                try {
-                    values.add((String) field.get(null));
-                } catch (IllegalAccessException e) {
-                    log.error("IllegalAccessException");
-                }
-            }
-        }
-        return values;
+        return List.of(
+                COMPANY, LABEL_CONFIG, EMAIL_CONFIG, RFID_CODE, BARCODE
+        );
     }
 
     public static List<String> getFieldsSimpleView() {

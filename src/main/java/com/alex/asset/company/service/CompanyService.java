@@ -40,11 +40,13 @@ public class CompanyService {
 
 
     @SneakyThrows
-    public Map<String, Object> getInfoAboutCompany(List<String> companyFields) {
+    public Map<String, Object> getInfoAboutCompany(List<String> fields) {
         log.info(TAG + "getInfoAboutCompany");
-        if (companyFields == null || companyFields.isEmpty()) companyFields = UtilCompany.getAll();
         Map<String, Object> map = new HashMap<>();
-        return CompanyMapper.toDTOWithCustomFields(map, companyRepo.findAll().get(0), companyFields);
+        return CompanyMapper.toDTOWithCustomFields(
+                map,
+                companyRepo.findAll().get(0),
+                fields.isEmpty() ? UtilCompany.getAll() : fields);
     }
 
 

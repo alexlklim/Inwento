@@ -1,7 +1,6 @@
 package com.alex.asset.product.controller;
 
 
-import com.alex.asset.product.dto.ProductCodesDTO;
 import com.alex.asset.product.service.ProductFilterService;
 import com.alex.asset.product.service.ProductService;
 import com.alex.asset.utils.SecHolder;
@@ -31,17 +30,6 @@ public class ProductController {
     @GetMapping("/all/{mode}/{scrap}")
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getAllProductsWithCustomFields(
-            @PathVariable("mode") String mode,
-            @PathVariable("scrap") Boolean isScrap,
-            @RequestParam(required = false) List<String> fields) {
-        log.info(TAG + "Try to get all products with custom or all fields");
-        return productFilterService.getAllProducts(mode, isScrap, fields, SecHolder.getUserId());
-    }
-
-    @Operation(summary = "Get list of products with fields, mode:admin/emp  scrap:true/false")
-    @PostMapping("/all/{mode}/{scrap}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> getAllProductsWithCustomFieldsApp(
             @PathVariable("mode") String mode,
             @PathVariable("scrap") Boolean isScrap,
             @RequestParam(required = false) List<String> fields) {
@@ -95,9 +83,10 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getProductsByWarrantyPeriod(
             @PathVariable("start_date") String startDate,
-            @PathVariable("end_date") String endDate) {
+            @PathVariable("end_date") String endDate,
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Get products in a special range (warranty period) ");
-        return productFilterService.getByWarrantyPeriod(startDate, endDate);
+        return productFilterService.getByWarrantyPeriod(startDate, endDate, fields);
     }
 
     @Operation(summary = "Get products in a special range (inspection period)")
@@ -105,15 +94,16 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getProductsByInspectionPeriod(
             @PathVariable("start_date") String startDate,
-            @PathVariable("end_date") String endDate) {
+            @PathVariable("end_date") String endDate,
+            @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Get products in a special range (inspection period) ");
-        return productFilterService.getByInspectionPeriod(startDate, endDate);
+        return productFilterService.getByInspectionPeriod(startDate, endDate, fields);
     }
 
     @Operation(summary = "Update product")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public ProductCodesDTO updateProduct(@RequestBody Map<String, Object> updates) {
+    public Map<String, Object> updateProduct(@RequestBody Map<String, Object> updates) {
         log.info(TAG + "Update product");
         return productService.update(updates, SecHolder.getUserId());
     }
@@ -121,7 +111,7 @@ public class ProductController {
     @Operation(summary = "Create product")
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ProductCodesDTO createProduct(@RequestBody Map<String, Object> updates) {
+    public Map<String, Object> createProduct(@RequestBody Map<String, Object> updates) {
         log.info(TAG + "Create product");
         return productService.createProduct(updates, SecHolder.getUserId());
     }

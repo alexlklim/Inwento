@@ -6,6 +6,7 @@ import com.alex.asset.exceptions.email.EmailIsNotConfigured;
 import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgress;
 import com.alex.asset.exceptions.product.IdNotProvidedException;
 import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
+import com.alex.asset.exceptions.product.ValueIsNotAllowed;
 import com.alex.asset.exceptions.product.ValueIsNotUnique;
 import com.alex.asset.exceptions.security.UserFailedAuthentication;
 import com.alex.asset.exceptions.security.UserNotRegisterYet;
@@ -39,7 +40,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler({
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            ValueIsNotAllowed.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleIllegalArgument(Exception ex) {

@@ -353,7 +353,7 @@ CREATE TABLE IF NOT EXISTS serviced_assets
     service_provider_id    BIGINT  NOT NULL,
     contact_person_id      BIGINT  NOT NULL,
     send_by_id             BIGINT  NOT NULL,
-    received_by_id         BIGINT  NOT NULL,
+    received_by_id         BIGINT,
     delivery               ENUM ('kurier', 'odbiór osobisty'),
     FOREIGN KEY (product_id) REFERENCES products (id),
     FOREIGN KEY (service_provider_id) REFERENCES service_provider (id),
@@ -361,3 +361,4 @@ CREATE TABLE IF NOT EXISTS serviced_assets
     FOREIGN KEY (send_by_id) REFERENCES users (id),
     FOREIGN KEY (received_by_id) REFERENCES users (id)
 );
+select bar_code from products;

@@ -34,22 +34,27 @@ public class ProductFilterService {
 
 
     @SneakyThrows
-    public Map<String, Object> getById(List<String> productFields, Long productId, Long userId) {
+    public Map<String, Object> getById(List<String> fields, Long productId, Long userId) {
         log.info(TAG + "getById");
         Product product = productRepo.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found with id " + userId));
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
             throw new ResourceNotFoundException("Product was deleted with id " + userId);
         }
-        if (productFields.contains(UtilProduct.SERVICED_HISTORY)){
-            return ProductMapper.toDTOWithCustomFields(product, productFields, servicedAssetRepo.findAllByProduct(product));
+        if (fields.contains(UtilProduct.SERVICED_HISTORY)){
+            return ProductMapper.toDTOWithCustomFields(
+                    product,
+                    fields,
+                    servicedAssetRepo.findAllByProduct(product));
         }
-        return ProductMapper.toDTOWithCustomFields(product, productFields);
+        return ProductMapper.toDTOWithCustomFields(
+                product,
+                fields.isEmpty() ? UtilProduct.getAll() : fields);
     }
 
     @SneakyThrows
     public List<Map<String, Object>> getAllProducts(
-            String mode, Boolean isScrap, List<String> productFields, Long userId) {
+            String mode, Boolean isScrap, List<String> fields, Long userId) {
         log.info(TAG + "getAllProducts");
         List<Product> products = null;
         if (Role.ADMIN == Role.fromString(mode)) {
@@ -58,9 +63,10 @@ public class ProductFilterService {
             }
         } else products = productRepo.getProductsListByEmp(isScrap);
 
-        if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
         if (products == null) return Collections.emptyList();
-        return ProductMapper.toDTOsWithCustomFields(products, productFields);
+        return ProductMapper.toDTOsWithCustomFields(
+                products,
+                fields.isEmpty() ? UtilProduct.getAll() : fields);
     }
 
 
@@ -68,7 +74,7 @@ public class ProductFilterService {
     @SneakyThrows
     public Map<String, Object> getByUniqueValues(
             String barCode, String rfidCode, String inventoryNumber, String serialNumber,
-            List<String> productFields, Long userId) {
+            List<String> fields, Long userId) {
         log.info(TAG + "getByUniqueValues");
         barCode = "null".equals(barCode) ? null : barCode;
         rfidCode = "null".equals(rfidCode) ? null : rfidCode;
@@ -79,39 +85,39 @@ public class ProductFilterService {
             if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
                 throw new ResourceNotFoundException("Product was deleted with id " + userId);
             }
-            if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
-            return ProductMapper.toDTOWithCustomFields(product, productFields);
+            return ProductMapper.toDTOWithCustomFields(
+                    product,
+                    fields.isEmpty() ? UtilProduct.getAll() : fields);
         } else throw new ResourceNotFoundException("Product not found with this code ");
     }
 
 
     @SneakyThrows
-    public List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields) {
+    public List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> fields) {
         log.info(TAG + "getByValue");
-        if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
-        return ProductMapper.toDTOsWithCustomFields(productRepo.getByKeyWord(keyWord, isScrapped), productFields);
+        return ProductMapper.toDTOsWithCustomFields(
+                productRepo.getByKeyWord(keyWord, isScrapped),
+                fields.isEmpty() ? UtilProduct.getAll() : fields);
     }
 
-    public List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate) {
+    public List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate, List<String> fields) {
         log.info(TAG + "getByWarrantyPeriod");
         return ProductMapper.toDTOsWithCustomFields(
                 productRepo.getProductsByWarrantyPeriod(
                         LocalDate.parse(startDate),
-                        LocalDate.parse(endDate)
-                ),
-                UtilProduct.getAll());
+                        LocalDate.parse(endDate)),
+                fields.isEmpty() ? UtilProduct.getAll() : fields);
 
     }
 
 
-    public List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate) {
+    public List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate, List<String> fields) {
         log.info(TAG + "getByInspectionPeriod");
         return ProductMapper.toDTOsWithCustomFields(
                 productRepo.getProductsByInspectionPeriod(
                         LocalDate.parse(startDate),
-                        LocalDate.parse(endDate)
-                ),
-                UtilProduct.getAll());
+                        LocalDate.parse(endDate)),
+                fields.isEmpty() ? UtilProduct.getAll() : fields);
 
     }
 

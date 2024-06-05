@@ -44,4 +44,14 @@ public class UtilsServicedAsset {
         );
     }
 
+    public static List<String> getAllFields() {
+        return List.of(
+                ID, ACTIVE, SERVICE_START_DATE, SERVICE_END_DATE, PLANNED_SERVICE_PERIOD, DELIVERY,
+                PRODUCT, PRODUCT_ID, SERVICE_PROVIDER_ID, SERVICE_PROVIDER_COMPANY,
+                SERVICE_PROVIDER_NIP, SERVICE_PROVIDER_ADDRESS, CONTACT_PERSON_ID,
+                CONTACT_PERSON_NAME, CONTACT_PERSON_EMAIL, CONTACT_PERSON_PHONE_NUMBER,
+                SEND_BY_ID, SEND_BY_NAME, SEND_BY_EMAIL, RECEIVER_BY_ID,
+                RECEIVER_BY_NAME, RECEIVER_BY_EMAIL
+        );
+    }
 }

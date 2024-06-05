@@ -87,6 +87,12 @@ public class UtilProduct {
         );
     }
 
+    public static List<String> getProductCodes() {
+        return List.of(
+                ID, BAR_CODE, RFID_CODE
+        );
+    }
+
 
     public static List<String> getFieldsShortView() {
         return List.of(
