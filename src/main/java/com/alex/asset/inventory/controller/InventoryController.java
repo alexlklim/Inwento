@@ -26,6 +26,16 @@ public class InventoryController {
      private final InventoryService inventoryService;
 
 
+     // get list of inventories with custom fields
+    // get inventory by id with custom fields
+    // get current inventory by id with custom fields
+
+
+    //   create new inventory
+    // update inventory
+
+
+
     @Operation(summary = "Get inventory by id")
     @Secured("ROLE_ADMIN")
     @GetMapping("/{inventory_id}")

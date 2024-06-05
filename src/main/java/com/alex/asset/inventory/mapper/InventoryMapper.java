@@ -18,4 +18,9 @@ public class InventoryMapper {
         dto.setInfo(entity.getInfo());
         return dto;
     }
+
+
+
+
+
 }
