@@ -19,17 +19,18 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ProductHistoryService {
 
-    private final String TAG = "PRODUCT_SERVICE - ";
+    private final String TAG = "PRODUCT_HISTORY_SERVICE - ";
     private final UserRepo userRepo;
 
 
 
     public ProductHistory createProductHistory(Long userId, Product product, Activity activity) {
+        log.info(TAG + "createProductHistory");
         return createProductHistory(userRepo.getUser(userId), product, activity);
     }
 
     public ProductHistory createProductHistory(User user, Product product, Activity activity) {
-        log.info(TAG + "Create Product History");
+        log.info(TAG + "createProductHistory");
         return new ProductHistory().toBuilder()
                 .activity(activity)
                 .created(LocalDateTime.now())

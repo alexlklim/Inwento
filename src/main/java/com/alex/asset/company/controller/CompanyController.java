@@ -32,6 +32,7 @@ public class CompanyController {
     public Map<String, Object> getInfo(
             @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Get company info");
+
         return companyService.getInfoAboutCompany(fields);
     }
 

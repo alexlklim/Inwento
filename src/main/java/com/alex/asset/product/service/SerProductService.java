@@ -30,7 +30,7 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class SerProductService {
-    private final String TAG = "PRODUCT_SERVICE - ";
+    private final String TAG = "SER_PRODUCT_SERVICE - ";
 
     private final ProductRepo productRepo;
     private final UserRepo userRepo;
@@ -42,6 +42,7 @@ public class SerProductService {
 
 
     public Map<String, Object> serviceProduct(Map<String, Object> updates, Long userId) {
+        log.info(TAG + "serviceProduct");
         if (updates.containsKey(UtilsServicedAsset.ID)) {
             ServicedAsset servicedAsset = servicedAssetRepo.findById(
                             ((Number) updates.get(UtilProduct.ID)).longValue())
@@ -60,7 +61,7 @@ public class SerProductService {
     private Map<String, Object> updateServicedAsset(
             Map<String, Object> updates, ServicedAsset servicedAsset, Long userId)
             throws ValueIsNotUnique {
-        log.info(TAG + "Update product by user with id {}", userId);
+        log.info(TAG + "updateServicedAsset");
         User user = userRepo.getUser(userId);
         updates.forEach((key, value) -> {
             switch (key) {
@@ -122,12 +123,14 @@ public class SerProductService {
     }
 
     public List<Map<String, Object>> getAllServicedAsset(List<String> fields, Long userId) {
+        log.info(TAG + "getAllServicedAsset");
         return ServiceMapper.toDTOsWithCustomFields(servicedAssetRepo.findAll(), fields);
 
     }
 
     @SneakyThrows
     public Map<String, Object> getServicedAssetById(Long assetId, List<String> fields, Long userId) {
+        log.info(TAG + "getServicedAssetById");
         return ServiceMapper.toDTOWithCustomFields(
                 servicedAssetRepo.findById(assetId).orElseThrow(
                         () -> new ResourceNotFoundException("Serviced asset not found with id " + assetId)

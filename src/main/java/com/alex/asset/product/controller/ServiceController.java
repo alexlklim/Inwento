@@ -21,7 +21,7 @@ import java.util.Map;
 @Tag(name = "Product Controller", description = "Product API")
 public class ServiceController {
 
-    private final String TAG = "PRODUCT_CONTROLLER - ";
+    private final String TAG = "SERVICE_CONTROLLER - ";
     private final SerProductService serProductService;
 
 

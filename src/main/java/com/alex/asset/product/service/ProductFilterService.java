@@ -26,7 +26,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProductFilterService {
 
-    private final String TAG = "PRODUCT_SERVICE - ";
+    private final String TAG = "PRODUCT_FILTER_SERVICE - ";
 
     private final ServicedAssetRepo servicedAssetRepo;
     private final ProductRepo productRepo;
@@ -35,7 +35,7 @@ public class ProductFilterService {
 
     @SneakyThrows
     public Map<String, Object> getById(List<String> productFields, Long productId, Long userId) {
-        log.info(TAG + "get product by id");
+        log.info(TAG + "getById");
         Product product = productRepo.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found with id " + userId));
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
@@ -50,6 +50,7 @@ public class ProductFilterService {
     @SneakyThrows
     public List<Map<String, Object>> getAllProducts(
             String mode, Boolean isScrap, List<String> productFields, Long userId) {
+        log.info(TAG + "getAllProducts");
         List<Product> products = null;
         if (Role.ADMIN == Role.fromString(mode)) {
             if (Role.ADMIN == userRepo.getUser(userId).getRoles()) {
@@ -68,6 +69,7 @@ public class ProductFilterService {
     public Map<String, Object> getByUniqueValues(
             String barCode, String rfidCode, String inventoryNumber, String serialNumber,
             List<String> productFields, Long userId) {
+        log.info(TAG + "getByUniqueValues");
         barCode = "null".equals(barCode) ? null : barCode;
         rfidCode = "null".equals(rfidCode) ? null : rfidCode;
         inventoryNumber = "null".equals(inventoryNumber) ? null : inventoryNumber;
@@ -85,12 +87,13 @@ public class ProductFilterService {
 
     @SneakyThrows
     public List<Map<String, Object>> getByValue(String keyWord, Boolean isScrapped, List<String> productFields) {
-        log.info(TAG + "get product by title");
+        log.info(TAG + "getByValue");
         if (productFields == null || productFields.isEmpty()) productFields = UtilProduct.getAll();
         return ProductMapper.toDTOsWithCustomFields(productRepo.getByKeyWord(keyWord, isScrapped), productFields);
     }
 
     public List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate) {
+        log.info(TAG + "getByWarrantyPeriod");
         return ProductMapper.toDTOsWithCustomFields(
                 productRepo.getProductsByWarrantyPeriod(
                         LocalDate.parse(startDate),
@@ -102,6 +105,7 @@ public class ProductFilterService {
 
 
     public List<Map<String, Object>> getByInspectionPeriod(String startDate, String endDate) {
+        log.info(TAG + "getByInspectionPeriod");
         return ProductMapper.toDTOsWithCustomFields(
                 productRepo.getProductsByInspectionPeriod(
                         LocalDate.parse(startDate),
