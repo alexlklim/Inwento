@@ -9,9 +9,10 @@ import com.alex.asset.configure.services.ConfigureService;
 import com.alex.asset.configure.services.services.BranchService;
 import com.alex.asset.configure.services.services.MpkService;
 import com.alex.asset.configure.services.services.TypeService;
+import com.alex.asset.exceptions.product.ActionIsNotPossibleException;
 import com.alex.asset.exceptions.product.IdNotProvidedException;
-import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
-import com.alex.asset.exceptions.product.ValueIsNotUnique;
+import com.alex.asset.exceptions.product.LengthOfCodeNotConfiguredException;
+import com.alex.asset.exceptions.product.ValueIsNotUniqueException;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
@@ -89,7 +90,7 @@ public class ProductService {
         log.info(TAG + "Create product");
         Company company = companyRepo.findAll().get(0);
         if (companyRepo.areNullOrZeroBarCodeLength(company)) {
-            throw new LengthOfCodeNotConfigured("RFID or BAR code length are null or zero. Please configure it to continue");
+            throw new LengthOfCodeNotConfiguredException("RFID or BAR code length are null or zero. Please configure it to continue");
         }
 
 
@@ -104,6 +105,7 @@ public class ProductService {
         entity.setRfidCode(generateRfidCode(company, entity.getId()));
 
         logService.addLog(userId, Action.CREATE, Section.PRODUCT, "Product was saved");
+        updates.remove(UtilProduct.ACTIVE);
         return updateProduct(updates, entity, userId, true);
     }
 
@@ -132,14 +134,15 @@ public class ProductService {
     }
 
     @SneakyThrows
-    private Map<String, Object> updateProduct(Map<String, Object> updates, Product product, Long userId, boolean isCreated) throws ValueIsNotUnique {
+    private Map<String, Object> updateProduct(Map<String, Object> updates, Product product, Long userId, boolean isCreated) throws ValueIsNotUniqueException {
         log.info(TAG + "Update product by user with id {}", userId);
         User user = userRepo.getUser(userId);
         updates.forEach((key, value) -> {
             switch (key) {
                 case UtilProduct.ACTIVE:
                     // if inventory is active, there is no possibility to delete product
-                    if (inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null) != null) break;
+                    if (inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null) != null)
+                        throw new ActionIsNotPossibleException("There is not possibility to delete product during active inventory");
 
                     if (userRepo.getUser(userId).getRoles() == Role.ADMIN) {
                         product.setActive((Boolean) value);
@@ -166,7 +169,7 @@ public class ProductService {
                     break;
                 case UtilProduct.BAR_CODE:
                     if (productRepo.existsByBarCode((String) value)) {
-                        throw new ValueIsNotUnique("Bar code " + value + " is taken");
+                        throw new ValueIsNotUniqueException("Bar code " + value + " is taken");
                     } else {
                         product.setBarCode((String) value);
                         product.getProductHistories().add(productHistoryService.createProductHistory(user, product, Activity.BAR_CODE));
@@ -174,7 +177,7 @@ public class ProductService {
                     break;
                 case UtilProduct.RFID_CODE:
                     if (productRepo.existsByRfidCode((String) value)) {
-                        throw new ValueIsNotUnique("Rfid code " + value + "is taken");
+                        throw new ValueIsNotUniqueException("Rfid code " + value + "is taken");
                     } else {
                         product.setRfidCode((String) value);
                         product.getProductHistories().add(productHistoryService.createProductHistory(user, product, Activity.RFID_CODE));
@@ -182,7 +185,7 @@ public class ProductService {
                     break;
                 case UtilProduct.INVENTORY_NUMBER:
                     if (productRepo.existsByInventoryNumber((String) value)) {
-                        throw new ValueIsNotUnique("Inventory number " + value + "is taken");
+                        throw new ValueIsNotUniqueException("Inventory number " + value + "is taken");
                     } else {
                         product.setInventoryNumber((String) value);
                         product.getProductHistories().add(productHistoryService.createProductHistory(user, product, Activity.INVENTORY_NUMBER));
@@ -190,7 +193,7 @@ public class ProductService {
                     break;
                 case UtilProduct.SERIAL_NUMBER:
                     if (productRepo.existsBySerialNumber((String) value)) {
-                        throw new ValueIsNotUnique("Serial number " + value + "is taken");
+                        throw new ValueIsNotUniqueException("Serial number " + value + "is taken");
                     } else {
                         product.setSerialNumber((String) value);
                         product.getProductHistories().add(productHistoryService.createProductHistory(user, product, Activity.SERIAL_NUMBER));

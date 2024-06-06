@@ -20,7 +20,19 @@ public interface LogRepo extends JpaRepository<Log, Long> {
     @Query("SELECT l " +
             "FROM Log l " +
             "WHERE l.created BETWEEN :startDate AND :endDate " +
-            "ORDER BY l.id DESC")
+            "AND l.user = :user" +
+            " ORDER BY l.id DESC")
+    List<Log> getLogsByDataRangeAndUser(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("user") User user);
+
+
+
+    @Query("SELECT l " +
+            "FROM Log l " +
+            "WHERE l.created BETWEEN :startDate AND :endDate " +
+            " ORDER BY l.id DESC")
     List<Log> getLogsByDataRange(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);

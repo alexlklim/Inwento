@@ -17,7 +17,7 @@ public interface CompanyRepo extends JpaRepository<Company, Long> {
 
     @Query("SELECT CASE WHEN " +
             "(c.barCodeLength IS NULL OR c.barCodeLength = 0) " +
-            "AND (c.rfidCodeLength IS NULL OR c.rfidCodeLength = 0) " +
+            "OR (c.rfidCodeLength IS NULL OR c.rfidCodeLength = 0) " +
             "THEN true ELSE false END FROM Company c WHERE c = ?1")
     boolean areNullOrZeroBarCodeLength(Company company);
 }

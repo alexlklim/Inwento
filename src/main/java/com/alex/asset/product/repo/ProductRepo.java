@@ -35,14 +35,15 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("SELECT p " +
             "FROM Product p " +
             "WHERE p.warrantyPeriod BETWEEN :startDate AND :endDate " +
-            "AND p.isActive = true " +
+            "AND p.isActive = true AND p.isScrapping != true " +
             "ORDER BY p.id DESC")
     List<Product> getProductsByWarrantyPeriod(@Param("startDate") LocalDate startDate,
                                               @Param("endDate") LocalDate endDate);
 
     @Query("SELECT p " +
             "FROM Product p " +
-            "WHERE p.inspectionDate BETWEEN :startDate AND :endDate AND p.isActive = true " +
+            "WHERE p.inspectionDate BETWEEN :startDate AND :endDate " +
+            "AND p.isActive = true AND p.isScrapping != true " +
             "ORDER BY p.id DESC")
     List<Product> getProductsByInspectionPeriod(@Param("startDate") LocalDate startDate,
                                               @Param("endDate") LocalDate endDate);
@@ -59,9 +60,10 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("SELECT p " +
             "FROM Product p " +
             "WHERE (LOWER(p.title) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
-            "       LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%')) " +
-            "      AND p.isScrapping = :is_scrapped " +
-            "      AND p.isActive = true")
+            "LOWER(p.barCode) LIKE CONCAT('%', LOWER(:prefix), '%') OR " +
+            "LOWER(p.rfidCode) LIKE CONCAT('%', LOWER(:prefix), '%')) " +
+            " AND p.isScrapping = :is_scrapped " +
+            " AND p.isActive = true")
     List<Product> getByKeyWord(
             @Param("prefix") String prefix,
             @Param("is_scrapped") Boolean isScrapped

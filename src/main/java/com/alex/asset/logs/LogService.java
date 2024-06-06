@@ -34,14 +34,16 @@ public class LogService {
     }
 
     @SneakyThrows
-    public List<LogDto> getLogsForSpecificUser(Long userId) {
-        log.info(TAG + "get logs for user with id {}", userId);
-        return logRepo.findAllByUserOrderByCreatedDesc(userRepo.findById(userId).orElseThrow(
-                        () -> new ResourceNotFoundException("User with id " + userId + " not found")))
-                .stream().map(LogMapper::toDto).toList();
+    public List<LogDto> getLogsForSpecificUserAndDataRange(Long userId, LocalDate startDate, LocalDate endDate) {
+        return LogMapper.toDTOs(
+                logRepo.getLogsByDataRangeAndUser(
+                        startDate.atStartOfDay(),
+                        endDate.plusDays(1).atStartOfDay(),
+                        userRepo.findById(userId).orElseThrow(
+                                () -> new ResourceNotFoundException("User not found with id " + userId)
+                        )
+                ));
     }
-
-
 
     @Transactional
     @SneakyThrows
@@ -55,15 +57,5 @@ public class LogService {
     public void addLog(Long userId, Action action, Section section, String text) {
         log.info(TAG + "add new log");
         addLog(userRepo.getUser(userId), action, section, text);
-    }
-
-
-    public List<LogDto> getLogsForSpecificDateRange(LocalDate startDate, LocalDate endDate) {
-
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
-
-        return LogMapper.toDTOs(
-                logRepo.getLogsByDataRange(startDateTime, endDateTime));
     }
 }

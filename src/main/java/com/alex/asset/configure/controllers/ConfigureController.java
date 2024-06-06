@@ -3,6 +3,7 @@ package com.alex.asset.configure.controllers;
 
 import com.alex.asset.configure.domain.KST;
 import com.alex.asset.configure.services.ConfiguratorService;
+import com.alex.asset.exceptions.company.KSTNumIsToShortException;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +31,7 @@ public class ConfigureController {
 
     @Operation(summary = "get all configurations (full view, active and not active)")
     @GetMapping("/all")
+    @Secured("ROLE_ADMIN")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getConfigurations(
             @RequestParam(required = false) List<String> fields) {
@@ -46,7 +49,7 @@ public class ConfigureController {
     }
 
 
-    @Operation(summary = "get asset statuses (active or not)")
+    @Operation(summary = "Update configurations")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
     public void updateConfigurations(
@@ -62,7 +65,7 @@ public class ConfigureController {
             @PathVariable("kst_num") String num) {
         log.info(TAG + "getKSTByNum");
         if (num.length() < 2)
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+             throw new KSTNumIsToShortException("Please, provide more longer KST num (length >= 2)");
         return new ResponseEntity<>(
                 configureService.getKSTsByNum(num),
                 HttpStatus.OK);

@@ -39,7 +39,7 @@ public class ProductFilterService {
         Product product = productRepo.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found with id " + userId));
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
-            throw new ResourceNotFoundException("Product was deleted with id " + userId);
+            throw new ResourceNotFoundException("Product was deleted with id " + productId);
         }
         if (fields == null) fields = UtilProduct.getAll();
         if (fields.contains(UtilProduct.SERVICED_HISTORY)){

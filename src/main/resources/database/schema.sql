@@ -331,8 +331,8 @@ CREATE TABLE IF NOT EXISTS contact_person
     is_active           BOOLEAN             NOT NULL,
     created             DATETIME,
     updated             DATETIME,
-    firstname           VARCHAR(255) UNIQUE NOT NULL,
-    lastname            VARCHAR(255) UNIQUE NOT NULL,
+    firstname           VARCHAR(255)  NOT NULL,
+    lastname            VARCHAR(255)  NOT NULL,
     phone_number        VARCHAR(255) UNIQUE NOT NULL,
     email               VARCHAR(255) UNIQUE NOT NULL,
     service_provider_id BIGINT              NOT NULL,
@@ -361,4 +361,5 @@ CREATE TABLE IF NOT EXISTS serviced_assets
     FOREIGN KEY (send_by_id) REFERENCES users (id),
     FOREIGN KEY (received_by_id) REFERENCES users (id)
 );
-select bar_code from products;
+select * from notifications;
+

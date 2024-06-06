@@ -3,8 +3,8 @@ package com.alex.asset.product.service;
 import com.alex.asset.configure.domain.ContactPerson;
 import com.alex.asset.configure.repo.ContactPersonRepo;
 import com.alex.asset.configure.repo.ServiceProviderRepo;
-import com.alex.asset.exceptions.product.ValueIsNotAllowed;
-import com.alex.asset.exceptions.product.ValueIsNotUnique;
+import com.alex.asset.exceptions.product.ValueIsNotAllowedException;
+import com.alex.asset.exceptions.product.ValueIsNotUniqueException;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.product.domain.Activity;
 import com.alex.asset.product.domain.ServicedAsset;
@@ -42,6 +42,7 @@ public class SerProductService {
 
 
 
+    @SneakyThrows
     public Map<String, Object> serviceProduct(Map<String, Object> updates, Long userId) {
         log.info(TAG + "serviceProduct userId " + userId);
         if (updates.containsKey(UtilsServicedAsset.ID)) {
@@ -61,7 +62,7 @@ public class SerProductService {
     @SneakyThrows
     private Map<String, Object> updateServicedAsset(
             Map<String, Object> updates, ServicedAsset servicedAsset, Long userId)
-            throws ValueIsNotUnique {
+            throws ValueIsNotUniqueException {
         log.info(TAG + "updateServicedAsset userId " + userId);
         User user = userRepo.getUser(userId);
         updates.forEach((key, value) -> {
@@ -121,13 +122,14 @@ public class SerProductService {
                     break;
             }
         });
-        servicedAsset.getProduct().getProductHistories().add(
-                productHistoryService.createProductHistory(user, servicedAsset.getProduct(), Activity.SERVICE));
 
         if (servicedAsset.getServiceStartDate() == null)
-            throw new ValueIsNotAllowed("Service start data can't be null");
+            throw new ValueIsNotAllowedException("Service start data can't be null");
         if (servicedAsset.getPlannedServicePeriod() == null)
-            throw new ValueIsNotAllowed("Planned service period can't be null");
+            throw new ValueIsNotAllowedException("Planned service period can't be null");
+
+        servicedAsset.getProduct().getProductHistories().add(
+                productHistoryService.createProductHistory(user, servicedAsset.getProduct(), Activity.COMMENT));
 
         servicedAssetRepo.save(servicedAsset);
         return new HashMap<>();

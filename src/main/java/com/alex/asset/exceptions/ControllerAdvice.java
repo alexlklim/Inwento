@@ -1,13 +1,11 @@
 package com.alex.asset.exceptions;
 
 
+import com.alex.asset.exceptions.company.KSTNumIsToShortException;
 import com.alex.asset.exceptions.company.LabelSizeIsIncorrectException;
 import com.alex.asset.exceptions.email.EmailIsNotConfigured;
-import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgress;
-import com.alex.asset.exceptions.product.IdNotProvidedException;
-import com.alex.asset.exceptions.product.LengthOfCodeNotConfigured;
-import com.alex.asset.exceptions.product.ValueIsNotAllowed;
-import com.alex.asset.exceptions.product.ValueIsNotUnique;
+import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgressException;
+import com.alex.asset.exceptions.product.*;
 import com.alex.asset.exceptions.security.UserFailedAuthentication;
 import com.alex.asset.exceptions.security.UserNotRegisterYet;
 import com.alex.asset.exceptions.shared.ObjectAlreadyExistException;
@@ -41,7 +39,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             IllegalArgumentException.class,
-            ValueIsNotAllowed.class
+            ValueIsNotAllowedException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleIllegalArgument(Exception ex) {
@@ -52,18 +50,19 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             LabelSizeIsIncorrectException.class,
-            ValueIsNotUnique.class,
+            ValueIsNotUniqueException.class,
             IllegalStateException.class,
             IOException.class,
             ObjectAlreadyExistException.class,
             UserNotRegisterYet.class,
             IdNotProvidedException.class,
-            LengthOfCodeNotConfigured.class
+            LengthOfCodeNotConfiguredException.class,
+            KSTNumIsToShortException.class
     })
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionBody handleUserAlreadyExistException(Exception ex) {
         log.error(TAG + ex.getMessage());
-        return new ExceptionBody(HttpStatus.CONTINUE.value(), ex.getMessage());
+        return new ExceptionBody(HttpStatus.CONFLICT.value(), ex.getMessage());
     }
 
 
@@ -71,7 +70,8 @@ public class ControllerAdvice {
 
     @ExceptionHandler({
             EmailIsNotConfigured.class,
-            InventIsAlreadyInProgress.class
+            InventIsAlreadyInProgressException.class,
+            ActionIsNotPossibleException.class
     })
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionBody handleInventConflict(Exception ex) {

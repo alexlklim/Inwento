@@ -8,6 +8,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Schema(description = "Notification Dto")
@@ -39,5 +40,8 @@ public class NotificationDto {
     @Schema(description = "Created", example = "2024-03-12")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     LocalDateTime created;
+
+    @Schema(description = "List of users id", example = "[1,2,3,4]")
+    private List<Long> userIds;
 
 }

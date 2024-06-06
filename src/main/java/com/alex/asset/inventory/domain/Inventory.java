@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor

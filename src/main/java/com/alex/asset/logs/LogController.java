@@ -41,23 +41,14 @@ public class LogController {
 
     @Operation(summary = "Get all logs")
     @Secured("ROLE_ADMIN")
-    @GetMapping("/user/{user_id}")
+    @GetMapping("/filter")
     @ResponseStatus(HttpStatus.OK)
     public List<LogDto> getLogsForSpecificUser(
-            @PathVariable("user_id") Long userId) {
-        log.info(TAG + "Get logs for user with id {}", userId);
-        return logService.getLogsForSpecificUser(userId);
-    }
-
-    @Operation(summary = "Get all logs")
-    @Secured("ROLE_ADMIN")
-    @GetMapping("/date/{start_date}/{end_date}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<LogDto> getLogsByDateRange(
-            @PathVariable("start_date") LocalDate startDate,
-            @PathVariable("end_date") LocalDate endDate) {
-        log.info(TAG + "Get logs for user with id ");
-        return logService.getLogsForSpecificDateRange(startDate, endDate);
+            @RequestParam(required = false) Long user_id,
+            @RequestParam("start_date") LocalDate startDate,
+            @RequestParam("end_date") LocalDate endDate) {
+        log.info(TAG + "Get logs for user with id {}", user_id);
+        return logService.getLogsForSpecificUserAndDataRange(user_id, startDate, endDate);
     }
 
 

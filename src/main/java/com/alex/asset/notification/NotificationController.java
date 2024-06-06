@@ -37,7 +37,7 @@ public class NotificationController {
 
 
     @Operation(summary = "Read all notification")
-    @GetMapping("/read")
+    @PutMapping("/read")
     @ResponseStatus(HttpStatus.OK)
     public void readAllNotifications() {
         log.info(TAG + "Read all notifications");
@@ -57,43 +57,20 @@ public class NotificationController {
     }
 
 
-    @Operation(summary = "Send notification to specific user")
-    @Secured("ROLE_ADMIN")
-    @PostMapping("/notify/{user_to_id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void sendNotificationToSpecificUser(
-            @PathVariable("user_to_id") Long userToId,
-            @RequestBody NotificationDto notificationDto) {
-        log.info(TAG + "Send notification to user with id {}", userToId);
-        notificationService.saveNotificationToSpecificUser(
-                notificationDto,
-                userToId,
-                SecHolder.getUserId());
-    }
-
-    @Operation(summary = "Send notification to all users")
+    @Operation(summary = "Send notification to specific users")
     @Secured("ROLE_ADMIN")
     @PostMapping("/notify")
     @ResponseStatus(HttpStatus.OK)
-    public void sendNotificationToAllUsers(
+    public void sendNotificationToUsers(
             @RequestBody NotificationDto notificationDto) {
-        log.info(TAG + "Send notification to all users");
-        notificationService.saveNotificationToAllUsers(
+        log.info(TAG + "Send notification to users");
+        notificationService.sendNotificationToUsers(
                 notificationDto,
                 SecHolder.getUserId());
     }
 
 
-    @Operation(summary = "Change visibility of notification")
-    @Secured("ROLE_ADMIN")
-    @PutMapping("/active")
-    @ResponseStatus(HttpStatus.OK)
-    public void changeVisibilityOfNotification(
-            @RequestBody DtoActive activeDto) {
-        log.info(TAG + "Change visibility of notification with id {} to status {}",
-                activeDto.getId(), activeDto.isActive());
-        notificationService.changeNotificationVisibility(
-                activeDto,
-                SecHolder.getUserId());
-    }
+
+
+
 }

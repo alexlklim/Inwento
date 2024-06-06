@@ -5,7 +5,7 @@ import com.alex.asset.configure.domain.ContactPerson;
 import com.alex.asset.configure.domain.ServiceProvider;
 import com.alex.asset.configure.repo.ContactPersonRepo;
 import com.alex.asset.configure.repo.ServiceProviderRepo;
-import com.alex.asset.exceptions.product.ValueIsNotUnique;
+import com.alex.asset.exceptions.product.ValueIsNotUniqueException;
 import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.security.domain.Role;
 import com.alex.asset.security.domain.User;
@@ -60,9 +60,9 @@ public class ServiceService {
                     if (contactPerson.getPhoneNumber() != null &&
                             !contactPerson.getPhoneNumber().equalsIgnoreCase((String) value) &&
                             contactPersonRepo.existsByPhoneNumber((String) value)) {
-                        throw new ValueIsNotUnique("Phone number of contact person is not unique");
+                        throw new ValueIsNotUniqueException("Phone number of contact person is not unique");
                     } else if (contactPerson.getPhoneNumber() == null && contactPersonRepo.existsByPhoneNumber((String) value)) {
-                        throw new ValueIsNotUnique("Phone number of contact person is not unique");
+                        throw new ValueIsNotUniqueException("Phone number of contact person is not unique");
                     } else {
                         contactPerson.setPhoneNumber((String) value);
                     }
@@ -71,9 +71,9 @@ public class ServiceService {
                     if (contactPerson.getEmail() != null &&
                             !contactPerson.getEmail().equalsIgnoreCase((String) value) &&
                             contactPersonRepo.existsByEmail((String) value)) {
-                        throw new ValueIsNotUnique("Email of contact person is not unique");
+                        throw new ValueIsNotUniqueException("Email of contact person is not unique");
                     } else if (contactPerson.getEmail() == null && contactPersonRepo.existsByEmail((String) value)) {
-                        throw new ValueIsNotUnique("Email of contact person is not unique");
+                        throw new ValueIsNotUniqueException("Email of contact person is not unique");
                     } else {
                         contactPerson.setEmail((String) value);
                     }
@@ -121,9 +121,9 @@ public class ServiceService {
                     if (serviceProvider.getCompany() != null &&
                             !serviceProvider.getCompany().equalsIgnoreCase((String) value) &&
                             serviceProviderRepo.existsByCompany((String) value)) {
-                        throw new ValueIsNotUnique("Company name of service provider is not unique");
+                        throw new ValueIsNotUniqueException("Company name of service provider is not unique");
                     } else if (serviceProvider.getCompany() == null && serviceProviderRepo.existsByCompany((String) value)) {
-                        throw new ValueIsNotUnique("Company name of service provider is not unique");
+                        throw new ValueIsNotUniqueException("Company name of service provider is not unique");
                     } else {
                         serviceProvider.setCompany((String) value);
                     }
@@ -132,9 +132,9 @@ public class ServiceService {
                     if (serviceProvider.getNip() != null &&
                             !serviceProvider.getNip().equalsIgnoreCase((String) value) &&
                             serviceProviderRepo.existsByNip((String) value)) {
-                        throw new ValueIsNotUnique("Nip of service provider is not unique");
+                        throw new ValueIsNotUniqueException("Nip of service provider is not unique");
                     } else if (serviceProvider.getNip() == null && serviceProviderRepo.existsByNip((String) value)) {
-                        throw new ValueIsNotUnique("Nip of service provider is not unique");
+                        throw new ValueIsNotUniqueException("Nip of service provider is not unique");
                     } else {
                         serviceProvider.setNip((String) value);
                     }
@@ -143,9 +143,9 @@ public class ServiceService {
                     if (serviceProvider.getAddress() != null &&
                             !serviceProvider.getAddress().equalsIgnoreCase((String) value) &&
                             serviceProviderRepo.existsByAddress((String) value)) {
-                        throw new ValueIsNotUnique("Address of service provider is not unique");
+                        throw new ValueIsNotUniqueException("Address of service provider is not unique");
                     } else if (serviceProvider.getAddress() == null && serviceProviderRepo.existsByAddress((String) value)) {
-                        throw new ValueIsNotUnique("Address of service provider is not unique");
+                        throw new ValueIsNotUniqueException("Address of service provider is not unique");
                     } else {
                         serviceProvider.setAddress((String) value);
                     }

@@ -6,6 +6,7 @@ public class UtilsInventory {
 
 
     public final static String INFO = "info"; // all fields belong to "info"
+
     public final static String ID = "id";
     public final static String IS_ACTIVE = "is_active";
     public final static String START_DATE = "start_date";
@@ -25,14 +26,12 @@ public class UtilsInventory {
 
     // it belongs to "events", user need to send brief or full view, server return response like "events"
     public final static String EVENTS = "events";
-    public final static String EVENTS_BRIEF_VIEW = "events_brief_view";
-    public final static String EVENTS_FULL_VIEW = "events_full_view";
 
 
 
 
     public static List<String> getAllFields() {
-        return List.of(INFO, PRODUCTS_AMOUNT, EVENTS_BRIEF_VIEW);
+        return List.of(INFO, PRODUCTS_AMOUNT, EVENTS);
     }
 
 }

@@ -1,10 +1,11 @@
 package com.alex.asset.inventory.service;
 
 
+import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgressException;
+import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import com.alex.asset.inventory.domain.Inventory;
 import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.dto.InventoryDto;
-import com.alex.asset.inventory.mapper.InventoryMapper;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
@@ -19,8 +20,6 @@ import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.utils.dictionaries.UtilEvent;
 import com.alex.asset.utils.dictionaries.UtilProduct;
 import com.alex.asset.utils.domain.BaseEntity;
-import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgress;
-import com.alex.asset.exceptions.shared.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,6 @@ public class InventoryService {
     private final ProductRepo productRepo;
     private final LogService logService;
     private final NotificationService notificationService;
-    private final InventoryMapper inventoryMapper;
     private final EventRepo eventRepo;
     private final UnknownProductRepo unknownProductRepo;
     private final ScannedProductRepo scannedProductRepo;
@@ -54,7 +52,7 @@ public class InventoryService {
 
 
         if (inventoryRepo.getCurrentInventory(LocalDate.now()).orElse(null) != null) {
-            throw new InventIsAlreadyInProgress("Inventory is active at this moment");
+            throw new InventIsAlreadyInProgressException("Inventory is active at this moment");
         }
 
 
@@ -130,7 +128,7 @@ public class InventoryService {
         log.info(TAG + "Get inventory by id {}", inventoryId);
         Inventory inventory = inventoryRepo.findById(inventoryId).orElseThrow(
                 () -> new ResourceNotFoundException("Inventory with id " + inventoryId + " not found"));
-        InventoryDto inventoryDto = inventoryMapper.toDto(inventory);
+        InventoryDto inventoryDto = toDto(inventory);
 
         List<Event> events = eventRepo.getActiveEventsByInventory(inventory);
         int unknownProductAmount = 0;
@@ -169,6 +167,17 @@ public class InventoryService {
 
     public List<InventoryDto> getInventories() {
         // get all active inventories
-        return inventoryRepo.findAll().stream().map(inventoryMapper::toDto).toList();
+        return inventoryRepo.findAll().stream().map(this::toDto).toList();
+    }
+
+
+    public InventoryDto toDto(Inventory entity) {
+        InventoryDto dto = new InventoryDto();
+        dto.setId(entity.getId());
+        dto.setStartDate(entity.getStartDate());
+        dto.setFinishDate(entity.getFinishDate());
+        dto.setFinished(entity.isFinished());
+        dto.setInfo(entity.getInfo());
+        return dto;
     }
 }

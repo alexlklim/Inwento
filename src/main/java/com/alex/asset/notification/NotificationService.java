@@ -27,7 +27,6 @@ public class NotificationService {
 
      private final String TAG = "NOTIFICATION_SERVICE - ";
 
-     private final LogService logService;
      private final NotificationRepo notificationRepo;
      private final NotificationMapper notificationMapper;
      private final UserRepo userRepo;
@@ -60,37 +59,25 @@ public class NotificationService {
         notificationRepo.save(notification);
     }
 
-    @SneakyThrows
-    public void saveNotificationToSpecificUser(NotificationDto dto, Long userTo, Long userFromId) {
-        log.info(TAG + "Send notification to specific user with id {} from user with id {}", userTo, userFromId);
-        notificationRepo.save(notificationMapper
-                .mapToEntity(
-                        dto,
-                        userRepo.findById(userTo).orElseThrow(() -> new ResourceNotFoundException("User with id " + userTo + " not found")),
-                        userRepo.getUser(userFromId)));
 
-        logService.addLog(userFromId, Action.CREATE, Section.NOTIFICATION, dto.toString());
+
+    public void sendSystemNotificationToSpecificUser(Reason reason, User userTo) {
+        sendSystemNotificationToSpecificUser(reason, userTo, "System message", null);
     }
 
 
-    public void saveNotificationToAllUsers(NotificationDto dto, Long userFromId) {
-        log.info(TAG + "Send notification to all users from user with id {}", userFromId);
-        List<User> users = userRepo.getActiveUsers();
-        users.forEach(user -> saveNotificationToSpecificUser(dto, user.getId(), userFromId));
-        logService.addLog(userFromId, Action.CREATE, Section.NOTIFICATION, dto.toString());
-    }
-
-
-    public void sendSystemNotificationToSpecificUser(Reason reason, User user) {
-        log.info(TAG + "Send system notification to use with id {}", user.getId());
+    public void sendSystemNotificationToSpecificUser(Reason reason, User userTo, String message, User userFrom) {
+        log.info(TAG + "Send system notification to user with id {}", userTo.getId());
         Notification notification = new Notification();
         notification.setActive(true);
         notification.setViewed(false);
         notification.setReason(reason);
-        notification.setMessage("System message");
-        notification.setUser(user);
+        notification.setMessage(message);
+        notification.setUser(userTo);
+        notification.setCreatedBy(userFrom);
         notificationRepo.save(notification);
     }
+
 
 
     public void sendSystemNotificationToAllUsers(Reason reason) {
@@ -100,19 +87,19 @@ public class NotificationService {
     }
 
 
-    public void sendSystemNotificationToUsersWithRole(Reason reason, Role role) {
-        log.info(TAG + "Send system notification to users with rol {}", role.name());
-        List<User> users = userRepo.getActiveUsersByRole(role);
-        users.forEach(user -> sendSystemNotificationToSpecificUser(reason, user));
-    }
 
+    @SneakyThrows
+    public void sendNotificationToUsers(NotificationDto notificationDto, Long userId) {
+        User userFrom = userRepo.getUser(userId);
+        for (Long id : notificationDto.getUserIds()){
+            User userTo = userRepo.findById(id).orElseThrow(
+                    () -> new ResourceNotFoundException("User not found with id " + id));
+            sendSystemNotificationToSpecificUser(
+                    Reason.fromString(notificationDto.getReason()),
+                    userTo,
+                    notificationDto.getMessage(),
+                    userFrom);
+        }
 
-    public void changeNotificationVisibility(DtoActive dto, Long userId) {
-        log.info(TAG + "Change notification visibility with id {} to status {}", dto.getId(), dto.isActive());
-        Notification notification = notificationRepo.findById(dto.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("Notification with id " + dto.getId() + " not found"));
-        notification.setActive(dto.isActive());
-        notificationRepo.save(notification);
-        logService.addLog(userId, Action.UPDATE, Section.NOTIFICATION, dto.toString());
     }
 }
