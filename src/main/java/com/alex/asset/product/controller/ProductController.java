@@ -97,6 +97,7 @@ public class ProductController {
             @PathVariable("end_date") String endDate,
             @RequestParam(required = false) List<String> fields) {
         log.info(TAG + "Get products in a special range (inspection period) ");
+        System.out.println(fields);
         return productFilterService.getByInspectionPeriod(startDate, endDate, fields);
     }
 

@@ -137,7 +137,7 @@ public class SerProductService {
         log.info(TAG + "getAllServicedAsset userID " + userId);
         return ServiceMapper.toDTOsWithCustomFields(
                 servicedAssetRepo.findAll(),
-                fields.isEmpty() ? UtilsServicedAsset.getAllFields() : fields);
+                fields == null ? UtilsServicedAsset.getAllFields() : fields);
 
     }
 
@@ -147,7 +147,7 @@ public class SerProductService {
         return ServiceMapper.toDTOWithCustomFields(
                 servicedAssetRepo.findById(assetId).orElseThrow(
                         () -> new ResourceNotFoundException("Serviced asset not found with id " + assetId)),
-                fields.isEmpty() ? UtilsServicedAsset.getAllFields() : fields
+                fields == null ? UtilsServicedAsset.getAllFields() : fields
         );
     }
 }

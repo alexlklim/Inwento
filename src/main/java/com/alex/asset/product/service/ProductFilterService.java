@@ -41,15 +41,11 @@ public class ProductFilterService {
         if (!product.isActive() && (userRepo.getUser(userId).getRoles() != Role.ADMIN)) {
             throw new ResourceNotFoundException("Product was deleted with id " + userId);
         }
+        if (fields == null) fields = UtilProduct.getAll();
         if (fields.contains(UtilProduct.SERVICED_HISTORY)){
-            return ProductMapper.toDTOWithCustomFields(
-                    product,
-                    fields,
-                    servicedAssetRepo.findAllByProduct(product));
+            return ProductMapper.toDTOWithCustomFields(product, fields, servicedAssetRepo.findAllByProduct(product));
         }
-        return ProductMapper.toDTOWithCustomFields(
-                product,
-                fields.isEmpty() ? UtilProduct.getAll() : fields);
+        return ProductMapper.toDTOWithCustomFields(product, fields);
     }
 
     @SneakyThrows
@@ -66,7 +62,7 @@ public class ProductFilterService {
         if (products == null) return Collections.emptyList();
         return ProductMapper.toDTOsWithCustomFields(
                 products,
-                fields.isEmpty() ? UtilProduct.getAll() : fields);
+                fields == null ? UtilProduct.getAll() : fields);
     }
 
 
@@ -87,7 +83,7 @@ public class ProductFilterService {
             }
             return ProductMapper.toDTOWithCustomFields(
                     product,
-                    fields.isEmpty() ? UtilProduct.getAll() : fields);
+                    fields == null ? UtilProduct.getAll() : fields);
         } else throw new ResourceNotFoundException("Product not found with this code ");
     }
 
@@ -97,7 +93,7 @@ public class ProductFilterService {
         log.info(TAG + "getByValue");
         return ProductMapper.toDTOsWithCustomFields(
                 productRepo.getByKeyWord(keyWord, isScrapped),
-                fields.isEmpty() ? UtilProduct.getAll() : fields);
+                fields == null ? UtilProduct.getAll() : fields);
     }
 
     public List<Map<String, Object>> getByWarrantyPeriod(String startDate, String endDate, List<String> fields) {
@@ -106,7 +102,7 @@ public class ProductFilterService {
                 productRepo.getProductsByWarrantyPeriod(
                         LocalDate.parse(startDate),
                         LocalDate.parse(endDate)),
-                fields.isEmpty() ? UtilProduct.getAll() : fields);
+                fields == null ? UtilProduct.getAll() : fields);
 
     }
 
@@ -117,7 +113,7 @@ public class ProductFilterService {
                 productRepo.getProductsByInspectionPeriod(
                         LocalDate.parse(startDate),
                         LocalDate.parse(endDate)),
-                fields.isEmpty() ? UtilProduct.getAll() : fields);
+                fields == null ? UtilProduct.getAll() : fields);
 
     }
 

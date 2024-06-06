@@ -12,11 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/inventory/2/")
+@RequestMapping("/api/v2/inventory/")
 @Tag(name = "Inventory Controller", description = "Inventory API 2")
 public class InvController {
 
@@ -33,6 +35,7 @@ public class InvController {
     // update inventory
 
     @Operation(summary = "Get inventory by id")
+    @Secured("ROLE_ADMIN")
     @GetMapping("/{inventory_id}")
     @ResponseStatus(HttpStatus.OK)
     public InventoryDto getInventoryById(
@@ -41,4 +44,38 @@ public class InvController {
         return inventoryService.getInventoryById(inventoryId, SecHolder.getUserId());
     }
 
+
+
+    @Operation(summary = "Get inventories")
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<InventoryDto> getInventories() {
+        log.info(TAG + "Get all inventories");
+        return inventoryService.getInventories();
+    }
+
+
+
+
+    @Operation(summary = "Create new inventory")
+    @Secured("ROLE_ADMIN")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(
+            @RequestBody InventoryDto inventoryDto) {
+        log.info(TAG + "Create inventory");
+        inventoryService.createInventory(SecHolder.getUserId(), inventoryDto);
+    }
+
+
+
+    @Operation(summary = "Update inventory")
+    @Secured("ROLE_ADMIN")
+    @PutMapping("/{inventory_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(
+            @PathVariable("inventory_id") Long inventoryId, @RequestBody InventoryDto inventoryDto) {
+        log.info(TAG + "Update inventory");
+        inventoryService.updateInventory(SecHolder.getUserId(), inventoryId, inventoryDto);
+    }
 }
