@@ -12,6 +12,7 @@ import com.alex.asset.inventory.mapper.EventMapper;
 import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
+import com.alex.asset.inventory_old.EventMapper2;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -39,7 +40,7 @@ import java.util.Map;
 public class EventService2 {
     private final String TAG = "EVENT_SERVICE - ";
     private final LogService logService;
-    private final EventMapper eventMapper;
+    private final EventMapper2 eventMapper;
     private final EventRepo eventRepo;
     private final UserRepo userRepo;
     private final InventoryRepo inventoryRepo;
