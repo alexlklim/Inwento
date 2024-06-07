@@ -42,13 +42,13 @@ public class ProductMapper {
         dataFetchers.put(UtilProduct.ACTIVE, product::isActive);
         dataFetchers.put(UtilProduct.TITLE, product::getTitle);
         dataFetchers.put(UtilProduct.DESCRIPTION, () -> product.getDescription() != null ? product.getDescription() : "");
-        dataFetchers.put(UtilProduct.PRICE, () -> product.getPrice() != null ? product.getPrice() : "");
+        dataFetchers.put(UtilProduct.PRICE, () -> product.getPrice() != null ? product.getPrice() : 0);
         dataFetchers.put(UtilProduct.BAR_CODE, product::getBarCode);
         dataFetchers.put(UtilProduct.RFID_CODE, product::getRfidCode);
         dataFetchers.put(UtilProduct.INVENTORY_NUMBER, product::getInventoryNumber);
         dataFetchers.put(UtilProduct.SERIAL_NUMBER, product::getSerialNumber);
         dataFetchers.put(UtilProduct.LIABLE_ID,
-                () -> product.getLiable() != null ? product.getLiable().getId() : "");
+                () -> product.getLiable() != null ? product.getLiable().getId() : 0);
         dataFetchers.put(UtilProduct.LIABLE_NAME,
                 () -> (product.getLiable() != null
                         && product.getLiable().getFirstname() != null
@@ -56,21 +56,21 @@ public class ProductMapper {
                         product.getLiable().getFirstname() + " " + product.getLiable().getLastname() : "");
         dataFetchers.put(UtilProduct.RECEIVER, () -> product.getReceiver() != null ? product.getReceiver() : "");
         dataFetchers.put(UtilProduct.KST_ID,
-                () -> product.getKst() != null ? product.getKst().getId() : "");
+                () -> product.getKst() != null ? product.getKst().getId() : 0);
         dataFetchers.put(UtilProduct.ASSET_STATUS_ID,
                 () -> product.getAssetStatus() != null ? product.getAssetStatus().getId() : "");
         dataFetchers.put(UtilProduct.UNIT_ID,
-                () -> product.getUnit() != null ? product.getUnit().getId() : "");
+                () -> product.getUnit() != null ? product.getUnit().getId() : 0);
         dataFetchers.put(UtilProduct.BRANCH_ID,
-                () -> product.getBranch() != null ? product.getBranch().getId() : "");
+                () -> product.getBranch() != null ? product.getBranch().getId() : 0);
         dataFetchers.put(UtilProduct.LOCATION_ID,
-                () -> product.getLocation() != null ? product.getLocation().getId() : "");
+                () -> product.getLocation() != null ? product.getLocation().getId() : 0);
         dataFetchers.put(UtilProduct.MPK_ID,
-                () -> product.getMpk() != null ? product.getMpk().getId() : "");
+                () -> product.getMpk() != null ? product.getMpk().getId() : 0);
         dataFetchers.put(UtilProduct.TYPE_ID,
-                () -> product.getType() != null ? product.getType().getId() : "");
+                () -> product.getType() != null ? product.getType().getId() : 0);
         dataFetchers.put(UtilProduct.SUBTYPE_ID,
-                () -> product.getSubtype() != null ? product.getSubtype().getId() : "");
+                () -> product.getSubtype() != null ? product.getSubtype().getId() : 0);
         dataFetchers.put(UtilProduct.KST,
                 () -> product.getKst() != null ? product.getKst().getKst() : "");
         dataFetchers.put(UtilProduct.ASSET_STATUS,

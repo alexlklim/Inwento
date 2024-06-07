@@ -52,6 +52,7 @@ public class DataDto {
         private String email;
         private String firstName;
         private String lastName;
+        private Boolean isActive;
     }
 
 

@@ -41,6 +41,7 @@ public class UserMapper {
     public static DataDto.Employee toEmployee(User user) {
         DataDto.Employee dto = new DataDto.Employee();
         dto.setId(user.getId());
+        dto.setIsActive(user.isActive());
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstname());
         dto.setLastName(user.getLastname());
