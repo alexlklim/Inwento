@@ -22,7 +22,7 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Schema(description = "Inventory DTO")
-public class InventoryDto {
+public class InventoryDTO {
 
     @Schema(description = "Id", example = "1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
