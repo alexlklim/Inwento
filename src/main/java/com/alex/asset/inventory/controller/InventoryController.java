@@ -71,8 +71,6 @@ public class InventoryController {
         inventoryService.createInventory(SecHolder.getUserId(), inventoryDto);
     }
 
-
-
     @Operation(summary = "Update inventory")
     @Secured("ROLE_ADMIN")
     @PutMapping("/{inventory_id}")

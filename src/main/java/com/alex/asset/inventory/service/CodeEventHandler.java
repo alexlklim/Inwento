@@ -33,15 +33,11 @@ import java.util.Map;
 @Transactional
 @RequiredArgsConstructor
 public class CodeEventHandler {
-
     private final String TAG = "CODE_EVENT_HANDLER - ";
+
     private final ProductService productService;
-    private final LogService logService;
-    private final EventMapper eventMapper;
     private final EventRepo eventRepo;
     private final UserRepo userRepo;
-    private final InventoryRepo inventoryRepo;
-    private final BranchRepo branchRepo;
     private final UnknownProductRepo unknownProductRepo;
     private final LocationRepo locationRepo;
     private final ProductRepo productRepo;
@@ -49,7 +45,7 @@ public class CodeEventHandler {
 
 
     public void addProductsToEventByRfidCode(List<String> listOfCodes, Long eventId, Long userId) {
-        log.info(TAG + "Adding products to event by rfid code by user with id {}", userId);
+        log.info(TAG + "addProductsToEventByRfidCode");
         Event event = eventRepo.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found with id " + eventId));
         for (String rfidCode : listOfCodes) {
@@ -69,8 +65,6 @@ public class CodeEventHandler {
                         .build();
             }
             scannedProduct.setIsScanned(true);
-
-
             scannedProductRepo.save(scannedProduct);
         }
     }
@@ -79,7 +73,7 @@ public class CodeEventHandler {
     @Transactional
     public void addProductsToEventByBarCode(
             List<Map<String, Object>> inventoryData, Long eventId, Long locationId, Long userId) {
-        log.info(TAG + "Adding products to event by bar code by user with id {}", userId);
+        log.info(TAG + "addProductsToEventByBarCode");
         Event event = eventRepo.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Event with id " + eventId + " not found"));
         Location location = locationRepo.findById(locationId)
@@ -111,7 +105,7 @@ public class CodeEventHandler {
 
     private void handleScannedProduct(
             Product product, Map<String, Object> map, Event event, Location location, Long userId) {
-        log.info(TAG + "Add product to scanned product");
+        log.info(TAG + "handleScannedProduct");
         if (product.getLocation() != location) {
             productService.moveProductByLocation(product, location, userId);
         }
@@ -147,7 +141,7 @@ public class CodeEventHandler {
 
     @SneakyThrows
     void handleUnknownProduct(String code, Event event, Long userId) {
-        log.info(TAG + "Add unknown product");
+        log.info(TAG + "handleUnknownProduct");
         UnknownProduct unknownProduct = unknownProductRepo.findByCode(code).orElse(null);
         if (unknownProduct == null) {
             unknownProduct = new UnknownProduct().toBuilder()
