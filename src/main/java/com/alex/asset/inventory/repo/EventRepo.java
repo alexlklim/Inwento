@@ -17,6 +17,15 @@ public interface EventRepo extends JpaRepository<Event, Long> {
             "ORDER BY e.created DESC")
     List<Event> getActiveEventsByInventory(Inventory inventory);
 
+
+    @Query("SELECT e " +
+            "FROM Event e " +
+            "WHERE e.inventory = ?1  AND e.isActive =?2 " +
+            "ORDER BY e.created DESC")
+    Optional<Event> getEventByIdAndActive(Long eventId, Boolean active);
+
+
+
     @Query("SELECT e " +
             "FROM Event e " +
             "WHERE e.inventory = ?1 " +

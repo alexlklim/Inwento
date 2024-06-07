@@ -1,4 +1,4 @@
-package com.alex.asset.inventory.old;
+package com.alex.asset.inventory_old.service;
 
 
 import com.alex.asset.exceptions.inventory.InventIsAlreadyInProgressException;
@@ -10,7 +10,6 @@ import com.alex.asset.inventory.repo.EventRepo;
 import com.alex.asset.inventory.repo.InventoryRepo;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
-import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
 import com.alex.asset.logs.domain.Section;
@@ -45,6 +44,7 @@ public class InventoryService2 {
     private final EventRepo eventRepo;
     private final UnknownProductRepo unknownProductRepo;
     private final ScannedProductRepo scannedProductRepo;
+    private final EventService2 eventService;
 
 
     @SneakyThrows
@@ -152,7 +152,6 @@ public class InventoryService2 {
         return inventoryDto;
     }
 
-    private final EventService eventService;
 
     @SneakyThrows
     public InventoryDTO getCurrentInventory(Long userId) {

@@ -39,6 +39,7 @@ public class InventoryService {
     private final NotificationService notificationService;
     private final EventService eventService;
     private final InventoryRepo inventoryRepo;
+    private final DBSnapshotProvider snapshotProvider;
 
 
     public Map<String, Object> getInventoryById(Long inventoryId, List<String> fields) {
@@ -75,7 +76,7 @@ public class InventoryService {
         inventoryRepo.save(inventory);
         logService.addLog(userId, Action.CREATE, Section.INVENTORY, dto.toString());
         notificationService.sendSystemNotificationToAllUsers(Reason.PLANNED_INVENTORY);
-        eventService.createEventsForInventory(userId);
+        snapshotProvider.createEventsForInventory(userId);
     }
 
 

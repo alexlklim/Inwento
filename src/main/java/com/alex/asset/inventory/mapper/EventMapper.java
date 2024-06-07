@@ -13,62 +13,58 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
 public class EventMapper {
-
-
     private final UnknownProductRepo unknownProductRepo;
     private final ScannedProductRepo scannedProductRepo;
     private final ProductRepo productRepo;
 
+    public List<Map<String, Object>> toDTOsWithCustomFields(List<Event> events, List<String> fields) {
+    return events.stream().map(event -> toDTOWithCustomFields(event, fields)).toList();
+    }
     public Map<String, Object> toDTOWithCustomFields(Event event, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
+        Map<String, Supplier<Object>> df = new HashMap<>();
+        df.put(UtilEvent.INFO, () -> getInfo(event));
+        df.put(UtilEvent.USER, () -> getUserInfo(event));
+        df.put(UtilEvent.UNKNOWN_PRODUCTS, () -> unknownProductRepo.findAllByEvent(event));
+        df.put(UtilEvent.SCANNED_PRODUCTS, () -> getProductsMap(scannedProductRepo.findProductsByEventAndIsScanned(event, true)));
+        df.put(UtilEvent.NOT_SCANNED_PRODUCTS, () -> getProductsMap(scannedProductRepo.findProductsByEventAndIsScanned(event, false)));
+        df.put(UtilEvent.PRODUCT_AMOUNT, () -> getProductAmount(event));
+        fields.forEach(field -> dtoMap.put(field, df.getOrDefault(field, () -> "").get()));
         dtoMap.put(UtilEvent.ID, event.getId());
-        for (String field : fields) {
-            switch (field) {
-                case UtilEvent.ACTIVE: dtoMap.put(UtilEvent.ACTIVE, event.isActive()); break;
-                case UtilEvent.INFO: dtoMap.put(UtilEvent.INFO, event.getInfo()); break;
-                case UtilEvent.INVENTORY_ID: dtoMap.put(UtilEvent.INVENTORY_ID, event.getInventory().getId()); break;
-                case UtilEvent.BRANCH_ID: dtoMap.put(UtilEvent.BRANCH_ID, event.getBranch().getId()); break;
-                case UtilEvent.BRANCH: dtoMap.put(UtilEvent.BRANCH, event.getBranch().getBranch()); break;
-                case UtilEvent.USER_ID: dtoMap.put(UtilEvent.USER_ID, event.getUser().getId()); break;
-                case UtilEvent.USER_EMAIL: dtoMap.put(UtilEvent.USER_EMAIL, event.getUser().getEmail()); break;
-
-                case UtilEvent.USER_NAME:
-                    dtoMap.put(UtilEvent.USER_NAME, event.getUser().getFirstname() + " " + event.getUser().getLastname());
-                    break;
-                case UtilEvent.UNKNOWN_PRODUCTS:
-                    dtoMap.put(UtilEvent.UNKNOWN_PRODUCTS, unknownProductRepo.findAllByEvent(event));
-                    break;
-                case UtilEvent.SCANNED_PRODUCTS:
-                    List<ScannedProduct> scannedProductsList =
-                            scannedProductRepo.findProductsByEventAndIsScanned(event, true);
-                    dtoMap.put(UtilEvent.SCANNED_PRODUCTS, getProductsMap(scannedProductsList));
-                    break;
-                case UtilEvent.NOT_SCANNED_PRODUCTS:
-                    List<ScannedProduct> productsNotScannedDTOs =
-                            scannedProductRepo.findProductsByEventAndIsScanned(event, false);
-                    dtoMap.put(UtilEvent.NOT_SCANNED_PRODUCTS, getProductsMap(productsNotScannedDTOs));
-                    break;
-                case UtilEvent.UNKNOWN_PRODUCT_AMOUNT:
-                    dtoMap.put(UtilEvent.UNKNOWN_PRODUCT_AMOUNT, unknownProductRepo.countProductsByEventId(event.getId()));
-                    break;
-                case UtilEvent.TOTAL_PRODUCT_AMOUNT:
-                    dtoMap.put(UtilEvent.TOTAL_PRODUCT_AMOUNT, productRepo.countProductsByBranchId(event.getBranch().getId()));
-                    break;
-                case UtilEvent.SCANNED_PRODUCT_AMOUNT:
-                    dtoMap.put(UtilEvent.SCANNED_PRODUCT_AMOUNT, scannedProductRepo.countByEventIdAndIsScanned(event, true));
-                    break;
-                default:
-                    break;
-            }
-
-        }
         return dtoMap;
+    }
+
+    private Map<String, Object> getProductAmount(Event event) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(UtilEvent.UNKNOWN_PRODUCT_AMOUNT, unknownProductRepo.countProductsByEventId(event.getId()));
+        map.put(UtilEvent.TOTAL_PRODUCT_AMOUNT, productRepo.countProductsByBranchId(event.getBranch().getId()));
+        map.put(UtilEvent.SCANNED_PRODUCT_AMOUNT, scannedProductRepo.countByEventIdAndIsScanned(event, true));
+        return map;
+    }
+
+    private Map<String, Object> getUserInfo(Event event) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(UtilEvent.USER_ID, event.getUser().getId());
+        map.put(UtilEvent.USER_EMAIL, event.getUser().getEmail());
+        map.put(UtilEvent.USER_NAME, event.getUser().getFirstname() + " " + event.getUser().getLastname());
+        return map;
+    }
+
+    private Map<String, Object> getInfo(Event event) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(UtilEvent.ACTIVE, event.isActive());
+        map.put(UtilEvent.INFO, event.getInfo());
+        map.put(UtilEvent.INVENTORY_ID, event.getInventory().getId());
+        map.put(UtilEvent.BRANCH_ID, event.getBranch().getId());
+        map.put(UtilEvent.BRANCH, event.getBranch().getBranch());
+        return map;
     }
 
 

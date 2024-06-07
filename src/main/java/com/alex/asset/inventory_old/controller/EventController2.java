@@ -1,8 +1,8 @@
-package com.alex.asset.inventory.old;
+package com.alex.asset.inventory_old.controller;
 
 
 import com.alex.asset.inventory.dto.EventDTO;
-import com.alex.asset.inventory.service.EventService;
+import com.alex.asset.inventory_old.service.EventService2;
 import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dictionaries.UtilEvent;
 import com.alex.asset.utils.dto.DtoActive;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Tag(name = "Event Controller", description = "Event API 2")
 public class EventController2 {
      private final String TAG = "EVENT_CONTROLLER - ";
-     private final EventService eventService;
+     private final EventService2 eventService;
 
 
     @Operation(summary = "Get event by id")

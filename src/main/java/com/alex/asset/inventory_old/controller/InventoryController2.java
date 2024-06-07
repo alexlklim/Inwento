@@ -1,6 +1,7 @@
-package com.alex.asset.inventory.old;
+package com.alex.asset.inventory_old.controller;
 
 import com.alex.asset.inventory.dto.InventoryDTO;
+import com.alex.asset.inventory_old.service.InventoryService2;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -25,16 +25,12 @@ import java.util.function.Supplier;
 @Transactional
 @RequiredArgsConstructor
 public class InventoryMapper {
-    private final String TAG = "INVENTORY_MAPPER - ";
     private final ProductRepo productRepo;
     private final EventRepo eventRepo;
     private final UnknownProductRepo unknownProductRepo;
     private final ScannedProductRepo scannedProductRepo;
     private final EventMapper eventMapper;
-    public Map<String, Object> toDTOWithCustomFields(
-            Inventory inventory,
-            List<String> fields
-    ) {
+    public Map<String, Object> toDTOWithCustomFields(Inventory inventory, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
         Map<String, Supplier<Object>> df = new HashMap<>();
         df.put(UtilsInventory.INFO, () -> getInfoAboutInventory(inventory));
