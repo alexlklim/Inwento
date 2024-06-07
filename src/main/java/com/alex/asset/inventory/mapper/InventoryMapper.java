@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +24,12 @@ import java.util.function.Supplier;
 @Transactional
 @RequiredArgsConstructor
 public class InventoryMapper {
+    private final EventMapper eventMapper;
+
     private final ProductRepo productRepo;
     private final EventRepo eventRepo;
     private final UnknownProductRepo unknownProductRepo;
     private final ScannedProductRepo scannedProductRepo;
-    private final EventMapper eventMapper;
     public Map<String, Object> toDTOWithCustomFields(Inventory inventory, List<String> fields) {
         Map<String, Object> dtoMap = new HashMap<>();
         Map<String, Supplier<Object>> df = new HashMap<>();
@@ -54,35 +54,26 @@ public class InventoryMapper {
 
     private Map<String, Object> getProductsAmount(List<Event> events) {
         Map<String, Object> map = new HashMap<>();
-
-        int unknownProductAmount = events.stream()
-                .mapToInt(event -> unknownProductRepo.countProductsByEventId(event.getId()))
-                .sum();
-        map.put(UtilsInventory.UNKNOWN_PRODUCT_AMOUNT, unknownProductAmount);
-
-        int scannedProductAmount = events.stream()
-                .mapToInt(event -> scannedProductRepo.countByEventIdAndIsScanned(event, true))
-                .sum();
-        map.put(UtilsInventory.SCANNED_PRODUCT_AMOUNT, scannedProductAmount);
-
-        int totalProductAmount = events.stream()
-                .mapToInt(event -> productRepo.countProductsByBranchId(event.getBranch().getId()))
-                .sum();
-        map.put(UtilsInventory.TOTAL_PRODUCT_AMOUNT, totalProductAmount);
-
-        int numberOfEvents = events.size();
-        map.put(UtilsInventory.NUMBERS_OF_EVENTS, numberOfEvents);
+        map.put(UtilsInventory.UNKNOWN_PRODUCT_AMOUNT,
+                events.stream()
+                        .mapToInt(event -> unknownProductRepo.countProductsByEventId(event.getId()))
+                        .sum());
+        map.put(UtilsInventory.SCANNED_PRODUCT_AMOUNT,
+                events.stream()
+                        .mapToInt(event -> scannedProductRepo.countByEventIdAndIsScanned(event, true))
+                        .sum());
+        map.put(UtilsInventory.TOTAL_PRODUCT_AMOUNT,
+                events.stream()
+                        .mapToInt(event -> productRepo.countProductsByBranchId(event.getBranch().getId()))
+                        .sum());
+        map.put(UtilsInventory.NUMBERS_OF_EVENTS, events.size());
         return map;
     }
 
 
 
     private List<Map<String, Object>> getEvents(List<Event> events) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (Event event : events) {
-            list.add(eventMapper.toDTOWithCustomFields(event, UtilEvent.getFieldsSimpleView()));
-        }
-        return list;
+        return eventMapper.toDTOsWithCustomFields(events, UtilEvent.getAll());
     }
 
 

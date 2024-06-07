@@ -54,7 +54,7 @@ public class EventController {
     @ResponseStatus(HttpStatus.OK)
     public void updateVisibility(
             @RequestBody DtoActive dtoActive) {
-        log.info(TAG + "Update visibility of event");
+        log.info(TAG + "updateVisibility");
         eventService.updateVisibility(
                 SecHolder.getUserId(),
                 dtoActive);

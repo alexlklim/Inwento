@@ -99,4 +99,10 @@ public class UtilProduct {
                 ID, TITLE, BAR_CODE, RFID_CODE, SERIAL_NUMBER
         );
     }
+
+    public static List<String> getFieldsForViewInEvent() {
+        return List.of(
+                ID, TITLE, BAR_CODE, RFID_CODE, LOCATION, BRANCH, PRODUCER
+        );
+    }
 }

@@ -20,27 +20,17 @@ import java.util.Map;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/v2/inventory/")
-@Tag(name = "Inventory Controller", description = "Inventory API 2")
+@Tag(name = "Inventory Controller", description = "Inventory API")
 public class InventoryController {
-
     private final String TAG = "INVENTORY_CONTROLLER - ";
-
     private final InventoryService inventoryService;
-
-
-    // get list of inventories with custom fields
-    // get inventory by id with custom fields
-
-
-    // create new inventory
-    // update inventory
 
     @Operation(summary = "get current active inventory (it returns 404 if no active inventory now")
     @GetMapping("/current")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object>  getCurrentInventory(
             @RequestParam(required = false) List<String> fields) {
-        log.info(TAG + "get current inventory");
+        log.info(TAG + "getCurrentInventory");
         return inventoryService.getCurrentInventory(fields);
     }
 
@@ -53,7 +43,7 @@ public class InventoryController {
     public Map<String, Object> getInventoryById(
             @PathVariable("inventory_id") Long inventoryId,
             @RequestParam(required = false) List<String> fields) {
-        log.info(TAG + "Get inventory with id {}", inventoryId);
+        log.info(TAG + "getInventoryById");
         return inventoryService.getInventoryById(inventoryId, fields);
     }
 
@@ -64,7 +54,7 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> getInventories(
             @RequestParam(required = false) List<String> fields) {
-        log.info(TAG + "Get all inventories");
+        log.info(TAG + "getInventories");
         return inventoryService.getInventories(fields);
     }
 
@@ -75,9 +65,9 @@ public class InventoryController {
     @Secured("ROLE_ADMIN")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(
+    public void createInventory(
             @RequestBody InventoryDTO inventoryDto) {
-        log.info(TAG + "Create inventory");
+        log.info(TAG + "createInventory");
         inventoryService.createInventory(SecHolder.getUserId(), inventoryDto);
     }
 
@@ -87,9 +77,9 @@ public class InventoryController {
     @Secured("ROLE_ADMIN")
     @PutMapping("/{inventory_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(
+    public void updateInventory(
             @PathVariable("inventory_id") Long inventoryId, @RequestBody InventoryDTO inventoryDTO) {
-        log.info(TAG + "Update inventory");
+        log.info(TAG + "updateInventory");
         inventoryService.updateInventory(SecHolder.getUserId(), inventoryId, inventoryDTO);
     }
 }

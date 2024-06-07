@@ -1,7 +1,6 @@
 package com.alex.asset.inventory.controller;
 
 import com.alex.asset.inventory.service.CodeEventHandler;
-import com.alex.asset.inventory.service.EventService;
 import com.alex.asset.utils.SecHolder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,6 +2,7 @@ package com.alex.asset.inventory_old.controller;
 
 
 import com.alex.asset.inventory.dto.EventDTO;
+import com.alex.asset.inventory.service.CodeEventHandler;
 import com.alex.asset.inventory_old.service.EventService2;
 import com.alex.asset.utils.SecHolder;
 import com.alex.asset.utils.dictionaries.UtilEvent;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class EventController2 {
      private final String TAG = "EVENT_CONTROLLER - ";
      private final EventService2 eventService;
+     private final CodeEventHandler codeEventHandler;
 
 
     @Operation(summary = "Get event by id")
@@ -101,7 +103,7 @@ public class EventController2 {
             @PathVariable("loc_id") Long locationId,
             @RequestBody List<Map<String, Object>> listOfCodes) {
         log.info(TAG + "BAR CODE Add product which exists in fact by BAR CODE");
-        eventService.addProductsToEventByBarCode(listOfCodes, eventId, locationId, SecHolder.getUserId());
+        codeEventHandler.addProductsToEventByBarCode(listOfCodes, eventId, locationId, SecHolder.getUserId());
     }
 
     @Operation(summary = "Add products to event by rfid code")
@@ -112,7 +114,7 @@ public class EventController2 {
             @RequestBody List<String> listOfCodes) {
         log.info(TAG + "RFID Add product which exists in fact by RFID CODE");
         System.out.println(listOfCodes);
-        eventService.addProductsToEventByRfidCode(listOfCodes, eventId, SecHolder.getUserId());
+        codeEventHandler.addProductsToEventByRfidCode(listOfCodes, eventId, SecHolder.getUserId());
     }
 
 }

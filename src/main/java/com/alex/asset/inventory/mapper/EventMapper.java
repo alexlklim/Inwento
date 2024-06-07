@@ -4,6 +4,7 @@ import com.alex.asset.inventory.domain.event.Event;
 import com.alex.asset.inventory.domain.event.ScannedProduct;
 import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
+import com.alex.asset.product.mappers.ProductMapper;
 import com.alex.asset.product.repo.ProductRepo;
 import com.alex.asset.utils.dictionaries.UtilEvent;
 import com.alex.asset.utils.dictionaries.UtilProduct;
@@ -14,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -68,20 +68,11 @@ public class EventMapper {
     }
 
 
-    List<Map<String, Object>> getProductsMap(List<ScannedProduct> scannedProductsList) {
-        return scannedProductsList.stream()
-                .map(scannedProduct -> {
-                    Map<String, Object> productDTO = new HashMap<>();
-                    productDTO.put(UtilProduct.ID, scannedProduct.getProduct().getId());
-                    productDTO.put(UtilProduct.TITLE, scannedProduct.getProduct().getTitle());
-                    productDTO.put(UtilProduct.BAR_CODE, scannedProduct.getProduct().getBarCode());
-                    productDTO.put(UtilProduct.RFID_CODE, scannedProduct.getProduct().getRfidCode());
-                    productDTO.put(UtilProduct.LOCATION, scannedProduct.getProduct().getLocation().getLocation());
-                    productDTO.put(UtilProduct.BRANCH, scannedProduct.getProduct().getBranch().getBranch());
-                    productDTO.put(UtilProduct.PRODUCER, scannedProduct.getProduct().getProducer() != null
-                            ? scannedProduct.getProduct().getProducer() : "");
-                    return productDTO;
-                })
-                .collect(Collectors.toList());
+    private List<Map<String, Object>> getProductsMap(List<ScannedProduct> scannedProductsList) {
+        return scannedProductsList.stream().map(
+                scannedProduct -> ProductMapper.toDTOWithCustomFields(
+                        scannedProduct.getProduct(),
+                        UtilProduct.getFieldsForViewInEvent()))
+                .toList();
     }
 }
