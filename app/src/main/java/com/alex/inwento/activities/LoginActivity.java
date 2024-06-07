@@ -17,7 +17,9 @@ import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.http.auth.LoginDTO;
+import com.alex.inwento.managers.NetworkClient;
 import com.alex.inwento.managers.SettingsMng;
+import com.alex.inwento.util.Endpoints;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
     SettingsMng settingsMng;
-    EditText etLogin, etPassword;
+    EditText etLogin, etPassword, etServerAddress;
 
     CheckBox isRememberMe;
 
@@ -45,8 +47,9 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         isRememberMe = findViewById(R.id.isRememberMe);
 
-
-        btnLogin.setOnClickListener(v -> sendLoginRequest());
+        btnLogin.setOnClickListener(v -> {
+            sendLoginRequest();
+        });
 
 
         // Set the checkbox state based on the stored value

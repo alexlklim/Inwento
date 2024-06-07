@@ -25,18 +25,18 @@ public class ProductDTO {
     private String title;
 
 
-    // branch
+
     @SerializedName("branch_id")
     private int branchId;
     @SerializedName("branch")
     private String branch;
-    //location
+
     @SerializedName("location_id")
     private Long locationId;
     @SerializedName("location")
     private String location;
 
-    // unique data
+
     @SerializedName("rfid_code")
     private String rfidCode;
     @SerializedName("bar_code")
@@ -45,34 +45,36 @@ public class ProductDTO {
     private String serialNumber;
 
 
-    // who use it
+
     @SerializedName("liable_name")
     private String liableName;
     @SerializedName("receiver")
     private String receiver;
 
-    // producer and supplier
+
     @SerializedName("producer")
     private String producer;
     @SerializedName("supplier")
     private String supplier;
 
 
-    // documents
+
     @SerializedName("document_date")
-    private boolean documentDate;
+    private String documentDate;
     @SerializedName("warranty_period")
-    private boolean warrantyPeriod;
+    private String warrantyPeriod;
     @SerializedName("inspection_date")
-    private boolean inspectionDate;
+    private String inspectionDate;
 
 
-    // scrapping
+
     @SerializedName("scrapping")
     private boolean isScrapped;
     @SerializedName("scrapping_date")
-    private boolean scrappingDate;
+    private String scrappingDate;
     @SerializedName("scrapping_reason")
-    private boolean scrappingReason;
+    private String scrappingReason;
+
+
 
 }

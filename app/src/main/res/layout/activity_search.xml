@@ -61,7 +61,6 @@
             android:id="@+id/rvSearch"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-
             android:hint="@string/start_writing_title" />
 
 

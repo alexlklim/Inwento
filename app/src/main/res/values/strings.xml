@@ -18,29 +18,23 @@
     <string name="move">PRZESUNIĘCIE</string>
     <string name="scan_edition">Scan Edition</string>
     <string name="user">Użytkownik:</string>
-    <string name="fake_name">Alex Klim</string>
     <string name="email">Email:</string>
-    <string name="fake_email">alex.klim@gmail.com</string>
     <string name="server_address">Adres serwera:</string>
-    <string name="fake_address">http://10.10.10.10:9090/api</string>
     <string name="filter_barcodes">Filtruj kody kreskowe</string>
     <string name="prefix">Prefiks</string>
-    <string name="fake_suffix">…1234...</string>
-    <string name="fake_postfix">…1234</string>
     <string name="code_length">Długość kodu</string>
     <string name="zero">0</string>
     <string name="min_code_length">Minimalna długość kodu</string>
     <string name="max_code_length">Maksymalna długość kodu</string>
     <string name="save_new_settings">Zachowaj nowe ustawienia</string>
-    <string name="fake_prefix">1234…</string>
     <string name="logo">logo</string>
     <string name="use_rfid_scanner">Używaj skanera RFID</string>
     <string name="product_view">Podgląd produktów</string>
     <string name="start_writing_title">Wyszukaj produkt</string>
     <string name="something_wrong">Coś poszło nie tak:</string>
     <string name="wszystkie">Wszystkie</string>
-    <string name="location_was_not_chosen">Lokalizacjia nie została wybrana</string>
-    <string name="products">"Produkty "</string>
+    <string name="location_was_not_chosen">Lokalizacja nie została wybrana</string>
+    <string name="products">"Produkty"</string>
     <string name="inventory_finished">Inventaryzacja została zakończona</string>
     <string name="login_failed">Login failed:</string>
     <string name="code_doesnt_match_the_established_pattern">Code doesn\'t match the established pattern</string>
@@ -59,7 +53,7 @@
     <string name="suffix">Suffix</string>
     <string name="postfix">Postfix</string>
     <string name="branch">Oddział:</string>
-    <string name="location">Lokalizacjia:</string>
+    <string name="location">Lokalizacja:</string>
     <string name="liable_user">Osoba odpowiedzialna:</string>
     <string name="receiver">Użytkownik:</string>
     <string name="name_and_surname">Imię i nazwisko</string>
@@ -80,6 +74,7 @@
     <string name="save_like_new_product">Zachowaj jako nowy produckt</string>
     <string name="place">Umiejscowienie</string>
     <string name="fake">fake</string>
+    <string name="fake_date">10-04-2025</string>
 
 
 </resources>

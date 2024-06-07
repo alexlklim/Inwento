@@ -139,7 +139,31 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="3"
-                    android:hint="@string/fake_address"
+                    android:hint="https://"
+                    android:inputType="text"
+                    android:text="" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="3"
+                    android:gravity="center_vertical"
+                    android:text="Kod dostępu:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/sAccessCode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:hint=""
                     android:inputType="text"
                     android:text="" />
             </LinearLayout>
@@ -231,7 +255,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:hint="@string/fake_prefix"
+                android:hint="123.."
                 android:inputType="text" />
         </LinearLayout>
 
@@ -257,7 +281,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:hint="@string/fake_suffix"
+                android:hint="...456.."
                 android:inputType="text" />
         </LinearLayout>
 
@@ -284,7 +308,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center"
-                android:hint="@string/fake_postfix"
+                android:hint="...789"
                 android:inputType="text" />
         </LinearLayout>
 

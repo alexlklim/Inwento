@@ -30,7 +30,7 @@ implements ResultDialog.ResultDialogListener{
     private static final String TAG = "SettingsActivity";
 
     TextView sName, sEmail;
-    EditText sServerAddress, sPrefix, sSuffix, sPostfix, sLength, sLengthMax, sLengthMin;
+    EditText sServerAddress, sAccessCode, sPrefix, sSuffix, sPostfix, sLength, sLengthMax, sLengthMin;
     Button btnSave;
     CheckBox sFilter, sIsRfidScan;
     SettingsMng sm;
@@ -47,6 +47,7 @@ implements ResultDialog.ResultDialogListener{
         sName = findViewById(R.id.sName);
         sEmail = findViewById(R.id.sEmail);
         sServerAddress = findViewById(R.id.sServerAddress);
+        sAccessCode = findViewById(R.id.sAccessCode);
         sFilter = findViewById(R.id.sFilter);
         sIsRfidScan = findViewById(R.id.sIsRfidScan);
         sPrefix = findViewById(R.id.sPrefix);
@@ -81,6 +82,7 @@ implements ResultDialog.ResultDialogListener{
         sName.setText(sm.getFirstname() + " " + sm.getLastname());
         sEmail.setText(sm.getEmail());
         sServerAddress.setText(Endpoints.SERVER);
+        sAccessCode.setText(sm.getAccessCode());
 
         sFilter.setChecked(sm.isFilter());
         sIsRfidScan.setChecked(sm.isRfidScan());
@@ -97,7 +99,8 @@ implements ResultDialog.ResultDialogListener{
 
     public void applyNewConfig() {
         sm.setIsFilter(sFilter.isChecked());
-        sm.setServerAddress(sServerAddress.getText().toString());
+        sm.setAccessCode(sAccessCode.getText().toString());
+
         sm.setIsRfidScan(sIsRfidScan.isChecked());
         sm.setCodeSettings(
                 sPrefix.getText().toString(),
@@ -123,12 +126,10 @@ implements ResultDialog.ResultDialogListener{
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     DataDTO dto = response.body();
-                    System.out.println(dto);
                     roomDB.branchDAO().insert(dto.getBranches());
                     roomDB.locationDAO().insert(dto.getProductLocations());
                     roomDB.employeeDAO().insert(dto.getEmployees());
-                }
-                else Log.e(TAG, "Get data failed:");
+                } else Log.e(TAG, "Get data failed:");
             }
             @Override
             public void onFailure(@NonNull Call<DataDTO> call, @NonNull Throwable t) {

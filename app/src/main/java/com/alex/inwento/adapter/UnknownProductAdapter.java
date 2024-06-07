@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alex.inwento.R;
 import com.alex.inwento.http.inventory.UnknownProductDTO;
-import com.alex.inwento.managers.DateMng;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class UnknownProductAdapter extends RecyclerView.Adapter<UnknownProductAdapter.OrderViewHolder> {

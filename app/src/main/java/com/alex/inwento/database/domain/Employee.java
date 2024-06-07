@@ -36,4 +36,9 @@ public class Employee {
     @ColumnInfo(name = "last_name")
     private String lastName;
 
+    @SerializedName("is_active")
+    @ColumnInfo(name = "is_active")
+    private boolean isActive;
+
+
 }

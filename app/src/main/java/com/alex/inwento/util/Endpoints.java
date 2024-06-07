@@ -2,9 +2,9 @@ package com.alex.inwento.util;
 
 public final class Endpoints {
 
-    public static String SERVER = "http://192.168.100.247:9091/api/";
+    public static String SERVER = "http:/10.30.0.66:9091/api/";
 
-    // Authentication Endpoints
+    // Authentication Endpoints 
     public static final String LOGIN = "v1/auth/login";
     public static final String REFRESH_TOKEN = "v1/auth/refresh";
 

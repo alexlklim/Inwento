@@ -17,20 +17,11 @@ public class SettingsMng {
     }
 
 
-    public void setServerAddress(String serverAddress) {
-        pref.edit().putString(Util.SERVER_ADDRESS, serverAddress).apply();
-    }
-
-    public String getServerAddress(){
-        return pref.getString(Util.SERVER_ADDRESS, "");
-    }
-
-
-    public void  setIsRememberMe(Boolean isRememberMe){
+    public void setIsRememberMe(Boolean isRememberMe) {
         pref.edit().putBoolean(Util.IS_REMEMBER_ME, isRememberMe).apply();
     }
 
-    public Boolean getIsRememberMe(){
+    public Boolean getIsRememberMe() {
         return pref.getBoolean(Util.IS_REMEMBER_ME, false);
     }
 
@@ -43,7 +34,8 @@ public class SettingsMng {
                 .putString(Util.REFRESH_TOKEN, dto.getRefreshToken())
                 .apply();
     }
-    public void setLoginDetails(String email, String password){
+
+    public void setLoginDetails(String email, String password) {
         pref.edit()
                 .putString(Util.EMAIL, email)
                 .putString(Util.PASSWORD, password)
@@ -59,18 +51,19 @@ public class SettingsMng {
         return pref.getString(Util.REFRESH_TOKEN, "");
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return pref.getString(Util.EMAIL, "");
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return pref.getString(Util.PASSWORD, "");
     }
 
-    public String getFirstname(){
+    public String getFirstname() {
         return pref.getString(Util.FIRST_NAME, "");
     }
-    public String getLastname(){
+
+    public String getLastname() {
         return pref.getString(Util.LAST_NAME, "");
     }
 
@@ -78,9 +71,10 @@ public class SettingsMng {
         pref.edit().putBoolean(Util.IS_FILTER, bool).apply();
     }
 
-    public boolean isFilter(){
+    public boolean isFilter() {
         return pref.getBoolean(Util.IS_FILTER, false);
     }
+
     public void setCodeSettings(String prefix, String suffix, String postfix, Integer length, Integer maxLength, Integer minLength) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(Util.CODE_PREFIX, prefix != null ? prefix : "");
@@ -93,26 +87,27 @@ public class SettingsMng {
     }
 
 
-
-    public String getCodePrefix(){
+    public String getCodePrefix() {
         return pref.getString(Util.CODE_PREFIX, "");
     }
-    public String getCodeSuffix(){
+
+    public String getCodeSuffix() {
         return pref.getString(Util.CODE_SUFFIX, "");
     }
-    public String getCodePostfix(){
+
+    public String getCodePostfix() {
         return pref.getString(Util.CODE_POSTFIX, "");
     }
 
-    public int getCodeLength(){
+    public int getCodeLength() {
         return pref.getInt(Util.CODE_LENGTH, 0);
     }
 
-    public int getCodeMaxLength(){
+    public int getCodeMaxLength() {
         return pref.getInt(Util.CODE_MAX_LENGTH, 0);
     }
 
-    public int getCodeMinLength(){
+    public int getCodeMinLength() {
         return pref.getInt(Util.CODE_MIN_LENGTH, 0);
     }
 
@@ -125,11 +120,12 @@ public class SettingsMng {
         pref.edit().putBoolean(Util.IS_RFID_SCAN, bool).apply();
     }
 
-    public boolean isServerConfigured() {
-        return pref.getBoolean(Util.IS_SERVER_CONFIGURED, false);
+
+    public String getAccessCode() {
+        return pref.getString(Util.ACCESS_CODE, "0000");
     }
 
-    public void setIsServerConfigured(boolean bool) {
-        pref.edit().putBoolean(Util.IS_SERVER_CONFIGURED, bool).apply();
+    public void setAccessCode(String accessCode) {
+        pref.edit().putString(Util.ACCESS_CODE, accessCode).apply();
     }
 }

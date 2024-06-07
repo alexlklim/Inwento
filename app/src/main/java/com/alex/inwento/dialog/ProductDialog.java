@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,8 +24,16 @@ public class ProductDialog extends AppCompatDialogFragment {
     private Boolean isInventory;
     private String currentBranch, currentLocation;
     Button dpBtnOk;
-    TextView dpTitle, dpBranch, dpLocation, dpLiable, dpReceiver, dpProducer, dpSerialNumber,
+    TextView dpTitle,
+            dpBranch, dpLocation,
+            dpProducer, dpSupplier, dpSerialNumber,
+            dpLiable, dpReceiver,
+            dpDocumentDate, dpWarrantyPeriod, dpInspectionDate,
+            dpScrapDate, dpScrapReason,
             dpWarningBranch, dpWarningLocation;
+
+
+    LinearLayout dpLLDataBlock, dpLLDocumentBlock, dpLLScrapBlock;
 
     public static ProductDialog newInstance(
             ProductDialog.ProductDialogListener listener,
@@ -49,26 +58,64 @@ public class ProductDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.dialog_product, null);
         builder.setView(view);
 
+        System.out.println(productDTO);
+
         dpTitle = view.findViewById(R.id.dpTitle);
 
         dpBranch = view.findViewById(R.id.dpBranch);
         dpLocation = view.findViewById(R.id.dpLocation);
+
         dpLiable = view.findViewById(R.id.dpLiable);
         dpReceiver = view.findViewById(R.id.dpReceiver);
+
+        dpLLDataBlock = view.findViewById(R.id.dpLLDataBlock);
+        dpProducer = view.findViewById(R.id.dpProducer);
+        dpSupplier = view.findViewById(R.id.dpSupplier);
+        dpSerialNumber = view.findViewById(R.id.dpSerialNumber);
+
+        dpLLDocumentBlock = view.findViewById(R.id.dpLLDocumentBlock);
+        dpDocumentDate = view.findViewById(R.id.dpDocumentDate);
+        dpWarrantyPeriod = view.findViewById(R.id.dpWarrantyPeriod);
+        dpInspectionDate = view.findViewById(R.id.dpInspectionDate);
+
+        dpLLScrapBlock = view.findViewById(R.id.dpLLScrapBlock);
+        dpScrapDate = view.findViewById(R.id.dpScrapDate);
+        dpScrapReason = view.findViewById(R.id.dpScrapReason);
+
         dpBtnOk = view.findViewById(R.id.dpBtnOk);
+
         dpWarningBranch = view.findViewById(R.id.dpWarningBranch);
         dpWarningLocation = view.findViewById(R.id.dpWarningLocation);
-        dpProducer = view.findViewById(R.id.dpProducer);
-        dpSerialNumber = view.findViewById(R.id.dpSerialNumber);
 
 
         dpTitle.setText(productDTO.getTitle());
         dpBranch.setText(productDTO.getBranch());
         dpLocation.setText(productDTO.getLocation());
+
         dpLiable.setText(productDTO.getLiableName());
         dpReceiver.setText(productDTO.getReceiver());
-        dpProducer.setText(productDTO.getProducer());
-        dpSerialNumber.setText(productDTO.getSerialNumber());
+
+        if (!isInventory){
+            dpProducer.setText(productDTO.getProducer());
+            dpSupplier.setText(productDTO.getSupplier());
+            dpSerialNumber.setText(productDTO.getSerialNumber());
+
+            dpDocumentDate.setText(productDTO.getDocumentDate());
+            dpWarrantyPeriod.setText(productDTO.getWarrantyPeriod());
+            dpInspectionDate.setText(productDTO.getInspectionDate());
+        } else{
+            dpLLDataBlock.setVisibility(View.GONE);
+            dpLLDocumentBlock.setVisibility(View.GONE);
+        }
+
+        if (productDTO.isScrapped()){
+
+            dpScrapDate.setText(productDTO.getScrappingDate());
+            dpScrapReason.setText(productDTO.getScrappingReason());
+        } else{
+            dpLLScrapBlock.setVisibility(View.GONE);
+        }
+
 
         if (!isInventory) {
             dpBtnOk.setOnClickListener(v -> dismiss());

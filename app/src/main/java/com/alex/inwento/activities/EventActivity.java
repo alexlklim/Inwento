@@ -99,6 +99,7 @@ public class EventActivity extends AppCompatActivity
         registerReceiver(myBroadcastReceiver, filter);
 
 
+        System.out.println(roomDB.branchDAO().getAll());
         sendGetEventById(getIntent().getIntExtra("EVENT_ID", 0));
 
 
@@ -153,8 +154,8 @@ public class EventActivity extends AppCompatActivity
         recyclerViewUnknownProduct.setLayoutManager(unknownProductLayoutManager);
         recyclerViewUnknownProduct.setAdapter(unknownProductAdapter);
 
+
         // init recycler products
-        System.out.println(event.getNotScannedProducts());
         productAdapter = new ProductAdapter(this, true,
                 isScanned, event.getNotScannedProducts(), this);
         LinearLayoutManager productLayoutManager = new LinearLayoutManager(this);
@@ -171,6 +172,7 @@ public class EventActivity extends AppCompatActivity
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.custom_spinner_item, locationsList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         locationSpinner.setAdapter(adapter);
+
 
         locationSpinner.setFocusable(false);
 

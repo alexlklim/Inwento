@@ -14,7 +14,6 @@ public final class Util {
 
     public static final String
             IS_RFID_SCAN = "is_rfid_scan",
-            IS_SERVER_CONFIGURED = "is_server_configured",
             IS_FILTER = "is_filter",
             IS_REMEMBER_ME = "remember_me",
             FIRST_NAME = "first_name",
@@ -26,6 +25,7 @@ public final class Util {
 
     public static final String
             SERVER_ADDRESS = "server_address",
+            ACCESS_CODE = "access_code",
             CODE_PREFIX = "code_prefix",
             CODE_SUFFIX = "code_suffix",
             CODE_POSTFIX = "code_postfix",
@@ -35,7 +35,7 @@ public final class Util {
 
 
     public static final String DATABASE_NAME = "inwento";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
 
     public static final String TABLE_NAME_BRANCH = "branches";

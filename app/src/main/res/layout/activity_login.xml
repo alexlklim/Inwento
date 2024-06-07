@@ -28,8 +28,12 @@
             android:tint="@color/icon_color"
             app:srcCompat="@drawable/inwento_high_resolution_logo_transparent" />
 
+
+
+
+
+
         <TextView
-            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -69,6 +73,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/remember_me" />
+
+
+
         <Button
             android:id="@+id/btnLogin"
             style="@style/btnStyle"
@@ -80,4 +87,6 @@
             android:textSize="25sp" />
 
     </LinearLayout>
+
+
 </LinearLayout>

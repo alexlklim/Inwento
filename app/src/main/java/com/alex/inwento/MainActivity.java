@@ -14,17 +14,23 @@ import com.alex.inwento.activities.LoginActivity;
 import com.alex.inwento.activities.ProductUpdateActivity;
 import com.alex.inwento.activities.SearchActivity;
 import com.alex.inwento.activities.SettingsActivity;
+import com.alex.inwento.dialog.GetAccessDialog;
+import com.alex.inwento.dialog.ResultDialog;
 import com.alex.inwento.http.APIClient;
 import com.alex.inwento.http.RetrofitClient;
 import com.alex.inwento.http.auth.AuthDTO;
 import com.alex.inwento.http.auth.RefreshTokenDTO;
 import com.alex.inwento.managers.SettingsMng;
+import com.alex.inwento.util.Endpoints;
+import com.alex.inwento.util.Util;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements GetAccessDialog.GetAccessDialogListener,
+        ResultDialog.ResultDialogListener {
     private static final String TAG = "MainActivity";
     ImageButton btnSearch, btnInventory, btnMove, btnScrap, btnSettings;
     SettingsMng settingsMng;
@@ -37,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         settingsMng = new SettingsMng(this);
 
-
         sendRefreshTokenRequest();
+
 
 
 
@@ -64,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("ACTION", 2);
             startActivity(intent);
         });
+
         btnSettings = findViewById(R.id.btnSettings);
-        btnSettings.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
+        btnSettings.setOnClickListener(view -> opeAccessCodeDialog());
 
     }
 
@@ -95,5 +101,36 @@ public class MainActivity extends AppCompatActivity {
     private void handleError(int errorCode) {
         Log.e(TAG, "sendLoginRequestRetrofit onResponse: Error - " + errorCode);
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+    }
+
+
+
+    private void opeAccessCodeDialog() {
+        Log.i(TAG, "opeAccessCodeDialog");
+        GetAccessDialog
+                .newInstance(this, settingsMng)
+                .show(getSupportFragmentManager(), "access_code_dialog");
+    }
+
+    private void openResultDialog(Boolean isSuccess) {
+        Log.i(TAG, "openResultDialog");
+        ResultDialog
+                .newInstance("Nieprawidwoły kod dostęmu", isSuccess, this)
+                .show(getSupportFragmentManager(), "result_access_code_dialog");
+    }
+
+    @Override
+    public void onOkClicked() {
+        Log.i(TAG, "onOkClicked");
+
+    }
+
+    @Override
+    public void onGetAccessDialog(Boolean result) {
+        if (result) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else {
+            openResultDialog(false);
+        }
     }
 }

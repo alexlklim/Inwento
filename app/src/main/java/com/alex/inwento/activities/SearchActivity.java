@@ -73,8 +73,7 @@ public class SearchActivity
         rootLayout.requestFocus();
 
         initTextListener();
-        rvSearch.clearFocus();
-
+        rvSearch.setFocusable(false);
     }
 
 
@@ -221,10 +220,7 @@ public class SearchActivity
             decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
         }
         sendGetFullProductRequest(decodedData, null);
-        recyclerView.clearFocus();
-
         productAdapter.setHandlingScanEvent(false);
-        recyclerView.clearFocus();
     }
 
 
