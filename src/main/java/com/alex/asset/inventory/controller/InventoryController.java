@@ -35,6 +35,17 @@ public class InventoryController {
     // create new inventory
     // update inventory
 
+    @Operation(summary = "get current active inventory (it returns 404 if no active inventory now")
+    @GetMapping("/current")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object>  getCurrentInventory(
+            @RequestParam(required = false) List<String> fields) {
+        log.info(TAG + "get current inventory");
+        return inventoryService.getCurrentInventory(fields);
+    }
+
+
+
     @Operation(summary = "Get inventory by id")
     @Secured("ROLE_ADMIN")
     @GetMapping("/{inventory_id}")

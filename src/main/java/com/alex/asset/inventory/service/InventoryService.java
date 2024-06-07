@@ -11,7 +11,6 @@ import com.alex.asset.inventory.repo.ScannedProductRepo;
 import com.alex.asset.inventory.repo.UnknownProductRepo;
 import com.alex.asset.logs.LogService;
 import com.alex.asset.logs.domain.Action;
-import com.alex.asset.logs.domain.Log;
 import com.alex.asset.logs.domain.Section;
 import com.alex.asset.notification.NotificationService;
 import com.alex.asset.notification.domain.Reason;
@@ -35,15 +34,12 @@ import java.util.Map;
 public class InventoryService {
 
     private final String TAG = "INVENTORY_SERVICE - ";
-    private final InventoryRepo inventoryRepo;
-    private final EventRepo eventRepo;
     private final InventoryMapper inventoryMapper;
-    private final ProductRepo productRepo;
     private final LogService logService;
     private final NotificationService notificationService;
     private final EventService eventService;
-    private final UnknownProductRepo unknownProductRepo;
-    private final ScannedProductRepo scannedProductRepo;
+    private final InventoryRepo inventoryRepo;
+
 
     public Map<String, Object> getInventoryById(Long inventoryId, List<String> fields) {
         log.info(TAG + "getInventoryById");
@@ -102,7 +98,19 @@ public class InventoryService {
 
     @SneakyThrows
     private Inventory getInventoryById(Long inventoryId){
+        log.info(TAG + "getInventoryById");
         return  inventoryRepo.findById(inventoryId).orElseThrow(
                 () -> new ResourceNotFoundException("Inventory with id " + inventoryId + " not found"));
+    }
+
+    @SneakyThrows
+    public Map<String, Object>  getCurrentInventory(List<String> fields) {
+        log.info(TAG + "getCurrentInventory");
+        return getInventoryById(
+                inventoryRepo.getCurrentInventory(LocalDate.now())
+                        .orElseThrow(() -> new ResourceNotFoundException("No active inventory at this moment"))
+                        .getId(),
+                fields == null ? UtilsInventory.getAllFields() : fields
+        );
     }
 }
