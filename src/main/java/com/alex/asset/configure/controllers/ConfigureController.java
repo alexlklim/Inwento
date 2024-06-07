@@ -62,7 +62,7 @@ public class ConfigureController {
 
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all active KST by KST num")
-    @GetMapping("/kst/{kst_num}")
+    @GetMapping("/kst/filter/num/{kst_num}")
     public List<KST> getKSTByNum(
             @PathVariable("kst_num") String num) {
         log.info(TAG + "getKSTByNum");
