@@ -42,6 +42,15 @@ public class UtilEvent extends UtilsBase{
         );
     }
 
+    public static List<String> getAllForAndroid() {
+        return List.of(
+                INFO, INVENTORY_ID, BRANCH_ID, BRANCH,
+                USER, USER_ID, USER_EMAIL, USER_NAME,
+                UNKNOWN_PRODUCTS, SCANNED_PRODUCTS, NOT_SCANNED_PRODUCTS,
+                PRODUCT_AMOUNT, UNKNOWN_PRODUCT_AMOUNT, TOTAL_PRODUCT_AMOUNT, SCANNED_PRODUCT_AMOUNT
+        );
+    }
+
 
     public static List<String> getFieldsSimpleView() {
         return List.of(

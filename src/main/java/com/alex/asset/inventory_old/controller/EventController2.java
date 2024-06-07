@@ -35,9 +35,9 @@ public class EventController2 {
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getEventById(
             @PathVariable("event_id") Long eventId,
-            @RequestBody(required = false) List<String> eventFields) {
+            @RequestBody(required = false) List<String> fields) {
         log.info(TAG + "Get event by id");
-        return eventService.getEvent(eventId, eventFields);
+        return eventService.getEvent(eventId, fields);
     }
 
 

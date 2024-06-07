@@ -51,11 +51,10 @@ public class EventService2 {
     @SneakyThrows
     public Map<String, Object> getEvent(Long eventId, List<String> eventFields) {
         log.info(TAG + "Get event with id {}", eventId);
-        if (eventFields == null || eventFields.isEmpty()) eventFields = UtilEvent.getAll();
-        Event event = eventRepo.findById(eventId).orElseThrow(
-                () -> new ResourceNotFoundException("Event not found with id " + eventId)
-        );
-        return eventMapper.toDTOWithCustomFields(event, eventFields);
+        return eventMapper.toDTOWithCustomFields(
+                eventRepo.findById(eventId).orElseThrow(
+                        () -> new ResourceNotFoundException("Event not found with id " + eventId)),
+               eventFields == null ?  UtilEvent.getAllForAndroid() : eventFields);
     }
 
 

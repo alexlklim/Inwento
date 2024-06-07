@@ -67,7 +67,6 @@ public class EventMapper2 {
                 default:
                     break;
             }
-
         }
         return dtoMap;
     }
