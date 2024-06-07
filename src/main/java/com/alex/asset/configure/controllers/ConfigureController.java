@@ -59,16 +59,28 @@ public class ConfigureController {
     }
 
 
+
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get all active KST by KST num")
     @GetMapping("/kst/{kst_num}")
-    public ResponseEntity<List<KST>> getKSTByNum(
+    public List<KST> getKSTByNum(
             @PathVariable("kst_num") String num) {
         log.info(TAG + "getKSTByNum");
         if (num.length() < 2)
              throw new KSTNumIsToShortException("Please, provide more longer KST num (length >= 2)");
-        return new ResponseEntity<>(
-                configureService.getKSTsByNum(num),
-                HttpStatus.OK);
+        return configureService.getKSTsByNum(num);
+    }
+
+
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get all active KST by KST name")
+    @GetMapping("/kst/filter/kst/{kst}")
+    public List<KST> getKSTByKST(
+            @PathVariable("kst") String kst) {
+        log.info(TAG + "getKSTByNum");
+        if (kst.length() < 3)
+            throw new KSTNumIsToShortException("Please, provide more longer KST name (length >= 3)");
+        return configureService.getKSTsByKST(kst);
     }
 
 }

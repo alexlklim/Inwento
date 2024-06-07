@@ -264,4 +264,9 @@ public class ConfiguratorService {
     }
 
 
+    public List<KST> getKSTsByKST(String kst) {
+        return kstRepo.getByKeyWord(kst);
+
+
+    }
 }

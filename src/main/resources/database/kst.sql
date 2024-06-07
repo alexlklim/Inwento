@@ -1,7 +1,3 @@
-SELECT * FROM ksts WHERE id= 6;
-
-
-
 
 INSERT IGNORE INTO ksts (is_active, num, kst) VALUES
 (true, '0', 'GRUNTY'),
